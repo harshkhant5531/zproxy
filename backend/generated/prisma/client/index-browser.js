@@ -145,6 +145,7 @@ exports.Prisma.FacultyProfileScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   fullName: 'fullName',
+  employeeId: 'employeeId',
   phone: 'phone',
   address: 'address',
   bio: 'bio',
@@ -374,6 +375,7 @@ exports.Prisma.AdminProfileOrderByRelevanceFieldEnum = {
 
 exports.Prisma.FacultyProfileOrderByRelevanceFieldEnum = {
   fullName: 'fullName',
+  employeeId: 'employeeId',
   phone: 'phone',
   address: 'address',
   bio: 'bio',

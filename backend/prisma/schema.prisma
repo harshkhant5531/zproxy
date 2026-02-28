@@ -7,6 +7,7 @@ generator client {
 
 datasource db {
   provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
 
@@ -71,6 +72,7 @@ model FacultyProfile {
   id            Int       @id @default(autoincrement())
   userId        Int       @unique
   fullName      String
+  employeeId    String    @unique
   phone         String?
   address       String?
   bio           String?

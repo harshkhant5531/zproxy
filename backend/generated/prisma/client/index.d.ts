@@ -4853,6 +4853,7 @@ export namespace Prisma {
     id: number | null
     userId: number | null
     fullName: string | null
+    employeeId: string | null
     phone: string | null
     address: string | null
     bio: string | null
@@ -4867,6 +4868,7 @@ export namespace Prisma {
     id: number | null
     userId: number | null
     fullName: string | null
+    employeeId: string | null
     phone: string | null
     address: string | null
     bio: string | null
@@ -4881,6 +4883,7 @@ export namespace Prisma {
     id: number
     userId: number
     fullName: number
+    employeeId: number
     phone: number
     address: number
     bio: number
@@ -4907,6 +4910,7 @@ export namespace Prisma {
     id?: true
     userId?: true
     fullName?: true
+    employeeId?: true
     phone?: true
     address?: true
     bio?: true
@@ -4921,6 +4925,7 @@ export namespace Prisma {
     id?: true
     userId?: true
     fullName?: true
+    employeeId?: true
     phone?: true
     address?: true
     bio?: true
@@ -4935,6 +4940,7 @@ export namespace Prisma {
     id?: true
     userId?: true
     fullName?: true
+    employeeId?: true
     phone?: true
     address?: true
     bio?: true
@@ -5036,6 +5042,7 @@ export namespace Prisma {
     id: number
     userId: number
     fullName: string
+    employeeId: string
     phone: string | null
     address: string | null
     bio: string | null
@@ -5069,6 +5076,7 @@ export namespace Prisma {
     id?: boolean
     userId?: boolean
     fullName?: boolean
+    employeeId?: boolean
     phone?: boolean
     address?: boolean
     bio?: boolean
@@ -5086,6 +5094,7 @@ export namespace Prisma {
     id?: boolean
     userId?: boolean
     fullName?: boolean
+    employeeId?: boolean
     phone?: boolean
     address?: boolean
     bio?: boolean
@@ -5096,7 +5105,7 @@ export namespace Prisma {
     officeHours?: boolean
   }
 
-  export type FacultyProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "fullName" | "phone" | "address" | "bio" | "department" | "designation" | "joiningDate" | "qualification" | "officeHours", ExtArgs["result"]["facultyProfile"]>
+  export type FacultyProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "fullName" | "employeeId" | "phone" | "address" | "bio" | "department" | "designation" | "joiningDate" | "qualification" | "officeHours", ExtArgs["result"]["facultyProfile"]>
   export type FacultyProfileInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UsersDefaultArgs<ExtArgs>
   }
@@ -5110,6 +5119,7 @@ export namespace Prisma {
       id: number
       userId: number
       fullName: string
+      employeeId: string
       phone: string | null
       address: string | null
       bio: string | null
@@ -5491,6 +5501,7 @@ export namespace Prisma {
     readonly id: FieldRef<"FacultyProfile", 'Int'>
     readonly userId: FieldRef<"FacultyProfile", 'Int'>
     readonly fullName: FieldRef<"FacultyProfile", 'String'>
+    readonly employeeId: FieldRef<"FacultyProfile", 'String'>
     readonly phone: FieldRef<"FacultyProfile", 'String'>
     readonly address: FieldRef<"FacultyProfile", 'String'>
     readonly bio: FieldRef<"FacultyProfile", 'String'>
@@ -19974,6 +19985,7 @@ export namespace Prisma {
     id: 'id',
     userId: 'userId',
     fullName: 'fullName',
+    employeeId: 'employeeId',
     phone: 'phone',
     address: 'address',
     bio: 'bio',
@@ -20260,6 +20272,7 @@ export namespace Prisma {
 
   export const FacultyProfileOrderByRelevanceFieldEnum: {
     fullName: 'fullName',
+    employeeId: 'employeeId',
     phone: 'phone',
     address: 'address',
     bio: 'bio',
@@ -20673,6 +20686,7 @@ export namespace Prisma {
     id?: IntFilter<"FacultyProfile"> | number
     userId?: IntFilter<"FacultyProfile"> | number
     fullName?: StringFilter<"FacultyProfile"> | string
+    employeeId?: StringFilter<"FacultyProfile"> | string
     phone?: StringNullableFilter<"FacultyProfile"> | string | null
     address?: StringNullableFilter<"FacultyProfile"> | string | null
     bio?: StringNullableFilter<"FacultyProfile"> | string | null
@@ -20688,6 +20702,7 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     fullName?: SortOrder
+    employeeId?: SortOrder
     phone?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
     bio?: SortOrderInput | SortOrder
@@ -20703,6 +20718,7 @@ export namespace Prisma {
   export type FacultyProfileWhereUniqueInput = Prisma.AtLeast<{
     id?: number
     userId?: number
+    employeeId?: string
     AND?: FacultyProfileWhereInput | FacultyProfileWhereInput[]
     OR?: FacultyProfileWhereInput[]
     NOT?: FacultyProfileWhereInput | FacultyProfileWhereInput[]
@@ -20716,12 +20732,13 @@ export namespace Prisma {
     qualification?: StringNullableFilter<"FacultyProfile"> | string | null
     officeHours?: StringNullableFilter<"FacultyProfile"> | string | null
     user?: XOR<UsersScalarRelationFilter, UsersWhereInput>
-  }, "id" | "userId">
+  }, "id" | "userId" | "employeeId">
 
   export type FacultyProfileOrderByWithAggregationInput = {
     id?: SortOrder
     userId?: SortOrder
     fullName?: SortOrder
+    employeeId?: SortOrder
     phone?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
     bio?: SortOrderInput | SortOrder
@@ -20744,6 +20761,7 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"FacultyProfile"> | number
     userId?: IntWithAggregatesFilter<"FacultyProfile"> | number
     fullName?: StringWithAggregatesFilter<"FacultyProfile"> | string
+    employeeId?: StringWithAggregatesFilter<"FacultyProfile"> | string
     phone?: StringNullableWithAggregatesFilter<"FacultyProfile"> | string | null
     address?: StringNullableWithAggregatesFilter<"FacultyProfile"> | string | null
     bio?: StringNullableWithAggregatesFilter<"FacultyProfile"> | string | null
@@ -21004,6 +21022,7 @@ export namespace Prisma {
 
   export type SubjectWhereUniqueInput = Prisma.AtLeast<{
     id?: number
+    name_courseId?: SubjectNameCourseIdCompoundUniqueInput
     AND?: SubjectWhereInput | SubjectWhereInput[]
     OR?: SubjectWhereInput[]
     NOT?: SubjectWhereInput | SubjectWhereInput[]
@@ -21019,7 +21038,7 @@ export namespace Prisma {
     timetableEntries?: TimetableListRelationFilter
     grades?: GradeListRelationFilter
     students?: UsersListRelationFilter
-  }, "id">
+  }, "id" | "name_courseId">
 
   export type SubjectOrderByWithAggregationInput = {
     id?: SortOrder
@@ -22193,6 +22212,7 @@ export namespace Prisma {
 
   export type FacultyProfileCreateInput = {
     fullName: string
+    employeeId: string
     phone?: string | null
     address?: string | null
     bio?: string | null
@@ -22208,6 +22228,7 @@ export namespace Prisma {
     id?: number
     userId: number
     fullName: string
+    employeeId: string
     phone?: string | null
     address?: string | null
     bio?: string | null
@@ -22220,6 +22241,7 @@ export namespace Prisma {
 
   export type FacultyProfileUpdateInput = {
     fullName?: StringFieldUpdateOperationsInput | string
+    employeeId?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22235,6 +22257,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     userId?: IntFieldUpdateOperationsInput | number
     fullName?: StringFieldUpdateOperationsInput | string
+    employeeId?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22249,6 +22272,7 @@ export namespace Prisma {
     id?: number
     userId: number
     fullName: string
+    employeeId: string
     phone?: string | null
     address?: string | null
     bio?: string | null
@@ -22261,6 +22285,7 @@ export namespace Prisma {
 
   export type FacultyProfileUpdateManyMutationInput = {
     fullName?: StringFieldUpdateOperationsInput | string
+    employeeId?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22275,6 +22300,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     userId?: IntFieldUpdateOperationsInput | number
     fullName?: StringFieldUpdateOperationsInput | string
+    employeeId?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
@@ -23944,6 +23970,7 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     fullName?: SortOrder
+    employeeId?: SortOrder
     phone?: SortOrder
     address?: SortOrder
     bio?: SortOrder
@@ -23963,6 +23990,7 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     fullName?: SortOrder
+    employeeId?: SortOrder
     phone?: SortOrder
     address?: SortOrder
     bio?: SortOrder
@@ -23977,6 +24005,7 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     fullName?: SortOrder
+    employeeId?: SortOrder
     phone?: SortOrder
     address?: SortOrder
     bio?: SortOrder
@@ -24190,6 +24219,11 @@ export namespace Prisma {
     fields: SubjectOrderByRelevanceFieldEnum | SubjectOrderByRelevanceFieldEnum[]
     sort: SortOrder
     search: string
+  }
+
+  export type SubjectNameCourseIdCompoundUniqueInput = {
+    name: string
+    courseId: number
   }
 
   export type SubjectCountOrderByAggregateInput = {
@@ -26762,6 +26796,7 @@ export namespace Prisma {
 
   export type FacultyProfileCreateWithoutUserInput = {
     fullName: string
+    employeeId: string
     phone?: string | null
     address?: string | null
     bio?: string | null
@@ -26775,6 +26810,7 @@ export namespace Prisma {
   export type FacultyProfileUncheckedCreateWithoutUserInput = {
     id?: number
     fullName: string
+    employeeId: string
     phone?: string | null
     address?: string | null
     bio?: string | null
@@ -27360,6 +27396,7 @@ export namespace Prisma {
 
   export type FacultyProfileUpdateWithoutUserInput = {
     fullName?: StringFieldUpdateOperationsInput | string
+    employeeId?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27373,6 +27410,7 @@ export namespace Prisma {
   export type FacultyProfileUncheckedUpdateWithoutUserInput = {
     id?: IntFieldUpdateOperationsInput | number
     fullName?: StringFieldUpdateOperationsInput | string
+    employeeId?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null

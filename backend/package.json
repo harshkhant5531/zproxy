@@ -4,7 +4,7 @@
   "description": "Backend API for Aura Integrity Engine",
   "main": "server.js",
   "prisma": {
-    "seed": "node prisma/seed.js"
+    "seed": "tsx prisma/seed.ts"
   },
   "scripts": {
     "start": "node server.js",

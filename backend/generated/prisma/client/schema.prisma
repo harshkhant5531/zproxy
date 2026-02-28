@@ -70,6 +70,7 @@ model FacultyProfile {
   id            Int       @id @default(autoincrement())
   userId        Int       @unique
   fullName      String
+  employeeId    String    @unique
   phone         String?
   address       String?
   bio           String?
@@ -145,6 +146,8 @@ model Subject {
   timetableEntries Timetable[] @relation("SubjectTimetable")
   grades           Grade[]     @relation("SubjectGrades")
   students         Users[]     @relation("StudentSubjects")
+
+  @@unique([name, courseId])
 }
 
 // ─── Sessions & Attendance ────────────────────────────────────────────────────
