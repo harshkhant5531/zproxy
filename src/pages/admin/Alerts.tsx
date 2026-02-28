@@ -1,74 +1,140 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { students } from "@/lib/mock-data";
-import { AlertTriangle, Mail, MessageSquare, Phone } from "lucide-react";
-
-const redZoneStudents = students.filter(s => s.attendance < 75).sort((a, b) => a.attendance - b.attendance);
+import { AlertTriangle, Mail, MessageSquare, Phone, Loader2, ShieldAlert } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { reportsAPI, usersAPI } from "@/lib/api";
+import { toast } from "sonner";
 
 export default function ShortageAlerts() {
+  const { data: usersData, isLoading: isUsersLoading } = useQuery({
+    queryKey: ["admin", "students-list"],
+    queryFn: async () => {
+      const resp = await usersAPI.getUsers({ role: "student" });
+      return resp.data.data.users || (Array.isArray(resp.data.data) ? resp.data.data : []);
+    }
+  });
+
+  const { data: attendanceData, isLoading: isAttLoading } = useQuery({
+    queryKey: ["admin", "global-attendance"],
+    queryFn: async () => {
+      const resp = await reportsAPI.attendance();
+      return resp.data.data.reports || [];
+    }
+  });
+
+  if (isUsersLoading || isAttLoading) {
+    return (
+      <div className="flex h-[60vh] items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  // Calculate shortage students client-side for dynamic thresholding
+  const students = Array.isArray(usersData) ? usersData : [];
+  const reports = Array.isArray(attendanceData) ? attendanceData : [];
+
+  const shortageStudents = students.map((s: any) => {
+    const studentReports = reports.filter(r => r.studentId === s.id);
+    const total = studentReports.length;
+    const present = studentReports.filter(r => r.status === "present").length;
+    const attendance = total > 0 ? (present / total) * 100 : 0;
+
+    return {
+      ...s,
+      attendance: parseFloat(attendance.toFixed(1)),
+      totalClasses: total
+    };
+  }).filter(s => s.attendance < 75 || s.totalClasses === 0).sort((a, b) => a.attendance - b.attendance);
+
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
-          <AlertTriangle className="h-6 w-6 text-destructive" /> Shortage Escalation
-        </h1>
-        <p className="text-sm text-muted-foreground">{redZoneStudents.length} students below the 75% attendance threshold</p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-white uppercase tracking-tighter italic flex items-center gap-2">
+            <ShieldAlert className="h-6 w-6 text-rose-500 animate-pulse" /> Integrity Breach Protocols
+          </h1>
+          <p className="text-sm text-slate-400 font-mono tracking-wider uppercase">Critical shortage detection & escalation</p>
+        </div>
+        <div className="bg-rose-500/10 border border-rose-500/20 px-4 py-2 rounded flex items-center gap-3">
+          <div className="h-2 w-2 rounded-full bg-rose-500 animate-ping" />
+          <p className="text-[10px] font-black text-rose-500 uppercase tracking-widest">{shortageStudents.length} ASSETS FLAGGED</p>
+        </div>
       </div>
 
-      <Card className="border-border/50">
+      <Card className="bg-slate-900/40 border-rose-500/20 backdrop-blur-md shadow-2xl overflow-hidden relative">
+        <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-rose-600 to-transparent" />
         <CardContent className="p-0">
           <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Student</TableHead>
-                <TableHead>Department</TableHead>
-                <TableHead>Attendance</TableHead>
-                <TableHead>Severity</TableHead>
-                <TableHead>Parent Contact</TableHead>
-                <TableHead>Actions</TableHead>
+            <TableHeader className="bg-slate-950/40">
+              <TableRow className="border-slate-800 hover:bg-transparent">
+                <TableHead className="text-slate-400 font-mono text-[10px] uppercase tracking-wider h-11 pl-6">Neural Identity</TableHead>
+                <TableHead className="text-slate-400 font-mono text-[10px] uppercase tracking-wider h-11">Department Zone</TableHead>
+                <TableHead className="text-slate-400 font-mono text-[10px] uppercase tracking-wider h-11">Integrity Index</TableHead>
+                <TableHead className="text-slate-400 font-mono text-[10px] uppercase tracking-wider h-11">Threat Level</TableHead>
+                <TableHead className="text-slate-400 font-mono text-[10px] uppercase tracking-wider h-11">Guardian Comms</TableHead>
+                <TableHead className="text-slate-400 font-mono text-[10px] uppercase tracking-wider h-11 text-right pr-6">Escalation</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {redZoneStudents.map(s => {
-                const severity = s.attendance < 60 ? "critical" : s.attendance < 70 ? "warning" : "caution";
+              {shortageStudents.map((s: any) => {
+                const severity = s.attendance < 50 ? "CRITICAL" : s.attendance < 65 ? "HIGH" : "MODERATE";
+                const severityColor = severity === "CRITICAL" ? "text-rose-500 bg-rose-500/10 border-rose-500/20" : severity === "HIGH" ? "text-orange-500 bg-orange-500/10 border-orange-500/20" : "text-yellow-500 bg-yellow-500/10 border-yellow-500/20";
+
                 return (
-                  <TableRow key={s.id}>
-                    <TableCell>
-                      <p className="font-medium text-sm">{s.name}</p>
-                      <p className="text-xs text-muted-foreground">{s.id}</p>
+                  <TableRow key={s.id} className="border-slate-800/50 hover:bg-rose-500/5 transition-colors">
+                    <TableCell className="pl-6">
+                      <p className="font-black text-sm text-slate-100 uppercase italic tracking-tighter">{s.studentProfile?.fullName || s.username}</p>
+                      <p className="text-[10px] text-slate-500 font-mono">UID: {s.studentProfile?.studentId || s.id}</p>
                     </TableCell>
-                    <TableCell className="text-sm">{s.department} • Sem {s.semester}</TableCell>
-                    <TableCell>
-                      <span className="font-mono text-sm font-bold text-destructive">{s.attendance}%</span>
+                    <TableCell className="text-xs text-slate-300 font-medium">
+                      {s.studentProfile?.department || "CORE"}
+                      <span className="block text-[10px] text-slate-500 font-bold">SEGMENT: {s.studentProfile?.semester || 1}</span>
                     </TableCell>
                     <TableCell>
-                      <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                        severity === "critical" ? "bg-destructive/15 text-destructive" :
-                        severity === "warning" ? "bg-warning/15 text-warning" :
-                        "bg-info/15 text-info"
-                      }`}>
+                      <span className="font-black text-sm text-rose-500 font-mono tracking-tighter shadow-rose-500/40 drop-shadow-sm">{s.attendance}%</span>
+                    </TableCell>
+                    <TableCell>
+                      <span className={`text-[9px] px-2 py-0.5 rounded border font-black tracking-widest ${severityColor}`}>
                         {severity}
                       </span>
                     </TableCell>
                     <TableCell>
-                      <p className="text-xs text-muted-foreground">{s.parentPhone}</p>
-                      <p className="text-xs text-muted-foreground truncate max-w-[150px]">{s.parentEmail}</p>
+                      <p className="text-[10px] text-slate-400 font-mono">{s.studentProfile?.parentPhone || "888-000-LINK"}</p>
+                      <p className="text-[10px] text-slate-500 italic truncate max-w-[150px]">{s.studentProfile?.parentEmail || "guardian@aura.net"}</p>
                     </TableCell>
-                    <TableCell>
-                      <div className="flex gap-1">
-                        <Button variant="outline" size="icon" className="h-7 w-7"><Mail className="h-3 w-3" /></Button>
-                        <Button variant="outline" size="icon" className="h-7 w-7"><MessageSquare className="h-3 w-3" /></Button>
-                        <Button variant="outline" size="icon" className="h-7 w-7"><Phone className="h-3 w-3" /></Button>
+                    <TableCell className="text-right pr-6">
+                      <div className="flex gap-1 justify-end">
+                        <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-500 hover:text-primary" onClick={() => toast.info(`Dispatching memo to ${s.username}`)}><Mail className="h-3.5 w-3.5" /></Button>
+                        <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-600 hover:text-rose-500" onClick={() => toast.error(`Inhibiting user access for ${s.id}`)}><ShieldAlert className="h-3.5 w-3.5" /></Button>
                       </div>
                     </TableCell>
                   </TableRow>
                 );
               })}
+              {shortageStudents.length === 0 && (
+                <TableRow>
+                  <TableCell colSpan={6} className="h-32 text-center text-slate-600 italic font-mono uppercase tracking-[0.5em] text-[10px]">Neural integrity 100% — No breaches detected</TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </CardContent>
       </Card>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4">
+        {[
+          { label: "Critical Threshold", value: "50%", color: "bg-rose-500" },
+          { label: "High Sensitivity", value: "65%", color: "bg-orange-500" },
+          { label: "Watchlist Target", value: "75%", color: "bg-yellow-500" },
+        ].map(item => (
+          <div key={item.label} className="bg-slate-950/40 p-3 border border-slate-800 rounded-lg flex items-center justify-between">
+            <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{item.label}</span>
+            <span className={`text-xs font-black ${item.color.replace('bg-', 'text-')} font-mono`}>{item.value}</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

@@ -1,56 +1,91 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, LineChart, Line } from "recharts";
-import { courseOutcomes, courses } from "@/lib/mock-data";
+import { useQuery } from "@tanstack/react-query";
+import { reportsAPI } from "@/lib/api";
+import { Loader2 } from "lucide-react";
 
 const tooltipStyle = { background: "hsl(222 47% 8%)", border: "1px solid hsl(222 30% 18%)", borderRadius: 8, color: "hsl(210 40% 96%)" };
 const tickStyle = { fill: "hsl(215 20% 55%)", fontSize: 12 };
 
-const attainmentData = courseOutcomes.map(co => ({
-  name: co.id,
-  attainment: co.attainment,
-  course: co.courseId,
-}));
-
-const radarData = courseOutcomes.filter(co => co.courseId === "CS301").map(co => ({
-  subject: co.id,
-  A: co.attainment,
-  fullMark: 100,
-}));
-
-const trendData = [
-  { week: "W1", CS301: 85, CS302: 78, CS303: 90 },
-  { week: "W2", CS301: 82, CS302: 80, CS303: 88 },
-  { week: "W3", CS301: 87, CS302: 76, CS303: 85 },
-  { week: "W4", CS301: 84, CS302: 82, CS303: 87 },
-  { week: "W5", CS301: 87, CS302: 86, CS303: 88 },
-];
-
 export default function Analytics() {
+  const { data: performanceData, isLoading: isPerfLoading } = useQuery({
+    queryKey: ["faculty", "performance-reports"],
+    queryFn: async () => {
+      const resp = await reportsAPI.performance();
+      return resp.data.data;
+    }
+  });
+
+  const { data: attendanceData, isLoading: isAttLoading } = useQuery({
+    queryKey: ["faculty", "attendance-reports"],
+    queryFn: async () => {
+      const resp = await reportsAPI.attendance();
+      return resp.data.data.reports || [];
+    }
+  });
+
+  if (isPerfLoading || isAttLoading) {
+    return (
+      <div className="flex h-[60vh] items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  // Transform data for charts
+  const students = performanceData?.students || [];
+  const topStudents = students.slice(0, 5).map((s: any) => ({
+    name: s.student?.studentProfile?.fullName || s.student?.username,
+    attainment: s.averagePercentage,
+  }));
+
+  const trendData = [
+    { week: "W1", attendance: 85, performance: 72 },
+    { week: "W2", attendance: 82, performance: 75 },
+    { week: "W3", attendance: 90, performance: 78 },
+    { week: "W4", attendance: 88, performance: 81 },
+    { week: "W5", attendance: 92, performance: 85 },
+  ];
+
+  const radarData = [
+    { subject: "Accuracy", A: 85, fullMark: 100 },
+    { subject: "Engagement", A: 90, fullMark: 100 },
+    { subject: "Compliance", A: 95, fullMark: 100 },
+    { subject: "Integrity", A: 88, fullMark: 100 },
+    { subject: "Punctuality", A: 76, fullMark: 100 },
+  ];
+
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">Attainment Analytics</h1>
-        <p className="text-sm text-muted-foreground">Course outcome attainment and attendance correlation</p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-white uppercase tracking-tighter italic">Deep-State Analytics</h1>
+          <p className="text-sm text-slate-400 font-mono tracking-wider">NEURAL COURSE OUTCOME & ENGAGEMENT METRICS</p>
+        </div>
+        <div className="bg-slate-900/50 border border-slate-800 px-4 py-2 rounded-lg backdrop-blur-md">
+          <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Global Index</p>
+          <p className="text-xl font-black text-primary font-mono">{performanceData?.statistics?.classAverage || 0}%</p>
+        </div>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card className="border-border/50">
-          <CardHeader className="pb-3"><CardTitle className="text-sm font-medium">CO Attainment by Course</CardTitle></CardHeader>
-          <CardContent>
+        <Card className="bg-slate-900/40 border-slate-800 backdrop-blur-sm shadow-xl">
+          <CardHeader className="pb-3 px-6"><CardTitle className="text-sm font-bold text-slate-300 uppercase tracking-widest italic">Top Performers Attainment</CardTitle></CardHeader>
+          <CardContent className="px-6 pb-6 pt-2">
             <ResponsiveContainer width="100%" height={260}>
-              <BarChart data={attainmentData}>
-                <XAxis dataKey="name" tick={tickStyle} axisLine={false} tickLine={false} />
+              <BarChart data={topStudents}>
+                <XAxis dataKey="name" tick={tickStyle} axisLine={false} tickLine={false} hide />
                 <YAxis tick={tickStyle} axisLine={false} tickLine={false} domain={[0, 100]} />
                 <Tooltip contentStyle={tooltipStyle} />
-                <Bar dataKey="attainment" fill="hsl(187 100% 50%)" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="attainment" fill="hsl(187 100% 50%)" radius={[4, 4, 0, 0]} barSize={30} />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
 
-        <Card className="border-border/50">
-          <CardHeader className="pb-3"><CardTitle className="text-sm font-medium">CS301 — Radar View</CardTitle></CardHeader>
-          <CardContent>
+        <Card className="bg-slate-900/40 border-slate-800 backdrop-blur-sm shadow-xl">
+          <CardHeader className="pb-3 px-6"><CardTitle className="text-sm font-bold text-slate-300 uppercase tracking-widest italic">Engagement Fingerprint</CardTitle></CardHeader>
+          <CardContent className="px-6 pb-6 pt-2">
             <ResponsiveContainer width="100%" height={260}>
               <RadarChart data={radarData}>
                 <PolarGrid stroke="hsl(222 30% 18%)" />
@@ -62,30 +97,34 @@ export default function Analytics() {
           </CardContent>
         </Card>
 
-        <Card className="border-border/50 lg:col-span-2">
-          <CardHeader className="pb-3"><CardTitle className="text-sm font-medium">Weekly Attendance Trend</CardTitle></CardHeader>
-          <CardContent>
+        <Card className="bg-slate-900/40 border-slate-800 backdrop-blur-sm lg:col-span-2 shadow-2xl">
+          <CardHeader className="pb-3 px-6"><CardTitle className="text-sm font-bold text-slate-300 uppercase tracking-widest italic">Chronological Outcome Progress</CardTitle></CardHeader>
+          <CardContent className="px-6 pb-6 pt-2">
             <ResponsiveContainer width="100%" height={260}>
               <LineChart data={trendData}>
                 <XAxis dataKey="week" tick={tickStyle} axisLine={false} tickLine={false} />
                 <YAxis tick={tickStyle} axisLine={false} tickLine={false} domain={[60, 100]} />
                 <Tooltip contentStyle={tooltipStyle} />
-                <Line type="monotone" dataKey="CS301" stroke="hsl(187 100% 50%)" strokeWidth={2} dot={{ r: 3 }} />
-                <Line type="monotone" dataKey="CS302" stroke="hsl(142 76% 46%)" strokeWidth={2} dot={{ r: 3 }} />
-                <Line type="monotone" dataKey="CS303" stroke="hsl(38 92% 50%)" strokeWidth={2} dot={{ r: 3 }} />
+                <Line type="monotone" dataKey="attendance" stroke="hsl(187 100% 50%)" strokeWidth={3} dot={{ r: 4, fill: "hsl(187 100% 50%)", strokeWidth: 2 }} />
+                <Line type="monotone" dataKey="performance" stroke="hsl(161 94% 30%)" strokeWidth={3} dot={{ r: 4, fill: "hsl(161 94% 30%)", strokeWidth: 2 }} />
               </LineChart>
             </ResponsiveContainer>
+            <div className="mt-4 flex justify-center gap-6 text-[10px] font-bold uppercase tracking-[0.2em]">
+              <div className="flex items-center gap-2"><div className="h-2 w-10 bg-primary" /> Attendance</div>
+              <div className="flex items-center gap-2"><div className="h-2 w-10 bg-emerald-700" /> Performance</div>
+            </div>
           </CardContent>
         </Card>
       </div>
 
       {/* Attainment Formula */}
-      <Card className="border-border/50">
-        <CardHeader className="pb-3"><CardTitle className="text-sm font-medium">OBE Attainment Formula</CardTitle></CardHeader>
-        <CardContent>
-          <div className="rounded-lg bg-secondary/30 p-4 font-mono text-sm text-center">
-            <p>A<sub>CO</sub> = (W<sub>att</sub> × P<sub>att</sub>) + (W<sub>int</sub> × M<sub>int</sub>)</p>
-            <p className="text-xs text-muted-foreground mt-2">W<sub>att</sub>=0.2, W<sub>int</sub>=0.8 — Configurable per course</p>
+      <Card className="bg-slate-950/40 border-slate-800 shadow-inner">
+        <CardHeader className="pb-3 px-6"><CardTitle className="text-xs font-black text-slate-500 uppercase tracking-widest">OBE Attainment Formula [v2.4]</CardTitle></CardHeader>
+        <CardContent className="px-6 pb-6">
+          <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-6 font-mono text-sm flex flex-col items-center">
+            <p className="text-primary text-xl font-black drop-shadow-[0_0_10px_rgba(34,211,238,0.3)]">A<sub>CO</sub> = (W<sub>att</sub> × P<sub>att</sub>) + (W<sub>int</sub> × M<sub>int</sub>)</p>
+            <div className="h-px w-20 bg-slate-800 my-4" />
+            <p className="text-[10px] text-slate-500 uppercase tracking-[0.3em]">Weights: ATT=0.20 | INT=0.80 — DYNAMIC_ADJUST_ENABLED</p>
           </div>
         </CardContent>
       </Card>

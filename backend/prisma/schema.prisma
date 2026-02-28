@@ -1,0 +1,341 @@
+// Prisma schema for Aura Integrity Engine
+
+generator client {
+  provider        = "prisma-client-js"
+  output          = "../generated/prisma/client"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+
+// ─── User Core ───────────────────────────────────────────────────────────────
+
+model Users {
+  id            Int      @id @default(autoincrement())
+  username      String   @unique
+  email         String   @unique
+  passwordHash  String
+  role          String   // 'admin', 'faculty', 'student'
+  avatar        String?
+  status        String   @default("active") // 'active', 'inactive', 'suspended'
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Profiles
+  adminProfile      AdminProfile?
+  facultyProfile    FacultyProfile?
+  studentProfile    StudentProfile?
+
+  // Leave relations – named to disambiguate
+  leaveApplications LeaveApplication[] @relation("LeaveApplicationUser")
+  approvedLeaves    LeaveApplication[] @relation("LeaveApplicationApprover")
+
+  // Attendance / Sessions
+  sessions           Session[]    @relation("FacultySessions")
+  attendanceRecords  Attendance[] @relation("StudentAttendance")
+
+  // Exams & Grades
+  examPermits ExamPermit[] @relation("StudentExamPermits")
+  grades      Grade[]      @relation("StudentGrades")
+
+  // Notifications & Reports
+  notifications Notification[] @relation("UserNotifications")
+  reports       Report[]        @relation("UserReports")
+  auditLogs     AuditLog[]     @relation("UserAuditLogs")
+
+  // Timetable (faculty entries)
+  timetableEntries Timetable[] @relation("FacultyTimetable")
+
+  // Course relations (via profile join tables defined on Course model)
+  facultyCourses  Course[] @relation("FacultyCourses")
+  studentCourses  Course[] @relation("StudentCourses")
+}
+
+// ─── Profiles ────────────────────────────────────────────────────────────────
+
+model AdminProfile {
+  id       Int     @id @default(autoincrement())
+  userId   Int     @unique
+  fullName String
+  phone    String?
+  address  String?
+  bio      String?
+
+  user Users @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model FacultyProfile {
+  id            Int       @id @default(autoincrement())
+  userId        Int       @unique
+  fullName      String
+  phone         String?
+  address       String?
+  bio           String?
+  department    String?
+  designation   String?
+  joiningDate   DateTime?
+  qualification String?
+  officeHours   String?
+
+  user Users @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model StudentProfile {
+  id               Int       @id @default(autoincrement())
+  userId           Int       @unique
+  fullName         String
+  phone            String?
+  address          String?
+  bio              String?
+  enrollmentNumber String    @unique
+  rollNumber       String?
+  admissionDate    DateTime?
+  department       String?
+  batch            String?
+  currentSemester  Int?
+  dob              DateTime?
+
+  user Users @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ─── Academic ────────────────────────────────────────────────────────────────
+
+model Course {
+  id           Int      @id @default(autoincrement())
+  code         String   @unique
+  name         String
+  description  String?
+  department   String
+  credits      Int
+  semester     Int
+  totalClasses Int      @default(0)
+  status       String   @default("active")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Faculty who teaches (direct FK, no profile join)
+  facultyId Int?
+  faculty   Users? @relation("FacultyCourses", fields: [facultyId], references: [id])
+
+  // Many-to-many: students enrolled
+  students Users[] @relation("StudentCourses")
+
+  subjects         Subject[]
+  timetableEntries Timetable[]
+  grades           Grade[]
+  sessions         Session[]
+  notifications    Notification[]
+  examPermits      ExamPermit[]
+}
+
+model Subject {
+  id           Int      @id @default(autoincrement())
+  courseId     Int
+  name         String
+  description  String?
+  credits      Int
+  totalClasses Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  course           Course      @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  sessions         Session[]   @relation("SubjectSessions")
+  timetableEntries Timetable[] @relation("SubjectTimetable")
+  grades           Grade[]     @relation("SubjectGrades")
+}
+
+// ─── Sessions & Attendance ────────────────────────────────────────────────────
+
+model Session {
+  id              Int      @id @default(autoincrement())
+  courseId        Int
+  facultyId       Int
+  subjectId       Int?
+  topic           String
+  description     String?
+  sessionType     String   @default("lecture")
+  date            DateTime
+  startTime       String
+  endTime         String
+  duration        Int      @default(60)
+  status          String   @default("scheduled")
+  attendanceCount Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  course            Course      @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  faculty           Users       @relation("FacultySessions", fields: [facultyId], references: [id], onDelete: Cascade)
+  subject           Subject?    @relation("SubjectSessions", fields: [subjectId], references: [id], onDelete: SetNull)
+  attendanceRecords Attendance[]
+  qrCode            QrCode?
+}
+
+model Attendance {
+  id         Int      @id @default(autoincrement())
+  sessionId  Int
+  studentId  Int
+  status     String   @default("present")
+  timestamp  DateTime @default(now())
+  location   String?
+  ipAddress  String?
+  deviceInfo String?
+  notes      String?
+
+  session Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  student Users   @relation("StudentAttendance", fields: [studentId], references: [id], onDelete: Cascade)
+}
+
+// ─── QR Code ─────────────────────────────────────────────────────────────────
+
+model QrCode {
+  id           Int      @id @default(autoincrement())
+  sessionId    Int      @unique
+  codeValue    String
+  validFrom    DateTime
+  validTo      DateTime
+  scannedCount Int      @default(0)
+  maxScans     Int      @default(50)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  session Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+}
+
+// ─── Exams ────────────────────────────────────────────────────────────────────
+
+model ExamPermit {
+  id        Int      @id @default(autoincrement())
+  studentId Int
+  courseId  Int
+  examType  String   @default("midterm")
+  examDate  DateTime
+  examHall  String
+  seatNumber String
+  status    String   @default("pending")
+  validFrom DateTime
+  validTo   DateTime
+  qrCode    String?
+  scanned   Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  student Users  @relation("StudentExamPermits", fields: [studentId], references: [id], onDelete: Cascade)
+  course  Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+}
+
+// ─── Leave Management ─────────────────────────────────────────────────────────
+
+model LeaveApplication {
+  id                Int      @id @default(autoincrement())
+  userId            Int
+  leaveType         String   @default("sick")
+  startDate         DateTime
+  endDate           DateTime
+  reason            String
+  supportingDocument String?
+  status            String   @default("pending")
+  approvedBy        Int?
+  approvalNotes     String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  user     Users  @relation("LeaveApplicationUser",     fields: [userId],     references: [id], onDelete: Cascade)
+  approver Users? @relation("LeaveApplicationApprover", fields: [approvedBy], references: [id], onDelete: SetNull)
+}
+
+// ─── Grades ───────────────────────────────────────────────────────────────────
+
+model Grade {
+  id             Int      @id @default(autoincrement())
+  studentId      Int
+  courseId       Int
+  subjectId      Int
+  assignment     String?
+  marksObtained  Int
+  totalMarks     Int
+  grade          String
+  semester       Int
+  year           Int
+  teacherRemarks String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  student Users   @relation("StudentGrades", fields: [studentId], references: [id], onDelete: Cascade)
+  course  Course  @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  subject Subject @relation("SubjectGrades", fields: [subjectId], references: [id], onDelete: Cascade)
+}
+
+// ─── Timetable ────────────────────────────────────────────────────────────────
+
+model Timetable {
+  id         Int      @id @default(autoincrement())
+  courseId   Int
+  subjectId  Int
+  facultyId  Int
+  dayOfWeek  Int
+  startTime  String
+  endTime    String
+  roomNumber String
+  semester   Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  course  Course  @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  subject Subject @relation("SubjectTimetable", fields: [subjectId], references: [id], onDelete: Cascade)
+  faculty Users   @relation("FacultyTimetable", fields: [facultyId], references: [id], onDelete: Cascade)
+}
+
+// ─── Notifications ────────────────────────────────────────────────────────────
+
+model Notification {
+  id          Int       @id @default(autoincrement())
+  userId      Int?
+  courseId    Int?
+  title       String
+  message     String
+  type        String    @default("info")
+  priority    String    @default("normal")
+  isRead      Boolean   @default(false)
+  scheduledAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  user   Users?  @relation("UserNotifications", fields: [userId], references: [id], onDelete: SetNull)
+  course Course? @relation(fields: [courseId], references: [id], onDelete: SetNull)
+}
+
+// ─── Reports ─────────────────────────────────────────────────────────────────
+
+model Report {
+  id          Int      @id @default(autoincrement())
+  reportType  String
+  generatedBy Int
+  filters     Json?
+  data        Json?
+  status      String   @default("generated")
+  format      String   @default("pdf")
+  fileName    String?
+  fileUrl     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user Users @relation("UserReports", fields: [generatedBy], references: [id], onDelete: Cascade)
+}
+
+// ─── Audit Logs ──────────────────────────────────────────────────────────────
+
+model AuditLog {
+  id           Int      @id @default(autoincrement())
+  userId       Int
+  action       String
+  resourceType String
+  resourceId   Int?
+  details      Json?
+  ipAddress    String?
+  userAgent    String?
+  createdAt    DateTime @default(now())
+
+  user Users @relation("UserAuditLogs", fields: [userId], references: [id], onDelete: Cascade)
+}

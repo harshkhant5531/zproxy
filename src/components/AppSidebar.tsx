@@ -1,7 +1,7 @@
 import {
   GraduationCap, ScanLine, Calculator, FileText, Ticket,
   LayoutDashboard, Plus, ClipboardList, BarChart3, ArrowLeftRight,
-  Users, BookOpen, Calendar, FileBarChart, AlertTriangle, Settings
+  Users, BookOpen, Calendar, FileBarChart, AlertTriangle, Settings, LogOut
 } from "lucide-react";
 import { useRole } from "@/contexts/RoleContext";
 import { NavLink } from "@/components/NavLink";
@@ -13,7 +13,10 @@ import {
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 import type { Role } from "@/lib/mock-data";
+import { useAuth } from "@/contexts/AuthContext";
+import React from "react";
 
 const studentMenu = [
   { title: "Dashboard", url: "/student/dashboard", icon: LayoutDashboard },
@@ -47,6 +50,7 @@ const roleConfig: Record<Role, { label: string; menu: typeof studentMenu; icon: 
 
 export function AppSidebar() {
   const { role, setRole } = useRole();
+  const { user, logout } = useAuth();
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
   const config = roleConfig[role];
@@ -101,14 +105,28 @@ export function AppSidebar() {
       </SidebarContent>
 
       <SidebarFooter className="p-4">
-        {!collapsed && (
+        {!collapsed && user && (
           <div className="rounded-lg bg-secondary/30 border border-border/30 p-3">
             <div className="flex items-center gap-2">
-              <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center text-xs font-bold text-primary">AS</div>
-              <div className="flex-1 min-w-0">
-                <p className="text-xs font-medium truncate">Aarav Sharma</p>
-                <p className="text-[10px] text-muted-foreground truncate">NIT Trichy • CSE</p>
+              <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center text-[10px] font-bold text-primary border border-primary/30">
+                {(user.profile?.fullName || user.username).split(" ").map((n: string) => n[0]).join("").toUpperCase()}
               </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-[11px] font-bold truncate text-slate-200">
+                  {user.profile?.fullName || user.username}
+                </p>
+                <p className="text-[9px] text-muted-foreground truncate uppercase tracking-tighter">
+                  {user.profile?.department || (role === "admin" ? "Institutional Oversight" : "Unassigned Sector")}
+                </p>
+              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 text-slate-500 hover:text-rose-500 hover:bg-rose-500/10"
+                onClick={() => logout()}
+              >
+                <LogOut className="h-4 w-4" />
+              </Button>
             </div>
           </div>
         )}
