@@ -10,20 +10,20 @@ const router = express.Router();
 // @access  Admin, Faculty
 router.get("/attendance", authMiddleware, async (req, res, next) => {
   try {
-    if (req.user.role !== "admin" && req.user.role !== "faculty") {
-      const error = new Error("Forbidden");
-      error.statusCode = 403;
-      throw error;
-    }
-
     const { courseId, studentId, dateFrom, dateTo, status } = req.query;
 
     const where = {};
 
+    // Force studentId for student role
+    let targetStudentId = studentId ? parseInt(studentId) : undefined;
+    if (req.user.role === "student") {
+      targetStudentId = req.user.id;
+    }
+
     if (courseId) {
       where.session = { ...where.session, courseId: parseInt(courseId) };
     }
-    if (studentId) where.studentId = parseInt(studentId);
+    if (targetStudentId) where.studentId = targetStudentId;
     if (dateFrom && dateTo) {
       where.session = {
         ...where.session,
@@ -442,6 +442,63 @@ router.get("/department", authMiddleware, async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+});
+
+// @route   GET /api/reports
+// @desc    Get all generated reports
+// @access  Admin, Faculty
+router.get("/", authMiddleware, async (req, res, next) => {
+  try {
+    const where = {};
+    if (req.user.role === "faculty") {
+      where.generatedById = req.user.id;
+    }
+
+    const reports = await prisma.report.findMany({
+      where,
+      include: {
+        user: { include: { facultyProfile: true, adminProfile: true } }
+      },
+      orderBy: { createdAt: "desc" }
+    });
+
+    res.json({ success: true, data: { reports } });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// @route   POST /api/reports/generate
+// @desc    Generate a new report
+// @access  Admin, Faculty
+router.post("/generate", authMiddleware, async (req, res, next) => {
+  try {
+    const { type, scope, dateFrom, dateTo, format = "PDF" } = req.body;
+
+    const report = await prisma.report.create({
+      data: {
+        reportType: type,
+        parameters: JSON.stringify({ dateFrom, dateTo, format }),
+        status: "completed",
+        fileUrl: `/reports/download/${Date.now()}.pdf`,
+        generatedBy: req.user.id
+      }
+    });
+
+    res.status(201).json({ success: true, data: { report } });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// @route   GET /api/reports/download/:id
+// @desc    Download report file
+// @access  Admin, Faculty
+router.get("/download/:id", authMiddleware, async (req, res, next) => {
+  // Mock file download
+  res.setHeader("Content-Type", "application/pdf");
+  res.setHeader("Content-Disposition", "attachment; filename=report.pdf");
+  res.send(Buffer.from("Fake PDF Content"));
 });
 
 // Helper function to get departments where faculty teaches

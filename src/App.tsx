@@ -4,7 +4,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
-import { RoleProvider } from "@/contexts/RoleContext";
 import { AppLayout } from "@/components/AppLayout";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Index";
@@ -13,7 +12,6 @@ import Login from "./pages/Index";
 import StudentDashboard from "./pages/student/Dashboard";
 import QRScanner from "./pages/student/QRScanner";
 import VerifyAttendance from "./pages/student/VerifyAttendance";
-import Simulator from "./pages/student/Simulator";
 import Leaves from "./pages/student/Leaves";
 import ExamPermit from "./pages/student/ExamPermit";
 
@@ -23,6 +21,7 @@ import CreateSession from "./pages/faculty/CreateSession";
 import LiveSession from "./pages/faculty/LiveSession";
 import Records from "./pages/faculty/Records";
 import Analytics from "./pages/faculty/Analytics";
+import FacultyTimetable from "./pages/faculty/Timetable";
 
 // Admin pages
 import AdminDashboard from "./pages/admin/Dashboard";
@@ -57,7 +56,6 @@ const AppContent = () => {
         {/* Student */}
         <Route path="/student/dashboard" element={<StudentDashboard />} />
         <Route path="/student/scan" element={<QRScanner />} />
-        <Route path="/student/simulator" element={<Simulator />} />
         <Route path="/student/leaves" element={<Leaves />} />
         <Route path="/student/permit" element={<ExamPermit />} />
         {/* Faculty */}
@@ -66,6 +64,7 @@ const AppContent = () => {
         <Route path="/faculty/session/:id" element={<LiveSession />} />
         <Route path="/faculty/records" element={<Records />} />
         <Route path="/faculty/analytics" element={<Analytics />} />
+        <Route path="/faculty/timetable" element={<FacultyTimetable />} />
         {/* Admin */}
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/admin/faculty" element={<FacultyManagement />} />
@@ -86,13 +85,11 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <AuthProvider>
-        <RoleProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <AppContent />
-          </BrowserRouter>
-        </RoleProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <AppContent />
+        </BrowserRouter>
       </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>

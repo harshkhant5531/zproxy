@@ -13,6 +13,8 @@ interface User {
     fullName: string;
     department?: string;
     enrollmentNumber?: string;
+    studentId?: string;
+    semester?: number;
   };
 }
 
@@ -38,8 +40,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         try {
           console.log("AuthContext: Fetching profile with token...");
           const response = await authAPI.getProfile();
-          console.log("AuthContext: Profile fetch success", response.data.data.user);
-          setUser(response.data.data.user);
+          const rawUser = response.data.data.user;
+          const userWithNormalizedProfile = {
+            ...rawUser,
+            profile: rawUser.studentProfile || rawUser.facultyProfile || rawUser.adminProfile || rawUser.profile
+          };
+          setUser(userWithNormalizedProfile);
         } catch (error) {
           console.error("AuthContext: Failed to fetch profile:", error);
           logout();
@@ -54,9 +60,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = async (email: string, password: string) => {
     try {
       const response = await authAPI.login(email, password);
-      const { user, token } = response.data.data;
+      const { user: rawUser, token } = response.data.data;
+      const userWithNormalizedProfile = {
+        ...rawUser,
+        profile: rawUser.studentProfile || rawUser.facultyProfile || rawUser.adminProfile || rawUser.profile
+      };
 
-      setUser(user);
+      setUser(userWithNormalizedProfile);
       setToken(token);
       localStorage.setItem("token", token);
     } catch (error) {

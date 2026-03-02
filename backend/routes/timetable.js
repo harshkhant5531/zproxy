@@ -134,6 +134,10 @@ router.post(
     body("semester")
       .isInt({ min: 1 })
       .withMessage("Semester must be at least 1"),
+    body("type")
+      .optional()
+      .isIn(["Theory", "Practical", "Tutorial"])
+      .withMessage("Invalid session type"),
   ],
   async (req, res, next) => {
     try {
@@ -160,6 +164,7 @@ router.post(
         endTime,
         roomNumber,
         semester,
+        type = "Theory",
       } = req.body;
 
       // Check if course and subject exist and are related
@@ -220,6 +225,7 @@ router.post(
           endTime,
           roomNumber,
           semester,
+          type,
         },
         include: {
           course: true,
@@ -269,6 +275,7 @@ router.put("/:id", authMiddleware, async (req, res, next) => {
       endTime,
       roomNumber,
       semester,
+      type,
     } = req.body;
 
     const updateData = {};
@@ -281,6 +288,7 @@ router.put("/:id", authMiddleware, async (req, res, next) => {
     if (endTime) updateData.endTime = endTime;
     if (roomNumber) updateData.roomNumber = roomNumber;
     if (semester !== undefined) updateData.semester = semester;
+    if (type) updateData.type = type;
 
     const updatedTimetableEntry = await prisma.timetable.update({
       where: { id: parseInt(req.params.id) },

@@ -52,14 +52,14 @@ export default function ShortageAlerts() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white uppercase tracking-tighter italic flex items-center gap-2">
-            <ShieldAlert className="h-6 w-6 text-rose-500 animate-pulse" /> Integrity Breach Protocols
+          <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
+            <ShieldAlert className="h-6 w-6 text-rose-500" /> Attendance Alerts
           </h1>
-          <p className="text-sm text-slate-400 font-mono tracking-wider uppercase">Critical shortage detection & escalation</p>
+          <p className="text-sm text-slate-400">Monitor students below attendance threshold</p>
         </div>
         <div className="bg-rose-500/10 border border-rose-500/20 px-4 py-2 rounded flex items-center gap-3">
-          <div className="h-2 w-2 rounded-full bg-rose-500 animate-ping" />
-          <p className="text-[10px] font-black text-rose-500 uppercase tracking-widest">{shortageStudents.length} ASSETS FLAGGED</p>
+          <div className="h-2 w-2 rounded-full bg-rose-500" />
+          <p className="text-[10px] font-bold text-rose-500 uppercase tracking-widest">{shortageStudents.length} Students Flagged</p>
         </div>
       </div>
 
@@ -69,12 +69,12 @@ export default function ShortageAlerts() {
           <Table>
             <TableHeader className="bg-slate-950/40">
               <TableRow className="border-slate-800 hover:bg-transparent">
-                <TableHead className="text-slate-400 font-mono text-[10px] uppercase tracking-wider h-11 pl-6">Neural Identity</TableHead>
-                <TableHead className="text-slate-400 font-mono text-[10px] uppercase tracking-wider h-11">Department Zone</TableHead>
-                <TableHead className="text-slate-400 font-mono text-[10px] uppercase tracking-wider h-11">Integrity Index</TableHead>
-                <TableHead className="text-slate-400 font-mono text-[10px] uppercase tracking-wider h-11">Threat Level</TableHead>
-                <TableHead className="text-slate-400 font-mono text-[10px] uppercase tracking-wider h-11">Guardian Comms</TableHead>
-                <TableHead className="text-slate-400 font-mono text-[10px] uppercase tracking-wider h-11 text-right pr-6">Escalation</TableHead>
+                <TableHead className="text-slate-400 font-medium text-[10px] uppercase tracking-wider h-11 pl-6">Student Information</TableHead>
+                <TableHead className="text-slate-400 font-medium text-[10px] uppercase tracking-wider h-11">Department</TableHead>
+                <TableHead className="text-slate-400 font-medium text-[10px] uppercase tracking-wider h-11">Attendance Rate</TableHead>
+                <TableHead className="text-slate-400 font-medium text-[10px] uppercase tracking-wider h-11">Status</TableHead>
+                <TableHead className="text-slate-400 font-medium text-[10px] uppercase tracking-wider h-11">Parent Contacts</TableHead>
+                <TableHead className="text-slate-400 font-medium text-[10px] uppercase tracking-wider h-11 text-right pr-6">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -85,12 +85,12 @@ export default function ShortageAlerts() {
                 return (
                   <TableRow key={s.id} className="border-slate-800/50 hover:bg-rose-500/5 transition-colors">
                     <TableCell className="pl-6">
-                      <p className="font-black text-sm text-slate-100 uppercase italic tracking-tighter">{s.studentProfile?.fullName || s.username}</p>
-                      <p className="text-[10px] text-slate-500 font-mono">UID: {s.studentProfile?.studentId || s.id}</p>
+                      <p className="font-bold text-sm text-slate-100">{s.studentProfile?.fullName || s.username}</p>
+                      <p className="text-[10px] text-slate-500">ID: {s.studentProfile?.enrollmentNumber || s.id}</p>
                     </TableCell>
                     <TableCell className="text-xs text-slate-300 font-medium">
-                      {s.studentProfile?.department || "CORE"}
-                      <span className="block text-[10px] text-slate-500 font-bold">SEGMENT: {s.studentProfile?.semester || 1}</span>
+                      {s.studentProfile?.department || "N/A"}
+                      <span className="block text-[10px] text-slate-500 font-bold">Semester: {s.studentProfile?.currentSemester || 1}</span>
                     </TableCell>
                     <TableCell>
                       <span className="font-black text-sm text-rose-500 font-mono tracking-tighter shadow-rose-500/40 drop-shadow-sm">{s.attendance}%</span>
@@ -101,8 +101,8 @@ export default function ShortageAlerts() {
                       </span>
                     </TableCell>
                     <TableCell>
-                      <p className="text-[10px] text-slate-400 font-mono">{s.studentProfile?.parentPhone || "888-000-LINK"}</p>
-                      <p className="text-[10px] text-slate-500 italic truncate max-w-[150px]">{s.studentProfile?.parentEmail || "guardian@aura.net"}</p>
+                      <p className="text-[10px] text-slate-400 font-mono">{s.studentProfile?.parentPhone || "NO CONTACT"}</p>
+                      <p className="text-[10px] text-slate-500 italic truncate max-w-[150px]">{s.studentProfile?.parentEmail || "NO EMAIL"}</p>
                     </TableCell>
                     <TableCell className="text-right pr-6">
                       <div className="flex gap-1 justify-end">

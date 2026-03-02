@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { FileBarChart, Download, FileText, FileSpreadsheet, Loader2 } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { reportsAPI, coursesAPI } from "@/lib/api";
 import { toast } from "sonner";
 
@@ -21,8 +21,17 @@ export default function Reports() {
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
+  const queryClient = useQueryClient();
 
   // Fetch unique departments from courses
+  const { data: reportsData, isLoading: isReportsLoading } = useQuery({
+    queryKey: ["admin", "reports-list"],
+    queryFn: async () => {
+      const resp = await reportsAPI.getReports();
+      return resp.data.data.reports || [];
+    }
+  });
+
   const { data: courses } = useQuery({
     queryKey: ["admin", "courses-for-depts"],
     queryFn: async () => {
@@ -36,16 +45,33 @@ export default function Reports() {
   const handleGenerate = async () => {
     setIsGenerating(true);
     try {
-      // Simulate/trigger report generation
-      toast.info(`Generating ${reportType} report for ${dept}...`);
-      // In a real app, this might trigger a background job or open a new tab with the PDF/Excel
-      setTimeout(() => {
-        toast.success(`${reportType.toUpperCase()} report generated successfully`);
-        setIsGenerating(false);
-      }, 2000);
+      await reportsAPI.generateReport({
+        type: reportType,
+        scope: dept,
+        dateFrom,
+        dateTo,
+      });
+      toast.success(`${reportType.toUpperCase()} report generation requested`);
+      queryClient.invalidateQueries({ queryKey: ["admin", "reports-list"] });
+      setIsGenerating(false);
     } catch (error) {
       toast.error("Failed to generate report");
       setIsGenerating(false);
+    }
+  };
+
+  const handleDownload = async (reportId: number) => {
+    try {
+      const response = await reportsAPI.downloadReport(reportId);
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `report-${reportId}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      toast.success("Download started");
+    } catch (error) {
+      toast.error("Download failed");
     }
   };
 
@@ -117,25 +143,43 @@ export default function Reports() {
         </CardContent>
       </Card>
 
-      <div className="grid gap-4 md:grid-cols-2">
-        {reportTypes.map(r => (
-          <Card key={r.id} className="bg-slate-900/40 border-slate-800 backdrop-blur-sm group hover:border-primary/30 transition-all duration-300">
-            <CardContent className="p-5 flex items-start justify-between">
-              <div className="space-y-1">
-                <p className="text-sm font-bold text-white group-hover:text-primary transition-colors uppercase tracking-tight">{r.name}</p>
-                <p className="text-xs text-slate-500 font-mono tracking-tighter">{r.description}</p>
-                <div className="mt-3 flex items-center gap-2 text-[10px] text-slate-600 font-bold uppercase tracking-widest">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                  Last Scan: Feb 20, 2026
+      <div className="space-y-4">
+        <h2 className="text-sm font-bold text-slate-500 uppercase tracking-widest ml-1">Generated Payloads history</h2>
+        <div className="grid gap-4 md:grid-cols-2">
+          {reportsData?.map((r: any) => (
+            <Card key={r.id} className="bg-slate-900/40 border-slate-800 backdrop-blur-sm group hover:border-primary/30 transition-all duration-300">
+              <CardContent className="p-5 flex items-start justify-between">
+                <div className="space-y-1">
+                  <p className="text-sm font-bold text-white group-hover:text-primary transition-colors uppercase tracking-tight">
+                    {reportTypes.find(t => t.id === r.type)?.name || r.type}
+                  </p>
+                  <p className="text-[10px] text-slate-500 font-mono tracking-tighter uppercase">
+                    SCOPE: {r.scope} // STATUS: {r.status}
+                  </p>
+                  <div className="mt-3 flex items-center gap-2 text-[10px] text-slate-600 font-bold uppercase tracking-widest">
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                    Generated: {new Date(r.createdAt).toLocaleDateString()}
+                  </div>
                 </div>
-              </div>
-              <div className="flex gap-2">
-                <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-white hover:bg-slate-800"><FileText className="h-4 w-4" /></Button>
-                <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-white hover:bg-slate-800"><FileSpreadsheet className="h-4 w-4" /></Button>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+                <div className="flex gap-2">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 text-slate-400 hover:text-white hover:bg-slate-800"
+                    onClick={() => handleDownload(r.id)}
+                  >
+                    <Download className="h-4 w-4" />
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+          {reportsData?.length === 0 && (
+            <div className="col-span-full py-12 text-center border-2 border-dashed border-slate-900 rounded-2xl">
+              <p className="text-xs text-slate-600 font-mono uppercase tracking-widest">No archival payloads detected</p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

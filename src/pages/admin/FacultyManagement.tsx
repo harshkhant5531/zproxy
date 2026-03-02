@@ -19,7 +19,12 @@ export default function FacultyManagement() {
         fullName: "",
         email: "",
         employeeId: "",
-        department: ""
+        department: "",
+        designation: "",
+        qualification: "",
+        phone: "",
+        address: "",
+        bio: ""
     });
 
     const { data: facultyData, isLoading: isFacultyLoading } = useQuery({
@@ -47,7 +52,7 @@ export default function FacultyManagement() {
             toast.success("Faculty member created successfully");
             queryClient.invalidateQueries({ queryKey: ["admin", "faculty"] });
             setIsAddDialogOpen(false);
-            setFormData({ username: "", password: "", fullName: "", email: "", employeeId: "", department: "" });
+            setFormData({ username: "", password: "", fullName: "", email: "", employeeId: "", department: "", designation: "", qualification: "", phone: "", address: "", bio: "" });
         },
         onError: (err: any) => {
             toast.error(err.response?.data?.message || "Failed to create faculty");
@@ -55,7 +60,7 @@ export default function FacultyManagement() {
     });
 
     const updateFacultyMutation = useMutation({
-        mutationFn: ({ id, data }: { id: number, data: any }) => usersAPI.updateStudentProfile(id, data), // reusing update profile logic
+        mutationFn: ({ id, data }: { id: number, data: any }) => usersAPI.updateStudentProfile(id, data),
         onSuccess: () => {
             toast.success("Faculty profile updated successfully");
             queryClient.invalidateQueries({ queryKey: ["admin", "faculty"] });
@@ -97,7 +102,12 @@ export default function FacultyManagement() {
             fullName: member.facultyProfile?.fullName || "",
             email: member.email,
             employeeId: member.facultyProfile?.employeeId || "",
-            department: member.facultyProfile?.department || ""
+            department: member.facultyProfile?.department || "",
+            designation: member.facultyProfile?.designation || "",
+            qualification: member.facultyProfile?.qualification || "",
+            phone: member.facultyProfile?.phone || "",
+            address: member.facultyProfile?.address || "",
+            bio: member.facultyProfile?.bio || ""
         });
         setIsEditOpen(true);
     };
@@ -188,6 +198,24 @@ export default function FacultyManagement() {
                                     />
                                 </div>
                             </div>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <label className="text-xs font-bold text-slate-500 uppercase">Designation</label>
+                                    <Input
+                                        value={formData.designation}
+                                        onChange={e => setFormData({ ...formData, designation: e.target.value })}
+                                        className="bg-slate-950 border-slate-800"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-xs font-bold text-slate-500 uppercase">Qualification</label>
+                                    <Input
+                                        value={formData.qualification}
+                                        onChange={e => setFormData({ ...formData, qualification: e.target.value })}
+                                        className="bg-slate-950 border-slate-800"
+                                    />
+                                </div>
+                            </div>
                             <Button
                                 className="w-full mt-4"
                                 onClick={() => createFacultyMutation.mutate(formData)}
@@ -211,7 +239,7 @@ export default function FacultyManagement() {
                             <TableHeader className="bg-slate-950/60">
                                 <TableRow className="border-slate-800">
                                     <TableHead className="text-slate-400 font-bold text-[10px] uppercase">Faculty Info</TableHead>
-                                    <TableHead className="text-slate-400 font-bold text-[10px] uppercase">Department</TableHead>
+                                    <TableHead className="text-slate-400 font-bold text-[10px] uppercase">Department & Role</TableHead>
                                     <TableHead className="text-slate-400 font-bold text-[10px] uppercase">Assigned Subjects</TableHead>
                                     <TableHead className="text-slate-400 font-bold text-[10px] uppercase text-right">Actions</TableHead>
                                 </TableRow>
@@ -225,15 +253,18 @@ export default function FacultyManagement() {
                                                     <Shield className="h-4 w-4 text-primary" />
                                                 </div>
                                                 <div>
-                                                    <p className="font-bold text-sm text-white">{member.profile?.fullName || member.username}</p>
-                                                    <p className="text-[10px] text-slate-500 font-medium">{member.profile?.employeeId || "EMPID-MISSING"}</p>
+                                                    <p className="font-bold text-sm text-white">{member.facultyProfile?.fullName || member.username}</p>
+                                                    <p className="text-[10px] text-slate-500 font-medium">{member.facultyProfile?.employeeId || "EMPID-MISSING"}</p>
                                                 </div>
                                             </div>
                                         </TableCell>
-                                        <TableCell className="text-xs text-slate-400 font-medium">{member.profile?.department || "N/A"}</TableCell>
+                                        <TableCell>
+                                            <p className="text-xs text-slate-400 font-medium">{member.facultyProfile?.department || "N/A"}</p>
+                                            <p className="text-[10px] text-slate-500 italic">{member.facultyProfile?.designation || "Faculty"}</p>
+                                        </TableCell>
                                         <TableCell>
                                             <div className="flex flex-wrap gap-1">
-                                                {member.teachingCourses?.map((course: any) => (
+                                                {member.facultyCourses?.map((course: any) => (
                                                     <span key={course.id} className="text-[9px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded border border-slate-700">
                                                         {course.code}
                                                     </span>
@@ -308,6 +339,24 @@ export default function FacultyManagement() {
                                 <Input
                                     value={formData.department}
                                     onChange={e => setFormData({ ...formData, department: e.target.value })}
+                                    className="bg-slate-950 border-slate-800"
+                                />
+                            </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <label className="text-xs font-bold text-slate-500 uppercase">Designation</label>
+                                <Input
+                                    value={formData.designation}
+                                    onChange={e => setFormData({ ...formData, designation: e.target.value })}
+                                    className="bg-slate-950 border-slate-800"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-xs font-bold text-slate-500 uppercase">Qualification</label>
+                                <Input
+                                    value={formData.qualification}
+                                    onChange={e => setFormData({ ...formData, qualification: e.target.value })}
                                     className="bg-slate-950 border-slate-800"
                                 />
                             </div>

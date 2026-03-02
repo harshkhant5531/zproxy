@@ -1,4502 +1,4502 @@
 [
-    [
-        "1",
-        "23010101088",
-        "A1",
-        "101",
-        "Ghelani Vardhan Chetanbhai",
-        "ASP. NET Core",
-        "Information Network Security"
-    ],
-    [
-        "2",
-        "23010101133",
-        "A1",
-        "102",
-        "Katba Kalp Maheshbhai",
-        "ASP. NET Core",
-        "Information Network Security"
-    ],
-    [
-        "3",
-        "23010101150",
-        "A1",
-        "103",
-        "Lalani Nandan Subhashbhai",
-        "ASP. NET Core",
-        "Information Network Security"
-    ],
-    [
-        "4",
-        "23010101217",
-        "A1",
-        "104",
-        "Raichura Rag Bakulbhai",
-        "ASP. NET Core",
-        "Information Network Security"
-    ],
-    [
-        "5",
-        "23010101288",
-        "A1",
-        "105",
-        "Vakhariya Abbasi Taherbhai",
-        "ASP. NET Core",
-        "Information Network Security"
-    ],
-    [
-        "6",
-        "24010101627",
-        "A2",
-        "106",
-        "Dhol Rutvi",
-        "Flutter",
-        "Information Network Security"
-    ],
-    [
-        "7",
-        "24010101660",
-        "A2",
-        "107",
-        "Makwana Nency Yogeshbhai",
-        "Flutter",
-        "Information Network Security"
-    ],
-    [
-        "8",
-        "24010101663",
-        "A2",
-        "108",
-        "Mehta Mansee Manishkumar",
-        "Flutter",
-        "Information Network Security"
-    ],
-    [
-        "9",
-        "24010101687",
-        "A2",
-        "109",
-        "Sheth Honey Sanjiv",
-        "Flutter",
-        "Information Network Security"
-    ],
-    [
-        "10",
-        "23010101050",
-        "A3",
-        "110",
-        "Chhatrala Devanshi Shaileshkumar",
-        "Advanced Web Technology",
-        "Information Network Security"
-    ],
-    [
-        "11",
-        "23010101069",
-        "A3",
-        "111",
-        "Dodia Yashraj Ajitsinh",
-        "Advanced Web Technology",
-        "Information Network Security"
-    ],
-    [
-        "12",
-        "23010101105",
-        "A3",
-        "112",
-        "Jani Rishil Vipul",
-        "Advanced Web Technology",
-        "Information Network Security"
-    ],
-    [
-        "13",
-        "23010101138",
-        "A3",
-        "113",
-        "Keraliya Shreya Nileshkumar",
-        "Advanced Web Technology",
-        "Information Network Security"
-    ],
-    [
-        "14",
-        "23010101143",
-        "A3",
-        "114",
-        "Kopaniya Mitesh Amrutbhai",
-        "Advanced Web Technology",
-        "Information Network Security"
-    ],
-    [
-        "15",
-        "23010101162",
-        "A3",
-        "115",
-        "Marvadi Jaina Prashantbhai",
-        "Advanced Web Technology",
-        "Information Network Security"
-    ],
-    [
-        "16",
-        "23010101214",
-        "A3",
-        "116",
-        "Rabadiya Preetkumar Jitendra",
-        "Advanced Web Technology",
-        "Information Network Security"
-    ],
-    [
-        "17",
-        "23010101249",
-        "A3",
-        "117",
-        "Shah Prem Nirajbhai",
-        "Advanced Web Technology",
-        "Information Network Security"
-    ],
-    [
-        "18",
-        "23010101274",
-        "A3",
-        "118",
-        "Trivedi Utsav Kishorbhai",
-        "Advanced Web Technology",
-        "Information Network Security"
-    ],
-    [
-        "19",
-        "23010101314",
-        "A3",
-        "119",
-        "Zezariya Jay Kamleshbhai",
-        "Advanced Web Technology",
-        "Information Network Security"
-    ],
-    [
-        "20",
-        "23010101403",
-        "A3",
-        "120",
-        "Bhensdadiya Avadh Vijaybhai",
-        "Advanced Web Technology",
-        "Information Network Security"
-    ],
-    [
-        "21",
-        "23010101423",
-        "A3",
-        "121",
-        "Parsaniya Rudra Hitesh",
-        "Advanced Web Technology",
-        "Information Network Security"
-    ],
-    [
-        "22",
-        "24010101619",
-        "A3",
-        "122",
-        "Cholera Vansh Dharmendra",
-        "Advanced Web Technology",
-        "Information Network Security"
-    ],
-    [
-        "23",
-        "24010101632",
-        "A3",
-        "123",
-        "Gangwani Harshil Manohar",
-        "Advanced Web Technology",
-        "Information Network Security"
-    ],
-    [
-        "24",
-        "24010101638",
-        "A3",
-        "124",
-        "Jadeja Karmdeepsinh Hitendrasinh",
-        "Advanced Web Technology",
-        "Information Network Security"
-    ],
-    [
-        "25",
-        "24010101667",
-        "A3",
-        "125",
-        "Pan Yash Jayeshbhai",
-        "Advanced Web Technology",
-        "Information Network Security"
-    ],
-    [
-        "26",
-        "24010101674",
-        "A3",
-        "126",
-        "Pithva Premanshu Hareshbhai",
-        "Advanced Web Technology",
-        "Information Network Security"
-    ],
-    [
-        "27",
-        "24010101677",
-        "A3",
-        "127",
-        "Prashil Ramoliya",
-        "Advanced Web Technology",
-        "Information Network Security"
-    ],
-    [
-        "28",
-        "22010101468",
-        "A4",
-        "128",
-        "Nair Thejas Suresh",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "29",
-        "23010101013",
-        "A4",
-        "129",
-        "Banugaria Sheet Hiteshbhai",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "30",
-        "23010101025",
-        "A4",
-        "130",
-        "Bhensdadia Deep",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "31",
-        "23010101028",
-        "A4",
-        "131",
-        "Bhimani Heetkumar Chamanlal",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "32",
-        "23010101029",
-        "A4",
-        "132",
-        "Bhimani Maulik Maheshbhai",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "33",
-        "23010101036",
-        "A4",
-        "133",
-        "Boda Riya Ashvinkumar",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "34",
-        "23010101049",
-        "A4",
-        "134",
-        "Chhaniyara Dhara Rajeshbhai",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "35",
-        "23010101071",
-        "A4",
-        "135",
-        "Dudani Vishv Vijaybhai",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "36",
-        "23010101085",
-        "A4",
-        "136",
-        "Garala Pahal Kamleshbhai",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "37",
-        "23010101095",
-        "A4",
-        "137",
-        "Hadiyal Devang Babulal",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "38",
-        "23010101096",
-        "A4",
-        "138",
-        "Hadvani Palak Hirenbhai",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "39",
-        "23010101110",
-        "A4",
-        "139",
-        "Jivani Meet Mansukhbhai",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "40",
-        "23010101135",
-        "A4",
-        "140",
-        "Kavar Riva Samirbhai",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "41",
-        "23010101147",
-        "A4",
-        "141",
-        "Kukadiya Jeel Pareshbhai",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "42",
-        "23010101173",
-        "A4",
-        "142",
-        "Nanda Hardik Bhaveshbhai",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "43",
-        "23010101197",
-        "A4",
-        "143",
-        "Parmar Vishal Jethabhai",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "44",
-        "23010101198",
-        "A4",
-        "144",
-        "Patadiya Pratham Deepakbhai",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "45",
-        "23010101209",
-        "A4",
-        "145",
-        "Pipaliya Dharmi Sureshbhai",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "46",
-        "23010101213",
-        "A4",
-        "146",
-        "Rabadiya Hit Mahendrabhai",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "47",
-        "23010101221",
-        "A4",
-        "147",
-        "Ramavat Harsh Rajesh",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "48",
-        "23010101226",
-        "A4",
-        "148",
-        "Rathod Drashti Jaysinhbhai",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "49",
-        "23010101229",
-        "A4",
-        "149",
-        "Rojivadiya Tirth Amitbhai",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "50",
-        "23010101232",
-        "A5",
-        "150",
-        "Rajvi Mukeshbhai Sadatiya",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "51",
-        "23010101237",
-        "A5",
-        "151",
-        "Sanandiya Brind Brijeshbhai",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "52",
-        "23010101238",
-        "A5",
-        "152",
-        "Sanandiya Daksh Hareshbhai",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "53",
-        "23010101240",
-        "A5",
-        "153",
-        "Sanghani Bhumik Sanjaybhai",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "54",
-        "23010101243",
-        "A5",
-        "154",
-        "Saradva Dhrumil Prakashbhai",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "55",
-        "23010101248",
-        "A5",
-        "155",
-        "Shah Devang Deepakkumar",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "56",
-        "23010101252",
-        "A5",
-        "156",
-        "Sidapara Dharmi Dineshbhai",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "57",
-        "23010101255",
-        "A5",
-        "157",
-        "Solanki Devkaran Kartikey",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "58",
-        "23010101279",
-        "A5",
-        "158",
-        "Vadaliya Aashvi Rupeshbhai",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "59",
-        "23010101280",
-        "A5",
-        "159",
-        "Vadaviya Muskan Hanif",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "60",
-        "23010101295",
-        "A5",
-        "160",
-        "Vegada Vishv Dimpalbhai",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "61",
-        "23010101300",
-        "A5",
-        "161",
-        "Viramgama Viken Kantilal",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "62",
-        "23010101304",
-        "A5",
-        "162",
-        "Jinkal Vora",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "63",
-        "23010101308",
-        "A5",
-        "163",
-        "Manvendrasinh Balbhadrasinh Zala",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "64",
-        "23010101409",
-        "A5",
-        "164",
-        "Ghetiya Misri Anjankumar",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "65",
-        "23010101413",
-        "A5",
-        "165",
-        "Kachrola Krishkumar Bhaveshbhai",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "66",
-        "23010101415",
-        "A5",
-        "166",
-        "Kalaria Maan Utkal",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "67",
-        "23010101421",
-        "A5",
-        "167",
-        "Panesara Maharshi Nileshbhai",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "68",
-        "23010101426",
-        "A5",
-        "168",
-        "Pipaliya Pujan Jitendrabhai",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "69",
-        "23010101430",
-        "A5",
-        "169",
-        "Sherasiya Gulamkasim Mohamadha",
-        "nUifI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "70",
-        "23010101433",
-        "A5",
-        "170",
-        "Zala Jayvardhansinh Pratapsinh",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "71",
-        "23031701003",
-        "A5",
-        "171",
-        "Badi Akib Ismailbhai",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "72",
-        "23031701022",
-        "A6",
-        "172",
-        "Kadivar Mohamadsahil Yunus",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "73",
-        "23031701027",
-        "A6",
-        "173",
-        "Khorajiya Mahir Mohamadsafi",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "74",
-        "23031701034",
-        "A6",
-        "174",
-        "Meva Raxit Vinodbhai",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "75",
-        "23031701052",
-        "A6",
-        "175",
-        "Vansajaliya Helly Ashokbhai",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "76",
-        "24010101610",
-        "A6",
-        "176",
-        "Bera Priya Manishbhai",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "77",
-        "24010101612",
-        "A6",
-        "177",
-        "Bhalodiya Hit Dilipbhai",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "78",
-        "24010101617",
-        "A6",
-        "178",
-        "Jeel Chaniyara",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "79",
-        "24010101618",
-        "A6",
-        "179",
-        "Chauhan Tirth Dipakbhai",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "80",
-        "24010101621",
-        "A6",
-        "180",
-        "Dadhaniya Parth Manishbhai",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "81",
-        "24010101625",
-        "A6",
-        "181",
-        "Devmurari Krisha Rajnikant",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "82",
-        "24010101630",
-        "A6",
-        "182",
-        "Doshi Bhavya",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "83",
-        "24010101631",
-        "A6",
-        "183",
-        "Gadhiya Subham Jagdishbhai",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "84",
-        "24010101654",
-        "A6",
-        "184",
-        "Kunadiya Jenis Bipinkumar",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "85",
-        "24010101659",
-        "A6",
-        "185",
-        "Makwana Khush Kiranbhai",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "86",
-        "24010101671",
-        "A6",
-        "186",
-        "Parmar Tirth Shaileshbhai",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "87",
-        "24010101675",
-        "A6",
-        "187",
-        "Pithwa Dhruv Rupeshbhai",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "88",
-        "24010101682",
-        "A6",
-        "188",
-        "Sagathiya Soham Maganbhai",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "89",
-        "24010101690",
-        "A6",
-        "189",
-        "Solanki Devansh Nirajkumar",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "90",
-        "24010101696",
-        "A6",
-        "190",
-        "Thakar Samiksha Nileshbhai",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "91",
-        "24010101702",
-        "A6",
-        "191",
-        "Vadariya Jaykumar Jitendrabhai",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "92",
-        "24010101707",
-        "A6",
-        "192",
-        "Vasoya Sahil Rakeshbhai",
-        "UI/UX Designing",
-        "Information Network Security"
-    ],
-    [
-        "93",
-        "23010101057",
-        "A7",
-        "193",
-        "Dedaniya Krish Jimeshbhai",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Information Network Security"
-    ],
-    [
-        "94",
-        "23010101066",
-        "A7",
-        "194",
-        "Dhol Shreeya Manojbhai",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Information Network Security"
-    ],
-    [
-        "95",
-        "23010101132",
-        "A7",
-        "195",
-        "Katariya Prince Anilbhai",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Information Network Security"
-    ],
-    [
-        "96",
-        "23010101194",
-        "A7",
-        "196",
-        "Parmar Rahul Dineshbhai",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Information Network Security"
-    ],
-    [
-        "97",
-        "24010101655",
-        "A7",
-        "197",
-        "Kunkana Binal Ashwinbhai",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Information Network Security"
-    ],
-    [
-        "98",
-        "23010101289",
-        "A8",
-        "198",
-        "Valand Shivam Prakashkumar",
-        "Advanced .NET Development\nand Modern Architectures",
-        "Information Network Security"
-    ],
-    [
-        "99",
-        "24010101643",
-        "A9",
-        "199",
-        "Jethava Darshan Gauravbhai",
-        "Advanced Flutter",
-        "Information Network Security"
-    ],
-    [
-        "100",
-        "24010101676",
-        "A9",
-        "200",
-        "Popat Nandan Niteshbhai",
-        "Advanced Flutter",
-        "Information Network Security"
-    ],
-    [
-        "101",
-        "23010101003",
-        "B1",
-        "301",
-        "Aghera Radhika Ratilal",
-        "ASP. NET Core",
-        "Machine Learning"
-    ],
-    [
-        "102",
-        "23010101031",
-        "B1",
-        "302",
-        "Bhimani Sujal Jagadishbhai",
-        "ASP. NET Core",
-        "Machine Learning"
-    ],
-    [
-        "103",
-        "23010101055",
-        "B1",
-        "303",
-        "Taksh Dalvadi",
-        "ASP. NET Core",
-        "Machine Learning"
-    ],
-    [
-        "104",
-        "23010101073",
-        "B1",
-        "304",
-        "Dudhatra Prince Bharatbhai",
-        "ASP. NET Core",
-        "Machine Learning"
-    ],
-    [
-        "105",
-        "23010101086",
-        "B1",
-        "305",
-        "Gareja Abhishek Lalabhai",
-        "ASP. NET Core",
-        "Machine Learning"
-    ],
-    [
-        "106",
-        "23010101107",
-        "B1",
-        "306",
-        "Jat Pooja Jagdish",
-        "ASP. NET Core",
-        "Machine Learning"
-    ],
-    [
-        "107",
-        "23010101119",
-        "B1",
-        "307",
-        "Kagathara Tanish Vipulbhai",
-        "ASP. NET Core",
-        "Machine Learning"
-    ],
-    [
-        "108",
-        "23010101120",
-        "B1",
-        "308",
-        "Kakadiya Prince Yogeshbhai",
-        "ASP. NET Core",
-        "Machine Learning"
-    ],
-    [
-        "109",
-        "23010101129",
-        "B1",
-        "309",
-        "Kargathiya Tusharkumar Jayantilal",
-        "ASP. NET Core",
-        "Machine Learning"
-    ],
-    [
-        "110",
-        "23010101158",
-        "B1",
-        "310",
-        "Makwana Vanshita Mukeshbhai",
-        "ASP. NET Core",
-        "Machine Learning"
-    ],
-    [
-        "111",
-        "23010101207",
-        "B1",
-        "311",
-        "Pindariya Nikunj Pala",
-        "ASP. NET Core",
-        "Machine Learning"
-    ],
-    [
-        "112",
-        "23010101244",
-        "B1",
-        "312",
-        "Sardhara Manasvi Sandipbhai",
-        "ASP. NET Core",
-        "Machine Learning"
-    ],
-    [
-        "113",
-        "23010101250",
-        "B1",
-        "313",
-        "Shalot Milan Manojkumar",
-        "ASP. NET Core",
-        "Machine Learning"
-    ],
-    [
-        "114",
-        "23010101268",
-        "B1",
-        "314",
-        "Thaker Rutva Kalpeshbhai",
-        "ASP. NET Core",
-        "Machine Learning"
-    ],
-    [
-        "115",
-        "23010101294",
-        "B1",
-        "315",
-        "Vegad Jay Dilipbhai",
-        "ASP. NET Core",
-        "Machine Learning"
-    ],
-    [
-        "116",
-        "23010101297",
-        "B1",
-        "316",
-        "Vekariya Harsh Mukeshbhai",
-        "ASP. NET Core",
-        "Machine Learning"
-    ],
-    [
-        "117",
-        "23010101406",
-        "B1",
-        "317",
-        "Dhamsaniya Smit Dipakbhai",
-        "ASP. NET Core",
-        "Machine Learning"
-    ],
-    [
-        "118",
-        "23031701001",
-        "B1",
-        "318",
-        "Adesara Yesha Madhukarbhai",
-        "ASP. NET Core",
-        "Machine Learning"
-    ],
-    [
-        "119",
-        "23031701010",
-        "B1",
-        "319",
-        "Bhuva Harsh Jagdishbhai",
-        "ASP. NET Core",
-        "Machine Learning"
-    ],
-    [
-        "120",
-        "23031701017",
-        "B1",
-        "320",
-        "Gami Khushali Sanjaybhai",
-        "ASP. NET Core",
-        "Machine Learning"
-    ],
-    [
-        "121",
-        "23031701019",
-        "B2",
-        "321",
-        "Hinsu Isha Rajeshbhai",
-        "ASP. NET Core",
-        "Machine Learning"
-    ],
-    [
-        "122",
-        "23031701021",
-        "B2",
-        "322",
-        "Jakasaniya Yugal Maheshbhai",
-        "ASP. NET Core",
-        "Machine Learning"
-    ],
-    [
-        "123",
-        "23031701025",
-        "B2",
-        "323",
-        "Kapuriya Aeshviben Jagdishbhai",
-        "ASP. NET Core",
-        "Machine Learning"
-    ],
-    [
-        "124",
-        "23031701033",
-        "B2",
-        "324",
-        "Maru Riya Nileshbhai",
-        "ASP. NET Core",
-        "Machine Learning"
-    ],
-    [
-        "125",
-        "23031701037",
-        "B2",
-        "325",
-        "Pansuriya Ayushkumar Dharmendra",
-        "bAhSaPi. NET Core",
-        "Machine Learning"
-    ],
-    [
-        "126",
-        "23031701038",
-        "B2",
-        "326",
-        "Parmar Prince Dilipbhai",
-        "ASP. NET Core",
-        "Machine Learning"
-    ],
-    [
-        "127",
-        "23031701039",
-        "B2",
-        "327",
-        "Patel Prinsi Bhudarbhai",
-        "ASP. NET Core",
-        "Machine Learning"
-    ],
-    [
-        "128",
-        "23031701042",
-        "B2",
-        "328",
-        "Pithadiya Vatsal Vijaybhai",
-        "ASP. NET Core",
-        "Machine Learning"
-    ],
-    [
-        "129",
-        "23031701043",
-        "B2",
-        "329",
-        "Popat Jaydeep Manojbhai",
-        "ASP. NET Core",
-        "Machine Learning"
-    ],
-    [
-        "130",
-        "23031701045",
-        "B2",
-        "330",
-        "Ranpariya Isha Sanjaybhai",
-        "ASP. NET Core",
-        "Machine Learning"
-    ],
-    [
-        "131",
-        "23031701048",
-        "B2",
-        "331",
-        "Sherasiya Tahesin Ismailbhai",
-        "ASP. NET Core",
-        "Machine Learning"
-    ],
-    [
-        "132",
-        "23031701049",
-        "B2",
-        "332",
-        "Sidpara Shweta Shaileshbhai",
-        "ASP. NET Core",
-        "Machine Learning"
-    ],
-    [
-        "133",
-        "24010101601",
-        "B2",
-        "333",
-        "Adesara Preet Snehalkumar",
-        "ASP. NET Core",
-        "Machine Learning"
-    ],
-    [
-        "134",
-        "24010101606",
-        "B2",
-        "334",
-        "Badi Mohammadshahid Javedbhai",
-        "ASP. NET Core",
-        "Machine Learning"
-    ],
-    [
-        "135",
-        "24010101607",
-        "B2",
-        "335",
-        "Badi Rakib Sharfudinbhai",
-        "ASP. NET Core",
-        "Machine Learning"
-    ],
-    [
-        "136",
-        "24010101615",
-        "B2",
-        "336",
-        "Buddhdev Krish Bipinbhai",
-        "ASP. NET Core",
-        "Machine Learning"
-    ],
-    [
-        "137",
-        "24010101636",
-        "B2",
-        "337",
-        "Hada Harshil Jayeshbhai",
-        "ASP. NET Core",
-        "Machine Learning"
-    ],
-    [
-        "138",
-        "24010101647",
-        "B2",
-        "338",
-        "Kansagra Ronak Nileshbhai",
-        "ASP. NET Core",
-        "Machine Learning"
-    ],
-    [
-        "139",
-        "24010101666",
-        "B2",
-        "339",
-        "Nakum Vrajkumar Rajeshbhai",
-        "ASP. NET Core",
-        "Machine Learning"
-    ],
-    [
-        "140",
-        "24010101683",
-        "B2",
-        "340",
-        "Sapariya Prince Chetanbhai",
-        "ASP. NET Core",
-        "Machine Learning"
-    ],
-    [
-        "141",
-        "24010101695",
-        "B2",
-        "341",
-        "Tank Ayushi Manojbhai",
-        "ASP. NET Core",
-        "Machine Learning"
-    ],
-    [
-        "142",
-        "23010101432",
-        "B3",
-        "342",
-        "Trambadiya Priyal Hareshbhai",
-        "Flutter",
-        "Machine Learning"
-    ],
-    [
-        "143",
-        "23031701002",
-        "B3",
-        "343",
-        "Aghera Anjal Milanbhai",
-        "Flutter",
-        "Machine Learning"
-    ],
-    [
-        "144",
-        "23031701047",
-        "B3",
-        "344",
-        "Sangani Maithil Vrajlal",
-        "Flutter",
-        "Machine Learning"
-    ],
-    [
-        "145",
-        "24010101639",
-        "B3",
-        "345",
-        "Jani Kavya Pankajbhai",
-        "Flutter",
-        "Machine Learning"
-    ],
-    [
-        "146",
-        "24010101658",
-        "B3",
-        "346",
-        "Lotia Dhruvi Shailesh",
-        "Flutter",
-        "Machine Learning"
-    ],
-    [
-        "147",
-        "23010101001",
-        "B4",
-        "347",
-        "Adroja Shyamkumar Niteshbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "148",
-        "23010101005",
-        "B4",
-        "348",
-        "Ajagiya Tirth Chetanbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "149",
-        "23010101015",
-        "B4",
-        "349",
-        "Barot Avnil Samirbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "150",
-        "23010101037",
-        "B4",
-        "350",
-        "Boghani Utsav Ashvinbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "151",
-        "23010101041",
-        "B4",
-        "351",
-        "Butani Sneha Dineshbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "152",
-        "23010101042",
-        "B4",
-        "352",
-        "Chabhadiya Krish Kailashbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "153",
-        "23010101043",
-        "B4",
-        "353",
-        "Chandravadiya Karan Karashanbha",
-        "iAdvanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "154",
-        "23010101060",
-        "B4",
-        "354",
-        "Detroja Zeel Suketbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "155",
-        "23010101064",
-        "B4",
-        "355",
-        "Dhandhukiya Keval Vinodbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "156",
-        "23010101068",
-        "B4",
-        "356",
-        "Dobariya Happy Bhaveshbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "157",
-        "23010101080",
-        "B4",
-        "357",
-        "Gajipara Arpit Bharatbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "158",
-        "23010101090",
-        "B4",
-        "358",
-        "Gohil Priyanshiba Pradipsinh",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "159",
-        "23010101093",
-        "B4",
-        "359",
-        "Gondaliya Jigar Pareshbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "160",
-        "23010101098",
-        "B4",
-        "360",
-        "Hirpara Harmi Bhaveshbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "161",
-        "23010101099",
-        "B4",
-        "361",
-        "Jadav Sahil Maheshbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "162",
-        "23010101100",
-        "B4",
-        "362",
-        "Jadeja Jayrajsinh Sanjaysinh",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "163",
-        "23010101102",
-        "B4",
-        "363",
-        "Jadeja Yashrajsinh Majabutsinh",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "164",
-        "23010101106",
-        "B4",
-        "364",
-        "Jariya Harsh Rajeshbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "165",
-        "23010101113",
-        "B4",
-        "365",
-        "Joshi Jaimish Narendrabhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "166",
-        "23010101114",
-        "B4",
-        "366",
-        "Joshi Kavyam Vimalkumar",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "167",
-        "23010101123",
-        "B5",
-        "367",
-        "Kamani Disha Rajeshbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "168",
-        "23010101128",
-        "B5",
-        "368",
-        "Kansagra Monil Sanjaybhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "169",
-        "23010101136",
-        "B5",
-        "369",
-        "Kavar Rutvi Jagjivanbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "170",
-        "23010101139",
-        "B5",
-        "370",
-        "Khachar Nivkumar Girishkumar",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "171",
-        "23010101142",
-        "B5",
-        "371",
-        "Khunt Smit Vipulbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "172",
-        "23010101148",
-        "B5",
-        "372",
-        "Kumbhani Meet Ashokbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "173",
-        "23010101149",
-        "B5",
-        "373",
-        "Kundaliya Nishit Gautambhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "174",
-        "23010101157",
-        "B5",
-        "374",
-        "Makwana Rajesh Karshanbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "175",
-        "23010101168",
-        "B5",
-        "375",
-        "Mendapara Krina Atulbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "176",
-        "23010101170",
-        "B5",
-        "376",
-        "Modi Pratham Rajesh",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "177",
-        "23010101172",
-        "B5",
-        "377",
-        "Nadiyapara Jatin Shailesh",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "178",
-        "23010101175",
-        "B5",
-        "378",
-        "Nenuji Neeldhvaj Mansbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "179",
-        "23010101186",
-        "B5",
-        "379",
-        "Pandya Piyanshu Amitchandra",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "180",
-        "23010101187",
-        "B5",
-        "380",
-        "Parmar Ayush Sanjaybhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "181",
-        "23010101188",
-        "B5",
-        "381",
-        "Parmar Haril Gautambhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "182",
-        "23010101190",
-        "B5",
-        "382",
-        "Parmar Kaushik Pravinbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "183",
-        "23010101193",
-        "B5",
-        "383",
-        "Parmar Nency Udaybhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "184",
-        "23010101202",
-        "B5",
-        "384",
-        "Khushiben Patel",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "185",
-        "23010101208",
-        "B5",
-        "385",
-        "Pipalava Yash Girishkumar",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "186",
-        "23010101210",
-        "B5",
-        "386",
-        "Pipariya Sumit Bhaveshbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "187",
-        "23010101219",
-        "B6",
-        "387",
-        "Ramani Harshil Rajeshbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "188",
-        "23010101224",
-        "B6",
-        "388",
-        "Rankja Vinit Kumar Ashok",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "189",
-        "23010101225",
-        "B6",
-        "389",
-        "Rasamiya Dhruv Amrutbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "190",
-        "23010101227",
-        "B6",
-        "390",
-        "Rathod Nikunj Atul",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "191",
-        "23010101233",
-        "B6",
-        "391",
-        "Sagathiya Gautam Bharatbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "192",
-        "23010101235",
-        "B6",
-        "392",
-        "Sakdecha Darshan Sanjaybhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "193",
-        "23010101239",
-        "B6",
-        "393",
-        "Sanariya Rishabhkumar Keshavjibh",
-        "aAidvanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "194",
-        "23010101241",
-        "B6",
-        "394",
-        "Santoki Diya Bhaveshbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "195",
-        "23010101253",
-        "B6",
-        "395",
-        "Sojitra Aayush Dilipbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "196",
-        "23010101254",
-        "B6",
-        "396",
-        "Sojitra Pratyush Chandreshbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "197",
-        "23010101257",
-        "B6",
-        "397",
-        "Solanki Mitesh Jiteshbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "198",
-        "23010101260",
-        "B6",
-        "398",
-        "Sudani Vivek Jayeshbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "199",
-        "23010101264",
-        "B6",
-        "399",
-        "Tank Balkrushn Rajeshbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "200",
-        "23010101271",
-        "B6",
-        "400",
-        "Thoriya Omkumar Yogeshbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "201",
-        "23010101273",
-        "B6",
-        "401",
-        "Togadiya Prasham Kishorbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "202",
-        "23010101277",
-        "B6",
-        "402",
-        "Upadheyay Ronak Thulendra",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "203",
-        "23010101278",
-        "B6",
-        "403",
-        "Vachhani Kush Hiteshbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "204",
-        "23010101284",
-        "B6",
-        "404",
-        "Vadhadiya Pragneshkumar Chaman",
-        "Abhdavai nced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "205",
-        "23010101293",
-        "B6",
-        "405",
-        "Vasoya Ayush Hareshbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "206",
-        "23010101301",
-        "B6",
-        "406",
-        "Viroja Yug Vipulbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "207",
-        "23010101305",
-        "B7",
-        "407",
-        "Yadav Harshil Dineshbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "208",
-        "23010101402",
-        "B7",
-        "408",
-        "Baraiya Jay Bharatbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "209",
-        "23010101424",
-        "B7",
-        "409",
-        "Patel Jenil Vimalbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "210",
-        "23010101428",
-        "B7",
-        "410",
-        "Raiyani Maitri Bharatbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "211",
-        "23010101431",
-        "B7",
-        "411",
-        "Sorathiya Raj Kamleshbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "212",
-        "23010101434",
-        "B7",
-        "412",
-        "Zalariya Parth Dipakbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "213",
-        "23031701007",
-        "B7",
-        "413",
-        "Bhalodiya Prince Nileshbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "214",
-        "23031701009",
-        "B7",
-        "414",
-        "Bhoraniya Vishva Chandrakantbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "215",
-        "23031701024",
-        "B7",
-        "415",
-        "Kagathara Shubham Kishorbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "216",
-        "23031701028",
-        "B7",
-        "416",
-        "Kodiya Dishaben Vallabhabhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "217",
-        "23031701032",
-        "B7",
-        "417",
-        "Mandora Nirali Prakashbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "218",
-        "23031701035",
-        "B7",
-        "418",
-        "Panara Ashaniben Ashokbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "219",
-        "23031701046",
-        "B7",
-        "419",
-        "Rupareliya Devanshi Amitbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "220",
-        "24010101611",
-        "B7",
-        "420",
-        "Bhadeshiya Jay Chandreshbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "221",
-        "24010101614",
-        "B7",
-        "421",
-        "Botadara Deep Milanbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "222",
-        "24010101620",
-        "B7",
-        "422",
-        "Chotara Anshil Rajeshbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "223",
-        "24010101641",
-        "B7",
-        "423",
-        "Javiya Abhay Hareshbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "224",
-        "24010101642",
-        "B7",
-        "424",
-        "Javiya Dhanvi Dhirubhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "225",
-        "24010101644",
-        "B7",
-        "425",
-        "Joshi Krushant Nitinkumar",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "226",
-        "24010101650",
-        "B7",
-        "426",
-        "Khunt Pratikkumar Hiteshbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "227",
-        "24010101652",
-        "B8",
-        "427",
-        "Koradiya Isha Vithalbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "228",
-        "24010101662",
-        "B8",
-        "428",
-        "Mansuriya Vishwa Ajitbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "229",
-        "24010101664",
-        "B8",
-        "429",
-        "Mehta Pratik Jigneshbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "230",
-        "24010101670",
-        "B8",
-        "430",
-        "Parmar Ruchita Lalitkumar",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "231",
-        "24010101672",
-        "B8",
-        "431",
-        "Parmar Vivek Rameshbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "232",
-        "24010101678",
-        "B8",
-        "432",
-        "Rana Mitrajsinh Bhagirathsinh",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "233",
-        "24010101694",
-        "B8",
-        "433",
-        "Karan Sonagara",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "234",
-        "24010101698",
-        "B8",
-        "434",
-        "Thumar Heet Rajnikant",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "235",
-        "24010101700",
-        "B8",
-        "435",
-        "Ukani Umangkumar Jiteshbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "236",
-        "24010101706",
-        "B8",
-        "436",
-        "Vaghela Nakul Hemantbhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "237",
-        "24010101903",
-        "B8",
-        "437",
-        "Vasani Jenisa Kalubhai",
-        "Advanced Web Technology",
-        "Machine Learning"
-    ],
-    [
-        "238",
-        "23010101011",
-        "B9",
-        "438",
-        "Bakraniya Mahek Hareshbhai",
-        "UI/UX Designing",
-        "Machine Learning"
-    ],
-    [
-        "239",
-        "23010101020",
-        "B9",
-        "439",
-        "Bhalodiya Charmi Rimalkumar",
-        "UI/UX Designing",
-        "Machine Learning"
-    ],
-    [
-        "240",
-        "23010101027",
-        "B9",
-        "440",
-        "Bhimani Harsh Pareshbhai",
-        "UI/UX Designing",
-        "Machine Learning"
-    ],
-    [
-        "241",
-        "23010101032",
-        "B9",
-        "441",
-        "Bhindora Nency Piyushbhai",
-        "UI/UX Designing",
-        "Machine Learning"
-    ],
-    [
-        "242",
-        "23010101034",
-        "B9",
-        "442",
-        "Bhuva Het Ghanshyam",
-        "UI/UX Designing",
-        "Machine Learning"
-    ],
-    [
-        "243",
-        "23010101062",
-        "B9",
-        "443",
-        "Dhamsaniya Darshi Jayeshbhai",
-        "UI/UX Designing",
-        "Machine Learning"
-    ],
-    [
-        "244",
-        "23010101065",
-        "B9",
-        "444",
-        "Dhandhukiya Nilay Jayeshbhai",
-        "UI/UX Designing",
-        "Machine Learning"
-    ],
-    [
-        "245",
-        "23010101091",
-        "B9",
-        "445",
-        "Gojariya Vishvaben Satishbhai",
-        "UI/UX Designing",
-        "Machine Learning"
-    ],
-    [
-        "246",
-        "23010101115",
-        "B9",
-        "446",
-        "Joshi Swayam Pareshbhai",
-        "UI/UX Designing",
-        "Machine Learning"
-    ],
-    [
-        "247",
-        "23010101124",
-        "B9",
-        "447",
-        "Rency Kamani",
-        "UI/UX Designing",
-        "Machine Learning"
-    ],
-    [
-        "248",
-        "23010101205",
-        "B9",
-        "448",
-        "Patel Vishwas Maheshkumar",
-        "UI/UX Designing",
-        "Machine Learning"
-    ],
-    [
-        "249",
-        "23010101261",
-        "B9",
-        "449",
-        "Surani Vritti Nilesh",
-        "UI/UX Designing",
-        "Machine Learning"
-    ],
-    [
-        "250",
-        "23010101296",
-        "B9",
-        "450",
-        "Vegda Zeel Sunil",
-        "UI/UX Designing",
-        "Machine Learning"
-    ],
-    [
-        "251",
-        "23010101408",
-        "B9",
-        "451",
-        "Doshi Tanisha Jasminbhai",
-        "UI/UX Designing",
-        "Machine Learning"
-    ],
-    [
-        "252",
-        "23010101414",
-        "B9",
-        "452",
-        "Kadivar Appasin Maksul",
-        "UI/UX Designing",
-        "Machine Learning"
-    ],
-    [
-        "253",
-        "23010101422",
-        "B9",
-        "453",
-        "Parasara Mohamadsaif Najarhushe",
-        "nUI/UX Designing",
-        "Machine Learning"
-    ],
-    [
-        "254",
-        "23010101427",
-        "B9",
-        "454",
-        "Rachchh Shubham Bhaveshbhai",
-        "UI/UX Designing",
-        "Machine Learning"
-    ],
-    [
-        "255",
-        "23031701023",
-        "B9",
-        "455",
-        "Kadivar Samanbanu Abdulrahim",
-        "UI/UX Designing",
-        "Machine Learning"
-    ],
-    [
-        "256",
-        "24010101603",
-        "B9",
-        "456",
-        "Aghera Riya Mukeshbhai",
-        "UI/UX Designing",
-        "Machine Learning"
-    ],
-    [
-        "257",
-        "24010101608",
-        "B9",
-        "457",
-        "Badi Safin Najarudin",
-        "UI/UX Designing",
-        "Machine Learning"
-    ],
-    [
-        "258",
-        "24010101613",
-        "B10",
-        "458",
-        "Bhas Farhan Manjurbhai",
-        "UI/UX Designing",
-        "Machine Learning"
-    ],
-    [
-        "259",
-        "24010101622",
-        "B10",
-        "459",
-        "Dedania Prem Nikhilbhai",
-        "UI/UX Designing",
-        "Machine Learning"
-    ],
-    [
-        "260",
-        "24010101623",
-        "B10",
-        "460",
-        "Dedania Prit Nikhilbhai",
-        "UI/UX Designing",
-        "Machine Learning"
-    ],
-    [
-        "261",
-        "24010101628",
-        "B10",
-        "461",
-        "Dobariya Viraj Hareshbhai",
-        "UI/UX Designing",
-        "Machine Learning"
-    ],
-    [
-        "262",
-        "24010101629",
-        "B10",
-        "462",
-        "Dodiya Dhanashree Dineshbhai",
-        "UI/UX Designing",
-        "Machine Learning"
-    ],
-    [
-        "263",
-        "24010101646",
-        "B10",
-        "463",
-        "Kalola Devang Sureshbhai",
-        "UI/UX Designing",
-        "Machine Learning"
-    ],
-    [
-        "264",
-        "24010101661",
-        "B10",
-        "464",
-        "Manasiya Mohammadshahid Najarh",
-        "uUsIh/UeXn Designing",
-        "Machine Learning"
-    ],
-    [
-        "265",
-        "24010101669",
-        "B10",
-        "465",
-        "Parmar Kush Pravinbhai",
-        "UI/UX Designing",
-        "Machine Learning"
-    ],
-    [
-        "266",
-        "24010101684",
-        "B10",
-        "466",
-        "Sapariya Vishva Vipulbhai",
-        "UI/UX Designing",
-        "Machine Learning"
-    ],
-    [
-        "267",
-        "24010101689",
-        "B10",
-        "467",
-        "Sinojiya Selja Sandipbhai",
-        "UI/UX Designing",
-        "Machine Learning"
-    ],
-    [
-        "268",
-        "24010101693",
-        "B10",
-        "468",
-        "Solanki Vanraj Dineshbhai",
-        "UI/UX Designing",
-        "Machine Learning"
-    ],
-    [
-        "269",
-        "24010101699",
-        "B10",
-        "469",
-        "Thummar Henil Ketanbhai",
-        "UI/UX Designing",
-        "Machine Learning"
-    ],
-    [
-        "270",
-        "24010101704",
-        "B10",
-        "470",
-        "Vaghasiya Jinal Harsukhbhai",
-        "UI/UX Designing",
-        "Machine Learning"
-    ],
-    [
-        "271",
-        "24010101705",
-        "B10",
-        "471",
-        "Vaghasiya Khushi Jaysukhbhai",
-        "UI/UX Designing",
-        "Machine Learning"
-    ],
-    [
-        "272",
-        "23010101004",
-        "B11",
-        "472",
-        "Ajagia Bansi Chetanbhai",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Machine Learning"
-    ],
-    [
-        "273",
-        "23010101022",
-        "B11",
-        "473",
-        "Bhanderi Prince Vijaybhai",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Machine Learning"
-    ],
-    [
-        "274",
-        "23010101035",
-        "B11",
-        "474",
-        "Boda Princekumar Hasmukhbhai",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Machine Learning"
-    ],
-    [
-        "275",
-        "23010101053",
-        "B11",
-        "475",
-        "Dadhaniya Tirth Pankajkumar",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Machine Learning"
-    ],
-    [
-        "276",
-        "23010101078",
-        "B11",
-        "476",
-        "Faldu Virangi Kantibhai",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Machine Learning"
-    ],
-    [
-        "277",
-        "23010101081",
-        "B11",
-        "477",
-        "Gajipara Jay Kishorbhai",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Machine Learning"
-    ],
-    [
-        "278",
-        "23010101103",
-        "B11",
-        "478",
-        "Jani Meet Jeetendrabhai",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Machine Learning"
-    ],
-    [
-        "279",
-        "23010101122",
-        "B11",
-        "479",
-        "Kakdiya Vandan Chandubhai",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Machine Learning"
-    ],
-    [
-        "280",
-        "23010101144",
-        "B11",
-        "480",
-        "Kotadiya Yashvi Ravindrabhai",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Machine Learning"
-    ],
-    [
-        "281",
-        "23010101155",
-        "B11",
-        "481",
-        "Maiyad Rushi Manishbhai",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Machine Learning"
-    ],
-    [
-        "282",
-        "23010101191",
-        "B11",
-        "482",
-        "Parmar Meet Prakashkumar",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Machine Learning"
-    ],
-    [
-        "283",
-        "23010101236",
-        "B11",
-        "483",
-        "Sambad Haresh Kalubhai",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Machine Learning"
-    ],
-    [
-        "284",
-        "23010101258",
-        "B11",
-        "484",
-        "Soni Bhavy Sureshbhai",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Machine Learning"
-    ],
-    [
-        "285",
-        "23010101263",
-        "B11",
-        "485",
-        "Talaviya Dhaval Maheshbhai",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Machine Learning"
-    ],
-    [
-        "286",
-        "23010101276",
-        "B11",
-        "486",
-        "Ubhadiya Vivek Batukbhai",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Machine Learning"
-    ],
-    [
-        "287",
-        "23010101307",
-        "B11",
-        "487",
-        "Zala Harsh Nileshbhai",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Machine Learning"
-    ],
-    [
-        "288",
-        "23010101411",
-        "B11",
-        "488",
-        "Jadeja Rudrarajsinh Rajendrasinh",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Machine Learning"
-    ],
-    [
-        "289",
-        "23010101416",
-        "B11",
-        "489",
-        "Kalavadiya Monakkumar Vimalbhai",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Machine Learning"
-    ],
-    [
-        "290",
-        "23010101419",
-        "B11",
-        "490",
-        "Mavani Rutva Purushottambhai",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Machine Learning"
-    ],
-    [
-        "291",
-        "23031701018",
-        "B11",
-        "491",
-        "Godhaviya Neemaben Maheshbhai",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Machine Learning"
-    ],
-    [
-        "292",
-        "23031701030",
-        "B11",
-        "492",
-        "Makasana Nidhiben Rajnikantbhai",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Machine Learning"
-    ],
-    [
-        "293",
-        "23031701055",
-        "B11",
-        "493",
-        "Zalariya Himanshi Hiteshkumar",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Machine Learning"
-    ],
-    [
-        "294",
-        "24010101673",
-        "B11",
-        "494",
-        "Patel Honey Rajeshbhai",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Machine Learning"
-    ],
-    [
-        "295",
-        "24010101640",
-        "B12",
-        "495",
-        "Jat Karan Pratapbhai",
-        "Advanced .NET Development\nand Modern Architectures",
-        "Machine Learning"
-    ],
-    [
-        "296",
-        "24010101681",
-        "B12",
-        "496",
-        "Rathod Vaibhav Hirenbhai",
-        "Advanced .NET Development\nand Modern Architectures",
-        "Machine Learning"
-    ],
-    [
-        "297",
-        "24010101692",
-        "B12",
-        "497",
-        "Solanki Karan Pareshbhai",
-        "Advanced .NET Development\nand Modern Architectures",
-        "Machine Learning"
-    ],
-    [
-        "298",
-        "23010101018",
-        "B12",
-        "498",
-        "Bhalala Tisha Ashokbhai",
-        "Advanced .NET Development\nand Modern Architectures",
-        "Machine Learning"
-    ],
-    [
-        "299",
-        "23010101137",
-        "B12",
-        "499",
-        "Kavathiya Khushi Bhaveshbhai",
-        "Advanced .NET Development\nand Modern Architectures",
-        "Machine Learning"
-    ],
-    [
-        "300",
-        "23010101166",
-        "B12",
-        "500",
-        "Mehta Parshva Kalpesh",
-        "Advanced .NET Development\nand Modern Architectures",
-        "Machine Learning"
-    ],
-    [
-        "301",
-        "23010101185",
-        "B12",
-        "501",
-        "Panchasara Raj Hasmukhrai",
-        "Advanced .NET Development\nand Modern Architectures",
-        "Machine Learning"
-    ],
-    [
-        "302",
-        "23010101230",
-        "B12",
-        "502",
-        "Roshiya Rahul Pravinbhai",
-        "Advanced .NET Development\nand Modern Architectures",
-        "Machine Learning"
-    ],
-    [
-        "303",
-        "23010101405",
-        "B12",
-        "503",
-        "Desai Isha Jayeshbhai",
-        "Advanced .NET Development\nand Modern Architectures",
-        "Machine Learning"
-    ],
-    [
-        "304",
-        "23010101412",
-        "B12",
-        "504",
-        "Javiya Bansi Ashokbhai",
-        "Advanced .NET Development\nand Modern Architectures",
-        "Machine Learning"
-    ],
-    [
-        "305",
-        "23031701012",
-        "B12",
-        "505",
-        "Chauhan Sarthak Sureshbhai",
-        "Advanced .NET Development\nand Modern Architectures",
-        "Machine Learning"
-    ],
-    [
-        "306",
-        "24010101609",
-        "B12",
-        "506",
-        "Shyam Badiyani",
-        "Advanced .NET Development\nand Modern Architectures",
-        "Machine Learning"
-    ],
-    [
-        "307",
-        "24010101626",
-        "B12",
-        "507",
-        "Dhamsaniya Nensiben Nileshbhai",
-        "Advanced .NET Development\nand Modern Architectures",
-        "Machine Learning"
-    ],
-    [
-        "308",
-        "24010101635",
-        "B12",
-        "508",
-        "Gohil Vishwajitsinh Jagdishsinh",
-        "Advanced .NET Development\nand Modern Architectures",
-        "Machine Learning"
-    ],
-    [
-        "309",
-        "23010101002",
-        "B13",
-        "509",
-        "Dharvi Mehulkumar Adthakkar",
-        "Advanced Flutter",
-        "Machine Learning"
-    ],
-    [
-        "310",
-        "23010101033",
-        "B13",
-        "510",
-        "Bhut Om Nileshbhai",
-        "Advanced Flutter",
-        "Machine Learning"
-    ],
-    [
-        "311",
-        "23010101163",
-        "B13",
-        "511",
-        "Mathakiya Aafiya Mahebubbhai",
-        "Advanced Flutter",
-        "Machine Learning"
-    ],
-    [
-        "312",
-        "24010101685",
-        "B13",
-        "512",
-        "Sapariya Yash Harilal",
-        "Advanced Flutter",
-        "Machine Learning"
-    ],
-    [
-        "313",
-        "24010101701",
-        "B13",
-        "513",
-        "Vachhani Sneh Kiranbhai",
-        "Advanced Flutter",
-        "Machine Learning"
-    ],
-    [
-        "314",
-        "23010101012",
-        "C1",
-        "601",
-        "Bamnoliya Mahek Rakeshbhai",
-        "ASP. NET Core",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "315",
-        "23010101059",
-        "C1",
-        "602",
-        "Detroja Manan Pravinbhai",
-        "ASP. NET Core",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "316",
-        "23010101072",
-        "C1",
-        "603",
-        "Dudhagara Atmik Pashvinbhai",
-        "ASP. NET Core",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "317",
-        "23010101077",
-        "C1",
-        "604",
-        "Faldu Rashi Nimeshbhai",
-        "ASP. NET Core",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "318",
-        "23010101159",
-        "C1",
-        "605",
-        "Maradia Ayush Jigneshbhai",
-        "ASP. NET Core",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "319",
-        "23010101204",
-        "C1",
-        "606",
-        "Patel Riya Nikunjbhai",
-        "ASP. NET Core",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "320",
-        "23010101211",
-        "C1",
-        "607",
-        "Prabhakar Dhvani Sanjay",
-        "ASP. NET Core",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "321",
-        "23010101218",
-        "C1",
-        "608",
-        "Raiyani Rushi Bhaveshbhai",
-        "ASP. NET Core",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "322",
-        "23010101306",
-        "C1",
-        "609",
-        "Zala Dhruvrajsinh Chhatrasinh",
-        "ASP. NET Core",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "323",
-        "23010101310",
-        "C1",
-        "610",
-        "Prakirti Zalariya",
-        "ASP. NET Core",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "324",
-        "23010101425",
-        "C1",
-        "611",
-        "Pattani Varun Kiran",
-        "ASP. NET Core",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "325",
-        "23031701004",
-        "C1",
-        "612",
-        "Baru Priyanshi Yogesh",
-        "ASP. NET Core",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "326",
-        "23031701005",
-        "C1",
-        "613",
-        "Bhalara Dakshkumar Sanjaybhai",
-        "ASP. NET Core",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "327",
-        "23031701011",
-        "C1",
-        "614",
-        "Bhuva Purv Vijaybhai",
-        "ASP. NET Core",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "328",
-        "23031701015",
-        "C1",
-        "615",
-        "Gajera Meet Rameshbhai",
-        "ASP. NET Core",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "329",
-        "23031701029",
-        "C1",
-        "616",
-        "Makadiya Sneha Subhashbhai",
-        "ASP. NET Core",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "330",
-        "23031701031",
-        "C1",
-        "617",
-        "Mandali Krupaliben Rajeshbhai",
-        "ASP. NET Core",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "331",
-        "23031701044",
-        "C1",
-        "618",
-        "Rajpara Tushar Jayeshbhai",
-        "ASP. NET Core",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "332",
-        "24010101605",
-        "C1",
-        "619",
-        "Babar Meet Dharamshibhai",
-        "ASP. NET Core",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "333",
-        "24010101634",
-        "C1",
-        "620",
-        "Gohil Arjunsinh Narendrasinh",
-        "ASP. NET Core",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "334",
-        "24010101649",
-        "C1",
-        "621",
-        "Khant Vidit Rakhilbhai",
-        "ASP. NET Core",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "335",
-        "24010101665",
-        "C1",
-        "622",
-        "Mehta Vidhya Bharatbhai",
-        "ASP. NET Core",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "336",
-        "24010101697",
-        "C1",
-        "623",
-        "Thakkar Parth Rakeshbhai",
-        "ASP. NET Core",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "337",
-        "23010101165",
-        "C2",
-        "624",
-        "Mehta Diya Vickybhai",
-        "Flutter",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "338",
-        "23010101246",
-        "C2",
-        "625",
-        "Savaliya Avinash Bhaveshbhai",
-        "Flutter",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "339",
-        "23010101291",
-        "C2",
-        "626",
-        "Vamja Deep Bharatbhai",
-        "Flutter",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "340",
-        "23031701014",
-        "C2",
-        "627",
-        "Khushi Detroja",
-        "Flutter",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "341",
-        "23031701020",
-        "C2",
-        "628",
-        "Jadav Niyati Manojbhai",
-        "Flutter",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "342",
-        "23031701026",
-        "C2",
-        "629",
-        "Khokhar Ishita Kamleshbhai",
-        "Flutter",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "343",
-        "23010101006",
-        "C3",
-        "630",
-        "Ajani Keval Kalpeshbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "344",
-        "23010101007",
-        "C3",
-        "631",
-        "Akbari Kishan Kamleshbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "345",
-        "23010101008",
-        "C3",
-        "632",
-        "Akbari Manali Alpeshbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "346",
-        "23010101009",
-        "C3",
-        "633",
-        "Andani Renish Maheshbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "347",
-        "23010101010",
-        "C3",
-        "634",
-        "Andrapiya Disha Ashokkumar",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "348",
-        "23010101014",
-        "C3",
-        "635",
-        "Baraiya Vishalbhai Vijaybhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "349",
-        "23010101016",
-        "C3",
-        "636",
-        "Bhagiya Rutvik Rameshbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "350",
-        "23010101017",
-        "C3",
-        "637",
-        "Bhagiya Vidisha Hareshbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "351",
-        "23010101019",
-        "C3",
-        "638",
-        "Bhalani Het Rameshkumar",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "352",
-        "23010101023",
-        "C3",
-        "639",
-        "Bhatt Dhairya Pareshbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "353",
-        "23010101024",
-        "C3",
-        "640",
-        "Bhatti Mahek Jigneshbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "354",
-        "23010101030",
-        "C3",
-        "641",
-        "Bhimani Riyaben Chandrakantbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "355",
-        "23010101045",
-        "C3",
-        "642",
-        "Chauhan Jasmin Rajeshbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "356",
-        "23010101046",
-        "C3",
-        "643",
-        "Chauhan Pruthviraj Bhaveshbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "357",
-        "23010101048",
-        "C3",
-        "644",
-        "Rudra Chavda",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "358",
-        "23010101051",
-        "C3",
-        "645",
-        "Chotai Dhruv Kamleshbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "359",
-        "23010101052",
-        "C3",
-        "646",
-        "Priyanshu Choudhary",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "360",
-        "23010101054",
-        "C3",
-        "647",
-        "Dafda Disha Ketanbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "361",
-        "23010101058",
-        "C3",
-        "648",
-        "Desai Jineesh Shaileshkumar",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "362",
-        "23010101067",
-        "C3",
-        "649",
-        "Dev Dobariya",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "363",
-        "23010101075",
-        "C4",
-        "650",
-        "Dhairya Jayeshbhai Dudkiya",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "364",
-        "23010101076",
-        "C4",
-        "651",
-        "Faldu Aum Prashantbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "365",
-        "23010101079",
-        "C4",
-        "652",
-        "Fatepara Mansiben Kishorbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "366",
-        "23010101082",
-        "C4",
-        "653",
-        "Gambhava Rushi Chetanbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "367",
-        "23010101083",
-        "C4",
-        "654",
-        "Ganatra Devansh Bharatbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "368",
-        "23010101084",
-        "C4",
-        "655",
-        "Gangani Komal Manishbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "369",
-        "23010101089",
-        "C4",
-        "656",
-        "Gohel Neel Hiteshbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "370",
-        "23010101092",
-        "C4",
-        "657",
-        "Gojiya Jagrutiben Jeshabhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "371",
-        "23010101097",
-        "C4",
-        "658",
-        "Halani Darshan Miteshbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "372",
-        "23010101101",
-        "C4",
-        "659",
-        "Jadeja Shivangiba Narendrasinh",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "373",
-        "23010101109",
-        "C4",
-        "660",
-        "Jivani Anjali Vasantbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "374",
-        "23010101111",
-        "C4",
-        "661",
-        "Jogia Kairavi Rupesh",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "375",
-        "23010101116",
-        "C4",
-        "662",
-        "Jotaniya Meet Sureshbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "376",
-        "23010101117",
-        "C4",
-        "663",
-        "Kacha Dev Bakulbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "377",
-        "23010101125",
-        "C4",
-        "664",
-        "Kambariya Vanita Rambhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "378",
-        "23010101130",
-        "C4",
-        "665",
-        "Karia Parva Manoj",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "379",
-        "23010101134",
-        "C4",
-        "666",
-        "Kathrani Darshi Maheshbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "380",
-        "23010101140",
-        "C4",
-        "667",
-        "Khant Harshkumar Dilipbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "381",
-        "23010101141",
-        "C4",
-        "668",
-        "Kholia Vandan Chirag",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "382",
-        "23010101145",
-        "C4",
-        "669",
-        "Kotecha Manav Amitbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "383",
-        "23010101151",
-        "C5",
-        "670",
-        "Limbad Divyesh Prakashbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "384",
-        "23010101152",
-        "C5",
-        "671",
-        "Lo Nisarg Bharatbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "385",
-        "23010101153",
-        "C5",
-        "672",
-        "Karan Lukka",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "386",
-        "23010101154",
-        "C5",
-        "673",
-        "Machchhar Deven Kishorbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "387",
-        "23010101161",
-        "C5",
-        "674",
-        "Maru Smit Mukeshbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "388",
-        "23010101164",
-        "C5",
-        "675",
-        "Meghapara Krish Shaileshbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "389",
-        "23010101167",
-        "C5",
-        "676",
-        "Mehta Samarth Chirag",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "390",
-        "23010101169",
-        "C5",
-        "677",
-        "Merja Yash Kantilal",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "391",
-        "23010101174",
-        "C5",
-        "678",
-        "Nandasana Shyam Mansukhbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "392",
-        "23010101176",
-        "C5",
-        "679",
-        "Nesadiya Parth Virendrabhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "393",
-        "23010101177",
-        "C5",
-        "680",
-        "Nimavat Mansi Dilipbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "394",
-        "23010101178",
-        "C5",
-        "681",
-        "Odedra Viraj Arjanbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "395",
-        "23010101179",
-        "C5",
-        "682",
-        "Padhiyar Mann Hiteshbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "396",
-        "23010101180",
-        "C5",
-        "683",
-        "Padhiyar Meet Hiteshbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "397",
-        "23010101181",
-        "C5",
-        "684",
-        "Padsumbiya Darshan Rajeshbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "398",
-        "23010101182",
-        "C5",
-        "685",
-        "Padsumbiya Nandani Dharmendrab",
-        "hAadivanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "399",
-        "23010101183",
-        "C5",
-        "686",
-        "Pambhar Meet Nikunjbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "400",
-        "23010101184",
-        "C5",
-        "687",
-        "Malay Mansukh Panara",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "401",
-        "23010101189",
-        "C5",
-        "688",
-        "Parmar Harsh Hareshbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "402",
-        "23010101195",
-        "C5",
-        "689",
-        "Parmar Sahil Nilesh",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "403",
-        "23010101199",
-        "C6",
-        "690",
-        "Patel Ayushi Samitbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "404",
-        "23010101200",
-        "C6",
-        "691",
-        "Patel Balkrushna Manishbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "405",
-        "23010101201",
-        "C6",
-        "692",
-        "Jay Patel",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "406",
-        "23010101203",
-        "C6",
-        "693",
-        "Patel Krishkumar Bharatbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "407",
-        "23010101206",
-        "C6",
-        "694",
-        "Patoliya Yash Chandubhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "408",
-        "23010101215",
-        "C6",
-        "695",
-        "Rabadiya Raj Mansukhbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "409",
-        "23010101220",
-        "C6",
-        "696",
-        "Ramani Yasha Bhaveshbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "410",
-        "23010101223",
-        "C6",
-        "697",
-        "Ranipa Vraj Bharatbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "411",
-        "23010101231",
-        "C6",
-        "698",
-        "Ruparelia Drashti Dharmesh",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "412",
-        "23010101234",
-        "C6",
-        "699",
-        "Sakariya Mayank Bhupendrabhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "413",
-        "23010101242",
-        "C6",
-        "700",
-        "Sapariya Niyati Ketanbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "414",
-        "23010101251",
-        "C6",
-        "701",
-        "Sherasiya Mohmadayaz Ismail",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "415",
-        "23010101256",
-        "C6",
-        "702",
-        "Solanki Harshil Shaileshbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "416",
-        "23010101262",
-        "C6",
-        "703",
-        "Kashvi Chandrakant Suvagiya",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "417",
-        "23010101265",
-        "C6",
-        "704",
-        "Tank Hemali Sanjaybhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "418",
-        "23010101266",
-        "C6",
-        "705",
-        "Tanwani Kirti Jagdish",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "419",
-        "23010101267",
-        "C6",
-        "706",
-        "Taraviya Nency Rameshbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "420",
-        "23010101269",
-        "C6",
-        "707",
-        "Thakkar Zeel Kiritkumar",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "421",
-        "23010101270",
-        "C6",
-        "708",
-        "Thesia Hearshraj Jayeshbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "422",
-        "23010101272",
-        "C6",
-        "709",
-        "Thummar Jainil Sanjaybhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "423",
-        "23010101275",
-        "C7",
-        "710",
-        "Bhoomi Tulsiyani",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "424",
-        "23010101281",
-        "C7",
-        "711",
-        "Vadaviya Parth Kishorbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "425",
-        "23010101285",
-        "C7",
-        "712",
-        "Vaghamashi Deep Rajeshbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "426",
-        "23010101286",
-        "C7",
-        "713",
-        "Vaghasia Nirav Mansukhbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "427",
-        "23010101290",
-        "C7",
-        "714",
-        "Valera Dhruvi Dipesh",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "428",
-        "23010101299",
-        "C7",
-        "715",
-        "Kalp Vipul Viradia",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "429",
-        "23010101302",
-        "C7",
-        "716",
-        "Virpariya Avi Brijeshbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "430",
-        "23010101303",
-        "C7",
-        "717",
-        "Virsodiya Yash Nileshbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "431",
-        "23010101311",
-        "C7",
-        "718",
-        "Zalariya Shrutiben Rajnikantbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "432",
-        "23010101313",
-        "C7",
-        "719",
-        "Zapadiya Haresh Dhirubhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "433",
-        "23010101401",
-        "C7",
-        "720",
-        "Ajmera Pujan Mukeshbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "434",
-        "23010101407",
-        "C7",
-        "721",
-        "Dhol Namra Vijaybhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "435",
-        "23010101429",
-        "C7",
-        "722",
-        "Ranipa Smit Kishorbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "436",
-        "23031701040",
-        "C7",
-        "723",
-        "Pedhadiya Tinkal Jamanbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "437",
-        "24010101604",
-        "C7",
-        "724",
-        "Ansari Mohmadaabid Akbarali",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "438",
-        "24010101633",
-        "C7",
-        "725",
-        "Ghada Afsana Rahimbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "439",
-        "24010101637",
-        "C7",
-        "726",
-        "Ida Gaurav Rajubhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "440",
-        "24010101651",
-        "C7",
-        "727",
-        "Koradiya Harsh Pareshbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "441",
-        "24010101653",
-        "C7",
-        "728",
-        "Dikshita Kothari",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "442",
-        "24010101668",
-        "C7",
-        "729",
-        "Panera Ghanshyam Karshanbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "443",
-        "24010101680",
-        "C7",
-        "730",
-        "Rathod Harmik Kamleshbhai",
-        "Advanced Web Technology",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "444",
-        "23010101063",
-        "C8",
-        "731",
-        "Dhandh Pari Mukundbhai",
-        "UI/UX Designing",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "445",
-        "23010101074",
-        "C8",
-        "732",
-        "Dudhrejiya Dharashvi Hareshkumar",
-        "UI/UX Designing",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "446",
-        "23010101094",
-        "C8",
-        "733",
-        "Gosrani Hasti Mitesh",
-        "UI/UX Designing",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "447",
-        "23010101118",
-        "C8",
-        "734",
-        "Kacha Mihir Rasikbhai",
-        "UI/UX Designing",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "448",
-        "23010101245",
-        "C8",
-        "735",
-        "Sata Aayushi Mital",
-        "UI/UX Designing",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "449",
-        "23010101283",
-        "C8",
-        "736",
-        "Vadukar Jigar Jayeshbhai",
-        "UI/UX Designing",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "450",
-        "23010101287",
-        "C8",
-        "737",
-        "Vaghasiya Birva Bipinbhai",
-        "UI/UX Designing",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "451",
-        "23010101309",
-        "C8",
-        "738",
-        "Satyajitsinh Jitendrasinh Zala",
-        "UI/UX Designing",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "452",
-        "23010101312",
-        "C8",
-        "739",
-        "Zalavadiya Priya Pareshbhai",
-        "UI/UX Designing",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "453",
-        "23010101417",
-        "C8",
-        "740",
-        "Kansagra Kevalkumar Chetanbhai",
-        "UI/UX Designing",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "454",
-        "23031701041",
-        "C8",
-        "741",
-        "Piparva Keshvi Vimalbhai",
-        "UI/UX Designing",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "455",
-        "24010101648",
-        "C8",
-        "742",
-        "Kava Payal Rajnibhai",
-        "UI/UX Designing",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "456",
-        "24010101657",
-        "C8",
-        "743",
-        "Lo Khushboo Amrutlal",
-        "UI/UX Designing",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "457",
-        "24010101686",
-        "C8",
-        "744",
-        "Shekhat Tejasvi Bharatbhai",
-        "UI/UX Designing",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "458",
-        "23010101021",
-        "C9",
-        "745",
-        "Bhalodiya Tanisha Pankajbhai",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "459",
-        "23010101056",
-        "C9",
-        "746",
-        "Dedakiya Raj Sanjaybhai",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "460",
-        "23010101061",
-        "C9",
-        "747",
-        "Dhameliya Yash Vipulbhai",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "461",
-        "23010101087",
-        "C9",
-        "748",
-        "Gaudani Siddhi Nayanbhai",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "462",
-        "23010101104",
-        "C9",
-        "749",
-        "Jani Prem Viralbhai",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "463",
-        "23010101121",
-        "C9",
-        "750",
-        "Kakadiya Yash Vipulbhai",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "464",
-        "23010101127",
-        "C9",
-        "751",
-        "Kaneriya Drashti Mrugendrabhai",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "465",
-        "23010101160",
-        "C9",
-        "752",
-        "Markana Pushti Manishbhai",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "466",
-        "23010101171",
-        "C9",
-        "753",
-        "Morad Jevin Kiritbhai",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "467",
-        "23010101192",
-        "C9",
-        "754",
-        "Parmar Mohil Jayeshbhai",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "468",
-        "23010101196",
-        "C9",
-        "755",
-        "Parmar Vatsal Prakashbhai",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "469",
-        "23010101216",
-        "C9",
-        "756",
-        "Rabadiya Yashvi Dilipbhai",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "470",
-        "23010101222",
-        "C9",
-        "757",
-        "Kunj Ramoliya",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "471",
-        "23010101247",
-        "C9",
-        "758",
-        "Savaliya Ronit Ashokbhai",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "472",
-        "23010101259",
-        "C9",
-        "759",
-        "Sorathiya Harshvi Maheshbhai",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "473",
-        "23010101282",
-        "C9",
-        "760",
-        "Vadhava Sumit Naranbhai",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "474",
-        "23010101292",
-        "C9",
-        "761",
-        "Meet Jitendra Vasiyani",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "475",
-        "23010101298",
-        "C9",
-        "762",
-        "Vekariya Raj Kishorbhai",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "476",
-        "23031701006",
-        "C9",
-        "763",
-        "Bhalodi Jeet Pareshbhai",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "477",
-        "23031701008",
-        "C9",
-        "764",
-        "Bhanderi Viraj Narendrabhai",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "478",
-        "23031701016",
-        "C9",
-        "765",
-        "Gambhava Vruta Parasbhai",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "479",
-        "23031701053",
-        "C9",
-        "766",
-        "Vekariya Shreyas Jayantibhai",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "480",
-        "23031701054",
-        "C9",
-        "767",
-        "Vipani Darsh Kalpeshbhai",
-        "Building RESTful APIs with\nASP.NET Core (Advanced\n.NET )",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "481",
-        "23010101026",
-        "C10",
-        "768",
-        "Bhesdadiya Krishnaben Kantibhai",
-        "Advanced .NET Development\nand Modern Architectures",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "482",
-        "23010101039",
-        "C10",
-        "769",
-        "Busa Krisha Maheshbhai",
-        "Advanced .NET Development\nand Modern Architectures",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "483",
-        "23010101040",
-        "C10",
-        "770",
-        "Busa Umangkumar Kamleshbhai",
-        "Advanced .NET Development\nand Modern Architectures",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "484",
-        "23010101070",
-        "C10",
-        "771",
-        "Dubal Esha Paragbhai",
-        "Advanced .NET Development\nand Modern Architectures",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "485",
-        "23010101126",
-        "C10",
-        "772",
-        "Prit Kanani",
-        "Advanced .NET Development\nand Modern Architectures",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "486",
-        "23010101146",
-        "C10",
-        "773",
-        "Kugashiya Ronak Ranabhai",
-        "Advanced .NET Development\nand Modern Architectures",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "487",
-        "23010101410",
-        "C10",
-        "774",
-        "Hirpara Pushti Vishal",
-        "Advanced .NET Development\nand Modern Architectures",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "488",
-        "24010101602",
-        "C10",
-        "775",
-        "Adroja Dhairya Ajaybhai",
-        "Advanced .NET Development\nand Modern Architectures",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "489",
-        "24010101679",
-        "C10",
-        "776",
-        "Ranpariya Shreyansh Harshadbhai",
-        "Advanced .NET Development\nand Modern Architectures",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "490",
-        "24010101688",
-        "C10",
-        "777",
-        "Sindhav Harpalsinh Bhupendrasinh",
-        "Advanced .NET Development\nand Modern Architectures",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "491",
-        "23010101108",
-        "C11",
-        "778",
-        "Jethva Jenil Samirbhai",
-        "Advanced Flutter",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "492",
-        "23031701036",
-        "C11",
-        "779",
-        "Panara Avani Maheshbhai",
-        "Advanced Flutter",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "493",
-        "23031701050",
-        "C11",
-        "780",
-        "Sorani Hiral Manubhai",
-        "Advanced Flutter",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "494",
-        "24010101691",
-        "C11",
-        "781",
-        "Solanki Heena Bharatbhai",
-        "Advanced Flutter",
-        "Machine Learning and Deep\nLearning"
-    ],
-    [
-        "495",
-        "23010101047",
-        "",
-        "",
-        "Chavda Princekumar Kalubhai",
-        "Not Given",
-        "Not Given"
-    ],
-    [
-        "496",
-        "23010101212",
-        "",
-        "",
-        "Prajapati Aakash Rajubhai",
-        "Not Given",
-        "Not Given"
-    ],
-    [
-        "497",
-        "23010101228",
-        "",
-        "",
-        "Rathod Priyansh Yogeshbhai",
-        "Not Given",
-        "Not Given"
-    ],
-    [
-        "498",
-        "23031701051",
-        "",
-        "",
-        "Timbadiya Pratik Dineshbhai",
-        "Not Given",
-        "Not Given"
-    ],
-    [
-        "499",
-        "24010101624",
-        "",
-        "",
-        "Devaliya Bhumiben Yogeshbhai",
-        "Not Given",
-        "Not Given"
-    ],
-    [
-        "500",
-        "24010101645",
-        "",
-        "",
-        "Kadavala Hitesh Ajaybhai",
-        "Not Given",
-        "Not Given"
-    ]
+  [
+    "1",
+    "23010101088",
+    "A1",
+    "101",
+    "Ghelani Vardhan Chetanbhai",
+    "ASP. NET Core",
+    "Information Network Security"
+  ],
+  [
+    "2",
+    "23010101133",
+    "A1",
+    "102",
+    "Katba Kalp Maheshbhai",
+    "ASP. NET Core",
+    "Information Network Security"
+  ],
+  [
+    "3",
+    "23010101150",
+    "A1",
+    "103",
+    "Lalani Nandan Subhashbhai",
+    "ASP. NET Core",
+    "Information Network Security"
+  ],
+  [
+    "4",
+    "23010101217",
+    "A1",
+    "104",
+    "Raichura Rag Bakulbhai",
+    "ASP. NET Core",
+    "Information Network Security"
+  ],
+  [
+    "5",
+    "23010101288",
+    "A1",
+    "105",
+    "Vakhariya Abbasi Taherbhai",
+    "ASP. NET Core",
+    "Information Network Security"
+  ],
+  [
+    "6",
+    "24010101627",
+    "A2",
+    "106",
+    "Dhol Rutvi",
+    "Flutter",
+    "Information Network Security"
+  ],
+  [
+    "7",
+    "24010101660",
+    "A2",
+    "107",
+    "Makwana Nency Yogeshbhai",
+    "Flutter",
+    "Information Network Security"
+  ],
+  [
+    "8",
+    "24010101663",
+    "A2",
+    "108",
+    "Mehta Mansee Manishkumar",
+    "Flutter",
+    "Information Network Security"
+  ],
+  [
+    "9",
+    "24010101687",
+    "A2",
+    "109",
+    "Sheth Honey Sanjiv",
+    "Flutter",
+    "Information Network Security"
+  ],
+  [
+    "10",
+    "23010101050",
+    "A3",
+    "110",
+    "Chhatrala Devanshi Shaileshkumar",
+    "Advanced Web Technology",
+    "Information Network Security"
+  ],
+  [
+    "11",
+    "23010101069",
+    "A3",
+    "111",
+    "Dodia Yashraj Ajitsinh",
+    "Advanced Web Technology",
+    "Information Network Security"
+  ],
+  [
+    "12",
+    "23010101105",
+    "A3",
+    "112",
+    "Jani Rishil Vipul",
+    "Advanced Web Technology",
+    "Information Network Security"
+  ],
+  [
+    "13",
+    "23010101138",
+    "A3",
+    "113",
+    "Keraliya Shreya Nileshkumar",
+    "Advanced Web Technology",
+    "Information Network Security"
+  ],
+  [
+    "14",
+    "23010101143",
+    "A3",
+    "114",
+    "Kopaniya Mitesh Amrutbhai",
+    "Advanced Web Technology",
+    "Information Network Security"
+  ],
+  [
+    "15",
+    "23010101162",
+    "A3",
+    "115",
+    "Marvadi Jaina Prashantbhai",
+    "Advanced Web Technology",
+    "Information Network Security"
+  ],
+  [
+    "16",
+    "23010101214",
+    "A3",
+    "116",
+    "Rabadiya Preetkumar Jitendra",
+    "Advanced Web Technology",
+    "Information Network Security"
+  ],
+  [
+    "17",
+    "23010101249",
+    "A3",
+    "117",
+    "Shah Prem Nirajbhai",
+    "Advanced Web Technology",
+    "Information Network Security"
+  ],
+  [
+    "18",
+    "23010101274",
+    "A3",
+    "118",
+    "Trivedi Utsav Kishorbhai",
+    "Advanced Web Technology",
+    "Information Network Security"
+  ],
+  [
+    "19",
+    "23010101314",
+    "A3",
+    "119",
+    "Zezariya Jay Kamleshbhai",
+    "Advanced Web Technology",
+    "Information Network Security"
+  ],
+  [
+    "20",
+    "23010101403",
+    "A3",
+    "120",
+    "Bhensdadiya Avadh Vijaybhai",
+    "Advanced Web Technology",
+    "Information Network Security"
+  ],
+  [
+    "21",
+    "23010101423",
+    "A3",
+    "121",
+    "Parsaniya Rudra Hitesh",
+    "Advanced Web Technology",
+    "Information Network Security"
+  ],
+  [
+    "22",
+    "24010101619",
+    "A3",
+    "122",
+    "Cholera Vansh Dharmendra",
+    "Advanced Web Technology",
+    "Information Network Security"
+  ],
+  [
+    "23",
+    "24010101632",
+    "A3",
+    "123",
+    "Gangwani Harshil Manohar",
+    "Advanced Web Technology",
+    "Information Network Security"
+  ],
+  [
+    "24",
+    "24010101638",
+    "A3",
+    "124",
+    "Jadeja Karmdeepsinh Hitendrasinh",
+    "Advanced Web Technology",
+    "Information Network Security"
+  ],
+  [
+    "25",
+    "24010101667",
+    "A3",
+    "125",
+    "Pan Yash Jayeshbhai",
+    "Advanced Web Technology",
+    "Information Network Security"
+  ],
+  [
+    "26",
+    "24010101674",
+    "A3",
+    "126",
+    "Pithva Premanshu Hareshbhai",
+    "Advanced Web Technology",
+    "Information Network Security"
+  ],
+  [
+    "27",
+    "24010101677",
+    "A3",
+    "127",
+    "Prashil Ramoliya",
+    "Advanced Web Technology",
+    "Information Network Security"
+  ],
+  [
+    "28",
+    "22010101468",
+    "A4",
+    "128",
+    "Nair Thejas Suresh",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "29",
+    "23010101013",
+    "A4",
+    "129",
+    "Banugaria Sheet Hiteshbhai",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "30",
+    "23010101025",
+    "A4",
+    "130",
+    "Bhensdadia Deep",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "31",
+    "23010101028",
+    "A4",
+    "131",
+    "Bhimani Heetkumar Chamanlal",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "32",
+    "23010101029",
+    "A4",
+    "132",
+    "Bhimani Maulik Maheshbhai",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "33",
+    "23010101036",
+    "A4",
+    "133",
+    "Boda Riya Ashvinkumar",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "34",
+    "23010101049",
+    "A4",
+    "134",
+    "Chhaniyara Dhara Rajeshbhai",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "35",
+    "23010101071",
+    "A4",
+    "135",
+    "Dudani Vishv Vijaybhai",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "36",
+    "23010101085",
+    "A4",
+    "136",
+    "Garala Pahal Kamleshbhai",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "37",
+    "23010101095",
+    "A4",
+    "137",
+    "Hadiyal Devang Babulal",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "38",
+    "23010101096",
+    "A4",
+    "138",
+    "Hadvani Palak Hirenbhai",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "39",
+    "23010101110",
+    "A4",
+    "139",
+    "Jivani Meet Mansukhbhai",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "40",
+    "23010101135",
+    "A4",
+    "140",
+    "Kavar Riva Samirbhai",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "41",
+    "23010101147",
+    "A4",
+    "141",
+    "Kukadiya Jeel Pareshbhai",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "42",
+    "23010101173",
+    "A4",
+    "142",
+    "Nanda Hardik Bhaveshbhai",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "43",
+    "23010101197",
+    "A4",
+    "143",
+    "Parmar Vishal Jethabhai",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "44",
+    "23010101198",
+    "A4",
+    "144",
+    "Patadiya Pratham Deepakbhai",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "45",
+    "23010101209",
+    "A4",
+    "145",
+    "Pipaliya Dharmi Sureshbhai",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "46",
+    "23010101213",
+    "A4",
+    "146",
+    "Rabadiya Hit Mahendrabhai",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "47",
+    "23010101221",
+    "A4",
+    "147",
+    "Ramavat Harsh Rajesh",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "48",
+    "23010101226",
+    "A4",
+    "148",
+    "Rathod Drashti Jaysinhbhai",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "49",
+    "23010101229",
+    "A4",
+    "149",
+    "Rojivadiya Tirth Amitbhai",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "50",
+    "23010101232",
+    "A5",
+    "150",
+    "Rajvi Mukeshbhai Sadatiya",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "51",
+    "23010101237",
+    "A5",
+    "151",
+    "Sanandiya Brind Brijeshbhai",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "52",
+    "23010101238",
+    "A5",
+    "152",
+    "Sanandiya Daksh Hareshbhai",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "53",
+    "23010101240",
+    "A5",
+    "153",
+    "Sanghani Bhumik Sanjaybhai",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "54",
+    "23010101243",
+    "A5",
+    "154",
+    "Saradva Dhrumil Prakashbhai",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "55",
+    "23010101248",
+    "A5",
+    "155",
+    "Shah Devang Deepakkumar",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "56",
+    "23010101252",
+    "A5",
+    "156",
+    "Sidapara Dharmi Dineshbhai",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "57",
+    "23010101255",
+    "A5",
+    "157",
+    "Solanki Devkaran Kartikey",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "58",
+    "23010101279",
+    "A5",
+    "158",
+    "Vadaliya Aashvi Rupeshbhai",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "59",
+    "23010101280",
+    "A5",
+    "159",
+    "Vadaviya Muskan Hanif",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "60",
+    "23010101295",
+    "A5",
+    "160",
+    "Vegada Vishv Dimpalbhai",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "61",
+    "23010101300",
+    "A5",
+    "161",
+    "Viramgama Viken Kantilal",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "62",
+    "23010101304",
+    "A5",
+    "162",
+    "Jinkal Vora",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "63",
+    "23010101308",
+    "A5",
+    "163",
+    "Manvendrasinh Balbhadrasinh Zala",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "64",
+    "23010101409",
+    "A5",
+    "164",
+    "Ghetiya Misri Anjankumar",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "65",
+    "23010101413",
+    "A5",
+    "165",
+    "Kachrola Krishkumar Bhaveshbhai",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "66",
+    "23010101415",
+    "A5",
+    "166",
+    "Kalaria Maan Utkal",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "67",
+    "23010101421",
+    "A5",
+    "167",
+    "Panesara Maharshi Nileshbhai",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "68",
+    "23010101426",
+    "A5",
+    "168",
+    "Pipaliya Pujan Jitendrabhai",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "69",
+    "23010101430",
+    "A5",
+    "169",
+    "Sherasiya Gulamkasim Mohamadha",
+    "nUifI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "70",
+    "23010101433",
+    "A5",
+    "170",
+    "Zala Jayvardhansinh Pratapsinh",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "71",
+    "23031701003",
+    "A5",
+    "171",
+    "Badi Akib Ismailbhai",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "72",
+    "23031701022",
+    "A6",
+    "172",
+    "Kadivar Mohamadsahil Yunus",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "73",
+    "23031701027",
+    "A6",
+    "173",
+    "Khorajiya Mahir Mohamadsafi",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "74",
+    "23031701034",
+    "A6",
+    "174",
+    "Meva Raxit Vinodbhai",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "75",
+    "23031701052",
+    "A6",
+    "175",
+    "Vansajaliya Helly Ashokbhai",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "76",
+    "24010101610",
+    "A6",
+    "176",
+    "Bera Priya Manishbhai",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "77",
+    "24010101612",
+    "A6",
+    "177",
+    "Bhalodiya Hit Dilipbhai",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "78",
+    "24010101617",
+    "A6",
+    "178",
+    "Jeel Chaniyara",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "79",
+    "24010101618",
+    "A6",
+    "179",
+    "Chauhan Tirth Dipakbhai",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "80",
+    "24010101621",
+    "A6",
+    "180",
+    "Dadhaniya Parth Manishbhai",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "81",
+    "24010101625",
+    "A6",
+    "181",
+    "Devmurari Krisha Rajnikant",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "82",
+    "24010101630",
+    "A6",
+    "182",
+    "Doshi Bhavya",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "83",
+    "24010101631",
+    "A6",
+    "183",
+    "Gadhiya Subham Jagdishbhai",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "84",
+    "24010101654",
+    "A6",
+    "184",
+    "Kunadiya Jenis Bipinkumar",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "85",
+    "24010101659",
+    "A6",
+    "185",
+    "Makwana Khush Kiranbhai",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "86",
+    "24010101671",
+    "A6",
+    "186",
+    "Parmar Tirth Shaileshbhai",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "87",
+    "24010101675",
+    "A6",
+    "187",
+    "Pithwa Dhruv Rupeshbhai",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "88",
+    "24010101682",
+    "A6",
+    "188",
+    "Sagathiya Soham Maganbhai",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "89",
+    "24010101690",
+    "A6",
+    "189",
+    "Solanki Devansh Nirajkumar",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "90",
+    "24010101696",
+    "A6",
+    "190",
+    "Thakar Samiksha Nileshbhai",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "91",
+    "24010101702",
+    "A6",
+    "191",
+    "Vadariya Jaykumar Jitendrabhai",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "92",
+    "24010101707",
+    "A6",
+    "192",
+    "Vasoya Sahil Rakeshbhai",
+    "UI/UX Designing",
+    "Information Network Security"
+  ],
+  [
+    "93",
+    "23010101057",
+    "A7",
+    "193",
+    "Dedaniya Krish Jimeshbhai",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Information Network Security"
+  ],
+  [
+    "94",
+    "23010101066",
+    "A7",
+    "194",
+    "Dhol Shreeya Manojbhai",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Information Network Security"
+  ],
+  [
+    "95",
+    "23010101132",
+    "A7",
+    "195",
+    "Katariya Prince Anilbhai",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Information Network Security"
+  ],
+  [
+    "96",
+    "23010101194",
+    "A7",
+    "196",
+    "Parmar Rahul Dineshbhai",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Information Network Security"
+  ],
+  [
+    "97",
+    "24010101655",
+    "A7",
+    "197",
+    "Kunkana Binal Ashwinbhai",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Information Network Security"
+  ],
+  [
+    "98",
+    "23010101289",
+    "A8",
+    "198",
+    "Valand Shivam Prakashkumar",
+    "Advanced .NET Development and Modern Architectures",
+    "Information Network Security"
+  ],
+  [
+    "99",
+    "24010101643",
+    "A9",
+    "199",
+    "Jethava Darshan Gauravbhai",
+    "Advanced Flutter",
+    "Information Network Security"
+  ],
+  [
+    "100",
+    "24010101676",
+    "A9",
+    "200",
+    "Popat Nandan Niteshbhai",
+    "Advanced Flutter",
+    "Information Network Security"
+  ],
+  [
+    "101",
+    "23010101003",
+    "B1",
+    "301",
+    "Aghera Radhika Ratilal",
+    "ASP. NET Core",
+    "Machine Learning"
+  ],
+  [
+    "102",
+    "23010101031",
+    "B1",
+    "302",
+    "Bhimani Sujal Jagadishbhai",
+    "ASP. NET Core",
+    "Machine Learning"
+  ],
+  [
+    "103",
+    "23010101055",
+    "B1",
+    "303",
+    "Taksh Dalvadi",
+    "ASP. NET Core",
+    "Machine Learning"
+  ],
+  [
+    "104",
+    "23010101073",
+    "B1",
+    "304",
+    "Dudhatra Prince Bharatbhai",
+    "ASP. NET Core",
+    "Machine Learning"
+  ],
+  [
+    "105",
+    "23010101086",
+    "B1",
+    "305",
+    "Gareja Abhishek Lalabhai",
+    "ASP. NET Core",
+    "Machine Learning"
+  ],
+  [
+    "106",
+    "23010101107",
+    "B1",
+    "306",
+    "Jat Pooja Jagdish",
+    "ASP. NET Core",
+    "Machine Learning"
+  ],
+  [
+    "107",
+    "23010101119",
+    "B1",
+    "307",
+    "Kagathara Tanish Vipulbhai",
+    "ASP. NET Core",
+    "Machine Learning"
+  ],
+  [
+    "108",
+    "23010101120",
+    "B1",
+    "308",
+    "Kakadiya Prince Yogeshbhai",
+    "ASP. NET Core",
+    "Machine Learning"
+  ],
+  [
+    "109",
+    "23010101129",
+    "B1",
+    "309",
+    "Kargathiya Tusharkumar Jayantilal",
+    "ASP. NET Core",
+    "Machine Learning"
+  ],
+  [
+    "110",
+    "23010101158",
+    "B1",
+    "310",
+    "Makwana Vanshita Mukeshbhai",
+    "ASP. NET Core",
+    "Machine Learning"
+  ],
+  [
+    "111",
+    "23010101207",
+    "B1",
+    "311",
+    "Pindariya Nikunj Pala",
+    "ASP. NET Core",
+    "Machine Learning"
+  ],
+  [
+    "112",
+    "23010101244",
+    "B1",
+    "312",
+    "Sardhara Manasvi Sandipbhai",
+    "ASP. NET Core",
+    "Machine Learning"
+  ],
+  [
+    "113",
+    "23010101250",
+    "B1",
+    "313",
+    "Shalot Milan Manojkumar",
+    "ASP. NET Core",
+    "Machine Learning"
+  ],
+  [
+    "114",
+    "23010101268",
+    "B1",
+    "314",
+    "Thaker Rutva Kalpeshbhai",
+    "ASP. NET Core",
+    "Machine Learning"
+  ],
+  [
+    "115",
+    "23010101294",
+    "B1",
+    "315",
+    "Vegad Jay Dilipbhai",
+    "ASP. NET Core",
+    "Machine Learning"
+  ],
+  [
+    "116",
+    "23010101297",
+    "B1",
+    "316",
+    "Vekariya Harsh Mukeshbhai",
+    "ASP. NET Core",
+    "Machine Learning"
+  ],
+  [
+    "117",
+    "23010101406",
+    "B1",
+    "317",
+    "Dhamsaniya Smit Dipakbhai",
+    "ASP. NET Core",
+    "Machine Learning"
+  ],
+  [
+    "118",
+    "23031701001",
+    "B1",
+    "318",
+    "Adesara Yesha Madhukarbhai",
+    "ASP. NET Core",
+    "Machine Learning"
+  ],
+  [
+    "119",
+    "23031701010",
+    "B1",
+    "319",
+    "Bhuva Harsh Jagdishbhai",
+    "ASP. NET Core",
+    "Machine Learning"
+  ],
+  [
+    "120",
+    "23031701017",
+    "B1",
+    "320",
+    "Gami Khushali Sanjaybhai",
+    "ASP. NET Core",
+    "Machine Learning"
+  ],
+  [
+    "121",
+    "23031701019",
+    "B2",
+    "321",
+    "Hinsu Isha Rajeshbhai",
+    "ASP. NET Core",
+    "Machine Learning"
+  ],
+  [
+    "122",
+    "23031701021",
+    "B2",
+    "322",
+    "Jakasaniya Yugal Maheshbhai",
+    "ASP. NET Core",
+    "Machine Learning"
+  ],
+  [
+    "123",
+    "23031701025",
+    "B2",
+    "323",
+    "Kapuriya Aeshviben Jagdishbhai",
+    "ASP. NET Core",
+    "Machine Learning"
+  ],
+  [
+    "124",
+    "23031701033",
+    "B2",
+    "324",
+    "Maru Riya Nileshbhai",
+    "ASP. NET Core",
+    "Machine Learning"
+  ],
+  [
+    "125",
+    "23031701037",
+    "B2",
+    "325",
+    "Pansuriya Ayushkumar Dharmendra",
+    "bAhSaPi. NET Core",
+    "Machine Learning"
+  ],
+  [
+    "126",
+    "23031701038",
+    "B2",
+    "326",
+    "Parmar Prince Dilipbhai",
+    "ASP. NET Core",
+    "Machine Learning"
+  ],
+  [
+    "127",
+    "23031701039",
+    "B2",
+    "327",
+    "Patel Prinsi Bhudarbhai",
+    "ASP. NET Core",
+    "Machine Learning"
+  ],
+  [
+    "128",
+    "23031701042",
+    "B2",
+    "328",
+    "Pithadiya Vatsal Vijaybhai",
+    "ASP. NET Core",
+    "Machine Learning"
+  ],
+  [
+    "129",
+    "23031701043",
+    "B2",
+    "329",
+    "Popat Jaydeep Manojbhai",
+    "ASP. NET Core",
+    "Machine Learning"
+  ],
+  [
+    "130",
+    "23031701045",
+    "B2",
+    "330",
+    "Ranpariya Isha Sanjaybhai",
+    "ASP. NET Core",
+    "Machine Learning"
+  ],
+  [
+    "131",
+    "23031701048",
+    "B2",
+    "331",
+    "Sherasiya Tahesin Ismailbhai",
+    "ASP. NET Core",
+    "Machine Learning"
+  ],
+  [
+    "132",
+    "23031701049",
+    "B2",
+    "332",
+    "Sidpara Shweta Shaileshbhai",
+    "ASP. NET Core",
+    "Machine Learning"
+  ],
+  [
+    "133",
+    "24010101601",
+    "B2",
+    "333",
+    "Adesara Preet Snehalkumar",
+    "ASP. NET Core",
+    "Machine Learning"
+  ],
+  [
+    "134",
+    "24010101606",
+    "B2",
+    "334",
+    "Badi Mohammadshahid Javedbhai",
+    "ASP. NET Core",
+    "Machine Learning"
+  ],
+  [
+    "135",
+    "24010101607",
+    "B2",
+    "335",
+    "Badi Rakib Sharfudinbhai",
+    "ASP. NET Core",
+    "Machine Learning"
+  ],
+  [
+    "136",
+    "24010101615",
+    "B2",
+    "336",
+    "Buddhdev Krish Bipinbhai",
+    "ASP. NET Core",
+    "Machine Learning"
+  ],
+  [
+    "137",
+    "24010101636",
+    "B2",
+    "337",
+    "Hada Harshil Jayeshbhai",
+    "ASP. NET Core",
+    "Machine Learning"
+  ],
+  [
+    "138",
+    "24010101647",
+    "B2",
+    "338",
+    "Kansagra Ronak Nileshbhai",
+    "ASP. NET Core",
+    "Machine Learning"
+  ],
+  [
+    "139",
+    "24010101666",
+    "B2",
+    "339",
+    "Nakum Vrajkumar Rajeshbhai",
+    "ASP. NET Core",
+    "Machine Learning"
+  ],
+  [
+    "140",
+    "24010101683",
+    "B2",
+    "340",
+    "Sapariya Prince Chetanbhai",
+    "ASP. NET Core",
+    "Machine Learning"
+  ],
+  [
+    "141",
+    "24010101695",
+    "B2",
+    "341",
+    "Tank Ayushi Manojbhai",
+    "ASP. NET Core",
+    "Machine Learning"
+  ],
+  [
+    "142",
+    "23010101432",
+    "B3",
+    "342",
+    "Trambadiya Priyal Hareshbhai",
+    "Flutter",
+    "Machine Learning"
+  ],
+  [
+    "143",
+    "23031701002",
+    "B3",
+    "343",
+    "Aghera Anjal Milanbhai",
+    "Flutter",
+    "Machine Learning"
+  ],
+  [
+    "144",
+    "23031701047",
+    "B3",
+    "344",
+    "Sangani Maithil Vrajlal",
+    "Flutter",
+    "Machine Learning"
+  ],
+  [
+    "145",
+    "24010101639",
+    "B3",
+    "345",
+    "Jani Kavya Pankajbhai",
+    "Flutter",
+    "Machine Learning"
+  ],
+  [
+    "146",
+    "24010101658",
+    "B3",
+    "346",
+    "Lotia Dhruvi Shailesh",
+    "Flutter",
+    "Machine Learning"
+  ],
+  [
+    "147",
+    "23010101001",
+    "B4",
+    "347",
+    "Adroja Shyamkumar Niteshbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "148",
+    "23010101005",
+    "B4",
+    "348",
+    "Ajagiya Tirth Chetanbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "149",
+    "23010101015",
+    "B4",
+    "349",
+    "Barot Avnil Samirbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "150",
+    "23010101037",
+    "B4",
+    "350",
+    "Boghani Utsav Ashvinbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "151",
+    "23010101041",
+    "B4",
+    "351",
+    "Butani Sneha Dineshbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "152",
+    "23010101042",
+    "B4",
+    "352",
+    "Chabhadiya Krish Kailashbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "153",
+    "23010101043",
+    "B4",
+    "353",
+    "Chandravadiya Karan Karashanbha",
+    "iAdvanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "154",
+    "23010101060",
+    "B4",
+    "354",
+    "Detroja Zeel Suketbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "155",
+    "23010101064",
+    "B4",
+    "355",
+    "Dhandhukiya Keval Vinodbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "156",
+    "23010101068",
+    "B4",
+    "356",
+    "Dobariya Happy Bhaveshbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "157",
+    "23010101080",
+    "B4",
+    "357",
+    "Gajipara Arpit Bharatbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "158",
+    "23010101090",
+    "B4",
+    "358",
+    "Gohil Priyanshiba Pradipsinh",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "159",
+    "23010101093",
+    "B4",
+    "359",
+    "Gondaliya Jigar Pareshbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "160",
+    "23010101098",
+    "B4",
+    "360",
+    "Hirpara Harmi Bhaveshbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "161",
+    "23010101099",
+    "B4",
+    "361",
+    "Jadav Sahil Maheshbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "162",
+    "23010101100",
+    "B4",
+    "362",
+    "Jadeja Jayrajsinh Sanjaysinh",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "163",
+    "23010101102",
+    "B4",
+    "363",
+    "Jadeja Yashrajsinh Majabutsinh",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "164",
+    "23010101106",
+    "B4",
+    "364",
+    "Jariya Harsh Rajeshbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "165",
+    "23010101113",
+    "B4",
+    "365",
+    "Joshi Jaimish Narendrabhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "166",
+    "23010101114",
+    "B4",
+    "366",
+    "Joshi Kavyam Vimalkumar",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "167",
+    "23010101123",
+    "B5",
+    "367",
+    "Kamani Disha Rajeshbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "168",
+    "23010101128",
+    "B5",
+    "368",
+    "Kansagra Monil Sanjaybhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "169",
+    "23010101136",
+    "B5",
+    "369",
+    "Kavar Rutvi Jagjivanbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "170",
+    "23010101139",
+    "B5",
+    "370",
+    "Khachar Nivkumar Girishkumar",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "171",
+    "23010101142",
+    "B5",
+    "371",
+    "Khunt Smit Vipulbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "172",
+    "23010101148",
+    "B5",
+    "372",
+    "Kumbhani Meet Ashokbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "173",
+    "23010101149",
+    "B5",
+    "373",
+    "Kundaliya Nishit Gautambhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "174",
+    "23010101157",
+    "B5",
+    "374",
+    "Makwana Rajesh Karshanbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "175",
+    "23010101168",
+    "B5",
+    "375",
+    "Mendapara Krina Atulbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "176",
+    "23010101170",
+    "B5",
+    "376",
+    "Modi Pratham Rajesh",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "177",
+    "23010101172",
+    "B5",
+    "377",
+    "Nadiyapara Jatin Shailesh",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "178",
+    "23010101175",
+    "B5",
+    "378",
+    "Nenuji Neeldhvaj Mansbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "179",
+    "23010101186",
+    "B5",
+    "379",
+    "Pandya Piyanshu Amitchandra",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "180",
+    "23010101187",
+    "B5",
+    "380",
+    "Parmar Ayush Sanjaybhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "181",
+    "23010101188",
+    "B5",
+    "381",
+    "Parmar Haril Gautambhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "182",
+    "23010101190",
+    "B5",
+    "382",
+    "Parmar Kaushik Pravinbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "183",
+    "23010101193",
+    "B5",
+    "383",
+    "Parmar Nency Udaybhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "184",
+    "23010101202",
+    "B5",
+    "384",
+    "Khushiben Patel",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "185",
+    "23010101208",
+    "B5",
+    "385",
+    "Pipalava Yash Girishkumar",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "186",
+    "23010101210",
+    "B5",
+    "386",
+    "Pipariya Sumit Bhaveshbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "187",
+    "23010101219",
+    "B6",
+    "387",
+    "Ramani Harshil Rajeshbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "188",
+    "23010101224",
+    "B6",
+    "388",
+    "Rankja Vinit Kumar Ashok",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "189",
+    "23010101225",
+    "B6",
+    "389",
+    "Rasamiya Dhruv Amrutbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "190",
+    "23010101227",
+    "B6",
+    "390",
+    "Rathod Nikunj Atul",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "191",
+    "23010101233",
+    "B6",
+    "391",
+    "Sagathiya Gautam Bharatbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "192",
+    "23010101235",
+    "B6",
+    "392",
+    "Sakdecha Darshan Sanjaybhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "193",
+    "23010101239",
+    "B6",
+    "393",
+    "Sanariya Rishabhkumar Keshavjibh",
+    "aAidvanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "194",
+    "23010101241",
+    "B6",
+    "394",
+    "Santoki Diya Bhaveshbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "195",
+    "23010101253",
+    "B6",
+    "395",
+    "Sojitra Aayush Dilipbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "196",
+    "23010101254",
+    "B6",
+    "396",
+    "Sojitra Pratyush Chandreshbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "197",
+    "23010101257",
+    "B6",
+    "397",
+    "Solanki Mitesh Jiteshbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "198",
+    "23010101260",
+    "B6",
+    "398",
+    "Sudani Vivek Jayeshbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "199",
+    "23010101264",
+    "B6",
+    "399",
+    "Tank Balkrushn Rajeshbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "200",
+    "23010101271",
+    "B6",
+    "400",
+    "Thoriya Omkumar Yogeshbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "201",
+    "23010101273",
+    "B6",
+    "401",
+    "Togadiya Prasham Kishorbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "202",
+    "23010101277",
+    "B6",
+    "402",
+    "Upadheyay Ronak Thulendra",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "203",
+    "23010101278",
+    "B6",
+    "403",
+    "Vachhani Kush Hiteshbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "204",
+    "23010101284",
+    "B6",
+    "404",
+    "Vadhadiya Pragneshkumar Chaman",
+    "Abhdavai nced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "205",
+    "23010101293",
+    "B6",
+    "405",
+    "Vasoya Ayush Hareshbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "206",
+    "23010101301",
+    "B6",
+    "406",
+    "Viroja Yug Vipulbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "207",
+    "23010101305",
+    "B7",
+    "407",
+    "Yadav Harshil Dineshbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "208",
+    "23010101402",
+    "B7",
+    "408",
+    "Baraiya Jay Bharatbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "209",
+    "23010101424",
+    "B7",
+    "409",
+    "Patel Jenil Vimalbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "210",
+    "23010101428",
+    "B7",
+    "410",
+    "Raiyani Maitri Bharatbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "211",
+    "23010101431",
+    "B7",
+    "411",
+    "Sorathiya Raj Kamleshbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "212",
+    "23010101434",
+    "B7",
+    "412",
+    "Zalariya Parth Dipakbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "213",
+    "23031701007",
+    "B7",
+    "413",
+    "Bhalodiya Prince Nileshbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "214",
+    "23031701009",
+    "B7",
+    "414",
+    "Bhoraniya Vishva Chandrakantbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "215",
+    "23031701024",
+    "B7",
+    "415",
+    "Kagathara Shubham Kishorbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "216",
+    "23031701028",
+    "B7",
+    "416",
+    "Kodiya Dishaben Vallabhabhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "217",
+    "23031701032",
+    "B7",
+    "417",
+    "Mandora Nirali Prakashbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "218",
+    "23031701035",
+    "B7",
+    "418",
+    "Panara Ashaniben Ashokbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "219",
+    "23031701046",
+    "B7",
+    "419",
+    "Rupareliya Devanshi Amitbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "220",
+    "24010101611",
+    "B7",
+    "420",
+    "Bhadeshiya Jay Chandreshbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "221",
+    "24010101614",
+    "B7",
+    "421",
+    "Botadara Deep Milanbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "222",
+    "24010101620",
+    "B7",
+    "422",
+    "Chotara Anshil Rajeshbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "223",
+    "24010101641",
+    "B7",
+    "423",
+    "Javiya Abhay Hareshbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "224",
+    "24010101642",
+    "B7",
+    "424",
+    "Javiya Dhanvi Dhirubhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "225",
+    "24010101644",
+    "B7",
+    "425",
+    "Joshi Krushant Nitinkumar",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "226",
+    "24010101650",
+    "B7",
+    "426",
+    "Khunt Pratikkumar Hiteshbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "227",
+    "24010101652",
+    "B8",
+    "427",
+    "Koradiya Isha Vithalbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "228",
+    "24010101662",
+    "B8",
+    "428",
+    "Mansuriya Vishwa Ajitbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "229",
+    "24010101664",
+    "B8",
+    "429",
+    "Mehta Pratik Jigneshbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "230",
+    "24010101670",
+    "B8",
+    "430",
+    "Parmar Ruchita Lalitkumar",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "231",
+    "24010101672",
+    "B8",
+    "431",
+    "Parmar Vivek Rameshbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "232",
+    "24010101678",
+    "B8",
+    "432",
+    "Rana Mitrajsinh Bhagirathsinh",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "233",
+    "24010101694",
+    "B8",
+    "433",
+    "Karan Sonagara",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "234",
+    "24010101698",
+    "B8",
+    "434",
+    "Thumar Heet Rajnikant",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "235",
+    "24010101700",
+    "B8",
+    "435",
+    "Ukani Umangkumar Jiteshbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "236",
+    "24010101706",
+    "B8",
+    "436",
+    "Vaghela Nakul Hemantbhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "237",
+    "24010101903",
+    "B8",
+    "437",
+    "Vasani Jenisa Kalubhai",
+    "Advanced Web Technology",
+    "Machine Learning"
+  ],
+  [
+    "238",
+    "23010101011",
+    "B9",
+    "438",
+    "Bakraniya Mahek Hareshbhai",
+    "UI/UX Designing",
+    "Machine Learning"
+  ],
+  [
+    "239",
+    "23010101020",
+    "B9",
+    "439",
+    "Bhalodiya Charmi Rimalkumar",
+    "UI/UX Designing",
+    "Machine Learning"
+  ],
+  [
+    "240",
+    "23010101027",
+    "B9",
+    "440",
+    "Bhimani Harsh Pareshbhai",
+    "UI/UX Designing",
+    "Machine Learning"
+  ],
+  [
+    "241",
+    "23010101032",
+    "B9",
+    "441",
+    "Bhindora Nency Piyushbhai",
+    "UI/UX Designing",
+    "Machine Learning"
+  ],
+  [
+    "242",
+    "23010101034",
+    "B9",
+    "442",
+    "Bhuva Het Ghanshyam",
+    "UI/UX Designing",
+    "Machine Learning"
+  ],
+  [
+    "243",
+    "23010101062",
+    "B9",
+    "443",
+    "Dhamsaniya Darshi Jayeshbhai",
+    "UI/UX Designing",
+    "Machine Learning"
+  ],
+  [
+    "244",
+    "23010101065",
+    "B9",
+    "444",
+    "Dhandhukiya Nilay Jayeshbhai",
+    "UI/UX Designing",
+    "Machine Learning"
+  ],
+  [
+    "245",
+    "23010101091",
+    "B9",
+    "445",
+    "Gojariya Vishvaben Satishbhai",
+    "UI/UX Designing",
+    "Machine Learning"
+  ],
+  [
+    "246",
+    "23010101115",
+    "B9",
+    "446",
+    "Joshi Swayam Pareshbhai",
+    "UI/UX Designing",
+    "Machine Learning"
+  ],
+  [
+    "247",
+    "23010101124",
+    "B9",
+    "447",
+    "Rency Kamani",
+    "UI/UX Designing",
+    "Machine Learning"
+  ],
+  [
+    "248",
+    "23010101205",
+    "B9",
+    "448",
+    "Patel Vishwas Maheshkumar",
+    "UI/UX Designing",
+    "Machine Learning"
+  ],
+  [
+    "249",
+    "23010101261",
+    "B9",
+    "449",
+    "Surani Vritti Nilesh",
+    "UI/UX Designing",
+    "Machine Learning"
+  ],
+  [
+    "250",
+    "23010101296",
+    "B9",
+    "450",
+    "Vegda Zeel Sunil",
+    "UI/UX Designing",
+    "Machine Learning"
+  ],
+  [
+    "251",
+    "23010101408",
+    "B9",
+    "451",
+    "Doshi Tanisha Jasminbhai",
+    "UI/UX Designing",
+    "Machine Learning"
+  ],
+  [
+    "252",
+    "23010101414",
+    "B9",
+    "452",
+    "Kadivar Appasin Maksul",
+    "UI/UX Designing",
+    "Machine Learning"
+  ],
+  [
+    "253",
+    "23010101422",
+    "B9",
+    "453",
+    "Parasara Mohamadsaif Najarhushe",
+    "nUI/UX Designing",
+    "Machine Learning"
+  ],
+  [
+    "254",
+    "23010101427",
+    "B9",
+    "454",
+    "Rachchh Shubham Bhaveshbhai",
+    "UI/UX Designing",
+    "Machine Learning"
+  ],
+  [
+    "255",
+    "23031701023",
+    "B9",
+    "455",
+    "Kadivar Samanbanu Abdulrahim",
+    "UI/UX Designing",
+    "Machine Learning"
+  ],
+  [
+    "256",
+    "24010101603",
+    "B9",
+    "456",
+    "Aghera Riya Mukeshbhai",
+    "UI/UX Designing",
+    "Machine Learning"
+  ],
+  [
+    "257",
+    "24010101608",
+    "B9",
+    "457",
+    "Badi Safin Najarudin",
+    "UI/UX Designing",
+    "Machine Learning"
+  ],
+  [
+    "258",
+    "24010101613",
+    "B10",
+    "458",
+    "Bhas Farhan Manjurbhai",
+    "UI/UX Designing",
+    "Machine Learning"
+  ],
+  [
+    "259",
+    "24010101622",
+    "B10",
+    "459",
+    "Dedania Prem Nikhilbhai",
+    "UI/UX Designing",
+    "Machine Learning"
+  ],
+  [
+    "260",
+    "24010101623",
+    "B10",
+    "460",
+    "Dedania Prit Nikhilbhai",
+    "UI/UX Designing",
+    "Machine Learning"
+  ],
+  [
+    "261",
+    "24010101628",
+    "B10",
+    "461",
+    "Dobariya Viraj Hareshbhai",
+    "UI/UX Designing",
+    "Machine Learning"
+  ],
+  [
+    "262",
+    "24010101629",
+    "B10",
+    "462",
+    "Dodiya Dhanashree Dineshbhai",
+    "UI/UX Designing",
+    "Machine Learning"
+  ],
+  [
+    "263",
+    "24010101646",
+    "B10",
+    "463",
+    "Kalola Devang Sureshbhai",
+    "UI/UX Designing",
+    "Machine Learning"
+  ],
+  [
+    "264",
+    "24010101661",
+    "B10",
+    "464",
+    "Manasiya Mohammadshahid Najarh",
+    "uUsIh/UeXn Designing",
+    "Machine Learning"
+  ],
+  [
+    "265",
+    "24010101669",
+    "B10",
+    "465",
+    "Parmar Kush Pravinbhai",
+    "UI/UX Designing",
+    "Machine Learning"
+  ],
+  [
+    "266",
+    "24010101684",
+    "B10",
+    "466",
+    "Sapariya Vishva Vipulbhai",
+    "UI/UX Designing",
+    "Machine Learning"
+  ],
+  [
+    "267",
+    "24010101689",
+    "B10",
+    "467",
+    "Sinojiya Selja Sandipbhai",
+    "UI/UX Designing",
+    "Machine Learning"
+  ],
+  [
+    "268",
+    "24010101693",
+    "B10",
+    "468",
+    "Solanki Vanraj Dineshbhai",
+    "UI/UX Designing",
+    "Machine Learning"
+  ],
+  [
+    "269",
+    "24010101699",
+    "B10",
+    "469",
+    "Thummar Henil Ketanbhai",
+    "UI/UX Designing",
+    "Machine Learning"
+  ],
+  [
+    "270",
+    "24010101704",
+    "B10",
+    "470",
+    "Vaghasiya Jinal Harsukhbhai",
+    "UI/UX Designing",
+    "Machine Learning"
+  ],
+  [
+    "271",
+    "24010101705",
+    "B10",
+    "471",
+    "Vaghasiya Khushi Jaysukhbhai",
+    "UI/UX Designing",
+    "Machine Learning"
+  ],
+  [
+    "272",
+    "23010101004",
+    "B11",
+    "472",
+    "Ajagia Bansi Chetanbhai",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Machine Learning"
+  ],
+  [
+    "273",
+    "23010101022",
+    "B11",
+    "473",
+    "Bhanderi Prince Vijaybhai",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Machine Learning"
+  ],
+  [
+    "274",
+    "23010101035",
+    "B11",
+    "474",
+    "Boda Princekumar Hasmukhbhai",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Machine Learning"
+  ],
+  [
+    "275",
+    "23010101053",
+    "B11",
+    "475",
+    "Dadhaniya Tirth Pankajkumar",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Machine Learning"
+  ],
+  [
+    "276",
+    "23010101078",
+    "B11",
+    "476",
+    "Faldu Virangi Kantibhai",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Machine Learning"
+  ],
+  [
+    "277",
+    "23010101081",
+    "B11",
+    "477",
+    "Gajipara Jay Kishorbhai",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Machine Learning"
+  ],
+  [
+    "278",
+    "23010101103",
+    "B11",
+    "478",
+    "Jani Meet Jeetendrabhai",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Machine Learning"
+  ],
+  [
+    "279",
+    "23010101122",
+    "B11",
+    "479",
+    "Kakdiya Vandan Chandubhai",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Machine Learning"
+  ],
+  [
+    "280",
+    "23010101144",
+    "B11",
+    "480",
+    "Kotadiya Yashvi Ravindrabhai",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Machine Learning"
+  ],
+  [
+    "281",
+    "23010101155",
+    "B11",
+    "481",
+    "Maiyad Rushi Manishbhai",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Machine Learning"
+  ],
+  [
+    "282",
+    "23010101191",
+    "B11",
+    "482",
+    "Parmar Meet Prakashkumar",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Machine Learning"
+  ],
+  [
+    "283",
+    "23010101236",
+    "B11",
+    "483",
+    "Sambad Haresh Kalubhai",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Machine Learning"
+  ],
+  [
+    "284",
+    "23010101258",
+    "B11",
+    "484",
+    "Soni Bhavy Sureshbhai",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Machine Learning"
+  ],
+  [
+    "285",
+    "23010101263",
+    "B11",
+    "485",
+    "Talaviya Dhaval Maheshbhai",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Machine Learning"
+  ],
+  [
+    "286",
+    "23010101276",
+    "B11",
+    "486",
+    "Ubhadiya Vivek Batukbhai",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Machine Learning"
+  ],
+  [
+    "287",
+    "23010101307",
+    "B11",
+    "487",
+    "Zala Harsh Nileshbhai",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Machine Learning"
+  ],
+  [
+    "288",
+    "23010101411",
+    "B11",
+    "488",
+    "Jadeja Rudrarajsinh Rajendrasinh",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Machine Learning"
+  ],
+  [
+    "289",
+    "23010101416",
+    "B11",
+    "489",
+    "Kalavadiya Monakkumar Vimalbhai",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Machine Learning"
+  ],
+  [
+    "290",
+    "23010101419",
+    "B11",
+    "490",
+    "Mavani Rutva Purushottambhai",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Machine Learning"
+  ],
+  [
+    "291",
+    "23031701018",
+    "B11",
+    "491",
+    "Godhaviya Neemaben Maheshbhai",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Machine Learning"
+  ],
+  [
+    "292",
+    "23031701030",
+    "B11",
+    "492",
+    "Makasana Nidhiben Rajnikantbhai",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Machine Learning"
+  ],
+  [
+    "293",
+    "23031701055",
+    "B11",
+    "493",
+    "Zalariya Himanshi Hiteshkumar",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Machine Learning"
+  ],
+  [
+    "294",
+    "24010101673",
+    "B11",
+    "494",
+    "Patel Honey Rajeshbhai",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Machine Learning"
+  ],
+  [
+    "295",
+    "24010101640",
+    "B12",
+    "495",
+    "Jat Karan Pratapbhai",
+    "Advanced .NET Development and Modern Architectures",
+    "Machine Learning"
+  ],
+  [
+    "296",
+    "24010101681",
+    "B12",
+    "496",
+    "Rathod Vaibhav Hirenbhai",
+    "Advanced .NET Development and Modern Architectures",
+    "Machine Learning"
+  ],
+  [
+    "297",
+    "24010101692",
+    "B12",
+    "497",
+    "Solanki Karan Pareshbhai",
+    "Advanced .NET Development and Modern Architectures",
+    "Machine Learning"
+  ],
+  [
+    "298",
+    "23010101018",
+    "B12",
+    "498",
+    "Bhalala Tisha Ashokbhai",
+    "Advanced .NET Development and Modern Architectures",
+    "Machine Learning"
+  ],
+  [
+    "299",
+    "23010101137",
+    "B12",
+    "499",
+    "Kavathiya Khushi Bhaveshbhai",
+    "Advanced .NET Development and Modern Architectures",
+    "Machine Learning"
+  ],
+  [
+    "300",
+    "23010101166",
+    "B12",
+    "500",
+    "Mehta Parshva Kalpesh",
+    "Advanced .NET Development and Modern Architectures",
+    "Machine Learning"
+  ],
+  [
+    "301",
+    "23010101185",
+    "B12",
+    "501",
+    "Panchasara Raj Hasmukhrai",
+    "Advanced .NET Development and Modern Architectures",
+    "Machine Learning"
+  ],
+  [
+    "302",
+    "23010101230",
+    "B12",
+    "502",
+    "Roshiya Rahul Pravinbhai",
+    "Advanced .NET Development and Modern Architectures",
+    "Machine Learning"
+  ],
+  [
+    "303",
+    "23010101405",
+    "B12",
+    "503",
+    "Desai Isha Jayeshbhai",
+    "Advanced .NET Development and Modern Architectures",
+    "Machine Learning"
+  ],
+  [
+    "304",
+    "23010101412",
+    "B12",
+    "504",
+    "Javiya Bansi Ashokbhai",
+    "Advanced .NET Development and Modern Architectures",
+    "Machine Learning"
+  ],
+  [
+    "305",
+    "23031701012",
+    "B12",
+    "505",
+    "Chauhan Sarthak Sureshbhai",
+    "Advanced .NET Development and Modern Architectures",
+    "Machine Learning"
+  ],
+  [
+    "306",
+    "24010101609",
+    "B12",
+    "506",
+    "Shyam Badiyani",
+    "Advanced .NET Development and Modern Architectures",
+    "Machine Learning"
+  ],
+  [
+    "307",
+    "24010101626",
+    "B12",
+    "507",
+    "Dhamsaniya Nensiben Nileshbhai",
+    "Advanced .NET Development and Modern Architectures",
+    "Machine Learning"
+  ],
+  [
+    "308",
+    "24010101635",
+    "B12",
+    "508",
+    "Gohil Vishwajitsinh Jagdishsinh",
+    "Advanced .NET Development and Modern Architectures",
+    "Machine Learning"
+  ],
+  [
+    "309",
+    "23010101002",
+    "B13",
+    "509",
+    "Dharvi Mehulkumar Adthakkar",
+    "Advanced Flutter",
+    "Machine Learning"
+  ],
+  [
+    "310",
+    "23010101033",
+    "B13",
+    "510",
+    "Bhut Om Nileshbhai",
+    "Advanced Flutter",
+    "Machine Learning"
+  ],
+  [
+    "311",
+    "23010101163",
+    "B13",
+    "511",
+    "Mathakiya Aafiya Mahebubbhai",
+    "Advanced Flutter",
+    "Machine Learning"
+  ],
+  [
+    "312",
+    "24010101685",
+    "B13",
+    "512",
+    "Sapariya Yash Harilal",
+    "Advanced Flutter",
+    "Machine Learning"
+  ],
+  [
+    "313",
+    "24010101701",
+    "B13",
+    "513",
+    "Vachhani Sneh Kiranbhai",
+    "Advanced Flutter",
+    "Machine Learning"
+  ],
+  [
+    "314",
+    "23010101012",
+    "C1",
+    "601",
+    "Bamnoliya Mahek Rakeshbhai",
+    "ASP. NET Core",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "315",
+    "23010101059",
+    "C1",
+    "602",
+    "Detroja Manan Pravinbhai",
+    "ASP. NET Core",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "316",
+    "23010101072",
+    "C1",
+    "603",
+    "Dudhagara Atmik Pashvinbhai",
+    "ASP. NET Core",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "317",
+    "23010101077",
+    "C1",
+    "604",
+    "Faldu Rashi Nimeshbhai",
+    "ASP. NET Core",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "318",
+    "23010101159",
+    "C1",
+    "605",
+    "Maradia Ayush Jigneshbhai",
+    "ASP. NET Core",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "319",
+    "23010101204",
+    "C1",
+    "606",
+    "Patel Riya Nikunjbhai",
+    "ASP. NET Core",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "320",
+    "23010101211",
+    "C1",
+    "607",
+    "Prabhakar Dhvani Sanjay",
+    "ASP. NET Core",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "321",
+    "23010101218",
+    "C1",
+    "608",
+    "Raiyani Rushi Bhaveshbhai",
+    "ASP. NET Core",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "322",
+    "23010101306",
+    "C1",
+    "609",
+    "Zala Dhruvrajsinh Chhatrasinh",
+    "ASP. NET Core",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "323",
+    "23010101310",
+    "C1",
+    "610",
+    "Prakirti Zalariya",
+    "ASP. NET Core",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "324",
+    "23010101425",
+    "C1",
+    "611",
+    "Pattani Varun Kiran",
+    "ASP. NET Core",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "325",
+    "23031701004",
+    "C1",
+    "612",
+    "Baru Priyanshi Yogesh",
+    "ASP. NET Core",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "326",
+    "23031701005",
+    "C1",
+    "613",
+    "Bhalara Dakshkumar Sanjaybhai",
+    "ASP. NET Core",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "327",
+    "23031701011",
+    "C1",
+    "614",
+    "Bhuva Purv Vijaybhai",
+    "ASP. NET Core",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "328",
+    "23031701015",
+    "C1",
+    "615",
+    "Gajera Meet Rameshbhai",
+    "ASP. NET Core",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "329",
+    "23031701029",
+    "C1",
+    "616",
+    "Makadiya Sneha Subhashbhai",
+    "ASP. NET Core",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "330",
+    "23031701031",
+    "C1",
+    "617",
+    "Mandali Krupaliben Rajeshbhai",
+    "ASP. NET Core",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "331",
+    "23031701044",
+    "C1",
+    "618",
+    "Rajpara Tushar Jayeshbhai",
+    "ASP. NET Core",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "332",
+    "24010101605",
+    "C1",
+    "619",
+    "Babar Meet Dharamshibhai",
+    "ASP. NET Core",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "333",
+    "24010101634",
+    "C1",
+    "620",
+    "Gohil Arjunsinh Narendrasinh",
+    "ASP. NET Core",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "334",
+    "24010101649",
+    "C1",
+    "621",
+    "Khant Vidit Rakhilbhai",
+    "ASP. NET Core",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "335",
+    "24010101665",
+    "C1",
+    "622",
+    "Mehta Vidhya Bharatbhai",
+    "ASP. NET Core",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "336",
+    "24010101697",
+    "C1",
+    "623",
+    "Thakkar Parth Rakeshbhai",
+    "ASP. NET Core",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "337",
+    "23010101165",
+    "C2",
+    "624",
+    "Mehta Diya Vickybhai",
+    "Flutter",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "338",
+    "23010101246",
+    "C2",
+    "625",
+    "Savaliya Avinash Bhaveshbhai",
+    "Flutter",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "339",
+    "23010101291",
+    "C2",
+    "626",
+    "Vamja Deep Bharatbhai",
+    "Flutter",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "340",
+    "23031701014",
+    "C2",
+    "627",
+    "Khushi Detroja",
+    "Flutter",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "341",
+    "23031701020",
+    "C2",
+    "628",
+    "Jadav Niyati Manojbhai",
+    "Flutter",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "342",
+    "23031701026",
+    "C2",
+    "629",
+    "Khokhar Ishita Kamleshbhai",
+    "Flutter",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "343",
+    "23010101006",
+    "C3",
+    "630",
+    "Ajani Keval Kalpeshbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "344",
+    "23010101007",
+    "C3",
+    "631",
+    "Akbari Kishan Kamleshbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "345",
+    "23010101008",
+    "C3",
+    "632",
+    "Akbari Manali Alpeshbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "346",
+    "23010101009",
+    "C3",
+    "633",
+    "Andani Renish Maheshbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "347",
+    "23010101010",
+    "C3",
+    "634",
+    "Andrapiya Disha Ashokkumar",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "348",
+    "23010101014",
+    "C3",
+    "635",
+    "Baraiya Vishalbhai Vijaybhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "349",
+    "23010101016",
+    "C3",
+    "636",
+    "Bhagiya Rutvik Rameshbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "350",
+    "23010101017",
+    "C3",
+    "637",
+    "Bhagiya Vidisha Hareshbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "351",
+    "23010101019",
+    "C3",
+    "638",
+    "Bhalani Het Rameshkumar",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "352",
+    "23010101023",
+    "C3",
+    "639",
+    "Bhatt Dhairya Pareshbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "353",
+    "23010101024",
+    "C3",
+    "640",
+    "Bhatti Mahek Jigneshbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "354",
+    "23010101030",
+    "C3",
+    "641",
+    "Bhimani Riyaben Chandrakantbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "355",
+    "23010101045",
+    "C3",
+    "642",
+    "Chauhan Jasmin Rajeshbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "356",
+    "23010101046",
+    "C3",
+    "643",
+    "Chauhan Pruthviraj Bhaveshbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "357",
+    "23010101048",
+    "C3",
+    "644",
+    "Rudra Chavda",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "358",
+    "23010101051",
+    "C3",
+    "645",
+    "Chotai Dhruv Kamleshbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "359",
+    "23010101052",
+    "C3",
+    "646",
+    "Priyanshu Choudhary",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "360",
+    "23010101054",
+    "C3",
+    "647",
+    "Dafda Disha Ketanbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "361",
+    "23010101058",
+    "C3",
+    "648",
+    "Desai Jineesh Shaileshkumar",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "362",
+    "23010101067",
+    "C3",
+    "649",
+    "Dev Dobariya",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "363",
+    "23010101075",
+    "C4",
+    "650",
+    "Dhairya Jayeshbhai Dudkiya",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "364",
+    "23010101076",
+    "C4",
+    "651",
+    "Faldu Aum Prashantbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "365",
+    "23010101079",
+    "C4",
+    "652",
+    "Fatepara Mansiben Kishorbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "366",
+    "23010101082",
+    "C4",
+    "653",
+    "Gambhava Rushi Chetanbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "367",
+    "23010101083",
+    "C4",
+    "654",
+    "Ganatra Devansh Bharatbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "368",
+    "23010101084",
+    "C4",
+    "655",
+    "Gangani Komal Manishbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "369",
+    "23010101089",
+    "C4",
+    "656",
+    "Gohel Neel Hiteshbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "370",
+    "23010101092",
+    "C4",
+    "657",
+    "Gojiya Jagrutiben Jeshabhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "371",
+    "23010101097",
+    "C4",
+    "658",
+    "Halani Darshan Miteshbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "372",
+    "23010101101",
+    "C4",
+    "659",
+    "Jadeja Shivangiba Narendrasinh",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "373",
+    "23010101109",
+    "C4",
+    "660",
+    "Jivani Anjali Vasantbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "374",
+    "23010101111",
+    "C4",
+    "661",
+    "Jogia Kairavi Rupesh",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "375",
+    "23010101116",
+    "C4",
+    "662",
+    "Jotaniya Meet Sureshbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "376",
+    "23010101117",
+    "C4",
+    "663",
+    "Kacha Dev Bakulbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "377",
+    "23010101125",
+    "C4",
+    "664",
+    "Kambariya Vanita Rambhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "378",
+    "23010101130",
+    "C4",
+    "665",
+    "Karia Parva Manoj",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "379",
+    "23010101134",
+    "C4",
+    "666",
+    "Kathrani Darshi Maheshbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "380",
+    "23010101140",
+    "C4",
+    "667",
+    "Khant Harshkumar Dilipbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "381",
+    "23010101141",
+    "C4",
+    "668",
+    "Kholia Vandan Chirag",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "382",
+    "23010101145",
+    "C4",
+    "669",
+    "Kotecha Manav Amitbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "383",
+    "23010101151",
+    "C5",
+    "670",
+    "Limbad Divyesh Prakashbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "384",
+    "23010101152",
+    "C5",
+    "671",
+    "Lo Nisarg Bharatbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "385",
+    "23010101153",
+    "C5",
+    "672",
+    "Karan Lukka",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "386",
+    "23010101154",
+    "C5",
+    "673",
+    "Machchhar Deven Kishorbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "387",
+    "23010101161",
+    "C5",
+    "674",
+    "Maru Smit Mukeshbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "388",
+    "23010101164",
+    "C5",
+    "675",
+    "Meghapara Krish Shaileshbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "389",
+    "23010101167",
+    "C5",
+    "676",
+    "Mehta Samarth Chirag",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "390",
+    "23010101169",
+    "C5",
+    "677",
+    "Merja Yash Kantilal",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "391",
+    "23010101174",
+    "C5",
+    "678",
+    "Nandasana Shyam Mansukhbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "392",
+    "23010101176",
+    "C5",
+    "679",
+    "Nesadiya Parth Virendrabhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "393",
+    "23010101177",
+    "C5",
+    "680",
+    "Nimavat Mansi Dilipbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "394",
+    "23010101178",
+    "C5",
+    "681",
+    "Odedra Viraj Arjanbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "395",
+    "23010101179",
+    "C5",
+    "682",
+    "Padhiyar Mann Hiteshbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "396",
+    "23010101180",
+    "C5",
+    "683",
+    "Padhiyar Meet Hiteshbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "397",
+    "23010101181",
+    "C5",
+    "684",
+    "Padsumbiya Darshan Rajeshbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "398",
+    "23010101182",
+    "C5",
+    "685",
+    "Padsumbiya Nandani Dharmendrab",
+    "hAadivanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "399",
+    "23010101183",
+    "C5",
+    "686",
+    "Pambhar Meet Nikunjbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "400",
+    "23010101184",
+    "C5",
+    "687",
+    "Malay Mansukh Panara",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "401",
+    "23010101189",
+    "C5",
+    "688",
+    "Parmar Harsh Hareshbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "402",
+    "23010101195",
+    "C5",
+    "689",
+    "Parmar Sahil Nilesh",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "403",
+    "23010101199",
+    "C6",
+    "690",
+    "Patel Ayushi Samitbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "404",
+    "23010101200",
+    "C6",
+    "691",
+    "Patel Balkrushna Manishbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "405",
+    "23010101201",
+    "C6",
+    "692",
+    "Jay Patel",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "406",
+    "23010101203",
+    "C6",
+    "693",
+    "Patel Krishkumar Bharatbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "407",
+    "23010101206",
+    "C6",
+    "694",
+    "Patoliya Yash Chandubhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "408",
+    "23010101215",
+    "C6",
+    "695",
+    "Rabadiya Raj Mansukhbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "409",
+    "23010101220",
+    "C6",
+    "696",
+    "Ramani Yasha Bhaveshbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "410",
+    "23010101223",
+    "C6",
+    "697",
+    "Ranipa Vraj Bharatbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "411",
+    "23010101231",
+    "C6",
+    "698",
+    "Ruparelia Drashti Dharmesh",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "412",
+    "23010101234",
+    "C6",
+    "699",
+    "Sakariya Mayank Bhupendrabhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "413",
+    "23010101242",
+    "C6",
+    "700",
+    "Sapariya Niyati Ketanbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "414",
+    "23010101251",
+    "C6",
+    "701",
+    "Sherasiya Mohmadayaz Ismail",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "415",
+    "23010101256",
+    "C6",
+    "702",
+    "Solanki Harshil Shaileshbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "416",
+    "23010101262",
+    "C6",
+    "703",
+    "Kashvi Chandrakant Suvagiya",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "417",
+    "23010101265",
+    "C6",
+    "704",
+    "Tank Hemali Sanjaybhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "418",
+    "23010101266",
+    "C6",
+    "705",
+    "Tanwani Kirti Jagdish",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "419",
+    "23010101267",
+    "C6",
+    "706",
+    "Taraviya Nency Rameshbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "420",
+    "23010101269",
+    "C6",
+    "707",
+    "Thakkar Zeel Kiritkumar",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "421",
+    "23010101270",
+    "C6",
+    "708",
+    "Thesia Hearshraj Jayeshbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "422",
+    "23010101272",
+    "C6",
+    "709",
+    "Thummar Jainil Sanjaybhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "423",
+    "23010101275",
+    "C7",
+    "710",
+    "Bhoomi Tulsiyani",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "424",
+    "23010101281",
+    "C7",
+    "711",
+    "Vadaviya Parth Kishorbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "425",
+    "23010101285",
+    "C7",
+    "712",
+    "Vaghamashi Deep Rajeshbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "426",
+    "23010101286",
+    "C7",
+    "713",
+    "Vaghasia Nirav Mansukhbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "427",
+    "23010101290",
+    "C7",
+    "714",
+    "Valera Dhruvi Dipesh",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "428",
+    "23010101299",
+    "C7",
+    "715",
+    "Kalp Vipul Viradia",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "429",
+    "23010101302",
+    "C7",
+    "716",
+    "Virpariya Avi Brijeshbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "430",
+    "23010101303",
+    "C7",
+    "717",
+    "Virsodiya Yash Nileshbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "431",
+    "23010101311",
+    "C7",
+    "718",
+    "Zalariya Shrutiben Rajnikantbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "432",
+    "23010101313",
+    "C7",
+    "719",
+    "Zapadiya Haresh Dhirubhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "433",
+    "23010101401",
+    "C7",
+    "720",
+    "Ajmera Pujan Mukeshbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "434",
+    "23010101407",
+    "C7",
+    "721",
+    "Dhol Namra Vijaybhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "435",
+    "23010101429",
+    "C7",
+    "722",
+    "Ranipa Smit Kishorbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "436",
+    "23031701040",
+    "C7",
+    "723",
+    "Pedhadiya Tinkal Jamanbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "437",
+    "24010101604",
+    "C7",
+    "724",
+    "Ansari Mohmadaabid Akbarali",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "438",
+    "24010101633",
+    "C7",
+    "725",
+    "Ghada Afsana Rahimbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "439",
+    "24010101637",
+    "C7",
+    "726",
+    "Ida Gaurav Rajubhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "440",
+    "24010101651",
+    "C7",
+    "727",
+    "Koradiya Harsh Pareshbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "441",
+    "24010101653",
+    "C7",
+    "728",
+    "Dikshita Kothari",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "442",
+    "24010101668",
+    "C7",
+    "729",
+    "Panera Ghanshyam Karshanbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "443",
+    "24010101680",
+    "C7",
+    "730",
+    "Rathod Harmik Kamleshbhai",
+    "Advanced Web Technology",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "444",
+    "23010101063",
+    "C8",
+    "731",
+    "Dhandh Pari Mukundbhai",
+    "UI/UX Designing",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "445",
+    "23010101074",
+    "C8",
+    "732",
+    "Dudhrejiya Dharashvi Hareshkumar",
+    "UI/UX Designing",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "446",
+    "23010101094",
+    "C8",
+    "733",
+    "Gosrani Hasti Mitesh",
+    "UI/UX Designing",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "447",
+    "23010101118",
+    "C8",
+    "734",
+    "Kacha Mihir Rasikbhai",
+    "UI/UX Designing",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "448",
+    "23010101245",
+    "C8",
+    "735",
+    "Sata Aayushi Mital",
+    "UI/UX Designing",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "449",
+    "23010101283",
+    "C8",
+    "736",
+    "Vadukar Jigar Jayeshbhai",
+    "UI/UX Designing",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "450",
+    "23010101287",
+    "C8",
+    "737",
+    "Vaghasiya Birva Bipinbhai",
+    "UI/UX Designing",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "451",
+    "23010101309",
+    "C8",
+    "738",
+    "Satyajitsinh Jitendrasinh Zala",
+    "UI/UX Designing",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "452",
+    "23010101312",
+    "C8",
+    "739",
+    "Zalavadiya Priya Pareshbhai",
+    "UI/UX Designing",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "453",
+    "23010101417",
+    "C8",
+    "740",
+    "Kansagra Kevalkumar Chetanbhai",
+    "UI/UX Designing",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "454",
+    "23031701041",
+    "C8",
+    "741",
+    "Piparva Keshvi Vimalbhai",
+    "UI/UX Designing",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "455",
+    "24010101648",
+    "C8",
+    "742",
+    "Kava Payal Rajnibhai",
+    "UI/UX Designing",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "456",
+    "24010101657",
+    "C8",
+    "743",
+    "Lo Khushboo Amrutlal",
+    "UI/UX Designing",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "457",
+    "24010101686",
+    "C8",
+    "744",
+    "Shekhat Tejasvi Bharatbhai",
+    "UI/UX Designing",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "458",
+    "23010101021",
+    "C9",
+    "745",
+    "Bhalodiya Tanisha Pankajbhai",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "459",
+    "23010101056",
+    "C9",
+    "746",
+    "Dedakiya Raj Sanjaybhai",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "460",
+    "23010101061",
+    "C9",
+    "747",
+    "Dhameliya Yash Vipulbhai",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "461",
+    "23010101087",
+    "C9",
+    "748",
+    "Gaudani Siddhi Nayanbhai",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "462",
+    "23010101104",
+    "C9",
+    "749",
+    "Jani Prem Viralbhai",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "463",
+    "23010101121",
+    "C9",
+    "750",
+    "Kakadiya Yash Vipulbhai",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "464",
+    "23010101127",
+    "C9",
+    "751",
+    "Kaneriya Drashti Mrugendrabhai",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "465",
+    "23010101160",
+    "C9",
+    "752",
+    "Markana Pushti Manishbhai",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "466",
+    "23010101171",
+    "C9",
+    "753",
+    "Morad Jevin Kiritbhai",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "467",
+    "23010101192",
+    "C9",
+    "754",
+    "Parmar Mohil Jayeshbhai",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "468",
+    "23010101196",
+    "C9",
+    "755",
+    "Parmar Vatsal Prakashbhai",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "469",
+    "23010101216",
+    "C9",
+    "756",
+    "Rabadiya Yashvi Dilipbhai",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "470",
+    "23010101222",
+    "C9",
+    "757",
+    "Kunj Ramoliya",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "471",
+    "23010101247",
+    "C9",
+    "758",
+    "Savaliya Ronit Ashokbhai",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "472",
+    "23010101259",
+    "C9",
+    "759",
+    "Sorathiya Harshvi Maheshbhai",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "473",
+    "23010101282",
+    "C9",
+    "760",
+    "Vadhava Sumit Naranbhai",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "474",
+    "23010101292",
+    "C9",
+    "761",
+    "Meet Jitendra Vasiyani",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "475",
+    "23010101298",
+    "C9",
+    "762",
+    "Vekariya Raj Kishorbhai",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "476",
+    "23031701006",
+    "C9",
+    "763",
+    "Bhalodi Jeet Pareshbhai",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "477",
+    "23031701008",
+    "C9",
+    "764",
+    "Bhanderi Viraj Narendrabhai",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "478",
+    "23031701016",
+    "C9",
+    "765",
+    "Gambhava Vruta Parasbhai",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "479",
+    "23031701053",
+    "C9",
+    "766",
+    "Vekariya Shreyas Jayantibhai",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "480",
+    "23031701054",
+    "C9",
+    "767",
+    "Vipani Darsh Kalpeshbhai",
+    "Building RESTful APIs with ASP.NET Core (Advanced .NET )",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "481",
+    "23010101026",
+    "C10",
+    "768",
+    "Bhesdadiya Krishnaben Kantibhai",
+    "Advanced .NET Development and Modern Architectures",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "482",
+    "23010101039",
+    "C10",
+    "769",
+    "Busa Krisha Maheshbhai",
+    "Advanced .NET Development and Modern Architectures",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "483",
+    "23010101040",
+    "C10",
+    "770",
+    "Busa Umangkumar Kamleshbhai",
+    "Advanced .NET Development and Modern Architectures",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "484",
+    "23010101070",
+    "C10",
+    "771",
+    "Dubal Esha Paragbhai",
+    "Advanced .NET Development and Modern Architectures",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "485",
+    "23010101126",
+    "C10",
+    "772",
+    "Prit Kanani",
+    "Advanced .NET Development and Modern Architectures",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "486",
+    "23010101146",
+    "C10",
+    "773",
+    "Kugashiya Ronak Ranabhai",
+    "Advanced .NET Development and Modern Architectures",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "487",
+    "23010101410",
+    "C10",
+    "774",
+    "Hirpara Pushti Vishal",
+    "Advanced .NET Development and Modern Architectures",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "488",
+    "24010101602",
+    "C10",
+    "775",
+    "Adroja Dhairya Ajaybhai",
+    "Advanced .NET Development and Modern Architectures",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "489",
+    "24010101679",
+    "C10",
+    "776",
+    "Ranpariya Shreyansh Harshadbhai",
+    "Advanced .NET Development and Modern Architectures",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "490",
+    "24010101688",
+    "C10",
+    "777",
+    "Sindhav Harpalsinh Bhupendrasinh",
+    "Advanced .NET Development and Modern Architectures",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "491",
+    "23010101108",
+    "C11",
+    "778",
+    "Jethva Jenil Samirbhai",
+    "Advanced Flutter",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "492",
+    "23031701036",
+    "C11",
+    "779",
+    "Panara Avani Maheshbhai",
+    "Advanced Flutter",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "493",
+    "23031701050",
+    "C11",
+    "780",
+    "Sorani Hiral Manubhai",
+    "Advanced Flutter",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "494",
+    "24010101691",
+    "C11",
+    "781",
+    "Solanki Heena Bharatbhai",
+    "Advanced Flutter",
+    "Machine Learning and Deep Learning"
+  ],
+  [
+    "495",
+    "23010101047",
+    "",
+    "",
+    "Chavda Princekumar Kalubhai",
+    "Not Given",
+    "Not Given"
+  ],
+  [
+    "496",
+    "23010101212",
+    "",
+    "",
+    "Prajapati Aakash Rajubhai",
+    "Not Given",
+    "Not Given"
+  ],
+  [
+    "497",
+    "23010101228",
+    "",
+    "",
+    "Rathod Priyansh Yogeshbhai",
+    "Not Given",
+    "Not Given"
+  ],
+  [
+    "498",
+    "23031701051",
+    "",
+    "",
+    "Timbadiya Pratik Dineshbhai",
+    "Not Given",
+    "Not Given"
+  ],
+  [
+    "499",
+    "24010101624",
+    "",
+    "",
+    "Devaliya Bhumiben Yogeshbhai",
+    "Not Given",
+    "Not Given"
+  ],
+  [
+    "500",
+    "24010101645",
+    "",
+    "",
+    "Kadavala Hitesh Ajaybhai",
+    "Not Given",
+    "Not Given"
+  ]
 ]

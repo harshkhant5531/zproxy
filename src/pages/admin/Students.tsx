@@ -2,14 +2,16 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, Upload, Download, Loader2, Plus, Edit2, Trash2, UserPlus, Shield, X, Save } from "lucide-react";
+import { Search, Upload, Download, Loader2, Plus, Edit2, Trash2, UserPlus, Shield, X, Save, BookOpen } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { usersAPI } from "@/lib/api";
+import { usersAPI, coursesAPI } from "@/lib/api";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Badge } from "@/components/ui/badge";
 
 export default function StudentManagement() {
   const [search, setSearch] = useState("");
@@ -25,7 +27,9 @@ export default function StudentManagement() {
 
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isEnrollOpen, setIsEnrollOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<any>(null);
+  const [selectedCourses, setSelectedCourses] = useState<number[]>([]);
   const queryClient = useQueryClient();
 
   const [formData, setFormData] = useState({
@@ -55,6 +59,14 @@ export default function StudentManagement() {
     placeholderData: (previousData) => previousData,
   });
 
+  const { data: allCourses } = useQuery({
+    queryKey: ["admin", "courses"],
+    queryFn: async () => {
+      const resp = await coursesAPI.getCourses({ limit: 1000 });
+      return resp.data.data.courses || [];
+    }
+  });
+
   const createMutation = useMutation({
     mutationFn: (data: any) => usersAPI.createStudent(data),
     onSuccess: () => {
@@ -81,6 +93,17 @@ export default function StudentManagement() {
       toast.success("Student deleted");
       queryClient.invalidateQueries({ queryKey: ["admin", "students"] });
     }
+  });
+
+  const enrollmentMutation = useMutation({
+    mutationFn: ({ id, courseIds, subjectIds }: { id: number, courseIds: number[], subjectIds: number[] }) =>
+      usersAPI.updateStudentEnrollment(id, courseIds, subjectIds),
+    onSuccess: () => {
+      toast.success("Enrollment updated successfully");
+      queryClient.invalidateQueries({ queryKey: ["admin", "students"] });
+      setIsEnrollOpen(false);
+    },
+    onError: (err: any) => toast.error(err.response?.data?.message || "Failed to update enrollment")
   });
 
   const resetForm = () => {
@@ -115,6 +138,38 @@ export default function StudentManagement() {
       address: student.studentProfile?.address || ""
     });
     setIsEditOpen(true);
+  };
+
+  const handleEnrollment = (student: any) => {
+    setSelectedStudent(student);
+    const currentCourseIds = student.studentCourses?.map((c: any) => c.id) || [];
+    setSelectedCourses(currentCourseIds);
+    setIsEnrollOpen(true);
+  };
+
+  const toggleCourse = (courseId: number) => {
+    setSelectedCourses(prev =>
+      prev.includes(courseId) ? prev.filter(id => id !== courseId) : [...prev, courseId]
+    );
+  };
+
+  const saveEnrollment = () => {
+    if (!selectedStudent) return;
+
+    // For simplicity, we also auto-select all subjects belonging to these courses
+    const enrollmentSubjects: number[] = [];
+    selectedCourses.forEach(cId => {
+      const course = allCourses?.find((c: any) => c.id === cId);
+      if (course?.subjects) {
+        course.subjects.forEach((s: any) => enrollmentSubjects.push(s.id));
+      }
+    });
+
+    enrollmentMutation.mutate({
+      id: selectedStudent.id,
+      courseIds: selectedCourses,
+      subjectIds: Array.from(new Set(enrollmentSubjects))
+    });
   };
 
   const students = Array.isArray(userData) ? userData : [];
@@ -211,6 +266,9 @@ export default function StudentManagement() {
                   </TableCell>
                   <TableCell className="text-right px-6">
                     <div className="flex justify-end gap-1 opacity-20 group-hover:opacity-100 transition-opacity">
+                      <Button variant="ghost" size="icon" onClick={() => handleEnrollment(s)} title="Manage Enrollment" className="h-8 w-8 text-amber-500 hover:bg-amber-500/10">
+                        <BookOpen className="h-3.5 w-3.5" />
+                      </Button>
                       <Button variant="ghost" size="icon" onClick={() => handleEdit(s)} className="h-8 w-8 text-primary hover:bg-primary/10">
                         <Edit2 className="h-3.5 w-3.5" />
                       </Button>
@@ -362,6 +420,54 @@ export default function StudentManagement() {
             <Button variant="ghost" onClick={() => setIsEditOpen(false)} className="text-slate-500">Abort</Button>
             <Button onClick={() => updateMutation.mutate({ id: selectedStudent.id, data: formData })} disabled={updateMutation.isPending} className="bg-primary hover:bg-primary/90 font-bold">
               {updateMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Save className="mr-2 h-4 w-4" /> Commit Changes</>}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      {/* ENROLLMENT DIALOG */}
+      <Dialog open={isEnrollOpen} onOpenChange={setIsEnrollOpen}>
+        <DialogContent className="max-w-2xl bg-slate-900 border-slate-800 text-white">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-bold flex items-center gap-2 text-amber-500">
+              <BookOpen className="h-5 w-5" /> Manage Student Enrollment
+            </DialogTitle>
+            <DialogDescription className="text-slate-400">Select courses to enroll {selectedStudent?.studentProfile?.fullName || selectedStudent?.username}.</DialogDescription>
+          </DialogHeader>
+          <div className="py-4">
+            <ScrollArea className="h-[400px] pr-4">
+              <div className="grid grid-cols-1 gap-2">
+                {allCourses?.map((course: any) => (
+                  <div
+                    key={course.id}
+                    className={`flex items-center justify-between p-3 rounded-lg border transition-all cursor-pointer ${selectedCourses.includes(course.id)
+                      ? "bg-primary/10 border-primary/50"
+                      : "bg-slate-950/50 border-slate-800 hover:border-slate-700"
+                      }`}
+                    onClick={() => toggleCourse(course.id)}
+                  >
+                    <div className="flex items-center gap-3">
+                      <Checkbox
+                        checked={selectedCourses.includes(course.id)}
+                        onCheckedChange={() => toggleCourse(course.id)}
+                        className="border-slate-700 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                      />
+                      <div>
+                        <p className="font-bold text-sm text-slate-100">{course.code} — {course.name}</p>
+                        <p className="text-[10px] text-slate-500 uppercase font-mono">{course.department} • SEMESTER {course.semester} • {course.credits} CREDITS</p>
+                      </div>
+                    </div>
+                    {selectedCourses.includes(course.id) && (
+                      <Badge className="bg-primary/20 text-primary border-primary/20 hover:bg-primary/30">ENROLLED</Badge>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </ScrollArea>
+          </div>
+          <DialogFooter className="border-t border-white/5 pt-6">
+            <Button variant="ghost" onClick={() => setIsEnrollOpen(false)} className="text-slate-500">Cancel</Button>
+            <Button onClick={saveEnrollment} disabled={enrollmentMutation.isPending} className="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold">
+              {enrollmentMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : "Sync Enrollment"}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -230,9 +230,9 @@ export default function CourseManagement() {
                 <TableHead className="text-slate-400 font-mono text-[10px] uppercase tracking-wider h-11">Unique Code</TableHead>
                 <TableHead className="text-slate-400 font-mono text-[10px] uppercase tracking-wider h-11">Course Title</TableHead>
                 <TableHead className="text-slate-400 font-mono text-[10px] uppercase tracking-wider h-11">Department</TableHead>
-                <TableHead className="text-slate-400 font-mono text-[10px] uppercase tracking-wider h-11">Semester</TableHead>
-                <TableHead className="text-slate-400 font-mono text-[10px] uppercase tracking-wider h-11">Credits</TableHead>
+                <TableHead className="text-slate-400 font-mono text-[10px] uppercase tracking-wider h-11">Sem/Credits</TableHead>
                 <TableHead className="text-slate-400 font-mono text-[10px] uppercase tracking-wider h-11">Faculty Head</TableHead>
+                <TableHead className="text-slate-400 font-mono text-[10px] uppercase tracking-wider h-11">Enrollment</TableHead>
                 <TableHead className="text-slate-400 font-mono text-[10px] uppercase tracking-wider h-11 text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -242,12 +242,20 @@ export default function CourseManagement() {
                   <TableCell className="font-mono text-sm font-black text-primary group-hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.3)]">{c.code}</TableCell>
                   <TableCell className="font-bold text-sm text-slate-100">{c.name}</TableCell>
                   <TableCell className="text-xs text-slate-400 font-medium uppercase tracking-tighter">{c.department}</TableCell>
-                  <TableCell className="text-sm font-mono text-slate-300">SEM {c.semester}</TableCell>
-                  <TableCell className="text-sm text-slate-300">
-                    <span className="bg-slate-800 px-2 py-0.5 rounded text-[10px] font-bold text-primary">{c.credits} CR</span>
+                  <TableCell>
+                    <div className="flex flex-col">
+                      <span className="text-sm font-mono text-slate-300">SEM {c.semester}</span>
+                      <span className="text-[10px] font-bold text-primary">{c.credits} CR</span>
+                    </div>
                   </TableCell>
                   <TableCell className="text-sm text-slate-300 italic">
                     {c.faculty?.facultyProfile?.fullName || c.faculty?.username || "Not Assigned"}
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-bold text-slate-100">{c.students?.length || 0}</span>
+                      <span className="text-[10px] text-slate-500 uppercase font-mono">Students</span>
+                    </div>
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">

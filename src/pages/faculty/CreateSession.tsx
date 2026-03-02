@@ -1,42 +1,47 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { QrCode, ArrowRight, Loader2 } from "lucide-react";
+import { QrCode, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { coursesAPI, sessionsAPI } from "@/lib/api";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 
-const mockTopics: Record<string, string[]> = {
-  "CS301": ["Binary Search Trees", "AVL Trees", "Red-Black Trees", "Graph Traversal", "Dijkstra's Algorithm"],
-  "CS302": ["ER Diagrams", "Normalization", "SQL Joins", "Transactions", "Indexing"],
-  "CS303": ["Process Scheduling", "Deadlocks", "Memory Management", "File Systems", "I/O Systems"],
-};
-
 export default function CreateSession() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [step, setStep] = useState(1);
   const [courseId, setCourseId] = useState("");
+  const [subjectId, setSubjectId] = useState("");
   const [topic, setTopic] = useState("");
-  const [room, setRoom] = useState("LH-201"); // Default room
+  const [room, setRoom] = useState("LH-201");
 
   const { data: coursesData, isLoading: isCoursesLoading } = useQuery({
     queryKey: ["faculty", "my-courses", user?.id],
     queryFn: async () => {
       const resp = await coursesAPI.getCourses();
-      // Backend should ideally filter by faculty, but we'll client-side filter for robustness if needed
       return resp.data.data.courses || resp.data.data;
     },
     enabled: !!user?.id
   });
 
   const facultyCourses = Array.isArray(coursesData) ? coursesData.filter((c: any) => c.facultyId === user?.id) : [];
-
   const selectedCourse = facultyCourses.find((c: any) => c.id.toString() === courseId);
-  const availableTopics = selectedCourse ? mockTopics[selectedCourse.code] || ["General Discussion", "Problem Solving", "Lab Session"] : [];
+
+  // Fetch the full course detail to get subjects when a course is selected
+  const { data: courseDetail, isLoading: isCourseDetailLoading } = useQuery({
+    queryKey: ["faculty", "course-detail", courseId],
+    queryFn: async () => {
+      const resp = await coursesAPI.getCourse(courseId);
+      return resp.data.data.course;
+    },
+    enabled: !!courseId
+  });
+
+  const courseSubjects: any[] = courseDetail?.subjects || [];
 
   const createSessionMutation = useMutation({
     mutationFn: (data: any) => sessionsAPI.createSession(data),
@@ -57,12 +62,13 @@ export default function CreateSession() {
     }
 
     const now = new Date();
-    const startTime = now.toTimeString().split(' ')[0].substring(0, 5); // HH:mm
-    const end = new Date(now.getTime() + 60 * 60 * 1000); // +1 hour
-    const endTime = end.toTimeString().split(' ')[0].substring(0, 5); // HH:mm
+    const startTime = now.toTimeString().split(' ')[0].substring(0, 5);
+    const end = new Date(now.getTime() + 60 * 60 * 1000);
+    const endTime = end.toTimeString().split(' ')[0].substring(0, 5);
 
     createSessionMutation.mutate({
       courseId: parseInt(courseId),
+      ...(subjectId && { subjectId: parseInt(subjectId) }),
       topic,
       room,
       date: now.toISOString(),
@@ -70,6 +76,7 @@ export default function CreateSession() {
       endTime,
     });
   };
+
 
   if (isCoursesLoading) {
     return (
@@ -120,24 +127,63 @@ export default function CreateSession() {
           )}
 
           {step >= 2 && courseId && (
-            <div className="space-y-3 animate-in fade-in slide-in-from-left-4 duration-500">
-              <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] ml-1">Computational Topic</label>
-              <Select value={topic} onValueChange={(v) => { setTopic(v); setStep(Math.max(step, 3)); }}>
-                <SelectTrigger className="h-12 bg-slate-950 border-slate-800 text-slate-200 focus:ring-primary/50">
-                  <SelectValue placeholder="Define session logic..." />
-                </SelectTrigger>
-                <SelectContent className="bg-slate-900 border-slate-800 text-slate-200">
-                  {availableTopics.map(t => <SelectItem key={t} value={t} className="focus:bg-primary/20">{t}</SelectItem>)}
-                </SelectContent>
-              </Select>
+            <div className="space-y-5 animate-in fade-in slide-in-from-left-4 duration-500">
+              <div className="space-y-3">
+                <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] ml-1">Subject Module</label>
+                {isCourseDetailLoading ? (
+                  <div className="h-12 flex items-center pl-4 bg-slate-950 border border-slate-800 rounded-md">
+                    <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                    <span className="ml-3 text-xs text-slate-500 font-mono">Loading subjects...</span>
+                  </div>
+                ) : (
+                  <Select value={subjectId} onValueChange={setSubjectId}>
+                    <SelectTrigger className="h-12 bg-slate-950 border-slate-800 text-slate-200 focus:ring-primary/50">
+                      <SelectValue placeholder={courseSubjects.length > 0 ? "Select subject..." : "No subjects — skip"} />
+                    </SelectTrigger>
+                    <SelectContent className="bg-slate-900 border-slate-800 text-slate-200">
+                      {courseSubjects.map((s: any) => (
+                        <SelectItem key={s.id} value={s.id.toString()} className="focus:bg-primary/20">
+                          {s.name} <span className="text-slate-500 ml-1 text-xs">({s.type})</span>
+                        </SelectItem>
+                      ))}
+                      {courseSubjects.length === 0 && (
+                        <p className="p-2 text-xs text-slate-500 italic">No subjects configured for this course</p>
+                      )}
+                    </SelectContent>
+                  </Select>
+                )}
+              </div>
+              <div className="space-y-3">
+                <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] ml-1">Session Topic</label>
+                <Input
+                  className="h-12 bg-slate-950 border-slate-800 text-slate-200 placeholder:text-slate-600 focus-visible:ring-primary/50"
+                  placeholder="e.g. AVL Trees, SQL Joins, Deadlocks..."
+                  value={topic}
+                  onChange={(e) => {
+                    setTopic(e.target.value);
+                    if (e.target.value.trim()) setStep(Math.max(step, 3));
+                  }}
+                />
+              </div>
             </div>
           )}
 
           {step === 3 && topic && (
             <div className="space-y-4 animate-in fade-in zoom-in duration-500 text-center pt-4">
-              <div className="p-4 bg-primary/5 border border-primary/20 rounded-xl inline-block mb-4">
-                <p className="text-[10px] font-black text-primary uppercase tracking-[0.25em]">Ready for Deployment</p>
-                <p className="text-slate-300 font-mono text-xs mt-1">{selectedCourse?.code} // {topic}</p>
+              <div className="p-4 bg-primary/5 border border-primary/20 rounded-xl text-left space-y-1 mb-4">
+                <p className="text-[10px] font-black text-primary uppercase tracking-[0.25em] text-center mb-3">Ready for Deployment</p>
+                <p className="text-slate-300 font-mono text-sm">
+                  <span className="text-slate-500 text-xs uppercase">Course: </span>{selectedCourse?.code} — {selectedCourse?.name}
+                </p>
+                {subjectId && courseSubjects.find((s: any) => s.id.toString() === subjectId) && (
+                  <p className="text-slate-300 font-mono text-sm">
+                    <span className="text-slate-500 text-xs uppercase">Subject: </span>
+                    {courseSubjects.find((s: any) => s.id.toString() === subjectId)?.name}
+                  </p>
+                )}
+                <p className="text-slate-300 font-mono text-sm">
+                  <span className="text-slate-500 text-xs uppercase">Topic: </span>{topic}
+                </p>
               </div>
               <Button
                 size="lg"

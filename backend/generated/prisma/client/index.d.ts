@@ -100,7 +100,9 @@ export type AuditLog = $Result.DefaultSelection<Prisma.$AuditLogPayload>
  * Type-safe database client for TypeScript & Node.js
  * @example
  * ```
- * const prisma = new PrismaClient()
+ * const prisma = new PrismaClient({
+ *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
+ * })
  * // Fetch zero or more Users
  * const users = await prisma.users.findMany()
  * ```
@@ -121,7 +123,9 @@ export class PrismaClient<
    * Type-safe database client for TypeScript & Node.js
    * @example
    * ```
-   * const prisma = new PrismaClient()
+   * const prisma = new PrismaClient({
+   *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
+   * })
    * // Fetch zero or more Users
    * const users = await prisma.users.findMany()
    * ```
@@ -420,8 +424,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 7.4.1
-   * Query Engine version: 55ae170b1ced7fc6ed07a15f110549408c501bb3
+   * Prisma Client JS version: 7.4.2
+   * Query Engine version: 94a226be1cf2967af2541cca5529f0f7ba866919
    */
   export type PrismaVersion = {
     client: string
@@ -5904,6 +5908,8 @@ export namespace Prisma {
     bio: string | null
     enrollmentNumber: string | null
     rollNumber: string | null
+    parentPhone: string | null
+    parentEmail: string | null
     admissionDate: Date | null
     department: string | null
     batch: string | null
@@ -5920,6 +5926,8 @@ export namespace Prisma {
     bio: string | null
     enrollmentNumber: string | null
     rollNumber: string | null
+    parentPhone: string | null
+    parentEmail: string | null
     admissionDate: Date | null
     department: string | null
     batch: string | null
@@ -5936,6 +5944,8 @@ export namespace Prisma {
     bio: number
     enrollmentNumber: number
     rollNumber: number
+    parentPhone: number
+    parentEmail: number
     admissionDate: number
     department: number
     batch: number
@@ -5966,6 +5976,8 @@ export namespace Prisma {
     bio?: true
     enrollmentNumber?: true
     rollNumber?: true
+    parentPhone?: true
+    parentEmail?: true
     admissionDate?: true
     department?: true
     batch?: true
@@ -5982,6 +5994,8 @@ export namespace Prisma {
     bio?: true
     enrollmentNumber?: true
     rollNumber?: true
+    parentPhone?: true
+    parentEmail?: true
     admissionDate?: true
     department?: true
     batch?: true
@@ -5998,6 +6012,8 @@ export namespace Prisma {
     bio?: true
     enrollmentNumber?: true
     rollNumber?: true
+    parentPhone?: true
+    parentEmail?: true
     admissionDate?: true
     department?: true
     batch?: true
@@ -6101,6 +6117,8 @@ export namespace Prisma {
     bio: string | null
     enrollmentNumber: string
     rollNumber: string | null
+    parentPhone: string | null
+    parentEmail: string | null
     admissionDate: Date | null
     department: string | null
     batch: string | null
@@ -6136,6 +6154,8 @@ export namespace Prisma {
     bio?: boolean
     enrollmentNumber?: boolean
     rollNumber?: boolean
+    parentPhone?: boolean
+    parentEmail?: boolean
     admissionDate?: boolean
     department?: boolean
     batch?: boolean
@@ -6155,6 +6175,8 @@ export namespace Prisma {
     bio?: boolean
     enrollmentNumber?: boolean
     rollNumber?: boolean
+    parentPhone?: boolean
+    parentEmail?: boolean
     admissionDate?: boolean
     department?: boolean
     batch?: boolean
@@ -6162,7 +6184,7 @@ export namespace Prisma {
     dob?: boolean
   }
 
-  export type StudentProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "fullName" | "phone" | "address" | "bio" | "enrollmentNumber" | "rollNumber" | "admissionDate" | "department" | "batch" | "currentSemester" | "dob", ExtArgs["result"]["studentProfile"]>
+  export type StudentProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "fullName" | "phone" | "address" | "bio" | "enrollmentNumber" | "rollNumber" | "parentPhone" | "parentEmail" | "admissionDate" | "department" | "batch" | "currentSemester" | "dob", ExtArgs["result"]["studentProfile"]>
   export type StudentProfileInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UsersDefaultArgs<ExtArgs>
   }
@@ -6181,6 +6203,8 @@ export namespace Prisma {
       bio: string | null
       enrollmentNumber: string
       rollNumber: string | null
+      parentPhone: string | null
+      parentEmail: string | null
       admissionDate: Date | null
       department: string | null
       batch: string | null
@@ -6564,6 +6588,8 @@ export namespace Prisma {
     readonly bio: FieldRef<"StudentProfile", 'String'>
     readonly enrollmentNumber: FieldRef<"StudentProfile", 'String'>
     readonly rollNumber: FieldRef<"StudentProfile", 'String'>
+    readonly parentPhone: FieldRef<"StudentProfile", 'String'>
+    readonly parentEmail: FieldRef<"StudentProfile", 'String'>
     readonly admissionDate: FieldRef<"StudentProfile", 'DateTime'>
     readonly department: FieldRef<"StudentProfile", 'String'>
     readonly batch: FieldRef<"StudentProfile", 'String'>
@@ -15808,6 +15834,7 @@ export namespace Prisma {
     endTime: string | null
     roomNumber: string | null
     semester: number | null
+    type: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -15822,6 +15849,7 @@ export namespace Prisma {
     endTime: string | null
     roomNumber: string | null
     semester: number | null
+    type: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -15836,6 +15864,7 @@ export namespace Prisma {
     endTime: number
     roomNumber: number
     semester: number
+    type: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -15870,6 +15899,7 @@ export namespace Prisma {
     endTime?: true
     roomNumber?: true
     semester?: true
+    type?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -15884,6 +15914,7 @@ export namespace Prisma {
     endTime?: true
     roomNumber?: true
     semester?: true
+    type?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -15898,6 +15929,7 @@ export namespace Prisma {
     endTime?: true
     roomNumber?: true
     semester?: true
+    type?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -15999,6 +16031,7 @@ export namespace Prisma {
     endTime: string
     roomNumber: string
     semester: number
+    type: string
     createdAt: Date
     updatedAt: Date
     _count: TimetableCountAggregateOutputType | null
@@ -16032,6 +16065,7 @@ export namespace Prisma {
     endTime?: boolean
     roomNumber?: boolean
     semester?: boolean
+    type?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     course?: boolean | CourseDefaultArgs<ExtArgs>
@@ -16051,11 +16085,12 @@ export namespace Prisma {
     endTime?: boolean
     roomNumber?: boolean
     semester?: boolean
+    type?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type TimetableOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "courseId" | "subjectId" | "facultyId" | "dayOfWeek" | "startTime" | "endTime" | "roomNumber" | "semester" | "createdAt" | "updatedAt", ExtArgs["result"]["timetable"]>
+  export type TimetableOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "courseId" | "subjectId" | "facultyId" | "dayOfWeek" | "startTime" | "endTime" | "roomNumber" | "semester" | "type" | "createdAt" | "updatedAt", ExtArgs["result"]["timetable"]>
   export type TimetableInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     course?: boolean | CourseDefaultArgs<ExtArgs>
     subject?: boolean | SubjectDefaultArgs<ExtArgs>
@@ -16079,6 +16114,7 @@ export namespace Prisma {
       endTime: string
       roomNumber: string
       semester: number
+      type: string
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["timetable"]>
@@ -16462,6 +16498,7 @@ export namespace Prisma {
     readonly endTime: FieldRef<"Timetable", 'String'>
     readonly roomNumber: FieldRef<"Timetable", 'String'>
     readonly semester: FieldRef<"Timetable", 'Int'>
+    readonly type: FieldRef<"Timetable", 'String'>
     readonly createdAt: FieldRef<"Timetable", 'DateTime'>
     readonly updatedAt: FieldRef<"Timetable", 'DateTime'>
   }
@@ -20008,6 +20045,8 @@ export namespace Prisma {
     bio: 'bio',
     enrollmentNumber: 'enrollmentNumber',
     rollNumber: 'rollNumber',
+    parentPhone: 'parentPhone',
+    parentEmail: 'parentEmail',
     admissionDate: 'admissionDate',
     department: 'department',
     batch: 'batch',
@@ -20168,6 +20207,7 @@ export namespace Prisma {
     endTime: 'endTime',
     roomNumber: 'roomNumber',
     semester: 'semester',
+    type: 'type',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -20292,6 +20332,8 @@ export namespace Prisma {
     bio: 'bio',
     enrollmentNumber: 'enrollmentNumber',
     rollNumber: 'rollNumber',
+    parentPhone: 'parentPhone',
+    parentEmail: 'parentEmail',
     department: 'department',
     batch: 'batch'
   };
@@ -20382,7 +20424,8 @@ export namespace Prisma {
   export const TimetableOrderByRelevanceFieldEnum: {
     startTime: 'startTime',
     endTime: 'endTime',
-    roomNumber: 'roomNumber'
+    roomNumber: 'roomNumber',
+    type: 'type'
   };
 
   export type TimetableOrderByRelevanceFieldEnum = (typeof TimetableOrderByRelevanceFieldEnum)[keyof typeof TimetableOrderByRelevanceFieldEnum]
@@ -20784,6 +20827,8 @@ export namespace Prisma {
     bio?: StringNullableFilter<"StudentProfile"> | string | null
     enrollmentNumber?: StringFilter<"StudentProfile"> | string
     rollNumber?: StringNullableFilter<"StudentProfile"> | string | null
+    parentPhone?: StringNullableFilter<"StudentProfile"> | string | null
+    parentEmail?: StringNullableFilter<"StudentProfile"> | string | null
     admissionDate?: DateTimeNullableFilter<"StudentProfile"> | Date | string | null
     department?: StringNullableFilter<"StudentProfile"> | string | null
     batch?: StringNullableFilter<"StudentProfile"> | string | null
@@ -20801,6 +20846,8 @@ export namespace Prisma {
     bio?: SortOrderInput | SortOrder
     enrollmentNumber?: SortOrder
     rollNumber?: SortOrderInput | SortOrder
+    parentPhone?: SortOrderInput | SortOrder
+    parentEmail?: SortOrderInput | SortOrder
     admissionDate?: SortOrderInput | SortOrder
     department?: SortOrderInput | SortOrder
     batch?: SortOrderInput | SortOrder
@@ -20822,6 +20869,8 @@ export namespace Prisma {
     address?: StringNullableFilter<"StudentProfile"> | string | null
     bio?: StringNullableFilter<"StudentProfile"> | string | null
     rollNumber?: StringNullableFilter<"StudentProfile"> | string | null
+    parentPhone?: StringNullableFilter<"StudentProfile"> | string | null
+    parentEmail?: StringNullableFilter<"StudentProfile"> | string | null
     admissionDate?: DateTimeNullableFilter<"StudentProfile"> | Date | string | null
     department?: StringNullableFilter<"StudentProfile"> | string | null
     batch?: StringNullableFilter<"StudentProfile"> | string | null
@@ -20839,6 +20888,8 @@ export namespace Prisma {
     bio?: SortOrderInput | SortOrder
     enrollmentNumber?: SortOrder
     rollNumber?: SortOrderInput | SortOrder
+    parentPhone?: SortOrderInput | SortOrder
+    parentEmail?: SortOrderInput | SortOrder
     admissionDate?: SortOrderInput | SortOrder
     department?: SortOrderInput | SortOrder
     batch?: SortOrderInput | SortOrder
@@ -20863,6 +20914,8 @@ export namespace Prisma {
     bio?: StringNullableWithAggregatesFilter<"StudentProfile"> | string | null
     enrollmentNumber?: StringWithAggregatesFilter<"StudentProfile"> | string
     rollNumber?: StringNullableWithAggregatesFilter<"StudentProfile"> | string | null
+    parentPhone?: StringNullableWithAggregatesFilter<"StudentProfile"> | string | null
+    parentEmail?: StringNullableWithAggregatesFilter<"StudentProfile"> | string | null
     admissionDate?: DateTimeNullableWithAggregatesFilter<"StudentProfile"> | Date | string | null
     department?: StringNullableWithAggregatesFilter<"StudentProfile"> | string | null
     batch?: StringNullableWithAggregatesFilter<"StudentProfile"> | string | null
@@ -21668,6 +21721,7 @@ export namespace Prisma {
     endTime?: StringFilter<"Timetable"> | string
     roomNumber?: StringFilter<"Timetable"> | string
     semester?: IntFilter<"Timetable"> | number
+    type?: StringFilter<"Timetable"> | string
     createdAt?: DateTimeFilter<"Timetable"> | Date | string
     updatedAt?: DateTimeFilter<"Timetable"> | Date | string
     course?: XOR<CourseScalarRelationFilter, CourseWhereInput>
@@ -21685,6 +21739,7 @@ export namespace Prisma {
     endTime?: SortOrder
     roomNumber?: SortOrder
     semester?: SortOrder
+    type?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     course?: CourseOrderByWithRelationInput
@@ -21706,6 +21761,7 @@ export namespace Prisma {
     endTime?: StringFilter<"Timetable"> | string
     roomNumber?: StringFilter<"Timetable"> | string
     semester?: IntFilter<"Timetable"> | number
+    type?: StringFilter<"Timetable"> | string
     createdAt?: DateTimeFilter<"Timetable"> | Date | string
     updatedAt?: DateTimeFilter<"Timetable"> | Date | string
     course?: XOR<CourseScalarRelationFilter, CourseWhereInput>
@@ -21723,6 +21779,7 @@ export namespace Prisma {
     endTime?: SortOrder
     roomNumber?: SortOrder
     semester?: SortOrder
+    type?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: TimetableCountOrderByAggregateInput
@@ -21745,6 +21802,7 @@ export namespace Prisma {
     endTime?: StringWithAggregatesFilter<"Timetable"> | string
     roomNumber?: StringWithAggregatesFilter<"Timetable"> | string
     semester?: IntWithAggregatesFilter<"Timetable"> | number
+    type?: StringWithAggregatesFilter<"Timetable"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Timetable"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Timetable"> | Date | string
   }
@@ -22318,6 +22376,8 @@ export namespace Prisma {
     bio?: string | null
     enrollmentNumber: string
     rollNumber?: string | null
+    parentPhone?: string | null
+    parentEmail?: string | null
     admissionDate?: Date | string | null
     department?: string | null
     batch?: string | null
@@ -22335,6 +22395,8 @@ export namespace Prisma {
     bio?: string | null
     enrollmentNumber: string
     rollNumber?: string | null
+    parentPhone?: string | null
+    parentEmail?: string | null
     admissionDate?: Date | string | null
     department?: string | null
     batch?: string | null
@@ -22349,6 +22411,8 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     enrollmentNumber?: StringFieldUpdateOperationsInput | string
     rollNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    parentPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    parentEmail?: NullableStringFieldUpdateOperationsInput | string | null
     admissionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     department?: NullableStringFieldUpdateOperationsInput | string | null
     batch?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22366,6 +22430,8 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     enrollmentNumber?: StringFieldUpdateOperationsInput | string
     rollNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    parentPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    parentEmail?: NullableStringFieldUpdateOperationsInput | string | null
     admissionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     department?: NullableStringFieldUpdateOperationsInput | string | null
     batch?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22382,6 +22448,8 @@ export namespace Prisma {
     bio?: string | null
     enrollmentNumber: string
     rollNumber?: string | null
+    parentPhone?: string | null
+    parentEmail?: string | null
     admissionDate?: Date | string | null
     department?: string | null
     batch?: string | null
@@ -22396,6 +22464,8 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     enrollmentNumber?: StringFieldUpdateOperationsInput | string
     rollNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    parentPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    parentEmail?: NullableStringFieldUpdateOperationsInput | string | null
     admissionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     department?: NullableStringFieldUpdateOperationsInput | string | null
     batch?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22412,6 +22482,8 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     enrollmentNumber?: StringFieldUpdateOperationsInput | string
     rollNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    parentPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    parentEmail?: NullableStringFieldUpdateOperationsInput | string | null
     admissionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     department?: NullableStringFieldUpdateOperationsInput | string | null
     batch?: NullableStringFieldUpdateOperationsInput | string | null
@@ -23250,6 +23322,7 @@ export namespace Prisma {
     endTime: string
     roomNumber: string
     semester: number
+    type?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     course: CourseCreateNestedOneWithoutTimetableEntriesInput
@@ -23267,6 +23340,7 @@ export namespace Prisma {
     endTime: string
     roomNumber: string
     semester: number
+    type?: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -23277,6 +23351,7 @@ export namespace Prisma {
     endTime?: StringFieldUpdateOperationsInput | string
     roomNumber?: StringFieldUpdateOperationsInput | string
     semester?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     course?: CourseUpdateOneRequiredWithoutTimetableEntriesNestedInput
@@ -23294,6 +23369,7 @@ export namespace Prisma {
     endTime?: StringFieldUpdateOperationsInput | string
     roomNumber?: StringFieldUpdateOperationsInput | string
     semester?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -23308,6 +23384,7 @@ export namespace Prisma {
     endTime: string
     roomNumber: string
     semester: number
+    type?: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -23318,6 +23395,7 @@ export namespace Prisma {
     endTime?: StringFieldUpdateOperationsInput | string
     roomNumber?: StringFieldUpdateOperationsInput | string
     semester?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -23332,6 +23410,7 @@ export namespace Prisma {
     endTime?: StringFieldUpdateOperationsInput | string
     roomNumber?: StringFieldUpdateOperationsInput | string
     semester?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -24061,6 +24140,8 @@ export namespace Prisma {
     bio?: SortOrder
     enrollmentNumber?: SortOrder
     rollNumber?: SortOrder
+    parentPhone?: SortOrder
+    parentEmail?: SortOrder
     admissionDate?: SortOrder
     department?: SortOrder
     batch?: SortOrder
@@ -24083,6 +24164,8 @@ export namespace Prisma {
     bio?: SortOrder
     enrollmentNumber?: SortOrder
     rollNumber?: SortOrder
+    parentPhone?: SortOrder
+    parentEmail?: SortOrder
     admissionDate?: SortOrder
     department?: SortOrder
     batch?: SortOrder
@@ -24099,6 +24182,8 @@ export namespace Prisma {
     bio?: SortOrder
     enrollmentNumber?: SortOrder
     rollNumber?: SortOrder
+    parentPhone?: SortOrder
+    parentEmail?: SortOrder
     admissionDate?: SortOrder
     department?: SortOrder
     batch?: SortOrder
@@ -24718,6 +24803,7 @@ export namespace Prisma {
     endTime?: SortOrder
     roomNumber?: SortOrder
     semester?: SortOrder
+    type?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -24741,6 +24827,7 @@ export namespace Prisma {
     endTime?: SortOrder
     roomNumber?: SortOrder
     semester?: SortOrder
+    type?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -24755,6 +24842,7 @@ export namespace Prisma {
     endTime?: SortOrder
     roomNumber?: SortOrder
     semester?: SortOrder
+    type?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -26833,6 +26921,8 @@ export namespace Prisma {
     bio?: string | null
     enrollmentNumber: string
     rollNumber?: string | null
+    parentPhone?: string | null
+    parentEmail?: string | null
     admissionDate?: Date | string | null
     department?: string | null
     batch?: string | null
@@ -26848,6 +26938,8 @@ export namespace Prisma {
     bio?: string | null
     enrollmentNumber: string
     rollNumber?: string | null
+    parentPhone?: string | null
+    parentEmail?: string | null
     admissionDate?: Date | string | null
     department?: string | null
     batch?: string | null
@@ -27199,6 +27291,7 @@ export namespace Prisma {
     endTime: string
     roomNumber: string
     semester: number
+    type?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     course: CourseCreateNestedOneWithoutTimetableEntriesInput
@@ -27214,6 +27307,7 @@ export namespace Prisma {
     endTime: string
     roomNumber: string
     semester: number
+    type?: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -27439,6 +27533,8 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     enrollmentNumber?: StringFieldUpdateOperationsInput | string
     rollNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    parentPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    parentEmail?: NullableStringFieldUpdateOperationsInput | string | null
     admissionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     department?: NullableStringFieldUpdateOperationsInput | string | null
     batch?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27454,6 +27550,8 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     enrollmentNumber?: StringFieldUpdateOperationsInput | string
     rollNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    parentPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    parentEmail?: NullableStringFieldUpdateOperationsInput | string | null
     admissionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     department?: NullableStringFieldUpdateOperationsInput | string | null
     batch?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27776,6 +27874,7 @@ export namespace Prisma {
     endTime?: StringFilter<"Timetable"> | string
     roomNumber?: StringFilter<"Timetable"> | string
     semester?: IntFilter<"Timetable"> | number
+    type?: StringFilter<"Timetable"> | string
     createdAt?: DateTimeFilter<"Timetable"> | Date | string
     updatedAt?: DateTimeFilter<"Timetable"> | Date | string
   }
@@ -28385,6 +28484,7 @@ export namespace Prisma {
     endTime: string
     roomNumber: string
     semester: number
+    type?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     subject: SubjectCreateNestedOneWithoutTimetableEntriesInput
@@ -28400,6 +28500,7 @@ export namespace Prisma {
     endTime: string
     roomNumber: string
     semester: number
+    type?: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -28866,6 +28967,7 @@ export namespace Prisma {
     endTime: string
     roomNumber: string
     semester: number
+    type?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     course: CourseCreateNestedOneWithoutTimetableEntriesInput
@@ -28881,6 +28983,7 @@ export namespace Prisma {
     endTime: string
     roomNumber: string
     semester: number
+    type?: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -31446,6 +31549,7 @@ export namespace Prisma {
     endTime: string
     roomNumber: string
     semester: number
+    type?: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -31837,6 +31941,7 @@ export namespace Prisma {
     endTime?: StringFieldUpdateOperationsInput | string
     roomNumber?: StringFieldUpdateOperationsInput | string
     semester?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     course?: CourseUpdateOneRequiredWithoutTimetableEntriesNestedInput
@@ -31852,6 +31957,7 @@ export namespace Prisma {
     endTime?: StringFieldUpdateOperationsInput | string
     roomNumber?: StringFieldUpdateOperationsInput | string
     semester?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -31865,6 +31971,7 @@ export namespace Prisma {
     endTime?: StringFieldUpdateOperationsInput | string
     roomNumber?: StringFieldUpdateOperationsInput | string
     semester?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -32037,6 +32144,7 @@ export namespace Prisma {
     endTime: string
     roomNumber: string
     semester: number
+    type?: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -32210,6 +32318,7 @@ export namespace Prisma {
     endTime?: StringFieldUpdateOperationsInput | string
     roomNumber?: StringFieldUpdateOperationsInput | string
     semester?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     subject?: SubjectUpdateOneRequiredWithoutTimetableEntriesNestedInput
@@ -32225,6 +32334,7 @@ export namespace Prisma {
     endTime?: StringFieldUpdateOperationsInput | string
     roomNumber?: StringFieldUpdateOperationsInput | string
     semester?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -32238,6 +32348,7 @@ export namespace Prisma {
     endTime?: StringFieldUpdateOperationsInput | string
     roomNumber?: StringFieldUpdateOperationsInput | string
     semester?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -32451,6 +32562,7 @@ export namespace Prisma {
     endTime: string
     roomNumber: string
     semester: number
+    type?: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -32530,6 +32642,7 @@ export namespace Prisma {
     endTime?: StringFieldUpdateOperationsInput | string
     roomNumber?: StringFieldUpdateOperationsInput | string
     semester?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     course?: CourseUpdateOneRequiredWithoutTimetableEntriesNestedInput
@@ -32545,6 +32658,7 @@ export namespace Prisma {
     endTime?: StringFieldUpdateOperationsInput | string
     roomNumber?: StringFieldUpdateOperationsInput | string
     semester?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -32558,6 +32672,7 @@ export namespace Prisma {
     endTime?: StringFieldUpdateOperationsInput | string
     roomNumber?: StringFieldUpdateOperationsInput | string
     semester?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

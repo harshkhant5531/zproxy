@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import type { AttendanceStatus, LeaveStatus } from "@/lib/mock-data";
+import { AttendanceStatus, LeaveStatus } from "@/lib/types";
 
 const statusConfig = {
   present: { label: "Present", className: "bg-success/15 text-success border-success/30" },

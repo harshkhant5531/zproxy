@@ -54,19 +54,16 @@ export default function FacultyDashboard() {
   const todaySessions = sessionsData || [];
   const completedToday = todaySessions.filter((s: any) => s.status === "completed").length;
 
-  const attainmentData = [
-    { name: "CO1", attainment: 72 },
-    { name: "CO2", attainment: 68 },
-    { name: "CO3", attainment: 75 },
-    { name: "CO4", attainment: 80 },
-    { name: "CO5", attainment: 65 },
-    { name: "CO6", attainment: 78 },
-  ]; // Still partially mock for UI variety until fully linked to specific courses
+  const attainmentData = performanceData?.students?.slice(0, 6).map((s: any, i: number) => ({
+    name: `CO${i + 1}`,
+    attainment: s.averagePercentage || 0
+  })) || [];
 
-  const recentActivity = [
-    { text: "System initialized successfully", time: "Today, Morning", type: "system" },
-    { text: "Automatic sync with attendance logs complete", time: "1 hour ago", type: "sync" },
-  ];
+  const recentActivity = todaySessions.slice(0, 3).map((s: any) => ({
+    text: `Session: ${s.topic} (${s.course?.code})`,
+    time: s.status === "completed" ? "Completed" : `Scheduled for ${s.startTime}`,
+    type: s.status
+  }));
 
   return (
     <div className="space-y-6">

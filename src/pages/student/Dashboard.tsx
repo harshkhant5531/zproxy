@@ -8,7 +8,9 @@ import { GraduationCap, CalendarCheck, Clock, TrendingUp, Loader2 } from "lucide
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/AuthContext";
 import { attendanceAPI, reportsAPI, coursesAPI } from "@/lib/api";
-import { format } from "date-fns";
+import { format, startOfWeek, endOfWeek, isWithinInterval, parseISO } from "date-fns";
+
+const DAY_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 export default function StudentDashboard() {
   const { user } = useAuth();
@@ -25,8 +27,8 @@ export default function StudentDashboard() {
   const { data: attendanceRecords, isLoading: isLogsLoading } = useQuery({
     queryKey: ["student", "attendance-logs", user?.id],
     queryFn: async () => {
-      const resp = await attendanceAPI.getAttendance({ studentId: user?.id, limit: 10 });
-      return resp.data.data.attendanceRecords;
+      const resp = await attendanceAPI.getAttendance({ studentId: user?.id, limit: 100 });
+      return resp.data.data.attendanceRecords || [];
     },
     enabled: !!user?.id
   });
@@ -53,13 +55,39 @@ export default function StudentDashboard() {
     );
   }
 
-  const weeklyData = [
-    { day: "Mon", present: 3, total: 4 },
-    { day: "Tue", present: 4, total: 4 },
-    { day: "Wed", present: 2, total: 4 },
-    { day: "Thu", present: 4, total: 4 },
-    { day: "Fri", present: 3, total: 4 },
-  ]; // Placeholder for weekly breakdown as API doesn't provide it directly in a simple way
+  const records: any[] = Array.isArray(attendanceRecords) ? attendanceRecords : [];
+  const courses: any[] = Array.isArray(coursesData) ? coursesData : [];
+
+  // --- Real weekly attendance chart ---
+  const now = new Date();
+  const weekStart = startOfWeek(now, { weekStartsOn: 1 }); // Monday
+  const weekEnd = endOfWeek(now, { weekStartsOn: 1 });
+
+  const weeklyData = DAY_LABELS.map((day, idx) => {
+    const dayRecords = records.filter((r: any) => {
+      if (!r.session?.date) return false;
+      try {
+        const date = parseISO(r.session.date);
+        return isWithinInterval(date, { start: weekStart, end: weekEnd }) && date.getDay() === (idx + 1) % 7;
+      } catch {
+        return false;
+      }
+    });
+    const present = dayRecords.filter((r: any) => r.status === "present").length;
+    return { day, present, total: dayRecords.length };
+  });
+
+  // --- Per-course real attendance ---
+  const courseAttendanceData = courses.map((course: any) => {
+    const courseRecords = records.filter((r: any) => r.session?.courseId === course.id);
+    const total = courseRecords.length;
+    const present = courseRecords.filter((r: any) => r.status === "present").length;
+    const pct = total > 0 ? Math.round((present / total) * 100) : 0;
+    return { ...course, attendancePct: pct };
+  });
+
+  const flaggedCourses = courseAttendanceData.filter((c: any) => c.attendancePct < 75 && records.length > 0);
+  const recentLogs = records.slice(0, 10);
 
   return (
     <div className="space-y-6">
@@ -72,14 +100,14 @@ export default function StudentDashboard() {
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard title="Overall Attendance" value={`${attendanceStats?.attendanceRate || 0}%`} icon={GraduationCap} trend={{ value: 0, label: "real-time" }} />
-        <StatCard title="Today's Classes" value="--" subtitle="Check schedule" icon={CalendarCheck} />
+        <StatCard title="This Week" value={weeklyData.reduce((a, d) => a + d.present, 0).toString()} subtitle={`${weeklyData.reduce((a, d) => a + d.total, 0)} classes this week`} icon={CalendarCheck} />
         <StatCard title="Total Present" value={attendanceStats?.presentCount?.toString() || "0"} subtitle="Current semester" icon={Clock} />
-        <StatCard title="Flagged Courses" value="0" subtitle="Below 75%" icon={TrendingUp} />
+        <StatCard title="Flagged Courses" value={flaggedCourses.length.toString()} subtitle="Below 75% attendance" icon={TrendingUp} iconClassName={flaggedCourses.length > 0 ? "bg-destructive/10" : undefined} />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card className="bg-slate-900/40 border-slate-800 backdrop-blur-sm">
-          <CardHeader className="pb-3 px-6"><CardTitle className="text-sm font-medium text-slate-300">Weekly Attendance Breakdown</CardTitle></CardHeader>
+          <CardHeader className="pb-3 px-6"><CardTitle className="text-sm font-medium text-slate-300">This Week's Attendance</CardTitle></CardHeader>
           <CardContent className="px-6 pb-6">
             <ResponsiveContainer width="100%" height={200}>
               <BarChart data={weeklyData}>
@@ -89,8 +117,8 @@ export default function StudentDashboard() {
                   cursor={{ fill: "rgba(255,255,255,0.05)" }}
                   contentStyle={{ background: "hsl(222 47% 8%)", border: "1px solid hsl(222 30% 18%)", borderRadius: 8, color: "hsl(210 40% 96%)" }}
                 />
-                <Bar dataKey="present" fill="hsl(187 100% 50%)" radius={[4, 4, 0, 0]} barSize={20} />
-                <Bar dataKey="total" fill="hsl(222 30% 18%)" radius={[4, 4, 0, 0]} barSize={20} />
+                <Bar dataKey="present" fill="hsl(187 100% 50%)" radius={[4, 4, 0, 0]} barSize={20} name="Present" />
+                <Bar dataKey="total" fill="hsl(222 30% 18%)" radius={[4, 4, 0, 0]} barSize={20} name="Total" />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
@@ -99,16 +127,16 @@ export default function StudentDashboard() {
         <Card className="bg-slate-900/40 border-slate-800 backdrop-blur-sm">
           <CardHeader className="pb-3 px-6"><CardTitle className="text-sm font-medium text-slate-300">OBE Progress by Course</CardTitle></CardHeader>
           <CardContent className="space-y-4 px-6 pb-6 h-[200px] overflow-y-auto custom-scrollbar">
-            {coursesData?.map((course: any) => (
+            {courseAttendanceData.map((course: any) => (
               <div key={course.id} className="space-y-2">
                 <div className="flex items-center justify-between text-xs text-slate-300">
                   <span className="font-medium font-mono tracking-tight">{course.code} — {course.name}</span>
-                  <span className="font-mono text-primary">85%</span>
+                  <span className={`font-mono font-bold ${course.attendancePct < 75 ? "text-rose-400" : "text-primary"}`}>{course.attendancePct}%</span>
                 </div>
-                <Progress value={85} className="h-1.5 bg-slate-800" />
+                <Progress value={course.attendancePct} className="h-1.5 bg-slate-800" />
               </div>
             ))}
-            {(!coursesData || coursesData.length === 0) && (
+            {courseAttendanceData.length === 0 && (
               <p className="text-sm text-slate-500 text-center py-8">No enrolled courses found</p>
             )}
           </CardContent>
@@ -129,9 +157,11 @@ export default function StudentDashboard() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {attendanceRecords?.map((log: any) => (
+                {recentLogs.map((log: any) => (
                   <TableRow key={log.id} className="border-slate-800 hover:bg-white/5 transition-colors">
-                    <TableCell className="text-xs text-slate-500 font-mono">{format(new Date(log.session.date), "MMM dd, yyyy")}</TableCell>
+                    <TableCell className="text-xs text-slate-500 font-mono">
+                      {log.session?.date ? format(parseISO(log.session.date), "MMM dd, yyyy") : "—"}
+                    </TableCell>
                     <TableCell className="text-sm font-bold text-white uppercase tracking-tight">{log.session?.course?.code || "N/A"}</TableCell>
                     <TableCell className="text-sm text-slate-300 italic">{log.session?.topic}</TableCell>
                     <TableCell><StatusBadge status={log.status} /></TableCell>
@@ -139,7 +169,7 @@ export default function StudentDashboard() {
                 ))}
               </TableBody>
             </Table>
-            {(!attendanceRecords || attendanceRecords.length === 0) && (
+            {recentLogs.length === 0 && (
               <p className="text-sm text-slate-500 text-center py-12">No recent logs found</p>
             )}
           </div>

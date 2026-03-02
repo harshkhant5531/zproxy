@@ -68,7 +68,7 @@ router.post("/faculty", authMiddleware, async (req, res, next) => {
       throw error;
     }
 
-    const { username, email, password, fullName, employeeId, department, designation, qualification } = req.body;
+    const { username, email, password, fullName, employeeId, department, designation, qualification, phone, address, bio } = req.body;
 
     const existing = await prisma.users.findFirst({
       where: { OR: [{ username }, { email }] }
@@ -95,7 +95,10 @@ router.post("/faculty", authMiddleware, async (req, res, next) => {
             employeeId,
             department,
             designation,
-            qualification
+            qualification,
+            phone,
+            address,
+            bio
           }
         }
       },
@@ -172,6 +175,65 @@ router.get("/", authMiddleware, async (req, res, next) => {
           pages: Math.ceil(total / limit),
         },
       },
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// @route   GET /api/users/students
+// @desc    Get all students
+// @access  Admin, Faculty
+router.get("/students", authMiddleware, async (req, res, next) => {
+  try {
+    // Only admins and faculty can view students
+    if (req.user.role !== "admin" && req.user.role !== "faculty") {
+      const error = new Error("Forbidden");
+      error.statusCode = 403;
+      throw error;
+    }
+
+    const students = await prisma.users.findMany({
+      where: { role: "student" },
+      include: {
+        studentProfile: true,
+      },
+      orderBy: { createdAt: "desc" },
+    });
+
+    res.json({
+      success: true,
+      data: { students },
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// @route   GET /api/users/faculty
+// @desc    Get all faculty
+// @access  Admin
+router.get("/faculty", authMiddleware, async (req, res, next) => {
+  try {
+    // Only admins can view faculty
+    if (req.user.role !== "admin") {
+      const error = new Error("Forbidden");
+      error.statusCode = 403;
+      throw error;
+    }
+
+    const faculty = await prisma.users.findMany({
+      where: { role: "faculty" },
+      include: {
+        facultyProfile: true,
+        facultyCourses: true,
+      },
+      orderBy: { createdAt: "desc" },
+    });
+
+    res.json({
+      success: true,
+      data: { faculty },
     });
   } catch (error) {
     next(error);
@@ -283,63 +345,6 @@ router.delete("/:id", authMiddleware, async (req, res, next) => {
   }
 });
 
-// @route   GET /api/users/students
-// @desc    Get all students
-// @access  Admin, Faculty
-router.get("/students", authMiddleware, async (req, res, next) => {
-  try {
-    // Only admins and faculty can view students
-    if (req.user.role !== "admin" && req.user.role !== "faculty") {
-      const error = new Error("Forbidden");
-      error.statusCode = 403;
-      throw error;
-    }
-
-    const students = await prisma.users.findMany({
-      where: { role: "student" },
-      include: {
-        studentProfile: true,
-      },
-      orderBy: { createdAt: "desc" },
-    });
-
-    res.json({
-      success: true,
-      data: { students },
-    });
-  } catch (error) {
-    next(error);
-  }
-});
-
-// @route   GET /api/users/faculty
-// @desc    Get all faculty
-// @access  Admin
-router.get("/faculty", authMiddleware, async (req, res, next) => {
-  try {
-    // Only admins can view faculty
-    if (req.user.role !== "admin") {
-      const error = new Error("Forbidden");
-      error.statusCode = 403;
-      throw error;
-    }
-
-    const faculty = await prisma.users.findMany({
-      where: { role: "faculty" },
-      include: {
-        facultyProfile: true,
-      },
-      orderBy: { createdAt: "desc" },
-    });
-
-    res.json({
-      success: true,
-      data: { faculty },
-    });
-  } catch (error) {
-    next(error);
-  }
-});
 
 // @route   PUT /api/users/:id/profile
 // @desc    Update user profile
@@ -353,7 +358,6 @@ router.put("/:id/profile", authMiddleware, async (req, res, next) => {
       throw error;
     }
 
-    const { fullName, phone, address, bio, ...profileData } = req.body;
 
     const user = await prisma.users.findUnique({
       where: { id: parseInt(req.params.id) },
@@ -365,8 +369,8 @@ router.put("/:id/profile", authMiddleware, async (req, res, next) => {
       throw error;
     }
 
-    // Update appropriate profile based on role
     if (user.role === "admin") {
+      const { fullName, phone, address, bio } = req.body;
       await prisma.adminProfile.upsert({
         where: { userId: user.id },
         update: { fullName, phone, address, bio },
@@ -379,29 +383,45 @@ router.put("/:id/profile", authMiddleware, async (req, res, next) => {
         },
       });
     } else if (user.role === "faculty") {
+      const {
+        fullName, employeeId, phone, address, bio,
+        department, designation, joiningDate, qualification, officeHours
+      } = req.body;
+
+      const data = {
+        fullName, employeeId, phone, address, bio,
+        department, designation, qualification, officeHours,
+        ...(joiningDate && { joiningDate: new Date(joiningDate) })
+      };
+
       await prisma.facultyProfile.upsert({
         where: { userId: user.id },
-        update: { fullName, phone, address, bio, ...profileData },
+        update: data,
         create: {
           userId: user.id,
-          fullName,
-          phone,
-          address,
-          bio,
-          ...profileData,
+          ...data
         },
       });
     } else if (user.role === "student") {
+      const {
+        fullName, enrollmentNumber, rollNumber, phone, address, bio,
+        parentPhone, parentEmail, admissionDate, department, batch, currentSemester, dob
+      } = req.body;
+
+      const data = {
+        fullName, enrollmentNumber, rollNumber, phone, address, bio,
+        parentPhone, parentEmail, department, batch,
+        ...(currentSemester && { currentSemester: parseInt(currentSemester) }),
+        ...(admissionDate && { admissionDate: new Date(admissionDate) }),
+        ...(dob && { dob: new Date(dob) })
+      };
+
       await prisma.studentProfile.upsert({
         where: { userId: user.id },
-        update: { fullName, phone, address, bio, ...profileData },
+        update: data,
         create: {
           userId: user.id,
-          fullName,
-          phone,
-          address,
-          bio,
-          ...profileData,
+          ...data
         },
       });
     }
@@ -420,6 +440,42 @@ router.put("/:id/profile", authMiddleware, async (req, res, next) => {
       success: true,
       message: "Profile updated successfully",
       data: { user: updatedUser },
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// @route   PUT /api/users/students/:id/enrollment
+// @desc    Update student course and subject enrollment
+// @access  Admin
+router.put("/students/:id/enrollment", authMiddleware, async (req, res, next) => {
+  try {
+    if (req.user.role !== "admin") {
+      const error = new Error("Forbidden");
+      error.statusCode = 403;
+      throw error;
+    }
+
+    const { courseIds, subjectIds } = req.body;
+    const studentId = parseInt(req.params.id);
+
+    // Update course enrollments
+    await prisma.users.update({
+      where: { id: studentId },
+      data: {
+        studentCourses: {
+          set: courseIds.map(id => ({ id: parseInt(id) }))
+        },
+        studentSubjects: {
+          set: subjectIds.map(id => ({ id: parseInt(id) }))
+        }
+      }
+    });
+
+    res.json({
+      success: true,
+      message: "Enrollment updated successfully"
     });
   } catch (error) {
     next(error);

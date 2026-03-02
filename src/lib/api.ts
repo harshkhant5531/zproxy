@@ -82,6 +82,9 @@ export const usersAPI = {
 
   updateStudentProfile: (id: string | number, data: any) => api.put(`/users/${id}/profile`, data),
 
+  updateStudentEnrollment: (id: string | number, courseIds: number[], subjectIds: number[]) =>
+    api.put(`/users/students/${id}/enrollment`, { courseIds, subjectIds }),
+
   deleteUser: (id: string | number) => api.delete(`/users/${id}`),
 };
 

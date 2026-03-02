@@ -92,6 +92,8 @@ model StudentProfile {
   bio              String?
   enrollmentNumber String    @unique
   rollNumber       String?
+  parentPhone      String?
+  parentEmail      String?
   admissionDate    DateTime?
   department       String?
   batch            String?
@@ -283,6 +285,7 @@ model Timetable {
   endTime    String
   roomNumber String
   semester   Int
+  type       String   @default("Theory")
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 

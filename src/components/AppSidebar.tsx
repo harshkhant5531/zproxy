@@ -4,25 +4,20 @@ import {
   Users, BookOpen, Calendar, FileBarChart, AlertTriangle, Settings, LogOut,
   Shield
 } from "lucide-react";
-import { useRole } from "@/contexts/RoleContext";
+import { Role } from "@/lib/types";
+import { useAuth } from "@/contexts/AuthContext";
 import { NavLink } from "@/components/NavLink";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent,
   SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem,
   SidebarHeader, SidebarFooter, useSidebar,
 } from "@/components/ui/sidebar";
-import {
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
-} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import type { Role } from "@/lib/mock-data";
-import { useAuth } from "@/contexts/AuthContext";
 import React from "react";
 
 const studentMenu = [
   { title: "Dashboard", url: "/student/dashboard", icon: LayoutDashboard },
   { title: "QR Scanner", url: "/student/scan", icon: ScanLine },
-  { title: "What-If Simulator", url: "/student/simulator", icon: Calculator },
   { title: "Leave Management", url: "/student/leaves", icon: FileText },
   { title: "Exam Permit", url: "/student/permit", icon: Ticket },
 ];
@@ -31,6 +26,7 @@ const facultyMenu = [
   { title: "Dashboard", url: "/faculty/dashboard", icon: LayoutDashboard },
   { title: "New Session", url: "/faculty/session/new", icon: Plus },
   { title: "Attendance Records", url: "/faculty/records", icon: ClipboardList },
+  { title: "Timetable", url: "/faculty/timetable", icon: Calendar },
   { title: "Analytics", url: "/faculty/analytics", icon: BarChart3 },
 ];
 
@@ -51,8 +47,8 @@ const roleConfig: Record<Role, { label: string; menu: typeof studentMenu; icon: 
 };
 
 export function AppSidebar() {
-  const { role, setRole } = useRole();
   const { user, logout } = useAuth();
+  const role = user?.role || "student";
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
   const config = roleConfig[role];
@@ -71,16 +67,11 @@ export function AppSidebar() {
         )}
         {collapsed && <div className="mb-2 h-8 w-8 rounded-lg bg-primary/20 flex items-center justify-center text-primary font-bold text-sm">A</div>}
         {!collapsed && (
-          <Select value={role} onValueChange={(v) => setRole(v as Role)}>
-            <SelectTrigger className="h-9 bg-secondary/50 border-border/50 text-xs">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="student">🎓 Student View</SelectItem>
-              <SelectItem value="faculty">📚 Faculty View</SelectItem>
-              <SelectItem value="admin">⚙️ Admin / HOD View</SelectItem>
-            </SelectContent>
-          </Select>
+          <div className="px-2 py-1.5 rounded-md bg-primary/5 border border-primary/10 mb-2">
+            <p className="text-[10px] font-bold text-primary uppercase tracking-widest flex items-center gap-1.5">
+              <Shield className="h-3 w-3" /> {config.label} Access
+            </p>
+          </div>
         )}
       </SidebarHeader>
 
