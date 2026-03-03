@@ -172,7 +172,7 @@ router.post(
         where: { id: subjectId },
       });
 
-      if (!subject || subject.courseId !== courseId) {
+      if (!subject || Number(subject.courseId) !== Number(courseId)) {
         const error = new Error("Subject is not associated with this course");
         error.statusCode = 400;
         throw error;
@@ -183,7 +183,7 @@ router.post(
         where: { id: courseId },
       });
 
-      if (course.facultyId !== facultyId) {
+      if (Number(course.facultyId) !== Number(facultyId)) {
         const error = new Error("Faculty is not assigned to this course");
         error.statusCode = 400;
         throw error;

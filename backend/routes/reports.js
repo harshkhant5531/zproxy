@@ -292,15 +292,24 @@ router.get("/performance", authMiddleware, async (req, res, next) => {
       where.course = { facultyId: req.user.id };
     }
 
-    // Get all grades
-    const grades = await prisma.grade.findMany({
-      where,
-      include: {
-        student: { include: { studentProfile: true } },
-        course: true,
-        subject: true,
-      },
-    });
+    // Get all grades and total enrolled students
+    const [grades, enrolledCourses] = await Promise.all([
+      prisma.grade.findMany({
+        where,
+        include: {
+          student: { include: { studentProfile: true } },
+          course: true,
+          subject: true,
+        },
+      }),
+      prisma.course.findMany({
+        where: req.user.role === "faculty" ? { facultyId: req.user.id } : (courseId ? { id: parseInt(courseId) } : {}),
+        include: { students: true }
+      })
+    ]);
+
+    const enrolledStudentIds = new Set(enrolledCourses.flatMap(c => c.students.map(s => s.id)));
+    const totalEnrolledStudents = enrolledStudentIds.size;
 
     // Group grades by student
     const studentPerformance = {};
@@ -357,7 +366,8 @@ router.get("/performance", authMiddleware, async (req, res, next) => {
       success: true,
       data: {
         statistics: {
-          totalStudents: performanceReports.length,
+          totalStudents: totalEnrolledStudents,
+          gradedStudents: performanceReports.length,
           classAverage: parseFloat(classAverage.toFixed(2)),
         },
         students: performanceReports,

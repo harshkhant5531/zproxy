@@ -92,9 +92,9 @@ export default function StudentDashboard() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-white">Student Dashboard</h1>
-        <p className="text-sm text-slate-400 font-mono uppercase tracking-wider">
-          Welcome back, {user?.profile?.fullName || user?.username} • {user?.profile?.enrollmentNumber || "Student"}
+        <h1 className="text-2xl font-black tracking-tight text-foreground uppercase aura-text-glow">Performance Analytics</h1>
+        <p className="text-[10px] text-muted-foreground font-mono uppercase tracking-[0.2em] mt-1">
+          Authorized Sector // {user?.profile?.fullName || user?.username} // {user?.profile?.enrollmentNumber || "Student"}
         </p>
       </div>
 
@@ -106,8 +106,8 @@ export default function StudentDashboard() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card className="bg-slate-900/40 border-slate-800 backdrop-blur-sm">
-          <CardHeader className="pb-3 px-6"><CardTitle className="text-sm font-medium text-slate-300">This Week's Attendance</CardTitle></CardHeader>
+        <Card className="bg-card/40 border-border backdrop-blur-sm">
+          <CardHeader className="pb-3 px-6"><CardTitle className="text-sm font-bold text-muted-foreground uppercase tracking-widest">This Week's Attendance</CardTitle></CardHeader>
           <CardContent className="px-6 pb-6">
             <ResponsiveContainer width="100%" height={200}>
               <BarChart data={weeklyData}>
@@ -124,8 +124,8 @@ export default function StudentDashboard() {
           </CardContent>
         </Card>
 
-        <Card className="bg-slate-900/40 border-slate-800 backdrop-blur-sm">
-          <CardHeader className="pb-3 px-6"><CardTitle className="text-sm font-medium text-slate-300">OBE Progress by Course</CardTitle></CardHeader>
+        <Card className="bg-card/40 border-border backdrop-blur-sm">
+          <CardHeader className="pb-3 px-6"><CardTitle className="text-sm font-bold text-muted-foreground uppercase tracking-widest">OBE Progress by Course</CardTitle></CardHeader>
           <CardContent className="space-y-4 px-6 pb-6 h-[200px] overflow-y-auto custom-scrollbar">
             {courseAttendanceData.map((course: any) => (
               <div key={course.id} className="space-y-2">
@@ -143,8 +143,8 @@ export default function StudentDashboard() {
         </Card>
       </div>
 
-      <Card className="bg-slate-900/40 border-slate-800 backdrop-blur-sm">
-        <CardHeader className="pb-3 px-6"><CardTitle className="text-sm font-medium text-slate-300">Recent Attendance Log</CardTitle></CardHeader>
+      <Card className="bg-card/40 border-border backdrop-blur-sm">
+        <CardHeader className="pb-3 px-6"><CardTitle className="text-sm font-bold text-muted-foreground uppercase tracking-widest">Recent Attendance Log</CardTitle></CardHeader>
         <CardContent className="px-6 pb-6">
           <div className="rounded-xl border border-slate-800/50 overflow-hidden">
             <Table>

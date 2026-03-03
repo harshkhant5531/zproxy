@@ -50,6 +50,7 @@ model Users {
 
   // Course relations (via profile join tables defined on Course model)
   facultyCourses  Course[] @relation("FacultyCourses")
+  facultySubjects Subject[] @relation("FacultySubjects")
   studentCourses  Course[] @relation("StudentCourses")
   studentSubjects Subject[] @relation("StudentSubjects")
 }
@@ -137,14 +138,18 @@ model Course {
 model Subject {
   id           Int      @id @default(autoincrement())
   courseId     Int
+  code         String?
   name         String
+  type         String   @default("Theory")
   description  String?
   credits      Int
   totalClasses Int      @default(0)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
+  facultyId    Int?
   course           Course      @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  faculty          Users?      @relation("FacultySubjects", fields: [facultyId], references: [id])
   sessions         Session[]   @relation("SubjectSessions")
   timetableEntries Timetable[] @relation("SubjectTimetable")
   grades           Grade[]     @relation("SubjectGrades")

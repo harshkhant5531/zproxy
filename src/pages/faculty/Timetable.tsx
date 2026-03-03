@@ -81,11 +81,11 @@ export default function FacultyTimetable() {
         <div className="space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold tracking-tighter text-white uppercase flex items-center gap-3 italic aura-text-glow">
-                        <Calendar className="h-7 w-7 text-primary animate-aura-pulse" /> Academic Command Schedule
+                    <h1 className="text-2xl font-black tracking-tight text-white uppercase flex items-center gap-3 aura-text-glow">
+                        <Calendar className="h-7 w-7 text-primary" /> Academic Schedule
                     </h1>
                     <p className="text-[10px] text-slate-500 font-mono tracking-[0.2em] uppercase mt-1">
-                        Operational Matrix // {user?.profile?.fullName || user?.username} // Institutional Grade
+                        Operational Matrix // {user?.profile?.fullName || user?.username} // Standard Ver.
                     </p>
                 </div>
                 <div className="flex gap-2">
@@ -170,7 +170,7 @@ export default function FacultyTimetable() {
                                                     </div>
                                                 </div>
                                             ) : (
-                                                <div className="h-full border border-dashed border-slate-800/20 rounded-xl flex items-center justify-center opacity-10 italic text-[9px] text-slate-500 font-mono uppercase tracking-widest">
+                                                <div className="h-full border border-dashed border-slate-800/20 rounded-xl flex items-center justify-center opacity-10 text-[9px] text-slate-500 font-mono uppercase tracking-widest">
                                                     Slot Available
                                                 </div>
                                             )}
@@ -190,7 +190,7 @@ export default function FacultyTimetable() {
                 <div className="space-y-1">
                     <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Procedural Note</p>
                     <p className="text-xs text-slate-400 font-mono leading-relaxed">
-                        The timetable is fixed by the institutional oversight. Any schedule conflicts or room reassignments must be authorized via the HOD terminal. Sessions marked with <span className="text-primary italic">Aura-Link</span> are enabled for real-time biometric verification.
+                        The timetable is fixed by the institutional oversight. Any schedule conflicts or room reassignments must be authorized via the HOD terminal. Sessions marked with <span className="text-primary font-bold">Aura-Link</span> are enabled for real-time biometric verification.
                     </p>
                 </div>
             </div>

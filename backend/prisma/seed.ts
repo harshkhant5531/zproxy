@@ -170,20 +170,20 @@ async function main() {
   });
 
   const subjectData = [
-    { code: "CS601", name: "Automata Theory and Compiler Construction (ATCC)", credits: 4, faculty: "Dixita Kagathara" },
-    { code: "CS602", name: "Operating Systems (OS)", credits: 4, faculty: "Firoz Sherasiya" },
-    { code: "CS603", name: "Fundamentals of Accounting (FOA)", credits: 4, faculty: "Javed Nathani" },
-    { code: "CS606", name: "Advanced Web Technologies (AWT)", credits: 3, faculty: "Arjun Bala" },
-    { code: "CS607", name: "Information Network Security (INS)", credits: 3, faculty: "Maulik Trivedi" },
-    { code: "CS608", name: "UI/UX Designing", credits: 3, faculty: "Mayur Padia" },
-    { code: "CS609", name: ".NET", credits: 3, faculty: "Naimish Vadodariya" },
-    { code: "CS610", name: "Advanced .NET", credits: 3, faculty: "Naimish Vadodariya" },
-    { code: "CS611", name: "Advanced Advanced .NET", credits: 3, faculty: "Naimish Vadodariya" },
-    { code: "CS612", name: "Flutter", credits: 3, faculty: "Mehul Bhundiya" },
-    { code: "CS613", name: "Advanced Flutter", credits: 3, faculty: "Mehul Bhundiya" },
-    { code: "CS604", name: "Machine Learning and Deep Learning (MLDL)", credits: 3, faculty: "Jayesh Vagadiya" },
-    { code: "CS605", name: "Machine Learning (ML)", credits: 3, faculty: "Jayesh Vagadiya" },
-    { code: "CS614", name: "Mobile Computing and Wireless Communication (MCWC)", credits: 3, faculty: "Dixita Kagathara" },
+    { code: "CS601", name: "Automata Theory and Compiler Construction (ATCC)", credits: 4, type: "Theory", faculty: "Dixita Kagathara" },
+    { code: "CS602", name: "Operating Systems (OS)", credits: 4, type: "Theory", faculty: "Firoz Sherasiya" },
+    { code: "CS603", name: "Fundamentals of Accounting (FOA)", credits: 4, type: "Theory", faculty: "Javed Nathani" },
+    { code: "CS606", name: "Advanced Web Technologies (AWT)", credits: 3, type: "Theory", faculty: "Arjun Bala" },
+    { code: "CS607", name: "Information Network Security (INS)", credits: 3, type: "Theory", faculty: "Maulik Trivedi" },
+    { code: "CS608", name: "UI/UX Designing", credits: 3, type: "Theory", faculty: "Mayur Padia" },
+    { code: "CS609", name: ".NET", credits: 3, type: "Theory", faculty: "Naimish Vadodariya" },
+    { code: "CS610", name: "Advanced .NET", credits: 3, type: "Theory", faculty: "Naimish Vadodariya" },
+    { code: "CS611", name: "Advanced Advanced .NET", credits: 3, type: "Theory", faculty: "Naimish Vadodariya" },
+    { code: "CS612", name: "Flutter", credits: 3, type: "Theory", faculty: "Mehul Bhundiya" },
+    { code: "CS613", name: "Advanced Flutter", credits: 3, type: "Theory", faculty: "Mehul Bhundiya" },
+    { code: "CS604", name: "Machine Learning and Deep Learning (MLDL)", credits: 3, type: "Theory", faculty: "Jayesh Vagadiya" },
+    { code: "CS605", name: "Machine Learning (ML)", credits: 3, type: "Theory", faculty: "Jayesh Vagadiya" },
+    { code: "CS614", name: "Mobile Computing and Wireless Communication (MCWC)", credits: 3, type: "Theory", faculty: "Dixita Kagathara" },
   ];
 
   const subjects: any[] = [];
@@ -193,12 +193,19 @@ async function main() {
 
     const subject = await prisma.subject.upsert({
       where: { name_courseId: { name: s.name, courseId: programCourse.id } },
-      update: {},
+      update: {
+        code: s.code,
+        type: s.type,
+        facultyId: faculty.user.id,
+      },
       create: {
         name: s.name,
+        code: s.code,
+        type: s.type,
         courseId: programCourse.id,
         credits: s.credits,
         totalClasses: 40,
+        facultyId: faculty.user.id,
       },
     });
 

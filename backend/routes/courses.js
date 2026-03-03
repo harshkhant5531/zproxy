@@ -41,7 +41,7 @@ router.get("/", authMiddleware, async (req, res, next) => {
         take: parseInt(limit),
         include: {
           faculty: true,
-          subjects: true,
+          subjects: { include: { faculty: true } },
           students: { include: { studentProfile: true } },
         },
         orderBy: { createdAt: "desc" },
@@ -211,7 +211,7 @@ router.put("/:id", authMiddleware, async (req, res, next) => {
       },
       include: {
         faculty: true,
-        subjects: true,
+        subjects: { include: { faculty: true } },
         students: { include: { studentProfile: true } },
       },
     });
@@ -297,7 +297,7 @@ router.post(
         throw error;
       }
 
-      const { name, description, credits, totalClasses } = req.body;
+      const { name, description, credits, totalClasses, facultyId } = req.body;
 
       const subject = await prisma.subject.create({
         data: {
@@ -306,9 +306,11 @@ router.post(
           description,
           credits: parseInt(credits),
           totalClasses: totalClasses ? parseInt(totalClasses) : 0,
+          ...(facultyId && { facultyId: parseInt(facultyId) }),
         },
         include: {
           course: true,
+          faculty: true,
         },
       });
 
@@ -337,7 +339,7 @@ router.put(
         throw error;
       }
 
-      const { name, description, credits, totalClasses } = req.body;
+      const { name, description, credits, totalClasses, facultyId } = req.body;
 
       const updatedSubject = await prisma.subject.update({
         where: { id: parseInt(req.params.subjectId) },
@@ -346,9 +348,11 @@ router.put(
           ...(description && { description }),
           ...(credits && { credits: parseInt(credits) }),
           ...(totalClasses && { totalClasses: parseInt(totalClasses) }),
+          ...(facultyId && { facultyId: parseInt(facultyId) }),
         },
         include: {
           course: true,
+          faculty: true,
         },
       });
 

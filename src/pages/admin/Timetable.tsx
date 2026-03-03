@@ -132,7 +132,7 @@ export default function Timetable() {
     queryKey: ["admin", "faculty"],
     queryFn: async () => {
       const resp = await usersAPI.getFaculty();
-      return resp.data.data.users;
+      return resp.data.data.faculty;
     },
   });
 
@@ -240,11 +240,11 @@ export default function Timetable() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white uppercase tracking-tighter flex items-center gap-2">
-            <Calendar className="h-6 w-6 text-primary" /> Timetable Management
+          <h1 className="text-2xl font-black tracking-tight text-foreground uppercase flex items-center gap-3 aura-text-glow">
+            <Calendar className="h-7 w-7 text-primary" /> Curricular Schedule Hub
           </h1>
-          <p className="text-sm text-slate-400 font-mono tracking-wider uppercase">
-            Academic Schedule Matrix
+          <p className="text-[10px] text-muted-foreground font-mono tracking-[0.2em] uppercase mt-1">
+            Institutional Control Matrix // Management Access
           </p>
         </div>
       </div>
@@ -302,7 +302,7 @@ export default function Timetable() {
               {days.map((day, idx) => (
                 <div
                   key={day}
-                  className="p-4 text-[10px] font-black text-slate-300 text-center border-l border-slate-800/50 uppercase tracking-[0.3em]"
+                  className="p-4 text-[10px] font-black text-foreground/70 text-center border-l border-border/50 uppercase tracking-[0.3em]"
                 >
                   {day}
                 </div>
@@ -410,23 +410,22 @@ export default function Timetable() {
       )}
 
       <div className="flex justify-center gap-8 pt-4">
-        <div className="flex items-center gap-2 text-[10px] font-bold text-slate-600 uppercase tracking-widest">
+        <div className="flex items-center gap-2 text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
           <div className="h-2 w-2 rounded-full bg-primary" /> Scheduled Session
         </div>
-        <div className="flex items-center gap-2 text-[10px] font-bold text-slate-600 uppercase tracking-widest">
-          <div className="h-2 w-2 rounded-full bg-slate-800" /> Available Slot
+        <div className="flex items-center gap-2 text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+          <div className="h-2 w-2 rounded-full bg-muted" /> Available Slot
         </div>
       </div>
 
       <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
         <DialogContent className="bg-slate-900 border-slate-800 text-white">
           <DialogHeader>
-            <DialogTitle className="text-xl font-black uppercase italic tracking-tighter text-primary">
-              Add Timetable Entry
+            <DialogTitle className="text-xl font-black uppercase tracking-tight text-primary">
+              Create Timetable Entry
             </DialogTitle>
-            <DialogDescription className="text-slate-500 font-mono text-[10px] uppercase">
-              Scheduling for {selectedSlot && days[selectedSlot.day - 1]} at{" "}
-              {selectedSlot?.time.start} - {selectedSlot?.time.end}
+            <DialogDescription className="text-muted-foreground font-mono text-[10px] uppercase tracking-widest">
+              Assigning for {selectedSlot && days[selectedSlot.day - 1]} // {selectedSlot?.time.start} - {selectedSlot?.time.end}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
@@ -572,7 +571,7 @@ export default function Timetable() {
             </div>
 
             <Button
-              className="w-full mt-4 bg-primary hover:bg-primary/90 font-black uppercase italic tracking-tighter"
+              className="w-full mt-4 bg-primary hover:bg-primary/90 font-black uppercase tracking-tight"
               onClick={() =>
                 createMutation.mutate({
                   ...formData,

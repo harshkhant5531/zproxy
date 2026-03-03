@@ -57,8 +57,8 @@ export default function VerifyAttendance() {
                         <Shield className="absolute inset-0 m-auto h-8 w-8 text-primary animate-pulse" />
                     </div>
                     <div className="text-center space-y-2">
-                        <p className="text-xl font-black italic uppercase tracking-tighter">Initializing Integrity Check</p>
-                        <p className="text-[10px] text-slate-500 font-mono uppercase tracking-[0.3em]">Authenticating neural link & spatial vector...</p>
+                        <p className="text-xl font-black uppercase tracking-tight text-foreground">Initializing Integrity Check</p>
+                        <p className="text-[10px] text-muted-foreground font-mono uppercase tracking-[0.3em]">Authenticating neural link & spatial vector...</p>
                     </div>
                 </div>
             </div>
@@ -71,10 +71,10 @@ export default function VerifyAttendance() {
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none" />
 
                 <CardHeader className="text-center pb-2">
-                    <CardTitle className="text-2xl font-black italic uppercase tracking-tighter text-white">
+                    <CardTitle className="text-2xl font-black uppercase tracking-tight text-foreground">
                         Session Authentication
                     </CardTitle>
-                    <p className="text-[10px] text-slate-500 font-mono tracking-widest uppercase mt-1">
+                    <p className="text-[10px] text-muted-foreground font-mono tracking-widest uppercase mt-1">
                         Secure Attendance Gateway
                     </p>
                 </CardHeader>

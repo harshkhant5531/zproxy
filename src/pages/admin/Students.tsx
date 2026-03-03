@@ -178,11 +178,11 @@ export default function StudentManagement() {
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black tracking-tighter text-white uppercase italic flex items-center gap-3">
+          <h1 className="text-3xl font-black tracking-tighter text-foreground uppercase flex items-center gap-3 aura-text-glow">
             <Shield className="h-8 w-8 text-primary" />
             Student Registry
           </h1>
-          <p className="text-xs text-slate-500 font-mono tracking-widest mt-1">
+          <p className="text-[10px] text-muted-foreground font-mono tracking-[0.2em] mt-1 uppercase">
             {isLoading ? "INITIALIZING SECURE LINK..." : `${students.length} VERIFIED IDENTITIES IN CORE ENGINE`}
           </p>
         </div>
@@ -282,9 +282,9 @@ export default function StudentManagement() {
               {students.length === 0 && !isLoading && (
                 <TableRow>
                   <TableCell colSpan={5} className="h-40 text-center">
-                    <div className="flex flex-col items-center justify-center text-slate-600 gap-2">
+                    <div className="flex flex-col items-center justify-center text-muted-foreground gap-2">
                       <Search className="h-8 w-8 opacity-20" />
-                      <p className="text-sm font-medium italic">No matches found in the registry core</p>
+                      <p className="text-sm font-medium">No matches found in the registry core</p>
                     </div>
                   </TableCell>
                 </TableRow>

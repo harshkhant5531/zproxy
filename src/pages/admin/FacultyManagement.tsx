@@ -130,8 +130,8 @@ export default function FacultyManagement() {
         <div className="space-y-6">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold tracking-tight text-white">Faculty Management</h1>
-                    <p className="text-sm text-slate-400">Manage institutional faculty and course assignments</p>
+                    <h1 className="text-2xl font-black tracking-tight text-foreground uppercase aura-text-glow">Faculty Command</h1>
+                    <p className="text-[10px] text-muted-foreground font-mono uppercase tracking-[0.2em] mt-1">Manage institutional faculty and course assignments</p>
                 </div>
                 <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
                     <DialogTrigger asChild>
@@ -253,14 +253,14 @@ export default function FacultyManagement() {
                                                     <Shield className="h-4 w-4 text-primary" />
                                                 </div>
                                                 <div>
-                                                    <p className="font-bold text-sm text-white">{member.facultyProfile?.fullName || member.username}</p>
-                                                    <p className="text-[10px] text-slate-500 font-medium">{member.facultyProfile?.employeeId || "EMPID-MISSING"}</p>
+                                                    <p className="font-bold text-sm text-foreground">{member.facultyProfile?.fullName || member.username}</p>
+                                                    <p className="text-[10px] text-muted-foreground font-medium">{member.facultyProfile?.employeeId || "EMPID-MISSING"}</p>
                                                 </div>
                                             </div>
                                         </TableCell>
                                         <TableCell>
-                                            <p className="text-xs text-slate-400 font-medium">{member.facultyProfile?.department || "N/A"}</p>
-                                            <p className="text-[10px] text-slate-500 italic">{member.facultyProfile?.designation || "Faculty"}</p>
+                                            <p className="text-xs text-muted-foreground font-medium">{member.facultyProfile?.department || "N/A"}</p>
+                                            <p className="text-[10px] text-muted-foreground">{member.facultyProfile?.designation || "Faculty"}</p>
                                         </TableCell>
                                         <TableCell>
                                             <div className="flex flex-wrap gap-1">

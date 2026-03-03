@@ -49,6 +49,7 @@ model Users {
 
   // Course relations (via profile join tables defined on Course model)
   facultyCourses  Course[]  @relation("FacultyCourses")
+  facultySubjects Subject[] @relation("FacultySubjects")
   studentCourses  Course[]  @relation("StudentCourses")
   studentSubjects Subject[] @relation("StudentSubjects")
 }
@@ -143,7 +144,9 @@ model Subject {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
+  facultyId        Int?
   course           Course      @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  faculty          Users?      @relation("FacultySubjects", fields: [facultyId], references: [id])
   sessions         Session[]   @relation("SubjectSessions")
   timetableEntries Timetable[] @relation("SubjectTimetable")
   grades           Grade[]     @relation("SubjectGrades")
@@ -167,6 +170,7 @@ model Session {
   endTime         String
   duration        Int      @default(60)
   status          String   @default("scheduled")
+  batches         String[] // Multi-batch selection
   attendanceCount Int      @default(0)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
@@ -191,6 +195,10 @@ model Attendance {
 
   session Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   student Users   @relation("StudentAttendance", fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@index([studentId])
+  @@index([timestamp])
 }
 
 // ─── QR Code ─────────────────────────────────────────────────────────────────
@@ -271,6 +279,10 @@ model Grade {
   student Users   @relation("StudentGrades", fields: [studentId], references: [id], onDelete: Cascade)
   course  Course  @relation(fields: [courseId], references: [id], onDelete: Cascade)
   subject Subject @relation("SubjectGrades", fields: [subjectId], references: [id], onDelete: Cascade)
+
+  @@index([studentId])
+  @@index([courseId])
+  @@index([subjectId])
 }
 
 // ─── Timetable ────────────────────────────────────────────────────────────────
@@ -292,6 +304,11 @@ model Timetable {
   course  Course  @relation(fields: [courseId], references: [id], onDelete: Cascade)
   subject Subject @relation("SubjectTimetable", fields: [subjectId], references: [id], onDelete: Cascade)
   faculty Users   @relation("FacultyTimetable", fields: [facultyId], references: [id], onDelete: Cascade)
+
+  @@index([courseId])
+  @@index([subjectId])
+  @@index([facultyId])
+  @@index([dayOfWeek])
 }
 
 // ─── Notifications ────────────────────────────────────────────────────────────

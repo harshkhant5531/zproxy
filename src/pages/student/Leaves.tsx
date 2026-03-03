@@ -72,8 +72,8 @@ export default function LeaveManagement() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white uppercase tracking-tighter italic">Absence Registry</h1>
-          <p className="text-sm text-slate-400 font-mono tracking-wider">SUBMIT AND TRACK LEAVE PROTOCOLS</p>
+          <h1 className="text-2xl font-black tracking-tight text-foreground uppercase aura-text-glow">Absence Registry</h1>
+          <p className="text-[10px] text-muted-foreground font-mono tracking-[0.2em] uppercase mt-1">Institutional Absence Protocols // Secure Filing</p>
         </div>
         <Button
           onClick={() => setShowForm(!showForm)}
@@ -87,7 +87,7 @@ export default function LeaveManagement() {
       {showForm && (
         <Card className="bg-slate-900/40 border-primary/30 border backdrop-blur-md shadow-2xl animate-in fade-in slide-in-from-top-4 duration-300">
           <CardHeader className="pb-3 px-6">
-            <CardTitle className="text-sm font-bold text-primary uppercase tracking-widest italic">Request Authorization</CardTitle>
+            <CardTitle className="text-sm font-bold text-primary uppercase tracking-widest">Request Authorization</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 px-6 pb-6">
             <div className="grid gap-4 sm:grid-cols-2">
@@ -143,7 +143,7 @@ export default function LeaveManagement() {
             </div>
             <div className="flex gap-3 justify-end pt-2">
               <Button
-                className="px-8 font-bold tracking-tighter italic"
+                className="px-8 font-bold tracking-tight"
                 onClick={handleSubmit}
                 disabled={createLeaveMutation.isPending}
               >
@@ -178,7 +178,7 @@ export default function LeaveManagement() {
                   <TableCell className="text-[10px] text-slate-400 font-mono">
                     {format(new Date(leave.startDate), "MMM dd")} — {format(new Date(leave.endDate), "MMM dd")}
                   </TableCell>
-                  <TableCell className="text-sm text-slate-300 max-w-[200px] truncate italic">{leave.reason}</TableCell>
+                  <TableCell className="text-sm text-muted-foreground max-w-[200px] truncate">{leave.reason}</TableCell>
                   <TableCell className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">
                     {leave.approver?.facultyProfile?.fullName || "PENDING SYSTEM"}
                   </TableCell>

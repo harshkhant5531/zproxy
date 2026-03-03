@@ -197,7 +197,8 @@ exports.Prisma.SubjectScalarFieldEnum = {
   credits: 'credits',
   totalClasses: 'totalClasses',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  facultyId: 'facultyId'
 };
 
 exports.Prisma.SessionScalarFieldEnum = {
@@ -213,6 +214,7 @@ exports.Prisma.SessionScalarFieldEnum = {
   endTime: 'endTime',
   duration: 'duration',
   status: 'status',
+  batches: 'batches',
   attendanceCount: 'attendanceCount',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

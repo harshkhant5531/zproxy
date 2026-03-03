@@ -26,7 +26,7 @@ export default function AdminDashboard() {
   const { data: coursesData, isLoading: isCoursesLoading } = useQuery({
     queryKey: ["admin", "courses"],
     queryFn: async () => {
-      const resp = await coursesAPI.getCourses();
+      const resp = await coursesAPI.getCourses({ limit: 1000 });
       return resp.data.data.courses || [];
     }
   });
@@ -34,7 +34,7 @@ export default function AdminDashboard() {
   const { data: attendanceData, isLoading: isAttLoading } = useQuery({
     queryKey: ["admin", "global-attendance"],
     queryFn: async () => {
-      const resp = await reportsAPI.attendance();
+      const resp = await reportsAPI.attendance({ limit: 5000 });
       return resp.data.data.reports || [];
     }
   });
@@ -77,8 +77,10 @@ export default function AdminDashboard() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-white">Admin Dashboard</h1>
-        <p className="text-sm text-slate-400 font-mono uppercase tracking-wider">Real-time System Metrics</p>
+        <h1 className="text-2xl font-black tracking-tight text-foreground uppercase aura-text-glow">Institutional Command</h1>
+        <p className="text-[10px] text-muted-foreground font-mono uppercase tracking-[0.2em] mt-1">
+          Root Access // Global System Metrics
+        </p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -109,7 +111,7 @@ export default function AdminDashboard() {
         <Card className="bg-slate-900/40 border-slate-800 backdrop-blur-sm">
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-sm font-medium flex items-center gap-2 text-slate-300">
+              <CardTitle className="text-sm font-bold flex items-center gap-2 text-muted-foreground uppercase tracking-widest">
                 <AlertTriangle className="h-4 w-4 text-destructive" /> Shortage Alerts
               </CardTitle>
               {shortageStudents.length > 0 && (
@@ -127,8 +129,8 @@ export default function AdminDashboard() {
                 return (
                   <div key={s.id} className="flex items-center justify-between rounded-lg bg-destructive/5 border border-destructive/20 p-3 hover:border-destructive/40 transition-colors">
                     <div>
-                      <p className="text-sm font-bold text-white">{s.studentProfile?.fullName || s.username}</p>
-                      <p className="text-xs text-slate-400 font-mono">{s.studentProfile?.enrollmentNumber || s.id} • {s.studentProfile?.department || "—"}</p>
+                      <p className="text-sm font-bold text-foreground">{s.studentProfile?.fullName || s.username}</p>
+                      <p className="text-xs text-muted-foreground font-mono">{s.studentProfile?.enrollmentNumber || s.id} • {s.studentProfile?.department || "—"}</p>
                     </div>
                     <div className="text-right flex items-center gap-2">
                       <span className={`text-[9px] px-2 py-0.5 rounded border font-black tracking-widest ${colorClass}`}>{severity}</span>

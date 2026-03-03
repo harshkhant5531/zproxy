@@ -2242,6 +2242,7 @@ export namespace Prisma {
     auditLogs: number
     timetableEntries: number
     facultyCourses: number
+    facultySubjects: number
     studentCourses: number
     studentSubjects: number
   }
@@ -2258,6 +2259,7 @@ export namespace Prisma {
     auditLogs?: boolean | UsersCountOutputTypeCountAuditLogsArgs
     timetableEntries?: boolean | UsersCountOutputTypeCountTimetableEntriesArgs
     facultyCourses?: boolean | UsersCountOutputTypeCountFacultyCoursesArgs
+    facultySubjects?: boolean | UsersCountOutputTypeCountFacultySubjectsArgs
     studentCourses?: boolean | UsersCountOutputTypeCountStudentCoursesArgs
     studentSubjects?: boolean | UsersCountOutputTypeCountStudentSubjectsArgs
   }
@@ -2348,6 +2350,13 @@ export namespace Prisma {
    */
   export type UsersCountOutputTypeCountFacultyCoursesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CourseWhereInput
+  }
+
+  /**
+   * UsersCountOutputType without action
+   */
+  export type UsersCountOutputTypeCountFacultySubjectsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SubjectWhereInput
   }
 
   /**
@@ -2787,6 +2796,7 @@ export namespace Prisma {
     auditLogs?: boolean | Users$auditLogsArgs<ExtArgs>
     timetableEntries?: boolean | Users$timetableEntriesArgs<ExtArgs>
     facultyCourses?: boolean | Users$facultyCoursesArgs<ExtArgs>
+    facultySubjects?: boolean | Users$facultySubjectsArgs<ExtArgs>
     studentCourses?: boolean | Users$studentCoursesArgs<ExtArgs>
     studentSubjects?: boolean | Users$studentSubjectsArgs<ExtArgs>
     _count?: boolean | UsersCountOutputTypeDefaultArgs<ExtArgs>
@@ -2844,6 +2854,7 @@ export namespace Prisma {
     auditLogs?: boolean | Users$auditLogsArgs<ExtArgs>
     timetableEntries?: boolean | Users$timetableEntriesArgs<ExtArgs>
     facultyCourses?: boolean | Users$facultyCoursesArgs<ExtArgs>
+    facultySubjects?: boolean | Users$facultySubjectsArgs<ExtArgs>
     studentCourses?: boolean | Users$studentCoursesArgs<ExtArgs>
     studentSubjects?: boolean | Users$studentSubjectsArgs<ExtArgs>
     _count?: boolean | UsersCountOutputTypeDefaultArgs<ExtArgs>
@@ -2868,6 +2879,7 @@ export namespace Prisma {
       auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
       timetableEntries: Prisma.$TimetablePayload<ExtArgs>[]
       facultyCourses: Prisma.$CoursePayload<ExtArgs>[]
+      facultySubjects: Prisma.$SubjectPayload<ExtArgs>[]
       studentCourses: Prisma.$CoursePayload<ExtArgs>[]
       studentSubjects: Prisma.$SubjectPayload<ExtArgs>[]
     }
@@ -3289,6 +3301,7 @@ export namespace Prisma {
     auditLogs<T extends Users$auditLogsArgs<ExtArgs> = {}>(args?: Subset<T, Users$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     timetableEntries<T extends Users$timetableEntriesArgs<ExtArgs> = {}>(args?: Subset<T, Users$timetableEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TimetablePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     facultyCourses<T extends Users$facultyCoursesArgs<ExtArgs> = {}>(args?: Subset<T, Users$facultyCoursesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CoursePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    facultySubjects<T extends Users$facultySubjectsArgs<ExtArgs> = {}>(args?: Subset<T, Users$facultySubjectsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SubjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     studentCourses<T extends Users$studentCoursesArgs<ExtArgs> = {}>(args?: Subset<T, Users$studentCoursesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CoursePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     studentSubjects<T extends Users$studentSubjectsArgs<ExtArgs> = {}>(args?: Subset<T, Users$studentSubjectsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SubjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -4035,6 +4048,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: CourseScalarFieldEnum | CourseScalarFieldEnum[]
+  }
+
+  /**
+   * Users.facultySubjects
+   */
+  export type Users$facultySubjectsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Subject
+     */
+    select?: SubjectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Subject
+     */
+    omit?: SubjectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SubjectInclude<ExtArgs> | null
+    where?: SubjectWhereInput
+    orderBy?: SubjectOrderByWithRelationInput | SubjectOrderByWithRelationInput[]
+    cursor?: SubjectWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SubjectScalarFieldEnum | SubjectScalarFieldEnum[]
   }
 
   /**
@@ -9063,6 +9100,7 @@ export namespace Prisma {
     courseId: number | null
     credits: number | null
     totalClasses: number | null
+    facultyId: number | null
   }
 
   export type SubjectSumAggregateOutputType = {
@@ -9070,6 +9108,7 @@ export namespace Prisma {
     courseId: number | null
     credits: number | null
     totalClasses: number | null
+    facultyId: number | null
   }
 
   export type SubjectMinAggregateOutputType = {
@@ -9081,6 +9120,7 @@ export namespace Prisma {
     totalClasses: number | null
     createdAt: Date | null
     updatedAt: Date | null
+    facultyId: number | null
   }
 
   export type SubjectMaxAggregateOutputType = {
@@ -9092,6 +9132,7 @@ export namespace Prisma {
     totalClasses: number | null
     createdAt: Date | null
     updatedAt: Date | null
+    facultyId: number | null
   }
 
   export type SubjectCountAggregateOutputType = {
@@ -9103,6 +9144,7 @@ export namespace Prisma {
     totalClasses: number
     createdAt: number
     updatedAt: number
+    facultyId: number
     _all: number
   }
 
@@ -9112,6 +9154,7 @@ export namespace Prisma {
     courseId?: true
     credits?: true
     totalClasses?: true
+    facultyId?: true
   }
 
   export type SubjectSumAggregateInputType = {
@@ -9119,6 +9162,7 @@ export namespace Prisma {
     courseId?: true
     credits?: true
     totalClasses?: true
+    facultyId?: true
   }
 
   export type SubjectMinAggregateInputType = {
@@ -9130,6 +9174,7 @@ export namespace Prisma {
     totalClasses?: true
     createdAt?: true
     updatedAt?: true
+    facultyId?: true
   }
 
   export type SubjectMaxAggregateInputType = {
@@ -9141,6 +9186,7 @@ export namespace Prisma {
     totalClasses?: true
     createdAt?: true
     updatedAt?: true
+    facultyId?: true
   }
 
   export type SubjectCountAggregateInputType = {
@@ -9152,6 +9198,7 @@ export namespace Prisma {
     totalClasses?: true
     createdAt?: true
     updatedAt?: true
+    facultyId?: true
     _all?: true
   }
 
@@ -9250,6 +9297,7 @@ export namespace Prisma {
     totalClasses: number
     createdAt: Date
     updatedAt: Date
+    facultyId: number | null
     _count: SubjectCountAggregateOutputType | null
     _avg: SubjectAvgAggregateOutputType | null
     _sum: SubjectSumAggregateOutputType | null
@@ -9280,7 +9328,9 @@ export namespace Prisma {
     totalClasses?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    facultyId?: boolean
     course?: boolean | CourseDefaultArgs<ExtArgs>
+    faculty?: boolean | Subject$facultyArgs<ExtArgs>
     sessions?: boolean | Subject$sessionsArgs<ExtArgs>
     timetableEntries?: boolean | Subject$timetableEntriesArgs<ExtArgs>
     grades?: boolean | Subject$gradesArgs<ExtArgs>
@@ -9297,7 +9347,9 @@ export namespace Prisma {
     totalClasses?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    facultyId?: boolean
     course?: boolean | CourseDefaultArgs<ExtArgs>
+    faculty?: boolean | Subject$facultyArgs<ExtArgs>
   }, ExtArgs["result"]["subject"]>
 
   export type SubjectSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -9309,7 +9361,9 @@ export namespace Prisma {
     totalClasses?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    facultyId?: boolean
     course?: boolean | CourseDefaultArgs<ExtArgs>
+    faculty?: boolean | Subject$facultyArgs<ExtArgs>
   }, ExtArgs["result"]["subject"]>
 
   export type SubjectSelectScalar = {
@@ -9321,11 +9375,13 @@ export namespace Prisma {
     totalClasses?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    facultyId?: boolean
   }
 
-  export type SubjectOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "courseId" | "name" | "description" | "credits" | "totalClasses" | "createdAt" | "updatedAt", ExtArgs["result"]["subject"]>
+  export type SubjectOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "courseId" | "name" | "description" | "credits" | "totalClasses" | "createdAt" | "updatedAt" | "facultyId", ExtArgs["result"]["subject"]>
   export type SubjectInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     course?: boolean | CourseDefaultArgs<ExtArgs>
+    faculty?: boolean | Subject$facultyArgs<ExtArgs>
     sessions?: boolean | Subject$sessionsArgs<ExtArgs>
     timetableEntries?: boolean | Subject$timetableEntriesArgs<ExtArgs>
     grades?: boolean | Subject$gradesArgs<ExtArgs>
@@ -9334,15 +9390,18 @@ export namespace Prisma {
   }
   export type SubjectIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     course?: boolean | CourseDefaultArgs<ExtArgs>
+    faculty?: boolean | Subject$facultyArgs<ExtArgs>
   }
   export type SubjectIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     course?: boolean | CourseDefaultArgs<ExtArgs>
+    faculty?: boolean | Subject$facultyArgs<ExtArgs>
   }
 
   export type $SubjectPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Subject"
     objects: {
       course: Prisma.$CoursePayload<ExtArgs>
+      faculty: Prisma.$UsersPayload<ExtArgs> | null
       sessions: Prisma.$SessionPayload<ExtArgs>[]
       timetableEntries: Prisma.$TimetablePayload<ExtArgs>[]
       grades: Prisma.$GradePayload<ExtArgs>[]
@@ -9357,6 +9416,7 @@ export namespace Prisma {
       totalClasses: number
       createdAt: Date
       updatedAt: Date
+      facultyId: number | null
     }, ExtArgs["result"]["subject"]>
     composites: {}
   }
@@ -9752,6 +9812,7 @@ export namespace Prisma {
   export interface Prisma__SubjectClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     course<T extends CourseDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CourseDefaultArgs<ExtArgs>>): Prisma__CourseClient<$Result.GetResult<Prisma.$CoursePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    faculty<T extends Subject$facultyArgs<ExtArgs> = {}>(args?: Subset<T, Subject$facultyArgs<ExtArgs>>): Prisma__UsersClient<$Result.GetResult<Prisma.$UsersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     sessions<T extends Subject$sessionsArgs<ExtArgs> = {}>(args?: Subset<T, Subject$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     timetableEntries<T extends Subject$timetableEntriesArgs<ExtArgs> = {}>(args?: Subset<T, Subject$timetableEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TimetablePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     grades<T extends Subject$gradesArgs<ExtArgs> = {}>(args?: Subset<T, Subject$gradesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GradePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -9793,6 +9854,7 @@ export namespace Prisma {
     readonly totalClasses: FieldRef<"Subject", 'Int'>
     readonly createdAt: FieldRef<"Subject", 'DateTime'>
     readonly updatedAt: FieldRef<"Subject", 'DateTime'>
+    readonly facultyId: FieldRef<"Subject", 'Int'>
   }
     
 
@@ -10189,6 +10251,25 @@ export namespace Prisma {
   }
 
   /**
+   * Subject.faculty
+   */
+  export type Subject$facultyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Users
+     */
+    select?: UsersSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Users
+     */
+    omit?: UsersOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UsersInclude<ExtArgs> | null
+    where?: UsersWhereInput
+  }
+
+  /**
    * Subject.sessions
    */
   export type Subject$sessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -10382,6 +10463,7 @@ export namespace Prisma {
     endTime: number
     duration: number
     status: number
+    batches: number
     attendanceCount: number
     createdAt: number
     updatedAt: number
@@ -10456,6 +10538,7 @@ export namespace Prisma {
     endTime?: true
     duration?: true
     status?: true
+    batches?: true
     attendanceCount?: true
     createdAt?: true
     updatedAt?: true
@@ -10561,6 +10644,7 @@ export namespace Prisma {
     endTime: string
     duration: number
     status: string
+    batches: string[]
     attendanceCount: number
     createdAt: Date
     updatedAt: Date
@@ -10598,6 +10682,7 @@ export namespace Prisma {
     endTime?: boolean
     duration?: boolean
     status?: boolean
+    batches?: boolean
     attendanceCount?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -10622,6 +10707,7 @@ export namespace Prisma {
     endTime?: boolean
     duration?: boolean
     status?: boolean
+    batches?: boolean
     attendanceCount?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -10643,6 +10729,7 @@ export namespace Prisma {
     endTime?: boolean
     duration?: boolean
     status?: boolean
+    batches?: boolean
     attendanceCount?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -10664,12 +10751,13 @@ export namespace Prisma {
     endTime?: boolean
     duration?: boolean
     status?: boolean
+    batches?: boolean
     attendanceCount?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type SessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "courseId" | "facultyId" | "subjectId" | "topic" | "description" | "sessionType" | "date" | "startTime" | "endTime" | "duration" | "status" | "attendanceCount" | "createdAt" | "updatedAt", ExtArgs["result"]["session"]>
+  export type SessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "courseId" | "facultyId" | "subjectId" | "topic" | "description" | "sessionType" | "date" | "startTime" | "endTime" | "duration" | "status" | "batches" | "attendanceCount" | "createdAt" | "updatedAt", ExtArgs["result"]["session"]>
   export type SessionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     course?: boolean | CourseDefaultArgs<ExtArgs>
     faculty?: boolean | UsersDefaultArgs<ExtArgs>
@@ -10711,6 +10799,7 @@ export namespace Prisma {
       endTime: string
       duration: number
       status: string
+      batches: string[]
       attendanceCount: number
       createdAt: Date
       updatedAt: Date
@@ -11154,6 +11243,7 @@ export namespace Prisma {
     readonly endTime: FieldRef<"Session", 'String'>
     readonly duration: FieldRef<"Session", 'Int'>
     readonly status: FieldRef<"Session", 'String'>
+    readonly batches: FieldRef<"Session", 'String[]'>
     readonly attendanceCount: FieldRef<"Session", 'Int'>
     readonly createdAt: FieldRef<"Session", 'DateTime'>
     readonly updatedAt: FieldRef<"Session", 'DateTime'>
@@ -22495,7 +22585,8 @@ export namespace Prisma {
     credits: 'credits',
     totalClasses: 'totalClasses',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    facultyId: 'facultyId'
   };
 
   export type SubjectScalarFieldEnum = (typeof SubjectScalarFieldEnum)[keyof typeof SubjectScalarFieldEnum]
@@ -22514,6 +22605,7 @@ export namespace Prisma {
     endTime: 'endTime',
     duration: 'duration',
     status: 'status',
+    batches: 'batches',
     attendanceCount: 'attendanceCount',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -22829,6 +22921,7 @@ export namespace Prisma {
     auditLogs?: AuditLogListRelationFilter
     timetableEntries?: TimetableListRelationFilter
     facultyCourses?: CourseListRelationFilter
+    facultySubjects?: SubjectListRelationFilter
     studentCourses?: CourseListRelationFilter
     studentSubjects?: SubjectListRelationFilter
   }
@@ -22857,6 +22950,7 @@ export namespace Prisma {
     auditLogs?: AuditLogOrderByRelationAggregateInput
     timetableEntries?: TimetableOrderByRelationAggregateInput
     facultyCourses?: CourseOrderByRelationAggregateInput
+    facultySubjects?: SubjectOrderByRelationAggregateInput
     studentCourses?: CourseOrderByRelationAggregateInput
     studentSubjects?: SubjectOrderByRelationAggregateInput
   }
@@ -22888,6 +22982,7 @@ export namespace Prisma {
     auditLogs?: AuditLogListRelationFilter
     timetableEntries?: TimetableListRelationFilter
     facultyCourses?: CourseListRelationFilter
+    facultySubjects?: SubjectListRelationFilter
     studentCourses?: CourseListRelationFilter
     studentSubjects?: SubjectListRelationFilter
   }, "id" | "username" | "email">
@@ -23310,7 +23405,9 @@ export namespace Prisma {
     totalClasses?: IntFilter<"Subject"> | number
     createdAt?: DateTimeFilter<"Subject"> | Date | string
     updatedAt?: DateTimeFilter<"Subject"> | Date | string
+    facultyId?: IntNullableFilter<"Subject"> | number | null
     course?: XOR<CourseScalarRelationFilter, CourseWhereInput>
+    faculty?: XOR<UsersNullableScalarRelationFilter, UsersWhereInput> | null
     sessions?: SessionListRelationFilter
     timetableEntries?: TimetableListRelationFilter
     grades?: GradeListRelationFilter
@@ -23326,7 +23423,9 @@ export namespace Prisma {
     totalClasses?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    facultyId?: SortOrderInput | SortOrder
     course?: CourseOrderByWithRelationInput
+    faculty?: UsersOrderByWithRelationInput
     sessions?: SessionOrderByRelationAggregateInput
     timetableEntries?: TimetableOrderByRelationAggregateInput
     grades?: GradeOrderByRelationAggregateInput
@@ -23346,7 +23445,9 @@ export namespace Prisma {
     totalClasses?: IntFilter<"Subject"> | number
     createdAt?: DateTimeFilter<"Subject"> | Date | string
     updatedAt?: DateTimeFilter<"Subject"> | Date | string
+    facultyId?: IntNullableFilter<"Subject"> | number | null
     course?: XOR<CourseScalarRelationFilter, CourseWhereInput>
+    faculty?: XOR<UsersNullableScalarRelationFilter, UsersWhereInput> | null
     sessions?: SessionListRelationFilter
     timetableEntries?: TimetableListRelationFilter
     grades?: GradeListRelationFilter
@@ -23362,6 +23463,7 @@ export namespace Prisma {
     totalClasses?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    facultyId?: SortOrderInput | SortOrder
     _count?: SubjectCountOrderByAggregateInput
     _avg?: SubjectAvgOrderByAggregateInput
     _max?: SubjectMaxOrderByAggregateInput
@@ -23381,6 +23483,7 @@ export namespace Prisma {
     totalClasses?: IntWithAggregatesFilter<"Subject"> | number
     createdAt?: DateTimeWithAggregatesFilter<"Subject"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Subject"> | Date | string
+    facultyId?: IntNullableWithAggregatesFilter<"Subject"> | number | null
   }
 
   export type SessionWhereInput = {
@@ -23399,6 +23502,7 @@ export namespace Prisma {
     endTime?: StringFilter<"Session"> | string
     duration?: IntFilter<"Session"> | number
     status?: StringFilter<"Session"> | string
+    batches?: StringNullableListFilter<"Session">
     attendanceCount?: IntFilter<"Session"> | number
     createdAt?: DateTimeFilter<"Session"> | Date | string
     updatedAt?: DateTimeFilter<"Session"> | Date | string
@@ -23422,6 +23526,7 @@ export namespace Prisma {
     endTime?: SortOrder
     duration?: SortOrder
     status?: SortOrder
+    batches?: SortOrder
     attendanceCount?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -23448,6 +23553,7 @@ export namespace Prisma {
     endTime?: StringFilter<"Session"> | string
     duration?: IntFilter<"Session"> | number
     status?: StringFilter<"Session"> | string
+    batches?: StringNullableListFilter<"Session">
     attendanceCount?: IntFilter<"Session"> | number
     createdAt?: DateTimeFilter<"Session"> | Date | string
     updatedAt?: DateTimeFilter<"Session"> | Date | string
@@ -23471,6 +23577,7 @@ export namespace Prisma {
     endTime?: SortOrder
     duration?: SortOrder
     status?: SortOrder
+    batches?: SortOrder
     attendanceCount?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -23497,6 +23604,7 @@ export namespace Prisma {
     endTime?: StringWithAggregatesFilter<"Session"> | string
     duration?: IntWithAggregatesFilter<"Session"> | number
     status?: StringWithAggregatesFilter<"Session"> | string
+    batches?: StringNullableListFilter<"Session">
     attendanceCount?: IntWithAggregatesFilter<"Session"> | number
     createdAt?: DateTimeWithAggregatesFilter<"Session"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Session"> | Date | string
@@ -24337,6 +24445,7 @@ export namespace Prisma {
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseCreateNestedManyWithoutFacultyInput
+    facultySubjects?: SubjectCreateNestedManyWithoutFacultyInput
     studentCourses?: CourseCreateNestedManyWithoutStudentsInput
     studentSubjects?: SubjectCreateNestedManyWithoutStudentsInput
   }
@@ -24365,6 +24474,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableUncheckedCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseUncheckedCreateNestedManyWithoutFacultyInput
+    facultySubjects?: SubjectUncheckedCreateNestedManyWithoutFacultyInput
     studentCourses?: CourseUncheckedCreateNestedManyWithoutStudentsInput
     studentSubjects?: SubjectUncheckedCreateNestedManyWithoutStudentsInput
   }
@@ -24392,6 +24502,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUpdateManyWithoutFacultyNestedInput
+    facultySubjects?: SubjectUpdateManyWithoutFacultyNestedInput
     studentCourses?: CourseUpdateManyWithoutStudentsNestedInput
     studentSubjects?: SubjectUpdateManyWithoutStudentsNestedInput
   }
@@ -24420,6 +24531,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUncheckedUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUncheckedUpdateManyWithoutFacultyNestedInput
+    facultySubjects?: SubjectUncheckedUpdateManyWithoutFacultyNestedInput
     studentCourses?: CourseUncheckedUpdateManyWithoutStudentsNestedInput
     studentSubjects?: SubjectUncheckedUpdateManyWithoutStudentsNestedInput
   }
@@ -24878,6 +24990,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     course: CourseCreateNestedOneWithoutSubjectsInput
+    faculty?: UsersCreateNestedOneWithoutFacultySubjectsInput
     sessions?: SessionCreateNestedManyWithoutSubjectInput
     timetableEntries?: TimetableCreateNestedManyWithoutSubjectInput
     grades?: GradeCreateNestedManyWithoutSubjectInput
@@ -24893,6 +25006,7 @@ export namespace Prisma {
     totalClasses?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    facultyId?: number | null
     sessions?: SessionUncheckedCreateNestedManyWithoutSubjectInput
     timetableEntries?: TimetableUncheckedCreateNestedManyWithoutSubjectInput
     grades?: GradeUncheckedCreateNestedManyWithoutSubjectInput
@@ -24907,6 +25021,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     course?: CourseUpdateOneRequiredWithoutSubjectsNestedInput
+    faculty?: UsersUpdateOneWithoutFacultySubjectsNestedInput
     sessions?: SessionUpdateManyWithoutSubjectNestedInput
     timetableEntries?: TimetableUpdateManyWithoutSubjectNestedInput
     grades?: GradeUpdateManyWithoutSubjectNestedInput
@@ -24922,6 +25037,7 @@ export namespace Prisma {
     totalClasses?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    facultyId?: NullableIntFieldUpdateOperationsInput | number | null
     sessions?: SessionUncheckedUpdateManyWithoutSubjectNestedInput
     timetableEntries?: TimetableUncheckedUpdateManyWithoutSubjectNestedInput
     grades?: GradeUncheckedUpdateManyWithoutSubjectNestedInput
@@ -24937,6 +25053,7 @@ export namespace Prisma {
     totalClasses?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    facultyId?: number | null
   }
 
   export type SubjectUpdateManyMutationInput = {
@@ -24957,6 +25074,7 @@ export namespace Prisma {
     totalClasses?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    facultyId?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type SessionCreateInput = {
@@ -24968,6 +25086,7 @@ export namespace Prisma {
     endTime: string
     duration?: number
     status?: string
+    batches?: SessionCreatebatchesInput | string[]
     attendanceCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -24991,6 +25110,7 @@ export namespace Prisma {
     endTime: string
     duration?: number
     status?: string
+    batches?: SessionCreatebatchesInput | string[]
     attendanceCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -25007,6 +25127,7 @@ export namespace Prisma {
     endTime?: StringFieldUpdateOperationsInput | string
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
+    batches?: SessionUpdatebatchesInput | string[]
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -25030,6 +25151,7 @@ export namespace Prisma {
     endTime?: StringFieldUpdateOperationsInput | string
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
+    batches?: SessionUpdatebatchesInput | string[]
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -25050,6 +25172,7 @@ export namespace Prisma {
     endTime: string
     duration?: number
     status?: string
+    batches?: SessionCreatebatchesInput | string[]
     attendanceCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -25064,6 +25187,7 @@ export namespace Prisma {
     endTime?: StringFieldUpdateOperationsInput | string
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
+    batches?: SessionUpdatebatchesInput | string[]
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -25082,6 +25206,7 @@ export namespace Prisma {
     endTime?: StringFieldUpdateOperationsInput | string
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
+    batches?: SessionUpdatebatchesInput | string[]
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26534,6 +26659,7 @@ export namespace Prisma {
     totalClasses?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    facultyId?: SortOrder
   }
 
   export type SubjectAvgOrderByAggregateInput = {
@@ -26541,6 +26667,7 @@ export namespace Prisma {
     courseId?: SortOrder
     credits?: SortOrder
     totalClasses?: SortOrder
+    facultyId?: SortOrder
   }
 
   export type SubjectMaxOrderByAggregateInput = {
@@ -26552,6 +26679,7 @@ export namespace Prisma {
     totalClasses?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    facultyId?: SortOrder
   }
 
   export type SubjectMinOrderByAggregateInput = {
@@ -26563,6 +26691,7 @@ export namespace Prisma {
     totalClasses?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    facultyId?: SortOrder
   }
 
   export type SubjectSumOrderByAggregateInput = {
@@ -26570,6 +26699,15 @@ export namespace Prisma {
     courseId?: SortOrder
     credits?: SortOrder
     totalClasses?: SortOrder
+    facultyId?: SortOrder
+  }
+
+  export type StringNullableListFilter<$PrismaModel = never> = {
+    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    has?: string | StringFieldRefInput<$PrismaModel> | null
+    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
+    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
   }
 
   export type SubjectNullableScalarRelationFilter = {
@@ -26595,6 +26733,7 @@ export namespace Prisma {
     endTime?: SortOrder
     duration?: SortOrder
     status?: SortOrder
+    batches?: SortOrder
     attendanceCount?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -27325,6 +27464,13 @@ export namespace Prisma {
     connect?: CourseWhereUniqueInput | CourseWhereUniqueInput[]
   }
 
+  export type SubjectCreateNestedManyWithoutFacultyInput = {
+    create?: XOR<SubjectCreateWithoutFacultyInput, SubjectUncheckedCreateWithoutFacultyInput> | SubjectCreateWithoutFacultyInput[] | SubjectUncheckedCreateWithoutFacultyInput[]
+    connectOrCreate?: SubjectCreateOrConnectWithoutFacultyInput | SubjectCreateOrConnectWithoutFacultyInput[]
+    createMany?: SubjectCreateManyFacultyInputEnvelope
+    connect?: SubjectWhereUniqueInput | SubjectWhereUniqueInput[]
+  }
+
   export type CourseCreateNestedManyWithoutStudentsInput = {
     create?: XOR<CourseCreateWithoutStudentsInput, CourseUncheckedCreateWithoutStudentsInput> | CourseCreateWithoutStudentsInput[] | CourseUncheckedCreateWithoutStudentsInput[]
     connectOrCreate?: CourseCreateOrConnectWithoutStudentsInput | CourseCreateOrConnectWithoutStudentsInput[]
@@ -27430,6 +27576,13 @@ export namespace Prisma {
     connectOrCreate?: CourseCreateOrConnectWithoutFacultyInput | CourseCreateOrConnectWithoutFacultyInput[]
     createMany?: CourseCreateManyFacultyInputEnvelope
     connect?: CourseWhereUniqueInput | CourseWhereUniqueInput[]
+  }
+
+  export type SubjectUncheckedCreateNestedManyWithoutFacultyInput = {
+    create?: XOR<SubjectCreateWithoutFacultyInput, SubjectUncheckedCreateWithoutFacultyInput> | SubjectCreateWithoutFacultyInput[] | SubjectUncheckedCreateWithoutFacultyInput[]
+    connectOrCreate?: SubjectCreateOrConnectWithoutFacultyInput | SubjectCreateOrConnectWithoutFacultyInput[]
+    createMany?: SubjectCreateManyFacultyInputEnvelope
+    connect?: SubjectWhereUniqueInput | SubjectWhereUniqueInput[]
   }
 
   export type CourseUncheckedCreateNestedManyWithoutStudentsInput = {
@@ -27638,6 +27791,20 @@ export namespace Prisma {
     update?: CourseUpdateWithWhereUniqueWithoutFacultyInput | CourseUpdateWithWhereUniqueWithoutFacultyInput[]
     updateMany?: CourseUpdateManyWithWhereWithoutFacultyInput | CourseUpdateManyWithWhereWithoutFacultyInput[]
     deleteMany?: CourseScalarWhereInput | CourseScalarWhereInput[]
+  }
+
+  export type SubjectUpdateManyWithoutFacultyNestedInput = {
+    create?: XOR<SubjectCreateWithoutFacultyInput, SubjectUncheckedCreateWithoutFacultyInput> | SubjectCreateWithoutFacultyInput[] | SubjectUncheckedCreateWithoutFacultyInput[]
+    connectOrCreate?: SubjectCreateOrConnectWithoutFacultyInput | SubjectCreateOrConnectWithoutFacultyInput[]
+    upsert?: SubjectUpsertWithWhereUniqueWithoutFacultyInput | SubjectUpsertWithWhereUniqueWithoutFacultyInput[]
+    createMany?: SubjectCreateManyFacultyInputEnvelope
+    set?: SubjectWhereUniqueInput | SubjectWhereUniqueInput[]
+    disconnect?: SubjectWhereUniqueInput | SubjectWhereUniqueInput[]
+    delete?: SubjectWhereUniqueInput | SubjectWhereUniqueInput[]
+    connect?: SubjectWhereUniqueInput | SubjectWhereUniqueInput[]
+    update?: SubjectUpdateWithWhereUniqueWithoutFacultyInput | SubjectUpdateWithWhereUniqueWithoutFacultyInput[]
+    updateMany?: SubjectUpdateManyWithWhereWithoutFacultyInput | SubjectUpdateManyWithWhereWithoutFacultyInput[]
+    deleteMany?: SubjectScalarWhereInput | SubjectScalarWhereInput[]
   }
 
   export type CourseUpdateManyWithoutStudentsNestedInput = {
@@ -27856,6 +28023,20 @@ export namespace Prisma {
     update?: CourseUpdateWithWhereUniqueWithoutFacultyInput | CourseUpdateWithWhereUniqueWithoutFacultyInput[]
     updateMany?: CourseUpdateManyWithWhereWithoutFacultyInput | CourseUpdateManyWithWhereWithoutFacultyInput[]
     deleteMany?: CourseScalarWhereInput | CourseScalarWhereInput[]
+  }
+
+  export type SubjectUncheckedUpdateManyWithoutFacultyNestedInput = {
+    create?: XOR<SubjectCreateWithoutFacultyInput, SubjectUncheckedCreateWithoutFacultyInput> | SubjectCreateWithoutFacultyInput[] | SubjectUncheckedCreateWithoutFacultyInput[]
+    connectOrCreate?: SubjectCreateOrConnectWithoutFacultyInput | SubjectCreateOrConnectWithoutFacultyInput[]
+    upsert?: SubjectUpsertWithWhereUniqueWithoutFacultyInput | SubjectUpsertWithWhereUniqueWithoutFacultyInput[]
+    createMany?: SubjectCreateManyFacultyInputEnvelope
+    set?: SubjectWhereUniqueInput | SubjectWhereUniqueInput[]
+    disconnect?: SubjectWhereUniqueInput | SubjectWhereUniqueInput[]
+    delete?: SubjectWhereUniqueInput | SubjectWhereUniqueInput[]
+    connect?: SubjectWhereUniqueInput | SubjectWhereUniqueInput[]
+    update?: SubjectUpdateWithWhereUniqueWithoutFacultyInput | SubjectUpdateWithWhereUniqueWithoutFacultyInput[]
+    updateMany?: SubjectUpdateManyWithWhereWithoutFacultyInput | SubjectUpdateManyWithWhereWithoutFacultyInput[]
+    deleteMany?: SubjectScalarWhereInput | SubjectScalarWhereInput[]
   }
 
   export type CourseUncheckedUpdateManyWithoutStudentsNestedInput = {
@@ -28250,6 +28431,12 @@ export namespace Prisma {
     connect?: CourseWhereUniqueInput
   }
 
+  export type UsersCreateNestedOneWithoutFacultySubjectsInput = {
+    create?: XOR<UsersCreateWithoutFacultySubjectsInput, UsersUncheckedCreateWithoutFacultySubjectsInput>
+    connectOrCreate?: UsersCreateOrConnectWithoutFacultySubjectsInput
+    connect?: UsersWhereUniqueInput
+  }
+
   export type SessionCreateNestedManyWithoutSubjectInput = {
     create?: XOR<SessionCreateWithoutSubjectInput, SessionUncheckedCreateWithoutSubjectInput> | SessionCreateWithoutSubjectInput[] | SessionUncheckedCreateWithoutSubjectInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutSubjectInput | SessionCreateOrConnectWithoutSubjectInput[]
@@ -28310,6 +28497,16 @@ export namespace Prisma {
     upsert?: CourseUpsertWithoutSubjectsInput
     connect?: CourseWhereUniqueInput
     update?: XOR<XOR<CourseUpdateToOneWithWhereWithoutSubjectsInput, CourseUpdateWithoutSubjectsInput>, CourseUncheckedUpdateWithoutSubjectsInput>
+  }
+
+  export type UsersUpdateOneWithoutFacultySubjectsNestedInput = {
+    create?: XOR<UsersCreateWithoutFacultySubjectsInput, UsersUncheckedCreateWithoutFacultySubjectsInput>
+    connectOrCreate?: UsersCreateOrConnectWithoutFacultySubjectsInput
+    upsert?: UsersUpsertWithoutFacultySubjectsInput
+    disconnect?: UsersWhereInput | boolean
+    delete?: UsersWhereInput | boolean
+    connect?: UsersWhereUniqueInput
+    update?: XOR<XOR<UsersUpdateToOneWithWhereWithoutFacultySubjectsInput, UsersUpdateWithoutFacultySubjectsInput>, UsersUncheckedUpdateWithoutFacultySubjectsInput>
   }
 
   export type SessionUpdateManyWithoutSubjectNestedInput = {
@@ -28422,6 +28619,10 @@ export namespace Prisma {
     deleteMany?: UsersScalarWhereInput | UsersScalarWhereInput[]
   }
 
+  export type SessionCreatebatchesInput = {
+    set: string[]
+  }
+
   export type CourseCreateNestedOneWithoutSessionsInput = {
     create?: XOR<CourseCreateWithoutSessionsInput, CourseUncheckedCreateWithoutSessionsInput>
     connectOrCreate?: CourseCreateOrConnectWithoutSessionsInput
@@ -28464,6 +28665,11 @@ export namespace Prisma {
     create?: XOR<QrCodeCreateWithoutSessionInput, QrCodeUncheckedCreateWithoutSessionInput>
     connectOrCreate?: QrCodeCreateOrConnectWithoutSessionInput
     connect?: QrCodeWhereUniqueInput
+  }
+
+  export type SessionUpdatebatchesInput = {
+    set?: string[]
+    push?: string | string[]
   }
 
   export type CourseUpdateOneRequiredWithoutSessionsNestedInput = {
@@ -29185,6 +29391,7 @@ export namespace Prisma {
     endTime: string
     duration?: number
     status?: string
+    batches?: SessionCreatebatchesInput | string[]
     attendanceCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -29206,6 +29413,7 @@ export namespace Prisma {
     endTime: string
     duration?: number
     status?: string
+    batches?: SessionCreatebatchesInput | string[]
     attendanceCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -29523,6 +29731,45 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type SubjectCreateWithoutFacultyInput = {
+    name: string
+    description?: string | null
+    credits: number
+    totalClasses?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    course: CourseCreateNestedOneWithoutSubjectsInput
+    sessions?: SessionCreateNestedManyWithoutSubjectInput
+    timetableEntries?: TimetableCreateNestedManyWithoutSubjectInput
+    grades?: GradeCreateNestedManyWithoutSubjectInput
+    students?: UsersCreateNestedManyWithoutStudentSubjectsInput
+  }
+
+  export type SubjectUncheckedCreateWithoutFacultyInput = {
+    id?: number
+    courseId: number
+    name: string
+    description?: string | null
+    credits: number
+    totalClasses?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sessions?: SessionUncheckedCreateNestedManyWithoutSubjectInput
+    timetableEntries?: TimetableUncheckedCreateNestedManyWithoutSubjectInput
+    grades?: GradeUncheckedCreateNestedManyWithoutSubjectInput
+    students?: UsersUncheckedCreateNestedManyWithoutStudentSubjectsInput
+  }
+
+  export type SubjectCreateOrConnectWithoutFacultyInput = {
+    where: SubjectWhereUniqueInput
+    create: XOR<SubjectCreateWithoutFacultyInput, SubjectUncheckedCreateWithoutFacultyInput>
+  }
+
+  export type SubjectCreateManyFacultyInputEnvelope = {
+    data: SubjectCreateManyFacultyInput | SubjectCreateManyFacultyInput[]
+    skipDuplicates?: boolean
+  }
+
   export type CourseCreateWithoutStudentsInput = {
     code: string
     name: string
@@ -29577,6 +29824,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     course: CourseCreateNestedOneWithoutSubjectsInput
+    faculty?: UsersCreateNestedOneWithoutFacultySubjectsInput
     sessions?: SessionCreateNestedManyWithoutSubjectInput
     timetableEntries?: TimetableCreateNestedManyWithoutSubjectInput
     grades?: GradeCreateNestedManyWithoutSubjectInput
@@ -29591,6 +29839,7 @@ export namespace Prisma {
     totalClasses?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    facultyId?: number | null
     sessions?: SessionUncheckedCreateNestedManyWithoutSubjectInput
     timetableEntries?: TimetableUncheckedCreateNestedManyWithoutSubjectInput
     grades?: GradeUncheckedCreateNestedManyWithoutSubjectInput
@@ -29791,6 +30040,7 @@ export namespace Prisma {
     endTime?: StringFilter<"Session"> | string
     duration?: IntFilter<"Session"> | number
     status?: StringFilter<"Session"> | string
+    batches?: StringNullableListFilter<"Session">
     attendanceCount?: IntFilter<"Session"> | number
     createdAt?: DateTimeFilter<"Session"> | Date | string
     updatedAt?: DateTimeFilter<"Session"> | Date | string
@@ -30063,6 +30313,37 @@ export namespace Prisma {
     facultyId?: IntNullableFilter<"Course"> | number | null
   }
 
+  export type SubjectUpsertWithWhereUniqueWithoutFacultyInput = {
+    where: SubjectWhereUniqueInput
+    update: XOR<SubjectUpdateWithoutFacultyInput, SubjectUncheckedUpdateWithoutFacultyInput>
+    create: XOR<SubjectCreateWithoutFacultyInput, SubjectUncheckedCreateWithoutFacultyInput>
+  }
+
+  export type SubjectUpdateWithWhereUniqueWithoutFacultyInput = {
+    where: SubjectWhereUniqueInput
+    data: XOR<SubjectUpdateWithoutFacultyInput, SubjectUncheckedUpdateWithoutFacultyInput>
+  }
+
+  export type SubjectUpdateManyWithWhereWithoutFacultyInput = {
+    where: SubjectScalarWhereInput
+    data: XOR<SubjectUpdateManyMutationInput, SubjectUncheckedUpdateManyWithoutFacultyInput>
+  }
+
+  export type SubjectScalarWhereInput = {
+    AND?: SubjectScalarWhereInput | SubjectScalarWhereInput[]
+    OR?: SubjectScalarWhereInput[]
+    NOT?: SubjectScalarWhereInput | SubjectScalarWhereInput[]
+    id?: IntFilter<"Subject"> | number
+    courseId?: IntFilter<"Subject"> | number
+    name?: StringFilter<"Subject"> | string
+    description?: StringNullableFilter<"Subject"> | string | null
+    credits?: IntFilter<"Subject"> | number
+    totalClasses?: IntFilter<"Subject"> | number
+    createdAt?: DateTimeFilter<"Subject"> | Date | string
+    updatedAt?: DateTimeFilter<"Subject"> | Date | string
+    facultyId?: IntNullableFilter<"Subject"> | number | null
+  }
+
   export type CourseUpsertWithWhereUniqueWithoutStudentsInput = {
     where: CourseWhereUniqueInput
     update: XOR<CourseUpdateWithoutStudentsInput, CourseUncheckedUpdateWithoutStudentsInput>
@@ -30095,20 +30376,6 @@ export namespace Prisma {
     data: XOR<SubjectUpdateManyMutationInput, SubjectUncheckedUpdateManyWithoutStudentsInput>
   }
 
-  export type SubjectScalarWhereInput = {
-    AND?: SubjectScalarWhereInput | SubjectScalarWhereInput[]
-    OR?: SubjectScalarWhereInput[]
-    NOT?: SubjectScalarWhereInput | SubjectScalarWhereInput[]
-    id?: IntFilter<"Subject"> | number
-    courseId?: IntFilter<"Subject"> | number
-    name?: StringFilter<"Subject"> | string
-    description?: StringNullableFilter<"Subject"> | string | null
-    credits?: IntFilter<"Subject"> | number
-    totalClasses?: IntFilter<"Subject"> | number
-    createdAt?: DateTimeFilter<"Subject"> | Date | string
-    updatedAt?: DateTimeFilter<"Subject"> | Date | string
-  }
-
   export type UsersCreateWithoutAdminProfileInput = {
     username: string
     email: string
@@ -30131,6 +30398,7 @@ export namespace Prisma {
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseCreateNestedManyWithoutFacultyInput
+    facultySubjects?: SubjectCreateNestedManyWithoutFacultyInput
     studentCourses?: CourseCreateNestedManyWithoutStudentsInput
     studentSubjects?: SubjectCreateNestedManyWithoutStudentsInput
   }
@@ -30158,6 +30426,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableUncheckedCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseUncheckedCreateNestedManyWithoutFacultyInput
+    facultySubjects?: SubjectUncheckedCreateNestedManyWithoutFacultyInput
     studentCourses?: CourseUncheckedCreateNestedManyWithoutStudentsInput
     studentSubjects?: SubjectUncheckedCreateNestedManyWithoutStudentsInput
   }
@@ -30200,6 +30469,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUpdateManyWithoutFacultyNestedInput
+    facultySubjects?: SubjectUpdateManyWithoutFacultyNestedInput
     studentCourses?: CourseUpdateManyWithoutStudentsNestedInput
     studentSubjects?: SubjectUpdateManyWithoutStudentsNestedInput
   }
@@ -30227,6 +30497,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUncheckedUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUncheckedUpdateManyWithoutFacultyNestedInput
+    facultySubjects?: SubjectUncheckedUpdateManyWithoutFacultyNestedInput
     studentCourses?: CourseUncheckedUpdateManyWithoutStudentsNestedInput
     studentSubjects?: SubjectUncheckedUpdateManyWithoutStudentsNestedInput
   }
@@ -30253,6 +30524,7 @@ export namespace Prisma {
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseCreateNestedManyWithoutFacultyInput
+    facultySubjects?: SubjectCreateNestedManyWithoutFacultyInput
     studentCourses?: CourseCreateNestedManyWithoutStudentsInput
     studentSubjects?: SubjectCreateNestedManyWithoutStudentsInput
   }
@@ -30280,6 +30552,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableUncheckedCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseUncheckedCreateNestedManyWithoutFacultyInput
+    facultySubjects?: SubjectUncheckedCreateNestedManyWithoutFacultyInput
     studentCourses?: CourseUncheckedCreateNestedManyWithoutStudentsInput
     studentSubjects?: SubjectUncheckedCreateNestedManyWithoutStudentsInput
   }
@@ -30322,6 +30595,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUpdateManyWithoutFacultyNestedInput
+    facultySubjects?: SubjectUpdateManyWithoutFacultyNestedInput
     studentCourses?: CourseUpdateManyWithoutStudentsNestedInput
     studentSubjects?: SubjectUpdateManyWithoutStudentsNestedInput
   }
@@ -30349,6 +30623,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUncheckedUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUncheckedUpdateManyWithoutFacultyNestedInput
+    facultySubjects?: SubjectUncheckedUpdateManyWithoutFacultyNestedInput
     studentCourses?: CourseUncheckedUpdateManyWithoutStudentsNestedInput
     studentSubjects?: SubjectUncheckedUpdateManyWithoutStudentsNestedInput
   }
@@ -30375,6 +30650,7 @@ export namespace Prisma {
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseCreateNestedManyWithoutFacultyInput
+    facultySubjects?: SubjectCreateNestedManyWithoutFacultyInput
     studentCourses?: CourseCreateNestedManyWithoutStudentsInput
     studentSubjects?: SubjectCreateNestedManyWithoutStudentsInput
   }
@@ -30402,6 +30678,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableUncheckedCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseUncheckedCreateNestedManyWithoutFacultyInput
+    facultySubjects?: SubjectUncheckedCreateNestedManyWithoutFacultyInput
     studentCourses?: CourseUncheckedCreateNestedManyWithoutStudentsInput
     studentSubjects?: SubjectUncheckedCreateNestedManyWithoutStudentsInput
   }
@@ -30444,6 +30721,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUpdateManyWithoutFacultyNestedInput
+    facultySubjects?: SubjectUpdateManyWithoutFacultyNestedInput
     studentCourses?: CourseUpdateManyWithoutStudentsNestedInput
     studentSubjects?: SubjectUpdateManyWithoutStudentsNestedInput
   }
@@ -30471,6 +30749,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUncheckedUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUncheckedUpdateManyWithoutFacultyNestedInput
+    facultySubjects?: SubjectUncheckedUpdateManyWithoutFacultyNestedInput
     studentCourses?: CourseUncheckedUpdateManyWithoutStudentsNestedInput
     studentSubjects?: SubjectUncheckedUpdateManyWithoutStudentsNestedInput
   }
@@ -30497,6 +30776,7 @@ export namespace Prisma {
     reports?: ReportCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableCreateNestedManyWithoutFacultyInput
+    facultySubjects?: SubjectCreateNestedManyWithoutFacultyInput
     studentCourses?: CourseCreateNestedManyWithoutStudentsInput
     studentSubjects?: SubjectCreateNestedManyWithoutStudentsInput
   }
@@ -30524,6 +30804,7 @@ export namespace Prisma {
     reports?: ReportUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableUncheckedCreateNestedManyWithoutFacultyInput
+    facultySubjects?: SubjectUncheckedCreateNestedManyWithoutFacultyInput
     studentCourses?: CourseUncheckedCreateNestedManyWithoutStudentsInput
     studentSubjects?: SubjectUncheckedCreateNestedManyWithoutStudentsInput
   }
@@ -30556,6 +30837,7 @@ export namespace Prisma {
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseCreateNestedManyWithoutFacultyInput
+    facultySubjects?: SubjectCreateNestedManyWithoutFacultyInput
     studentSubjects?: SubjectCreateNestedManyWithoutStudentsInput
   }
 
@@ -30583,6 +30865,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableUncheckedCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseUncheckedCreateNestedManyWithoutFacultyInput
+    facultySubjects?: SubjectUncheckedCreateNestedManyWithoutFacultyInput
     studentSubjects?: SubjectUncheckedCreateNestedManyWithoutStudentsInput
   }
 
@@ -30598,6 +30881,7 @@ export namespace Prisma {
     totalClasses?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    faculty?: UsersCreateNestedOneWithoutFacultySubjectsInput
     sessions?: SessionCreateNestedManyWithoutSubjectInput
     timetableEntries?: TimetableCreateNestedManyWithoutSubjectInput
     grades?: GradeCreateNestedManyWithoutSubjectInput
@@ -30612,6 +30896,7 @@ export namespace Prisma {
     totalClasses?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    facultyId?: number | null
     sessions?: SessionUncheckedCreateNestedManyWithoutSubjectInput
     timetableEntries?: TimetableUncheckedCreateNestedManyWithoutSubjectInput
     grades?: GradeUncheckedCreateNestedManyWithoutSubjectInput
@@ -30713,6 +30998,7 @@ export namespace Prisma {
     endTime: string
     duration?: number
     status?: string
+    batches?: SessionCreatebatchesInput | string[]
     attendanceCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -30734,6 +31020,7 @@ export namespace Prisma {
     endTime: string
     duration?: number
     status?: string
+    batches?: SessionCreatebatchesInput | string[]
     attendanceCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -30860,6 +31147,7 @@ export namespace Prisma {
     reports?: ReportUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUpdateManyWithoutFacultyNestedInput
+    facultySubjects?: SubjectUpdateManyWithoutFacultyNestedInput
     studentCourses?: CourseUpdateManyWithoutStudentsNestedInput
     studentSubjects?: SubjectUpdateManyWithoutStudentsNestedInput
   }
@@ -30887,6 +31175,7 @@ export namespace Prisma {
     reports?: ReportUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUncheckedUpdateManyWithoutFacultyNestedInput
+    facultySubjects?: SubjectUncheckedUpdateManyWithoutFacultyNestedInput
     studentCourses?: CourseUncheckedUpdateManyWithoutStudentsNestedInput
     studentSubjects?: SubjectUncheckedUpdateManyWithoutStudentsNestedInput
   }
@@ -31064,6 +31353,66 @@ export namespace Prisma {
     create: XOR<CourseCreateWithoutSubjectsInput, CourseUncheckedCreateWithoutSubjectsInput>
   }
 
+  export type UsersCreateWithoutFacultySubjectsInput = {
+    username: string
+    email: string
+    passwordHash: string
+    role: string
+    avatar?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    adminProfile?: AdminProfileCreateNestedOneWithoutUserInput
+    facultyProfile?: FacultyProfileCreateNestedOneWithoutUserInput
+    studentProfile?: StudentProfileCreateNestedOneWithoutUserInput
+    leaveApplications?: LeaveApplicationCreateNestedManyWithoutUserInput
+    approvedLeaves?: LeaveApplicationCreateNestedManyWithoutApproverInput
+    sessions?: SessionCreateNestedManyWithoutFacultyInput
+    attendanceRecords?: AttendanceCreateNestedManyWithoutStudentInput
+    examPermits?: ExamPermitCreateNestedManyWithoutStudentInput
+    grades?: GradeCreateNestedManyWithoutStudentInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    reports?: ReportCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    timetableEntries?: TimetableCreateNestedManyWithoutFacultyInput
+    facultyCourses?: CourseCreateNestedManyWithoutFacultyInput
+    studentCourses?: CourseCreateNestedManyWithoutStudentsInput
+    studentSubjects?: SubjectCreateNestedManyWithoutStudentsInput
+  }
+
+  export type UsersUncheckedCreateWithoutFacultySubjectsInput = {
+    id?: number
+    username: string
+    email: string
+    passwordHash: string
+    role: string
+    avatar?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    adminProfile?: AdminProfileUncheckedCreateNestedOneWithoutUserInput
+    facultyProfile?: FacultyProfileUncheckedCreateNestedOneWithoutUserInput
+    studentProfile?: StudentProfileUncheckedCreateNestedOneWithoutUserInput
+    leaveApplications?: LeaveApplicationUncheckedCreateNestedManyWithoutUserInput
+    approvedLeaves?: LeaveApplicationUncheckedCreateNestedManyWithoutApproverInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutFacultyInput
+    attendanceRecords?: AttendanceUncheckedCreateNestedManyWithoutStudentInput
+    examPermits?: ExamPermitUncheckedCreateNestedManyWithoutStudentInput
+    grades?: GradeUncheckedCreateNestedManyWithoutStudentInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    reports?: ReportUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    timetableEntries?: TimetableUncheckedCreateNestedManyWithoutFacultyInput
+    facultyCourses?: CourseUncheckedCreateNestedManyWithoutFacultyInput
+    studentCourses?: CourseUncheckedCreateNestedManyWithoutStudentsInput
+    studentSubjects?: SubjectUncheckedCreateNestedManyWithoutStudentsInput
+  }
+
+  export type UsersCreateOrConnectWithoutFacultySubjectsInput = {
+    where: UsersWhereUniqueInput
+    create: XOR<UsersCreateWithoutFacultySubjectsInput, UsersUncheckedCreateWithoutFacultySubjectsInput>
+  }
+
   export type SessionCreateWithoutSubjectInput = {
     topic: string
     description?: string | null
@@ -31073,6 +31422,7 @@ export namespace Prisma {
     endTime: string
     duration?: number
     status?: string
+    batches?: SessionCreatebatchesInput | string[]
     attendanceCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -31094,6 +31444,7 @@ export namespace Prisma {
     endTime: string
     duration?: number
     status?: string
+    batches?: SessionCreatebatchesInput | string[]
     attendanceCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -31210,6 +31561,7 @@ export namespace Prisma {
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseCreateNestedManyWithoutFacultyInput
+    facultySubjects?: SubjectCreateNestedManyWithoutFacultyInput
     studentCourses?: CourseCreateNestedManyWithoutStudentsInput
   }
 
@@ -31237,6 +31589,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableUncheckedCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseUncheckedCreateNestedManyWithoutFacultyInput
+    facultySubjects?: SubjectUncheckedCreateNestedManyWithoutFacultyInput
     studentCourses?: CourseUncheckedCreateNestedManyWithoutStudentsInput
   }
 
@@ -31295,6 +31648,72 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutCourseNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutCourseNestedInput
     examPermits?: ExamPermitUncheckedUpdateManyWithoutCourseNestedInput
+  }
+
+  export type UsersUpsertWithoutFacultySubjectsInput = {
+    update: XOR<UsersUpdateWithoutFacultySubjectsInput, UsersUncheckedUpdateWithoutFacultySubjectsInput>
+    create: XOR<UsersCreateWithoutFacultySubjectsInput, UsersUncheckedCreateWithoutFacultySubjectsInput>
+    where?: UsersWhereInput
+  }
+
+  export type UsersUpdateToOneWithWhereWithoutFacultySubjectsInput = {
+    where?: UsersWhereInput
+    data: XOR<UsersUpdateWithoutFacultySubjectsInput, UsersUncheckedUpdateWithoutFacultySubjectsInput>
+  }
+
+  export type UsersUpdateWithoutFacultySubjectsInput = {
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    adminProfile?: AdminProfileUpdateOneWithoutUserNestedInput
+    facultyProfile?: FacultyProfileUpdateOneWithoutUserNestedInput
+    studentProfile?: StudentProfileUpdateOneWithoutUserNestedInput
+    leaveApplications?: LeaveApplicationUpdateManyWithoutUserNestedInput
+    approvedLeaves?: LeaveApplicationUpdateManyWithoutApproverNestedInput
+    sessions?: SessionUpdateManyWithoutFacultyNestedInput
+    attendanceRecords?: AttendanceUpdateManyWithoutStudentNestedInput
+    examPermits?: ExamPermitUpdateManyWithoutStudentNestedInput
+    grades?: GradeUpdateManyWithoutStudentNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    reports?: ReportUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    timetableEntries?: TimetableUpdateManyWithoutFacultyNestedInput
+    facultyCourses?: CourseUpdateManyWithoutFacultyNestedInput
+    studentCourses?: CourseUpdateManyWithoutStudentsNestedInput
+    studentSubjects?: SubjectUpdateManyWithoutStudentsNestedInput
+  }
+
+  export type UsersUncheckedUpdateWithoutFacultySubjectsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    adminProfile?: AdminProfileUncheckedUpdateOneWithoutUserNestedInput
+    facultyProfile?: FacultyProfileUncheckedUpdateOneWithoutUserNestedInput
+    studentProfile?: StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+    leaveApplications?: LeaveApplicationUncheckedUpdateManyWithoutUserNestedInput
+    approvedLeaves?: LeaveApplicationUncheckedUpdateManyWithoutApproverNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutFacultyNestedInput
+    attendanceRecords?: AttendanceUncheckedUpdateManyWithoutStudentNestedInput
+    examPermits?: ExamPermitUncheckedUpdateManyWithoutStudentNestedInput
+    grades?: GradeUncheckedUpdateManyWithoutStudentNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    reports?: ReportUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    timetableEntries?: TimetableUncheckedUpdateManyWithoutFacultyNestedInput
+    facultyCourses?: CourseUncheckedUpdateManyWithoutFacultyNestedInput
+    studentCourses?: CourseUncheckedUpdateManyWithoutStudentsNestedInput
+    studentSubjects?: SubjectUncheckedUpdateManyWithoutStudentsNestedInput
   }
 
   export type SessionUpsertWithWhereUniqueWithoutSubjectInput = {
@@ -31429,6 +31848,7 @@ export namespace Prisma {
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseCreateNestedManyWithoutFacultyInput
+    facultySubjects?: SubjectCreateNestedManyWithoutFacultyInput
     studentCourses?: CourseCreateNestedManyWithoutStudentsInput
     studentSubjects?: SubjectCreateNestedManyWithoutStudentsInput
   }
@@ -31456,6 +31876,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableUncheckedCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseUncheckedCreateNestedManyWithoutFacultyInput
+    facultySubjects?: SubjectUncheckedCreateNestedManyWithoutFacultyInput
     studentCourses?: CourseUncheckedCreateNestedManyWithoutStudentsInput
     studentSubjects?: SubjectUncheckedCreateNestedManyWithoutStudentsInput
   }
@@ -31473,6 +31894,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     course: CourseCreateNestedOneWithoutSubjectsInput
+    faculty?: UsersCreateNestedOneWithoutFacultySubjectsInput
     timetableEntries?: TimetableCreateNestedManyWithoutSubjectInput
     grades?: GradeCreateNestedManyWithoutSubjectInput
     students?: UsersCreateNestedManyWithoutStudentSubjectsInput
@@ -31487,6 +31909,7 @@ export namespace Prisma {
     totalClasses?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    facultyId?: number | null
     timetableEntries?: TimetableUncheckedCreateNestedManyWithoutSubjectInput
     grades?: GradeUncheckedCreateNestedManyWithoutSubjectInput
     students?: UsersUncheckedCreateNestedManyWithoutStudentSubjectsInput
@@ -31639,6 +32062,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUpdateManyWithoutFacultyNestedInput
+    facultySubjects?: SubjectUpdateManyWithoutFacultyNestedInput
     studentCourses?: CourseUpdateManyWithoutStudentsNestedInput
     studentSubjects?: SubjectUpdateManyWithoutStudentsNestedInput
   }
@@ -31666,6 +32090,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUncheckedUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUncheckedUpdateManyWithoutFacultyNestedInput
+    facultySubjects?: SubjectUncheckedUpdateManyWithoutFacultyNestedInput
     studentCourses?: CourseUncheckedUpdateManyWithoutStudentsNestedInput
     studentSubjects?: SubjectUncheckedUpdateManyWithoutStudentsNestedInput
   }
@@ -31689,6 +32114,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     course?: CourseUpdateOneRequiredWithoutSubjectsNestedInput
+    faculty?: UsersUpdateOneWithoutFacultySubjectsNestedInput
     timetableEntries?: TimetableUpdateManyWithoutSubjectNestedInput
     grades?: GradeUpdateManyWithoutSubjectNestedInput
     students?: UsersUpdateManyWithoutStudentSubjectsNestedInput
@@ -31703,6 +32129,7 @@ export namespace Prisma {
     totalClasses?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    facultyId?: NullableIntFieldUpdateOperationsInput | number | null
     timetableEntries?: TimetableUncheckedUpdateManyWithoutSubjectNestedInput
     grades?: GradeUncheckedUpdateManyWithoutSubjectNestedInput
     students?: UsersUncheckedUpdateManyWithoutStudentSubjectsNestedInput
@@ -31765,6 +32192,7 @@ export namespace Prisma {
     endTime: string
     duration?: number
     status?: string
+    batches?: SessionCreatebatchesInput | string[]
     attendanceCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -31787,6 +32215,7 @@ export namespace Prisma {
     endTime: string
     duration?: number
     status?: string
+    batches?: SessionCreatebatchesInput | string[]
     attendanceCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -31820,6 +32249,7 @@ export namespace Prisma {
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseCreateNestedManyWithoutFacultyInput
+    facultySubjects?: SubjectCreateNestedManyWithoutFacultyInput
     studentCourses?: CourseCreateNestedManyWithoutStudentsInput
     studentSubjects?: SubjectCreateNestedManyWithoutStudentsInput
   }
@@ -31847,6 +32277,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableUncheckedCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseUncheckedCreateNestedManyWithoutFacultyInput
+    facultySubjects?: SubjectUncheckedCreateNestedManyWithoutFacultyInput
     studentCourses?: CourseUncheckedCreateNestedManyWithoutStudentsInput
     studentSubjects?: SubjectUncheckedCreateNestedManyWithoutStudentsInput
   }
@@ -31876,6 +32307,7 @@ export namespace Prisma {
     endTime?: StringFieldUpdateOperationsInput | string
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
+    batches?: SessionUpdatebatchesInput | string[]
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31898,6 +32330,7 @@ export namespace Prisma {
     endTime?: StringFieldUpdateOperationsInput | string
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
+    batches?: SessionUpdatebatchesInput | string[]
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31937,6 +32370,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUpdateManyWithoutFacultyNestedInput
+    facultySubjects?: SubjectUpdateManyWithoutFacultyNestedInput
     studentCourses?: CourseUpdateManyWithoutStudentsNestedInput
     studentSubjects?: SubjectUpdateManyWithoutStudentsNestedInput
   }
@@ -31964,6 +32398,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUncheckedUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUncheckedUpdateManyWithoutFacultyNestedInput
+    facultySubjects?: SubjectUncheckedUpdateManyWithoutFacultyNestedInput
     studentCourses?: CourseUncheckedUpdateManyWithoutStudentsNestedInput
     studentSubjects?: SubjectUncheckedUpdateManyWithoutStudentsNestedInput
   }
@@ -31977,6 +32412,7 @@ export namespace Prisma {
     endTime: string
     duration?: number
     status?: string
+    batches?: SessionCreatebatchesInput | string[]
     attendanceCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -31999,6 +32435,7 @@ export namespace Prisma {
     endTime: string
     duration?: number
     status?: string
+    batches?: SessionCreatebatchesInput | string[]
     attendanceCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -32030,6 +32467,7 @@ export namespace Prisma {
     endTime?: StringFieldUpdateOperationsInput | string
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
+    batches?: SessionUpdatebatchesInput | string[]
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32052,6 +32490,7 @@ export namespace Prisma {
     endTime?: StringFieldUpdateOperationsInput | string
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
+    batches?: SessionUpdatebatchesInput | string[]
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32080,6 +32519,7 @@ export namespace Prisma {
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseCreateNestedManyWithoutFacultyInput
+    facultySubjects?: SubjectCreateNestedManyWithoutFacultyInput
     studentCourses?: CourseCreateNestedManyWithoutStudentsInput
     studentSubjects?: SubjectCreateNestedManyWithoutStudentsInput
   }
@@ -32107,6 +32547,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableUncheckedCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseUncheckedCreateNestedManyWithoutFacultyInput
+    facultySubjects?: SubjectUncheckedCreateNestedManyWithoutFacultyInput
     studentCourses?: CourseUncheckedCreateNestedManyWithoutStudentsInput
     studentSubjects?: SubjectUncheckedCreateNestedManyWithoutStudentsInput
   }
@@ -32195,6 +32636,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUpdateManyWithoutFacultyNestedInput
+    facultySubjects?: SubjectUpdateManyWithoutFacultyNestedInput
     studentCourses?: CourseUpdateManyWithoutStudentsNestedInput
     studentSubjects?: SubjectUpdateManyWithoutStudentsNestedInput
   }
@@ -32222,6 +32664,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUncheckedUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUncheckedUpdateManyWithoutFacultyNestedInput
+    facultySubjects?: SubjectUncheckedUpdateManyWithoutFacultyNestedInput
     studentCourses?: CourseUncheckedUpdateManyWithoutStudentsNestedInput
     studentSubjects?: SubjectUncheckedUpdateManyWithoutStudentsNestedInput
   }
@@ -32300,6 +32743,7 @@ export namespace Prisma {
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseCreateNestedManyWithoutFacultyInput
+    facultySubjects?: SubjectCreateNestedManyWithoutFacultyInput
     studentCourses?: CourseCreateNestedManyWithoutStudentsInput
     studentSubjects?: SubjectCreateNestedManyWithoutStudentsInput
   }
@@ -32327,6 +32771,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableUncheckedCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseUncheckedCreateNestedManyWithoutFacultyInput
+    facultySubjects?: SubjectUncheckedCreateNestedManyWithoutFacultyInput
     studentCourses?: CourseUncheckedCreateNestedManyWithoutStudentsInput
     studentSubjects?: SubjectUncheckedCreateNestedManyWithoutStudentsInput
   }
@@ -32358,6 +32803,7 @@ export namespace Prisma {
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseCreateNestedManyWithoutFacultyInput
+    facultySubjects?: SubjectCreateNestedManyWithoutFacultyInput
     studentCourses?: CourseCreateNestedManyWithoutStudentsInput
     studentSubjects?: SubjectCreateNestedManyWithoutStudentsInput
   }
@@ -32385,6 +32831,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableUncheckedCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseUncheckedCreateNestedManyWithoutFacultyInput
+    facultySubjects?: SubjectUncheckedCreateNestedManyWithoutFacultyInput
     studentCourses?: CourseUncheckedCreateNestedManyWithoutStudentsInput
     studentSubjects?: SubjectUncheckedCreateNestedManyWithoutStudentsInput
   }
@@ -32427,6 +32874,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUpdateManyWithoutFacultyNestedInput
+    facultySubjects?: SubjectUpdateManyWithoutFacultyNestedInput
     studentCourses?: CourseUpdateManyWithoutStudentsNestedInput
     studentSubjects?: SubjectUpdateManyWithoutStudentsNestedInput
   }
@@ -32454,6 +32902,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUncheckedUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUncheckedUpdateManyWithoutFacultyNestedInput
+    facultySubjects?: SubjectUncheckedUpdateManyWithoutFacultyNestedInput
     studentCourses?: CourseUncheckedUpdateManyWithoutStudentsNestedInput
     studentSubjects?: SubjectUncheckedUpdateManyWithoutStudentsNestedInput
   }
@@ -32491,6 +32940,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUpdateManyWithoutFacultyNestedInput
+    facultySubjects?: SubjectUpdateManyWithoutFacultyNestedInput
     studentCourses?: CourseUpdateManyWithoutStudentsNestedInput
     studentSubjects?: SubjectUpdateManyWithoutStudentsNestedInput
   }
@@ -32518,6 +32968,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUncheckedUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUncheckedUpdateManyWithoutFacultyNestedInput
+    facultySubjects?: SubjectUncheckedUpdateManyWithoutFacultyNestedInput
     studentCourses?: CourseUncheckedUpdateManyWithoutStudentsNestedInput
     studentSubjects?: SubjectUncheckedUpdateManyWithoutStudentsNestedInput
   }
@@ -32544,6 +32995,7 @@ export namespace Prisma {
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseCreateNestedManyWithoutFacultyInput
+    facultySubjects?: SubjectCreateNestedManyWithoutFacultyInput
     studentCourses?: CourseCreateNestedManyWithoutStudentsInput
     studentSubjects?: SubjectCreateNestedManyWithoutStudentsInput
   }
@@ -32571,6 +33023,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableUncheckedCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseUncheckedCreateNestedManyWithoutFacultyInput
+    facultySubjects?: SubjectUncheckedCreateNestedManyWithoutFacultyInput
     studentCourses?: CourseUncheckedCreateNestedManyWithoutStudentsInput
     studentSubjects?: SubjectUncheckedCreateNestedManyWithoutStudentsInput
   }
@@ -32634,6 +33087,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     course: CourseCreateNestedOneWithoutSubjectsInput
+    faculty?: UsersCreateNestedOneWithoutFacultySubjectsInput
     sessions?: SessionCreateNestedManyWithoutSubjectInput
     timetableEntries?: TimetableCreateNestedManyWithoutSubjectInput
     students?: UsersCreateNestedManyWithoutStudentSubjectsInput
@@ -32648,6 +33102,7 @@ export namespace Prisma {
     totalClasses?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    facultyId?: number | null
     sessions?: SessionUncheckedCreateNestedManyWithoutSubjectInput
     timetableEntries?: TimetableUncheckedCreateNestedManyWithoutSubjectInput
     students?: UsersUncheckedCreateNestedManyWithoutStudentSubjectsInput
@@ -32691,6 +33146,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUpdateManyWithoutFacultyNestedInput
+    facultySubjects?: SubjectUpdateManyWithoutFacultyNestedInput
     studentCourses?: CourseUpdateManyWithoutStudentsNestedInput
     studentSubjects?: SubjectUpdateManyWithoutStudentsNestedInput
   }
@@ -32718,6 +33174,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUncheckedUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUncheckedUpdateManyWithoutFacultyNestedInput
+    facultySubjects?: SubjectUncheckedUpdateManyWithoutFacultyNestedInput
     studentCourses?: CourseUncheckedUpdateManyWithoutStudentsNestedInput
     studentSubjects?: SubjectUncheckedUpdateManyWithoutStudentsNestedInput
   }
@@ -32793,6 +33250,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     course?: CourseUpdateOneRequiredWithoutSubjectsNestedInput
+    faculty?: UsersUpdateOneWithoutFacultySubjectsNestedInput
     sessions?: SessionUpdateManyWithoutSubjectNestedInput
     timetableEntries?: TimetableUpdateManyWithoutSubjectNestedInput
     students?: UsersUpdateManyWithoutStudentSubjectsNestedInput
@@ -32807,6 +33265,7 @@ export namespace Prisma {
     totalClasses?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    facultyId?: NullableIntFieldUpdateOperationsInput | number | null
     sessions?: SessionUncheckedUpdateManyWithoutSubjectNestedInput
     timetableEntries?: TimetableUncheckedUpdateManyWithoutSubjectNestedInput
     students?: UsersUncheckedUpdateManyWithoutStudentSubjectsNestedInput
@@ -32866,6 +33325,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     course: CourseCreateNestedOneWithoutSubjectsInput
+    faculty?: UsersCreateNestedOneWithoutFacultySubjectsInput
     sessions?: SessionCreateNestedManyWithoutSubjectInput
     grades?: GradeCreateNestedManyWithoutSubjectInput
     students?: UsersCreateNestedManyWithoutStudentSubjectsInput
@@ -32880,6 +33340,7 @@ export namespace Prisma {
     totalClasses?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    facultyId?: number | null
     sessions?: SessionUncheckedCreateNestedManyWithoutSubjectInput
     grades?: GradeUncheckedCreateNestedManyWithoutSubjectInput
     students?: UsersUncheckedCreateNestedManyWithoutStudentSubjectsInput
@@ -32912,6 +33373,7 @@ export namespace Prisma {
     reports?: ReportCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     facultyCourses?: CourseCreateNestedManyWithoutFacultyInput
+    facultySubjects?: SubjectCreateNestedManyWithoutFacultyInput
     studentCourses?: CourseCreateNestedManyWithoutStudentsInput
     studentSubjects?: SubjectCreateNestedManyWithoutStudentsInput
   }
@@ -32939,6 +33401,7 @@ export namespace Prisma {
     reports?: ReportUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     facultyCourses?: CourseUncheckedCreateNestedManyWithoutFacultyInput
+    facultySubjects?: SubjectUncheckedCreateNestedManyWithoutFacultyInput
     studentCourses?: CourseUncheckedCreateNestedManyWithoutStudentsInput
     studentSubjects?: SubjectUncheckedCreateNestedManyWithoutStudentsInput
   }
@@ -33019,6 +33482,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     course?: CourseUpdateOneRequiredWithoutSubjectsNestedInput
+    faculty?: UsersUpdateOneWithoutFacultySubjectsNestedInput
     sessions?: SessionUpdateManyWithoutSubjectNestedInput
     grades?: GradeUpdateManyWithoutSubjectNestedInput
     students?: UsersUpdateManyWithoutStudentSubjectsNestedInput
@@ -33033,6 +33497,7 @@ export namespace Prisma {
     totalClasses?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    facultyId?: NullableIntFieldUpdateOperationsInput | number | null
     sessions?: SessionUncheckedUpdateManyWithoutSubjectNestedInput
     grades?: GradeUncheckedUpdateManyWithoutSubjectNestedInput
     students?: UsersUncheckedUpdateManyWithoutStudentSubjectsNestedInput
@@ -33071,6 +33536,7 @@ export namespace Prisma {
     reports?: ReportUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     facultyCourses?: CourseUpdateManyWithoutFacultyNestedInput
+    facultySubjects?: SubjectUpdateManyWithoutFacultyNestedInput
     studentCourses?: CourseUpdateManyWithoutStudentsNestedInput
     studentSubjects?: SubjectUpdateManyWithoutStudentsNestedInput
   }
@@ -33098,6 +33564,7 @@ export namespace Prisma {
     reports?: ReportUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     facultyCourses?: CourseUncheckedUpdateManyWithoutFacultyNestedInput
+    facultySubjects?: SubjectUncheckedUpdateManyWithoutFacultyNestedInput
     studentCourses?: CourseUncheckedUpdateManyWithoutStudentsNestedInput
     studentSubjects?: SubjectUncheckedUpdateManyWithoutStudentsNestedInput
   }
@@ -33124,6 +33591,7 @@ export namespace Prisma {
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseCreateNestedManyWithoutFacultyInput
+    facultySubjects?: SubjectCreateNestedManyWithoutFacultyInput
     studentCourses?: CourseCreateNestedManyWithoutStudentsInput
     studentSubjects?: SubjectCreateNestedManyWithoutStudentsInput
   }
@@ -33151,6 +33619,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableUncheckedCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseUncheckedCreateNestedManyWithoutFacultyInput
+    facultySubjects?: SubjectUncheckedCreateNestedManyWithoutFacultyInput
     studentCourses?: CourseUncheckedCreateNestedManyWithoutStudentsInput
     studentSubjects?: SubjectUncheckedCreateNestedManyWithoutStudentsInput
   }
@@ -33239,6 +33708,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUpdateManyWithoutFacultyNestedInput
+    facultySubjects?: SubjectUpdateManyWithoutFacultyNestedInput
     studentCourses?: CourseUpdateManyWithoutStudentsNestedInput
     studentSubjects?: SubjectUpdateManyWithoutStudentsNestedInput
   }
@@ -33266,6 +33736,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUncheckedUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUncheckedUpdateManyWithoutFacultyNestedInput
+    facultySubjects?: SubjectUncheckedUpdateManyWithoutFacultyNestedInput
     studentCourses?: CourseUncheckedUpdateManyWithoutStudentsNestedInput
     studentSubjects?: SubjectUncheckedUpdateManyWithoutStudentsNestedInput
   }
@@ -33344,6 +33815,7 @@ export namespace Prisma {
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseCreateNestedManyWithoutFacultyInput
+    facultySubjects?: SubjectCreateNestedManyWithoutFacultyInput
     studentCourses?: CourseCreateNestedManyWithoutStudentsInput
     studentSubjects?: SubjectCreateNestedManyWithoutStudentsInput
   }
@@ -33371,6 +33843,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableUncheckedCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseUncheckedCreateNestedManyWithoutFacultyInput
+    facultySubjects?: SubjectUncheckedCreateNestedManyWithoutFacultyInput
     studentCourses?: CourseUncheckedCreateNestedManyWithoutStudentsInput
     studentSubjects?: SubjectUncheckedCreateNestedManyWithoutStudentsInput
   }
@@ -33413,6 +33886,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUpdateManyWithoutFacultyNestedInput
+    facultySubjects?: SubjectUpdateManyWithoutFacultyNestedInput
     studentCourses?: CourseUpdateManyWithoutStudentsNestedInput
     studentSubjects?: SubjectUpdateManyWithoutStudentsNestedInput
   }
@@ -33440,6 +33914,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUncheckedUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUncheckedUpdateManyWithoutFacultyNestedInput
+    facultySubjects?: SubjectUncheckedUpdateManyWithoutFacultyNestedInput
     studentCourses?: CourseUncheckedUpdateManyWithoutStudentsNestedInput
     studentSubjects?: SubjectUncheckedUpdateManyWithoutStudentsNestedInput
   }
@@ -33466,6 +33941,7 @@ export namespace Prisma {
     reports?: ReportCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseCreateNestedManyWithoutFacultyInput
+    facultySubjects?: SubjectCreateNestedManyWithoutFacultyInput
     studentCourses?: CourseCreateNestedManyWithoutStudentsInput
     studentSubjects?: SubjectCreateNestedManyWithoutStudentsInput
   }
@@ -33493,6 +33969,7 @@ export namespace Prisma {
     reports?: ReportUncheckedCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableUncheckedCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseUncheckedCreateNestedManyWithoutFacultyInput
+    facultySubjects?: SubjectUncheckedCreateNestedManyWithoutFacultyInput
     studentCourses?: CourseUncheckedCreateNestedManyWithoutStudentsInput
     studentSubjects?: SubjectUncheckedCreateNestedManyWithoutStudentsInput
   }
@@ -33535,6 +34012,7 @@ export namespace Prisma {
     reports?: ReportUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUpdateManyWithoutFacultyNestedInput
+    facultySubjects?: SubjectUpdateManyWithoutFacultyNestedInput
     studentCourses?: CourseUpdateManyWithoutStudentsNestedInput
     studentSubjects?: SubjectUpdateManyWithoutStudentsNestedInput
   }
@@ -33562,6 +34040,7 @@ export namespace Prisma {
     reports?: ReportUncheckedUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUncheckedUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUncheckedUpdateManyWithoutFacultyNestedInput
+    facultySubjects?: SubjectUncheckedUpdateManyWithoutFacultyNestedInput
     studentCourses?: CourseUncheckedUpdateManyWithoutStudentsNestedInput
     studentSubjects?: SubjectUncheckedUpdateManyWithoutStudentsNestedInput
   }
@@ -33606,6 +34085,7 @@ export namespace Prisma {
     endTime: string
     duration?: number
     status?: string
+    batches?: SessionCreatebatchesInput | string[]
     attendanceCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -33718,6 +34198,17 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type SubjectCreateManyFacultyInput = {
+    id?: number
+    courseId: number
+    name: string
+    description?: string | null
+    credits: number
+    totalClasses?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type LeaveApplicationUpdateWithoutUserInput = {
     leaveType?: StringFieldUpdateOperationsInput | string
     startDate?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33809,6 +34300,7 @@ export namespace Prisma {
     endTime?: StringFieldUpdateOperationsInput | string
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
+    batches?: SessionUpdatebatchesInput | string[]
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33830,6 +34322,7 @@ export namespace Prisma {
     endTime?: StringFieldUpdateOperationsInput | string
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
+    batches?: SessionUpdatebatchesInput | string[]
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33849,6 +34342,7 @@ export namespace Prisma {
     endTime?: StringFieldUpdateOperationsInput | string
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
+    batches?: SessionUpdatebatchesInput | string[]
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34181,6 +34675,46 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type SubjectUpdateWithoutFacultyInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    credits?: IntFieldUpdateOperationsInput | number
+    totalClasses?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    course?: CourseUpdateOneRequiredWithoutSubjectsNestedInput
+    sessions?: SessionUpdateManyWithoutSubjectNestedInput
+    timetableEntries?: TimetableUpdateManyWithoutSubjectNestedInput
+    grades?: GradeUpdateManyWithoutSubjectNestedInput
+    students?: UsersUpdateManyWithoutStudentSubjectsNestedInput
+  }
+
+  export type SubjectUncheckedUpdateWithoutFacultyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    courseId?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    credits?: IntFieldUpdateOperationsInput | number
+    totalClasses?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sessions?: SessionUncheckedUpdateManyWithoutSubjectNestedInput
+    timetableEntries?: TimetableUncheckedUpdateManyWithoutSubjectNestedInput
+    grades?: GradeUncheckedUpdateManyWithoutSubjectNestedInput
+    students?: UsersUncheckedUpdateManyWithoutStudentSubjectsNestedInput
+  }
+
+  export type SubjectUncheckedUpdateManyWithoutFacultyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    courseId?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    credits?: IntFieldUpdateOperationsInput | number
+    totalClasses?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type CourseUpdateWithoutStudentsInput = {
     code?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -34245,6 +34779,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     course?: CourseUpdateOneRequiredWithoutSubjectsNestedInput
+    faculty?: UsersUpdateOneWithoutFacultySubjectsNestedInput
     sessions?: SessionUpdateManyWithoutSubjectNestedInput
     timetableEntries?: TimetableUpdateManyWithoutSubjectNestedInput
     grades?: GradeUpdateManyWithoutSubjectNestedInput
@@ -34259,6 +34794,7 @@ export namespace Prisma {
     totalClasses?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    facultyId?: NullableIntFieldUpdateOperationsInput | number | null
     sessions?: SessionUncheckedUpdateManyWithoutSubjectNestedInput
     timetableEntries?: TimetableUncheckedUpdateManyWithoutSubjectNestedInput
     grades?: GradeUncheckedUpdateManyWithoutSubjectNestedInput
@@ -34273,6 +34809,7 @@ export namespace Prisma {
     totalClasses?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    facultyId?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type SubjectCreateManyCourseInput = {
@@ -34283,6 +34820,7 @@ export namespace Prisma {
     totalClasses?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    facultyId?: number | null
   }
 
   export type TimetableCreateManyCourseInput = {
@@ -34326,6 +34864,7 @@ export namespace Prisma {
     endTime: string
     duration?: number
     status?: string
+    batches?: SessionCreatebatchesInput | string[]
     attendanceCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -34383,6 +34922,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUpdateManyWithoutFacultyNestedInput
+    facultySubjects?: SubjectUpdateManyWithoutFacultyNestedInput
     studentSubjects?: SubjectUpdateManyWithoutStudentsNestedInput
   }
 
@@ -34410,6 +34950,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUncheckedUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUncheckedUpdateManyWithoutFacultyNestedInput
+    facultySubjects?: SubjectUncheckedUpdateManyWithoutFacultyNestedInput
     studentSubjects?: SubjectUncheckedUpdateManyWithoutStudentsNestedInput
   }
 
@@ -34432,6 +34973,7 @@ export namespace Prisma {
     totalClasses?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    faculty?: UsersUpdateOneWithoutFacultySubjectsNestedInput
     sessions?: SessionUpdateManyWithoutSubjectNestedInput
     timetableEntries?: TimetableUpdateManyWithoutSubjectNestedInput
     grades?: GradeUpdateManyWithoutSubjectNestedInput
@@ -34446,6 +34988,7 @@ export namespace Prisma {
     totalClasses?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    facultyId?: NullableIntFieldUpdateOperationsInput | number | null
     sessions?: SessionUncheckedUpdateManyWithoutSubjectNestedInput
     timetableEntries?: TimetableUncheckedUpdateManyWithoutSubjectNestedInput
     grades?: GradeUncheckedUpdateManyWithoutSubjectNestedInput
@@ -34460,6 +35003,7 @@ export namespace Prisma {
     totalClasses?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    facultyId?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type TimetableUpdateWithoutCourseInput = {
@@ -34556,6 +35100,7 @@ export namespace Prisma {
     endTime?: StringFieldUpdateOperationsInput | string
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
+    batches?: SessionUpdatebatchesInput | string[]
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34577,6 +35122,7 @@ export namespace Prisma {
     endTime?: StringFieldUpdateOperationsInput | string
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
+    batches?: SessionUpdatebatchesInput | string[]
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34596,6 +35142,7 @@ export namespace Prisma {
     endTime?: StringFieldUpdateOperationsInput | string
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
+    batches?: SessionUpdatebatchesInput | string[]
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34698,6 +35245,7 @@ export namespace Prisma {
     endTime: string
     duration?: number
     status?: string
+    batches?: SessionCreatebatchesInput | string[]
     attendanceCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -34741,6 +35289,7 @@ export namespace Prisma {
     endTime?: StringFieldUpdateOperationsInput | string
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
+    batches?: SessionUpdatebatchesInput | string[]
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34762,6 +35311,7 @@ export namespace Prisma {
     endTime?: StringFieldUpdateOperationsInput | string
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
+    batches?: SessionUpdatebatchesInput | string[]
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34781,6 +35331,7 @@ export namespace Prisma {
     endTime?: StringFieldUpdateOperationsInput | string
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
+    batches?: SessionUpdatebatchesInput | string[]
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34894,6 +35445,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUpdateManyWithoutFacultyNestedInput
+    facultySubjects?: SubjectUpdateManyWithoutFacultyNestedInput
     studentCourses?: CourseUpdateManyWithoutStudentsNestedInput
   }
 
@@ -34921,6 +35473,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUncheckedUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUncheckedUpdateManyWithoutFacultyNestedInput
+    facultySubjects?: SubjectUncheckedUpdateManyWithoutFacultyNestedInput
     studentCourses?: CourseUncheckedUpdateManyWithoutStudentsNestedInput
   }
 

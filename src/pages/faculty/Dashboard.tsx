@@ -68,8 +68,10 @@ export default function FacultyDashboard() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-white">Faculty Dashboard</h1>
-        <p className="text-sm text-slate-400 font-mono uppercase tracking-wider">{user?.profile?.fullName || user?.username} • Academic Hub</p>
+        <h1 className="text-2xl font-black tracking-tight text-foreground uppercase aura-text-glow">Academic Oversight</h1>
+        <p className="text-[10px] text-muted-foreground font-mono uppercase tracking-[0.2em] mt-1">
+          Officer: {user?.profile?.fullName || user?.username} // Institutional Grade Dashboard
+        </p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -80,16 +82,16 @@ export default function FacultyDashboard() {
       </div>
 
       {/* Today's Sessions */}
-      <Card className="bg-slate-900/40 border-slate-800 backdrop-blur-sm">
+      <Card className="bg-card/40 border-border backdrop-blur-sm">
         <CardHeader className="pb-3 px-6">
           <CardTitle className="text-sm font-medium text-slate-300">Today's Schedule</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3 px-6 pb-6">
           {todaySessions.length > 0 ? (
             todaySessions.map((session: any) => (
-              <div key={session.id} className="flex items-center justify-between rounded-xl bg-slate-950/40 border border-slate-800/50 p-4 transition-all hover:border-primary/30">
+              <div key={session.id} className="flex items-center justify-between rounded-xl bg-background/40 border border-border/50 p-4 transition-all hover:border-primary/30">
                 <div className="space-y-1">
-                  <p className="text-sm font-bold text-white uppercase tracking-tight">{session.course?.code} — {session.topic}</p>
+                  <p className="text-sm font-bold text-foreground uppercase tracking-tight">{session.course?.code} — {session.topic}</p>
                   <div className="flex items-center gap-4 text-xs text-slate-400 font-mono">
                     <span className="flex items-center gap-1.5"><Clock className="h-3 w-3 text-primary/70" />{session.startTime} - {session.endTime}</span>
                     <span className="bg-slate-800/80 px-2 py-0.5 rounded text-[10px]">{session.roomNumber || "Online"}</span>
@@ -99,7 +101,7 @@ export default function FacultyDashboard() {
                 <Button
                   size="sm"
                   variant={session.status === "scheduled" ? "default" : "outline"}
-                  className={session.status === "scheduled" ? "bg-primary hover:bg-primary/90 text-primary-foreground" : "border-slate-800 text-slate-400 hover:text-white"}
+                  className={session.status === "scheduled" ? "bg-primary hover:bg-primary/90 text-primary-foreground font-bold" : "border-border text-muted-foreground hover:text-foreground"}
                   onClick={() => navigate(`/faculty/session/${session.id}`)}
                 >
                   {session.status === "scheduled" ? <><Play className="mr-2 h-3.5 w-3.5 fill-current" />Start Session</> : "View Details"}
@@ -107,17 +109,17 @@ export default function FacultyDashboard() {
               </div>
             ))
           ) : (
-            <div className="text-center py-12 border-2 border-dashed border-slate-800 rounded-xl">
-              <Clock className="h-10 w-10 text-slate-700 mx-auto mb-3" />
-              <p className="text-sm font-medium text-slate-400">No sessions scheduled for today</p>
+            <div className="text-center py-12 border-2 border-dashed border-border rounded-xl">
+              <Clock className="h-10 w-10 text-muted-foreground/30 mx-auto mb-3" />
+              <p className="text-sm font-medium text-muted-foreground">No sessions scheduled for today</p>
             </div>
           )}
         </CardContent>
       </Card>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card className="bg-slate-900/40 border-slate-800 backdrop-blur-sm">
-          <CardHeader className="pb-3 px-6"><CardTitle className="text-sm font-medium text-slate-300">Top Performance Overview</CardTitle></CardHeader>
+        <Card className="bg-card/40 border-border backdrop-blur-sm">
+          <CardHeader className="pb-3 px-6"><CardTitle className="text-sm font-bold text-muted-foreground uppercase tracking-widest">Top Performance Overview</CardTitle></CardHeader>
           <CardContent className="px-6 pb-6">
             <ResponsiveContainer width="100%" height={240}>
               <BarChart data={attainmentData}>
@@ -133,15 +135,15 @@ export default function FacultyDashboard() {
           </CardContent>
         </Card>
 
-        <Card className="bg-slate-900/40 border-slate-800 backdrop-blur-sm">
-          <CardHeader className="pb-3 px-6"><CardTitle className="text-sm font-medium text-slate-300">Activity & Logs</CardTitle></CardHeader>
+        <Card className="bg-card/40 border-border backdrop-blur-sm">
+          <CardHeader className="pb-3 px-6"><CardTitle className="text-sm font-bold text-muted-foreground uppercase tracking-widest">Activity & Logs</CardTitle></CardHeader>
           <CardContent className="space-y-4 px-6 pb-6">
             {recentActivity.map((item, i) => (
               <div key={i} className="flex items-start gap-4 p-3 rounded-lg hover:bg-white/5 transition-colors">
                 <div className="mt-1.5 h-2 w-2 rounded-full bg-primary shadow-[0_0_8px_rgba(34,211,238,0.5)] shrink-0" />
                 <div className="space-y-0.5">
-                  <p className="text-sm text-slate-200 font-medium leading-none">{item.text}</p>
-                  <p className="text-[11px] text-slate-500 font-mono italic">{item.time}</p>
+                  <p className="text-sm text-foreground font-medium leading-none">{item.text}</p>
+                  <p className="text-[11px] text-muted-foreground font-mono">{item.time}</p>
                 </div>
               </div>
             ))}

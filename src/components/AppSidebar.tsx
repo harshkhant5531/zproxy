@@ -47,6 +47,8 @@ const roleConfig: Record<Role, { label: string; menu: typeof studentMenu; icon: 
   admin: { label: "Admin / HOD", menu: adminMenu, icon: Settings },
 };
 
+import { ModeToggle } from "@/components/ModeToggle";
+
 export function AppSidebar() {
   const { user, logout } = useAuth();
   const role = user?.role || "student";
@@ -58,12 +60,15 @@ export function AppSidebar() {
     <Sidebar collapsible="icon" className="border-r border-border/50">
       <SidebarHeader className="p-4">
         {!collapsed && (
-          <div className="mb-3">
-            <h1 className="text-lg font-bold tracking-tighter uppercase italic">
-              <span className="text-primary aura-text-glow">Aura</span>
-              <span className="text-white ml-1">Integrity</span>
-            </h1>
-            <p className="text-[9px] uppercase tracking-[0.3em] text-slate-500 font-mono">Engine v1.0 // S6</p>
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h1 className="text-xl font-black tracking-tighter text-foreground uppercase">
+                <span className="text-primary aura-text-glow">Aura</span>
+                <span className="text-foreground ml-1">Integrity</span>
+              </h1>
+              <p className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground font-mono">v1.0 Standard</p>
+            </div>
+            <ModeToggle />
           </div>
         )}
         {collapsed && <div className="mb-2 h-8 w-8 rounded-lg bg-primary/20 flex items-center justify-center text-primary font-bold text-sm">A</div>}
