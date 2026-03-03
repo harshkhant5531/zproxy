@@ -16,28 +16,29 @@ import { Button } from "@/components/ui/button";
 import React from "react";
 
 const studentMenu = [
-  { title: "Dashboard", url: "/student/dashboard", icon: LayoutDashboard },
-  { title: "QR Scanner", url: "/student/scan", icon: ScanLine },
+  { title: "Performance Hub", url: "/student/dashboard", icon: LayoutDashboard },
+  { title: "Academic Schedule", url: "/student/timetable", icon: Calendar },
+  { title: "Biometric Verification", url: "/student/verify-attendance", icon: ScanLine },
   { title: "Leave Management", url: "/student/leaves", icon: FileText },
   { title: "Exam Permit", url: "/student/permit", icon: Ticket },
 ];
 
 const facultyMenu = [
-  { title: "Dashboard", url: "/faculty/dashboard", icon: LayoutDashboard },
-  { title: "New Session", url: "/faculty/session/new", icon: Plus },
-  { title: "Attendance Records", url: "/faculty/records", icon: ClipboardList },
-  { title: "Timetable", url: "/faculty/timetable", icon: Calendar },
-  { title: "Analytics", url: "/faculty/analytics", icon: BarChart3 },
+  { title: "Executive Dashboard", url: "/faculty/dashboard", icon: LayoutDashboard },
+  { title: "Active Session", url: "/faculty/session/new", icon: Plus },
+  { title: "Biometric Registry", url: "/faculty/records", icon: ClipboardList },
+  { title: "Lecture Schedule", url: "/faculty/timetable", icon: Calendar },
+  { title: "Institutional Analytics", url: "/faculty/analytics", icon: BarChart3 },
 ];
 
 const adminMenu = [
-  { title: "Dashboard", url: "/admin/dashboard", icon: LayoutDashboard },
-  { title: "Faculty", url: "/admin/faculty", icon: Shield },
-  { title: "Students", url: "/admin/students", icon: Users },
-  { title: "Courses", url: "/admin/courses", icon: BookOpen },
-  { title: "Timetable", url: "/admin/timetable", icon: Calendar },
-  { title: "Reports", url: "/admin/reports", icon: FileBarChart },
-  { title: "Shortage Alerts", url: "/admin/alerts", icon: AlertTriangle },
+  { title: "Command Center", url: "/admin/dashboard", icon: LayoutDashboard },
+  { title: "Faculty Registry", url: "/admin/faculty", icon: Shield },
+  { title: "Student Database", url: "/admin/students", icon: Users },
+  { title: "Curriculum Matrix", url: "/admin/courses", icon: BookOpen },
+  { title: "Institutional Timetable", url: "/admin/timetable", icon: Calendar },
+  { title: "Audit Reports", url: "/admin/reports", icon: FileBarChart },
+  { title: "Risk Compliance", url: "/admin/alerts", icon: AlertTriangle },
 ];
 
 const roleConfig: Record<Role, { label: string; menu: typeof studentMenu; icon: React.ElementType }> = {
@@ -58,11 +59,11 @@ export function AppSidebar() {
       <SidebarHeader className="p-4">
         {!collapsed && (
           <div className="mb-3">
-            <h1 className="text-lg font-bold tracking-tight">
-              <span className="text-primary">Aura</span>
-              <span className="text-foreground">Attend</span>
+            <h1 className="text-lg font-bold tracking-tighter uppercase italic">
+              <span className="text-primary aura-text-glow">Aura</span>
+              <span className="text-white ml-1">Integrity</span>
             </h1>
-            <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Pro 2026</p>
+            <p className="text-[9px] uppercase tracking-[0.3em] text-slate-500 font-mono">Engine v1.0 // S6</p>
           </div>
         )}
         {collapsed && <div className="mb-2 h-8 w-8 rounded-lg bg-primary/20 flex items-center justify-center text-primary font-bold text-sm">A</div>}

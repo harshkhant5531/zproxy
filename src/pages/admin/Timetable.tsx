@@ -332,9 +332,9 @@ export default function Timetable() {
                       onClick={() => !session && handleSlotClick(dayIdx, slot)}
                     >
                       {session ? (
-                        <div className="h-full rounded-lg bg-slate-950/80 border border-primary/20 p-3 text-xs space-y-2 group/card relative overflow-hidden flex flex-col justify-between shadow-lg">
+                        <div className="h-full rounded-xl bg-slate-950/80 border border-white/5 p-3 text-xs space-y-2 group/card relative overflow-hidden flex flex-col justify-between shadow-lg transition-all hover:border-primary/30">
                           <button
-                            className="absolute top-1 right-1 p-1 opacity-0 group-hover/card:opacity-100 transition-opacity bg-red-500/20 hover:bg-red-500/40 rounded text-red-400"
+                            className="absolute top-1 right-1 p-1 opacity-0 group-hover/card:opacity-100 transition-opacity bg-red-500/10 hover:bg-red-500/20 rounded-md text-red-500 border border-red-500/20"
                             onClick={(e) => {
                               e.stopPropagation();
                               if (confirm("Delete this timetable entry?"))
@@ -344,37 +344,33 @@ export default function Timetable() {
                             <Trash2 className="h-3 w-3" />
                           </button>
                           <div>
-                            <p className="font-black text-primary uppercase tracking-tighter italic text-sm">
-                              {session.course?.code}
-                            </p>
-                            <p className="text-slate-400 line-clamp-1 font-medium">
-                              {session.course?.name}
+                            <p className="text-slate-100 font-bold text-[11px] leading-tight uppercase tracking-tight">
+                              {session.subject?.name || session.course?.name}
                             </p>
                           </div>
-                          <div className="space-y-1 pt-2">
+                          <div className="space-y-1.5 pt-2">
                             <div className="flex items-center gap-1.5 text-[9px] text-slate-500 font-bold uppercase tracking-widest">
-                              <MapPin className="h-3 w-3 text-slate-700" />{" "}
-                              {session.roomNumber || "—"}
+                              <MapPin className="h-3.5 w-3.5 text-primary/60" />{" "}
+                              {session.roomNumber || "UNASSIGNED"}
                             </div>
-                            <p className="text-[9px] text-slate-600 italic font-mono truncate">
-                              Faculty:{" "}
+                            <p className="text-[9px] text-slate-600 font-mono truncate uppercase">
                               {session.facultyProfile?.fullName ||
                                 session.faculty?.username ||
-                                "TBA"}
+                                "SECURE ACCESS"}
                             </p>
                           </div>
-                          <div className="absolute bottom-1 left-1">
+                          <div className="absolute bottom-1 right-1">
                             <Badge
                               variant="outline"
-                              className="text-[9px] border-primary/30 text-primary"
+                              className="text-[8px] border-primary/20 text-primary bg-primary/5 py-0 px-1.5 font-bold uppercase"
                             >
                               {session.type || "Theory"}
                             </Badge>
                           </div>
                         </div>
                       ) : (
-                        <div className="h-full border border-dashed border-slate-800/50 rounded-lg flex items-center justify-center opacity-0 group-hover/slot:opacity-100 transition-opacity">
-                          <Plus className="h-4 w-4 text-slate-700" />
+                        <div className="h-full border border-dashed border-slate-800/20 rounded-xl flex items-center justify-center opacity-0 group-hover/slot:opacity-100 transition-opacity">
+                          <Plus className="h-5 w-5 text-primary/40" />
                         </div>
                       )}
                     </div>

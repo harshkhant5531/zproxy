@@ -1,5 +1,5 @@
 const express = require("express");
-const bcrypt = require("bcryptjs");
+const argon2 = require("argon2");
 const jwt = require("jsonwebtoken");
 const { body, validationResult } = require("express-validator");
 const prisma = require("../prisma");
@@ -57,10 +57,7 @@ router.post(
       }
 
       // Hash password
-      const passwordHash = await bcrypt.hash(
-        password,
-        parseInt(process.env.BCRYPT_SALT_ROUNDS),
-      );
+      const passwordHash = await argon2.hash(password);
 
       // Create user
       const user = await prisma.users.create({
@@ -136,7 +133,7 @@ router.post(
       console.log(`[AUTH] User found: ${user.username}, Role: ${user.role}, Status: ${user.status}`);
 
       // Check password
-      const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
+      const isPasswordValid = await argon2.verify(user.passwordHash, password);
       if (!isPasswordValid) {
         console.log(`[AUTH] Password mismatch for: ${email}`);
         const error = new Error("Invalid credentials");
@@ -267,9 +264,9 @@ router.put(
       const { currentPassword, newPassword } = req.body;
 
       // Verify current password
-      const isPasswordValid = await bcrypt.compare(
-        currentPassword,
+      const isPasswordValid = await argon2.verify(
         req.user.passwordHash,
+        currentPassword,
       );
       if (!isPasswordValid) {
         const error = new Error("Current password is incorrect");
@@ -278,10 +275,7 @@ router.put(
       }
 
       // Hash new password
-      const passwordHash = await bcrypt.hash(
-        newPassword,
-        parseInt(process.env.BCRYPT_SALT_ROUNDS),
-      );
+      const passwordHash = await argon2.hash(newPassword);
 
       await prisma.users.update({
         where: { id: req.user.id },

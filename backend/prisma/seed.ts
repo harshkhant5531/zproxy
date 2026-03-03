@@ -1,6 +1,6 @@
 import "dotenv/config";
 import prisma from "./index";
-import bcrypt from "bcryptjs";
+import argon2 from "argon2";
 import studentsData from "../extracted_students.json";
 
 // In Prisma 7 with adapters, we use the centralized client from index.js
@@ -8,17 +8,20 @@ import studentsData from "../extracted_students.json";
 async function main() {
   console.log("🌱 Starting seed...");
 
-  const SALT = 10;
   const [adminHash, facultyHash, studentHash] = await Promise.all([
-    bcrypt.hash("admin123", SALT),
-    bcrypt.hash("faculty123", SALT),
-    bcrypt.hash("student123", SALT),
+    argon2.hash("admin123"),
+    argon2.hash("faculty123"),
+    argon2.hash("student123"),
   ]);
 
   // ── 1. Admin User ─────────────────────────────────────────────────────────────
   const admin = await prisma.users.upsert({
     where: { email: "admin@darshan.ac.in" },
-    update: {},
+    update: {
+      passwordHash: adminHash,
+      status: "active",
+      role: "admin",
+    },
     create: {
       username: "admin",
       email: "admin@darshan.ac.in",
@@ -99,7 +102,7 @@ async function main() {
       employeeId: "FAC2026007",
       department: "Computer Science",
       designation: "Assistant Professor",
-      subjects: ["UI/UX Design"],
+      subjects: ["UI/UX Designing"],
     },
     {
       fullName: "Naimish Vadodariya",
@@ -125,7 +128,11 @@ async function main() {
   for (const faculty of facultyData) {
     const user = await prisma.users.upsert({
       where: { email: faculty.email },
-      update: {},
+      update: {
+        passwordHash: facultyHash,
+        status: "active",
+        role: "faculty",
+      },
       create: {
         username: faculty.username,
         email: faculty.email,
@@ -148,166 +155,62 @@ async function main() {
   console.log("✅ Faculty created:", faculties.length, "members");
 
   // ── 3. Courses & Subjects ─────────────────────────────────────────────────────
-  // Core Courses
-  const coreCourses = [
-    {
-      code: "CS601",
-      name: "Automata Theory and Compiler Construction (ATCC)",
-      credits: 4,
+  // We define a single "Program" Course for the entire semester
+  const programCourse = await prisma.course.upsert({
+    where: { code: "BTECH-CS-S6" },
+    update: {},
+    create: {
+      code: "BTECH-CS-S6",
+      name: "B.Tech Computer Science - Sem 6",
+      department: "Computer Science",
+      credits: 24,
       semester: 6,
-      faculty: "Dixita Kagathara",
+      totalClasses: 0,
     },
-    {
-      code: "CS602",
-      name: "Operating Systems (OS)",
-      credits: 4,
-      semester: 6,
-      faculty: "Firoz Sherasiya",
-    },
+  });
+
+  const subjectData = [
+    { code: "CS601", name: "Automata Theory and Compiler Construction (ATCC)", credits: 4, faculty: "Dixita Kagathara" },
+    { code: "CS602", name: "Operating Systems (OS)", credits: 4, faculty: "Firoz Sherasiya" },
+    { code: "CS603", name: "Fundamentals of Accounting (FOA)", credits: 4, faculty: "Javed Nathani" },
+    { code: "CS606", name: "Advanced Web Technologies (AWT)", credits: 3, faculty: "Arjun Bala" },
+    { code: "CS607", name: "Information Network Security (INS)", credits: 3, faculty: "Maulik Trivedi" },
+    { code: "CS608", name: "UI/UX Designing", credits: 3, faculty: "Mayur Padia" },
+    { code: "CS609", name: ".NET", credits: 3, faculty: "Naimish Vadodariya" },
+    { code: "CS610", name: "Advanced .NET", credits: 3, faculty: "Naimish Vadodariya" },
+    { code: "CS611", name: "Advanced Advanced .NET", credits: 3, faculty: "Naimish Vadodariya" },
+    { code: "CS612", name: "Flutter", credits: 3, faculty: "Mehul Bhundiya" },
+    { code: "CS613", name: "Advanced Flutter", credits: 3, faculty: "Mehul Bhundiya" },
+    { code: "CS604", name: "Machine Learning and Deep Learning (MLDL)", credits: 3, faculty: "Jayesh Vagadiya" },
+    { code: "CS605", name: "Machine Learning (ML)", credits: 3, faculty: "Jayesh Vagadiya" },
+    { code: "CS614", name: "Mobile Computing and Wireless Communication (MCWC)", credits: 3, faculty: "Dixita Kagathara" },
   ];
 
-  // Elective Courses
-  const electiveCourses = [
-    {
-      code: "CS603",
-      name: "Fundamentals of Accounting (FOA)",
-      credits: 4,
-      semester: 6,
-      faculty: "Javed Nathani",
-    },
-    {
-      code: "CS604",
-      name: "Machine Learning and Deep Learning (MLDL)",
-      credits: 3,
-      semester: 6,
-      faculty: "Jayesh Vagadiya",
-    },
-    {
-      code: "CS605",
-      name: "Machine Learning (ML)",
-      credits: 3,
-      semester: 6,
-      faculty: "Jayesh Vagadiya",
-    },
-    {
-      code: "CS606",
-      name: "Advanced Web Technologies (AWT)",
-      credits: 3,
-      semester: 6,
-      faculty: "Arjun Bala",
-    },
-    {
-      code: "CS607",
-      name: "Information Network Security (INS)",
-      credits: 3,
-      semester: 6,
-      faculty: "Maulik Trivedi",
-    },
-    {
-      code: "CS608",
-      name: "UI/UX Design",
-      credits: 3,
-      semester: 6,
-      faculty: "Mayur Padia",
-    },
-    {
-      code: "CS609",
-      name: ".NET",
-      credits: 3,
-      semester: 6,
-      faculty: "Naimish Vadodariya",
-    },
-    {
-      code: "CS610",
-      name: "Advanced .NET",
-      credits: 3,
-      semester: 6,
-      faculty: "Naimish Vadodariya",
-    },
-    {
-      code: "CS611",
-      name: "Advanced Advanced .NET",
-      credits: 3,
-      semester: 6,
-      faculty: "Naimish Vadodariya",
-    },
-    {
-      code: "CS612",
-      name: "Flutter",
-      credits: 3,
-      semester: 6,
-      faculty: "Mehul Bhundiya",
-    },
-    {
-      code: "CS613",
-      name: "Advanced Flutter",
-      credits: 3,
-      semester: 6,
-      faculty: "Mehul Bhundiya",
-    },
-    {
-      code: "CS614",
-      name: "Mobile Computing and Wireless Communication (MCWC)",
-      credits: 3,
-      semester: 6,
-      faculty: "Dixita Kagathara",
-    },
-  ];
+  const subjects: any[] = [];
+  for (const s of subjectData) {
+    const faculty = faculties.find((f) => f.fullName === s.faculty);
+    if (!faculty) continue;
 
-  const allCourses = [...coreCourses, ...electiveCourses];
-  const courses: Array<{
-    code: string;
-    name: string;
-    credits: number;
-    semester: number;
-    faculty: string;
-    id: number;
-    subjectId: number;
-    facultyId: number;
-  }> = [];
-
-  for (const courseData of allCourses) {
-    const faculty = faculties.find((f) => f.fullName === courseData.faculty);
-    if (!faculty) {
-      console.error(`Faculty not found: ${courseData.faculty}`);
-      continue;
-    }
-
-    const course = await prisma.course.upsert({
-      where: { code: courseData.code },
-      update: {},
-      create: {
-        code: courseData.code,
-        name: courseData.name,
-        department: "Computer Science",
-        credits: courseData.credits,
-        semester: courseData.semester,
-        totalClasses: 40,
-        facultyId: faculty.user.id,
-      },
-    });
-
-    // Create subject for each course
     const subject = await prisma.subject.upsert({
-      where: { id: course.id },
+      where: { name_courseId: { name: s.name, courseId: programCourse.id } },
       update: {},
       create: {
-        courseId: course.id,
-        name: courseData.name,
-        credits: courseData.credits,
+        name: s.name,
+        courseId: programCourse.id,
+        credits: s.credits,
         totalClasses: 40,
       },
     });
 
-    courses.push({
-      ...courseData,
-      id: course.id,
-      subjectId: subject.id,
+    subjects.push({
+      ...s,
+      id: subject.id,
+      courseId: programCourse.id,
       facultyId: faculty.user.id,
     });
   }
 
-  console.log("✅ Courses created:", courses.length, "courses");
+  console.log("✅ Program and Subjects synchronized.");
 
   // ── 4. Students ──────────────────────────────────────────────────────────────
   console.log(`📡 Preparing ${studentsData.length} students for deployment...`);
@@ -320,9 +223,10 @@ async function main() {
     const email = `${enroll}@darshan.ac.in`;
 
     const studentSubjects: any[] = [];
-    coreCourses.forEach((coreCourse) => {
-      const course = courses.find((c) => c.name === coreCourse.name);
-      if (course) studentSubjects.push(course);
+    // Core subjects assigned to everyone
+    ["Automata Theory and Compiler Construction (ATCC)", "Operating Systems (OS)", "Fundamentals of Accounting (FOA)"].forEach(name => {
+      const subject = subjects.find(s => s.name === name);
+      if (subject) studentSubjects.push(subject);
     });
 
     const processElective = (elective: string) => {
@@ -333,11 +237,12 @@ async function main() {
       // Elective 1 Mapping
       if (normalized.includes("web technology") || normalized.includes("awt")) mappedName = "Advanced Web Technologies (AWT)";
       else if (normalized.includes("ins") || normalized.includes("security")) mappedName = "Information Network Security (INS)";
-      else if (normalized.includes("ui/ux") || normalized.includes("designing")) mappedName = "UI/UX Design";
-      else if (normalized.includes("asp. net core")) mappedName = ".NET";
-      else if (normalized.includes("advanced .net") || normalized.includes("restful apis")) {
-        if (normalized.includes("modern architecture") || normalized.includes("architectures")) mappedName = "Advanced Advanced .NET";
-        else mappedName = "Advanced .NET";
+      else if (normalized.includes("ui/ux") || normalized.includes("designing")) mappedName = "UI/UX Designing";
+      else if (normalized.includes("asp. net core") || normalized.includes(".net")) {
+        if (normalized.includes("advanced")) {
+          if (normalized.includes("modern architecture")) mappedName = "Advanced Advanced .NET";
+          else mappedName = "Advanced .NET";
+        } else mappedName = ".NET";
       }
       else if (normalized.includes("flutter")) {
         if (normalized.includes("advanced")) mappedName = "Advanced Flutter";
@@ -351,13 +256,10 @@ async function main() {
       }
       else if (normalized.includes("mcwc") || normalized.includes("mobile computing")) mappedName = "Mobile Computing and Wireless Communication (MCWC)";
 
-      // Standalone/Other Electives
-      else if (normalized.includes("accounting") || normalized.includes("foa")) mappedName = "Fundamentals of Accounting (FOA)";
-
       if (mappedName) {
-        const course = courses.find(c => c.name === mappedName);
-        if (course && !studentSubjects.find(s => s.code === course.code)) {
-          studentSubjects.push(course);
+        const subject = subjects.find(s => s.name === mappedName);
+        if (subject && !studentSubjects.find(s => s.id === subject.id)) {
+          studentSubjects.push(subject);
         }
       }
     };
@@ -367,16 +269,16 @@ async function main() {
 
     return prisma.users.create({
       data: {
-        username: enroll, // Use enrollment as username
+        username: enroll,
         email,
         passwordHash: studentHash,
         role: "student",
         status: "active",
         studentCourses: {
-          connect: Array.from(new Set(studentSubjects.map(s => s.id))).map(id => ({ id }))
+          connect: [{ id: programCourse.id }]
         },
         studentSubjects: {
-          connect: studentSubjects.map((s) => ({ id: s.subjectId })),
+          connect: studentSubjects.map((s) => ({ id: s.id })),
         },
         studentProfile: {
           create: {

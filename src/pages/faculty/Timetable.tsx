@@ -81,11 +81,11 @@ export default function FacultyTimetable() {
         <div className="space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold tracking-tight text-white uppercase tracking-tighter flex items-center gap-2 italic">
-                        <Calendar className="h-6 w-6 text-primary" /> My Academic Schedule
+                    <h1 className="text-2xl font-bold tracking-tighter text-white uppercase flex items-center gap-3 italic aura-text-glow">
+                        <Calendar className="h-7 w-7 text-primary animate-aura-pulse" /> Academic Command Schedule
                     </h1>
-                    <p className="text-sm text-slate-400 font-mono tracking-wider uppercase">
-                        Personal Lecture Matrix // {user?.profile?.fullName || user?.username}
+                    <p className="text-[10px] text-slate-500 font-mono tracking-[0.2em] uppercase mt-1">
+                        Operational Matrix // {user?.profile?.fullName || user?.username} // Institutional Grade
                     </p>
                 </div>
                 <div className="flex gap-2">
@@ -140,38 +140,38 @@ export default function FacultyTimetable() {
                                             className="p-3 border-l border-slate-800/30 min-h-[140px] hover:bg-white/5 transition-all duration-300 relative"
                                         >
                                             {session ? (
-                                                <div className="h-full rounded-lg bg-slate-950/80 border border-primary/20 p-3 text-xs space-y-2 relative overflow-hidden flex flex-col justify-between shadow-lg group/card">
-                                                    <div className="absolute top-0 right-0 p-1 opacity-20 group-hover/card:opacity-100 transition-opacity">
-                                                        <Badge variant="outline" className="text-[8px] border-primary/30 text-primary py-0 px-1">
+                                                <div className={`h-full rounded-xl p-3 text-xs space-y-2 relative overflow-hidden flex flex-col justify-between shadow-lg group/card transition-all duration-500 border
+                                                    ${session.startTime === "07:45" && dayIdx === 0 ? "bg-primary/10 border-primary/30 aura-glow animate-aura-pulse" : "bg-slate-950/80 border-white/5"}
+                                                `}>
+                                                    <div className="absolute top-0 right-0 p-1.5 opacity-40 group-hover/card:opacity-100 transition-opacity">
+                                                        <Badge variant="outline" className="text-[8px] border-primary/20 text-primary py-0 px-1.5 bg-primary/5 uppercase tracking-widest font-bold">
                                                             {session.type || "Theory"}
                                                         </Badge>
                                                     </div>
                                                     <div>
-                                                        <p className="font-black text-primary uppercase tracking-tighter italic text-sm">
-                                                            {session.course?.code}
-                                                        </p>
-                                                        <p className="text-slate-300 font-bold text-[10px] line-clamp-1 uppercase tracking-tight">
+                                                        <p className="text-slate-100 font-bold text-[11px] leading-tight uppercase tracking-tight">
                                                             {session.subject?.name || session.course?.name}
                                                         </p>
                                                     </div>
 
-                                                    <div className="space-y-1 pt-2">
-                                                        <div className="flex items-center gap-1.5 text-[9px] text-slate-500 font-bold uppercase tracking-widest">
-                                                            <MapPin className="h-3 w-3 text-primary/60" />{" "}
-                                                            {session.roomNumber || "—"}
+                                                    <div className="space-y-1.5 pt-2">
+                                                        <div className="flex items-center gap-1.5 text-[9px] text-slate-400 font-bold uppercase tracking-[0.15em]">
+                                                            <MapPin className="h-3.5 w-3.5 text-primary" />{" "}
+                                                            {session.roomNumber || "LECTURE HALL"}
                                                         </div>
-                                                        <p className="text-[9px] text-slate-600 font-mono">
-                                                            Sem {session.semester || "—"}
-                                                        </p>
+                                                        <div className="flex items-center gap-1.5 text-[9px] text-slate-500 font-mono">
+                                                            <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 pulsate" />
+                                                            REAL-TIME SYNC
+                                                        </div>
                                                     </div>
 
-                                                    <div className="h-1 w-full bg-slate-800 rounded-full mt-2 overflow-hidden">
-                                                        <div className="h-full bg-primary/40 w-full animate-pulse" />
+                                                    <div className="h-1 w-full bg-slate-900 rounded-full mt-2 overflow-hidden">
+                                                        <div className="h-full bg-primary/50 w-full" />
                                                     </div>
                                                 </div>
                                             ) : (
-                                                <div className="h-full border border-dashed border-slate-800/30 rounded-lg flex items-center justify-center opacity-20 italic text-[9px] text-slate-700 font-mono uppercase">
-                                                    No Session
+                                                <div className="h-full border border-dashed border-slate-800/20 rounded-xl flex items-center justify-center opacity-10 italic text-[9px] text-slate-500 font-mono uppercase tracking-widest">
+                                                    Slot Available
                                                 </div>
                                             )}
                                         </div>

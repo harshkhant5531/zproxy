@@ -1,4 +1,5 @@
 const express = require("express");
+const argon2 = require("argon2");
 const { body, validationResult } = require("express-validator");
 const prisma = require("../prisma");
 const authMiddleware = require("../middleware/auth");
@@ -29,8 +30,7 @@ router.post("/students", authMiddleware, requireRole(["admin"]), async (req, res
       throw error;
     }
 
-    const bcrypt = require("bcryptjs");
-    const passwordHash = await bcrypt.hash(password, 10);
+    const passwordHash = await argon2.hash(password);
 
     const user = await prisma.users.create({
       data: {
@@ -81,8 +81,7 @@ router.post("/faculty", authMiddleware, requireRole(["admin"]), async (req, res,
       throw error;
     }
 
-    const bcrypt = require("bcryptjs");
-    const passwordHash = await bcrypt.hash(password, 10);
+    const passwordHash = await argon2.hash(password);
 
     const user = await prisma.users.create({
       data: {
