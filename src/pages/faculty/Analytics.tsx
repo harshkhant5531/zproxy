@@ -107,8 +107,8 @@ export default function Analytics() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white uppercase tracking-tighter italic">Deep-State Analytics</h1>
-          <p className="text-sm text-slate-400 font-mono tracking-wider">NEURAL COURSE OUTCOME &amp; ENGAGEMENT METRICS</p>
+          <h1 className="text-2xl font-bold tracking-tight text-white uppercase tracking-tighter">Academic Analytics</h1>
+          <p className="text-sm text-slate-400 font-mono tracking-wider">COURSE OUTCOME & ENGAGEMENT METRICS</p>
         </div>
         <div className="bg-slate-900/50 border border-slate-800 px-4 py-2 rounded-lg backdrop-blur-md">
           <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Global Index</p>
@@ -138,7 +138,7 @@ export default function Analytics() {
         </Card>
 
         <Card className="bg-slate-900/40 border-slate-800 backdrop-blur-sm shadow-xl">
-          <CardHeader className="pb-3 px-6"><CardTitle className="text-sm font-bold text-slate-300 uppercase tracking-widest italic">Engagement Fingerprint</CardTitle></CardHeader>
+          <CardHeader className="pb-3 px-6"><CardTitle className="text-sm font-bold text-slate-300 uppercase tracking-widest italic">Performance Analysis</CardTitle></CardHeader>
           <CardContent className="px-6 pb-6 pt-2">
             <ResponsiveContainer width="100%" height={260}>
               <RadarChart data={radarData}>
@@ -176,17 +176,6 @@ export default function Analytics() {
         </Card>
       </div>
 
-      {/* Attainment Formula */}
-      <Card className="bg-slate-950/40 border-slate-800 shadow-inner">
-        <CardHeader className="pb-3 px-6"><CardTitle className="text-xs font-black text-slate-500 uppercase tracking-widest">OBE Attainment Formula [v2.4]</CardTitle></CardHeader>
-        <CardContent className="px-6 pb-6">
-          <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-6 font-mono text-sm flex flex-col items-center">
-            <p className="text-primary text-xl font-black drop-shadow-[0_0_10px_rgba(34,211,238,0.3)]">A<sub>CO</sub> = (W<sub>att</sub> × P<sub>att</sub>) + (W<sub>int</sub> × M<sub>int</sub>)</p>
-            <div className="h-px w-20 bg-slate-800 my-4" />
-            <p className="text-[10px] text-slate-500 uppercase tracking-[0.3em]">Weights: ATT=0.20 | INT=0.80 — DYNAMIC_ADJUST_ENABLED</p>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }

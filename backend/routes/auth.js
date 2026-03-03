@@ -114,6 +114,7 @@ router.post(
       }
 
       const { email, password } = req.body;
+      console.log(`[AUTH] Login attempt for: ${email}`);
 
       // Find user
       const user = await prisma.users.findFirst({
@@ -126,21 +127,28 @@ router.post(
       });
 
       if (!user) {
+        console.log(`[AUTH] User not found: ${email}`);
         const error = new Error("Invalid credentials");
         error.statusCode = 401;
         throw error;
       }
+
+      console.log(`[AUTH] User found: ${user.username}, Role: ${user.role}, Status: ${user.status}`);
 
       // Check password
       const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
       if (!isPasswordValid) {
+        console.log(`[AUTH] Password mismatch for: ${email}`);
         const error = new Error("Invalid credentials");
         error.statusCode = 401;
         throw error;
       }
 
+      console.log(`[AUTH] Password verified for: ${email}`);
+
       // Check if user is active
       if (user.status !== "active") {
+        console.log(`[AUTH] Account inactive for: ${email}`);
         const error = new Error("Your account is inactive or suspended");
         error.statusCode = 401;
         throw error;

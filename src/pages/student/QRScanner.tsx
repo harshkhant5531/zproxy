@@ -18,7 +18,7 @@ export default function QRScanner() {
   const SCANNER_ID = "reader";
 
   const markAttendanceMutation = useMutation({
-    mutationFn: (qrCode: string) => attendanceAPI.markAttendanceQR(qrCode, "LH-201 (Geofenced)", `AuraMobile-${user?.id}`),
+    mutationFn: (qrCode: string) => attendanceAPI.markAttendanceQR(qrCode, "Institutional Geofence", `UserDevice-${user?.id}`),
     onSuccess: (resp) => {
       setScannedData(resp.data.data);
       toast.success("Attendance verified and marked!");

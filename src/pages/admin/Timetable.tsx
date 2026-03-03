@@ -247,11 +247,6 @@ export default function Timetable() {
             Academic Schedule Matrix
           </p>
         </div>
-        <div className="flex gap-2">
-          <div className="bg-slate-900 border border-slate-800 px-3 py-1 rounded text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-            System Status: Active
-          </div>
-        </div>
       </div>
 
       {/* Search and Filter */}
@@ -359,7 +354,7 @@ export default function Timetable() {
                           <div className="space-y-1 pt-2">
                             <div className="flex items-center gap-1.5 text-[9px] text-slate-500 font-bold uppercase tracking-widest">
                               <MapPin className="h-3 w-3 text-slate-700" />{" "}
-                              {session.roomNumber || "LH-201"}
+                              {session.roomNumber || "—"}
                             </div>
                             <p className="text-[9px] text-slate-600 italic font-mono truncate">
                               Faculty:{" "}

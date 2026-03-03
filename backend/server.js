@@ -64,6 +64,9 @@ app.get("/api/health", (req, res) => {
 app.use(errorHandler);
 
 // Start server
+const { getLocalIp } = require("./utils/network");
+const networkIp = getLocalIp();
+
 app.listen(PORT, "0.0.0.0", async () => {
   try {
     // Test database connection
@@ -71,7 +74,10 @@ app.listen(PORT, "0.0.0.0", async () => {
     console.log("✅ Database connection successful");
     console.log(`🚀 Server is running on:`);
     console.log(`   - Local:    http://localhost:${PORT}`);
-    console.log(`   - Network:  http://${process.env.VITE_NETWORK_IP || 'your-ip'}:${PORT}`);
+    console.log(`   - Network:  http://${networkIp}:${PORT}`);
+
+    // Update process env for use in other modules if needed
+    process.env.VITE_NETWORK_IP = networkIp;
   } catch (error) {
     console.error("❌ Failed to connect to database:", error.message);
     process.exit(1);

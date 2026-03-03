@@ -416,4 +416,56 @@ router.post("/permit/:id/scan", authMiddleware, async (req, res, next) => {
   }
 });
 
+// @route   GET /api/exams/permit/:id/download
+// @desc    Download exam permit (hall ticket)
+// @access  Admin, Faculty, Student
+router.get("/permit/:id/download", authMiddleware, async (req, res, next) => {
+  try {
+    const permit = await prisma.examPermit.findUnique({
+      where: { id: parseInt(req.params.id) },
+      include: {
+        student: { include: { studentProfile: true } },
+        course: true,
+      },
+    });
+
+    if (!permit) {
+      const error = new Error("Permit not found");
+      error.statusCode = 404;
+      throw error;
+    }
+
+    // Check access
+    if (req.user.role === "student" && permit.studentId !== req.user.id) {
+      const error = new Error("Forbidden");
+      error.statusCode = 403;
+      throw error;
+    }
+
+    const content = `
+=========================================
+      AURA INTEGRITY ENGINE - HALL TICKET
+=========================================
+STUENT NAME: ${permit.student.studentProfile.fullName}
+ENROLLMENT: ${permit.student.studentProfile.enrollmentNumber}
+COURSE: ${permit.course.name} (${permit.course.code})
+EXAM TYPE: ${permit.examType.toUpperCase()}
+DATE: ${permit.examDate.toDateString()}
+HALL: ${permit.examHall}
+SEAT: ${permit.seatNumber}
+QR CODE: ${permit.qrCode}
+=========================================
+    VALID FROM: ${permit.validFrom.toDateString()}
+    VALID TO:   ${permit.validTo.toDateString()}
+=========================================
+`;
+
+    res.setHeader("Content-Type", "text/plain");
+    res.setHeader("Content-Disposition", `attachment; filename=hall_ticket_${permit.id}.txt`);
+    res.send(content);
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;

@@ -355,146 +355,20 @@ exports.Prisma.NullableJsonNullValueInput = {
   JsonNull: Prisma.JsonNull
 };
 
+exports.Prisma.QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+};
+
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
-};
-
-exports.Prisma.UsersOrderByRelevanceFieldEnum = {
-  username: 'username',
-  email: 'email',
-  passwordHash: 'passwordHash',
-  role: 'role',
-  avatar: 'avatar',
-  status: 'status'
-};
-
-exports.Prisma.AdminProfileOrderByRelevanceFieldEnum = {
-  fullName: 'fullName',
-  phone: 'phone',
-  address: 'address',
-  bio: 'bio'
-};
-
-exports.Prisma.FacultyProfileOrderByRelevanceFieldEnum = {
-  fullName: 'fullName',
-  employeeId: 'employeeId',
-  phone: 'phone',
-  address: 'address',
-  bio: 'bio',
-  department: 'department',
-  designation: 'designation',
-  qualification: 'qualification',
-  officeHours: 'officeHours'
-};
-
-exports.Prisma.StudentProfileOrderByRelevanceFieldEnum = {
-  fullName: 'fullName',
-  phone: 'phone',
-  address: 'address',
-  bio: 'bio',
-  enrollmentNumber: 'enrollmentNumber',
-  rollNumber: 'rollNumber',
-  parentPhone: 'parentPhone',
-  parentEmail: 'parentEmail',
-  department: 'department',
-  batch: 'batch'
-};
-
-exports.Prisma.CourseOrderByRelevanceFieldEnum = {
-  code: 'code',
-  name: 'name',
-  description: 'description',
-  department: 'department',
-  status: 'status'
-};
-
-exports.Prisma.SubjectOrderByRelevanceFieldEnum = {
-  name: 'name',
-  description: 'description'
-};
-
-exports.Prisma.SessionOrderByRelevanceFieldEnum = {
-  topic: 'topic',
-  description: 'description',
-  sessionType: 'sessionType',
-  startTime: 'startTime',
-  endTime: 'endTime',
-  status: 'status'
-};
-
-exports.Prisma.AttendanceOrderByRelevanceFieldEnum = {
-  status: 'status',
-  location: 'location',
-  ipAddress: 'ipAddress',
-  deviceInfo: 'deviceInfo',
-  notes: 'notes'
-};
-
-exports.Prisma.QrCodeOrderByRelevanceFieldEnum = {
-  codeValue: 'codeValue'
-};
-
-exports.Prisma.ExamPermitOrderByRelevanceFieldEnum = {
-  examType: 'examType',
-  examHall: 'examHall',
-  seatNumber: 'seatNumber',
-  status: 'status',
-  qrCode: 'qrCode'
-};
-
-exports.Prisma.LeaveApplicationOrderByRelevanceFieldEnum = {
-  leaveType: 'leaveType',
-  reason: 'reason',
-  supportingDocument: 'supportingDocument',
-  status: 'status',
-  approvalNotes: 'approvalNotes'
-};
-
-exports.Prisma.GradeOrderByRelevanceFieldEnum = {
-  assignment: 'assignment',
-  grade: 'grade',
-  teacherRemarks: 'teacherRemarks'
-};
-
-exports.Prisma.TimetableOrderByRelevanceFieldEnum = {
-  startTime: 'startTime',
-  endTime: 'endTime',
-  roomNumber: 'roomNumber',
-  type: 'type'
-};
-
-exports.Prisma.NotificationOrderByRelevanceFieldEnum = {
-  title: 'title',
-  message: 'message',
-  type: 'type',
-  priority: 'priority'
 };
 
 exports.Prisma.JsonNullValueFilter = {
   DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
-};
-
-exports.Prisma.QueryMode = {
-  default: 'default',
-  insensitive: 'insensitive'
-};
-
-exports.Prisma.ReportOrderByRelevanceFieldEnum = {
-  reportType: 'reportType',
-  status: 'status',
-  format: 'format',
-  fileName: 'fileName',
-  fileUrl: 'fileUrl'
-};
-
-exports.Prisma.AuditLogOrderByRelevanceFieldEnum = {
-  action: 'action',
-  resourceType: 'resourceType',
-  ipAddress: 'ipAddress',
-  userAgent: 'userAgent'
 };
 
 

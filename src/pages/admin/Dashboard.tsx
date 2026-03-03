@@ -78,13 +78,13 @@ export default function AdminDashboard() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold tracking-tight text-white">Admin Dashboard</h1>
-        <p className="text-sm text-slate-400 font-mono uppercase tracking-wider">System Overview</p>
+        <p className="text-sm text-slate-400 font-mono uppercase tracking-wider">Real-time System Metrics</p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard title="Total Students" value={studentsData?.length.toString() || "0"} icon={Users} trend={{ value: 0, label: "real-time" }} />
+        <StatCard title="Total Students" value={studentsData?.length.toString() || "0"} icon={Users} />
         <StatCard title="Active Courses" value={coursesData?.length.toString() || "0"} subtitle={`Across ${deptData?.length || 0} departments`} icon={BookOpen} />
-        <StatCard title="Avg Attendance" value={`${avgAttendance}%`} trend={{ value: 0, label: "current" }} icon={TrendingUp} />
+        <StatCard title="Avg Attendance" value={`${avgAttendance}%`} icon={TrendingUp} />
         <StatCard title="Flagged Students" value={shortageStudents.length.toString()} subtitle="Below 75% threshold" icon={AlertTriangle} iconClassName="bg-destructive/10" />
       </div>
 

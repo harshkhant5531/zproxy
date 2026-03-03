@@ -1,29 +1,9 @@
-import { PrismaClient } from "../generated/prisma/client";
-import { PrismaMariaDb } from "@prisma/adapter-mariadb";
+import prisma from "./index";
 import bcrypt from "bcryptjs";
 import "dotenv/config";
 import studentsData from "../extracted_students.json";
 
-// Parse DATABASE_URL to connection parameters
-const url = new URL(
-  process.env.DATABASE_URL ||
-  "mysql://root:dynamo@localhost:3306/aura_integrity_engine",
-);
-
-// Create Prisma adapter
-const adapter = new PrismaMariaDb({
-  host: url.hostname,
-  port: parseInt(url.port || "3306"),
-  user: url.username,
-  password: url.password,
-  database: url.pathname.slice(1), // Remove leading '/'
-});
-
-// Initialize PrismaClient with adapter
-const prisma = new PrismaClient({
-  adapter,
-  log: ["query", "info", "warn", "error"],
-});
+// In Prisma 7 with adapters, we use the centralized client from index.js
 
 async function main() {
   console.log("🌱 Starting seed...");
@@ -440,123 +420,7 @@ async function main() {
 
   console.log("✅ Students created:", students.length, "students");
 
-  // ── 5. Timetable ─────────────────────────────────────────────────────────────
-  // Create a sample timetable
-  const days = [1, 2, 3, 4, 5]; // Monday to Friday
-  const timeSlots = ["09:00", "10:00", "11:00", "14:00", "15:00"];
-  const rooms = ["LH-201", "LH-202", "LH-203", "Lab-1", "Lab-2"];
-
-  const timetableEntries: Array<{
-    courseId: number;
-    subjectId: number;
-    facultyId: number;
-    dayOfWeek: number;
-    startTime: string;
-    endTime: string;
-    roomNumber: string;
-    semester: number;
-  }> = [];
-
-  courses.forEach((course, index) => {
-    const day = days[index % days.length];
-    const timeSlot = timeSlots[index % timeSlots.length];
-    const room = rooms[index % rooms.length];
-
-    timetableEntries.push({
-      courseId: course.id,
-      subjectId: course.subjectId,
-      facultyId: course.facultyId,
-      dayOfWeek: day,
-      startTime: timeSlot,
-      endTime: `${parseInt(timeSlot.split(":")[0]) + 1}:00`,
-      roomNumber: room,
-      semester: 6,
-    });
-  });
-
-  await prisma.timetable.createMany({
-    data: timetableEntries,
-    skipDuplicates: true,
-  });
-
-  console.log("✅ Timetable entries created:", timetableEntries.length);
-
-  // ── 6. Historical Data (Attendance & Grades) ──────────────────────────────
-  console.log("📊 Generating historical data...");
-  const now = new Date();
-  const thirtyDaysAgo = new Date();
-  thirtyDaysAgo.setDate(now.getDate() - 30);
-
-  // Create sessions and attendance for the last 30 days
-  for (const course of courses) {
-    const courseStudents = students.filter(s => s.subjects.some(sub => sub.id === course.id));
-
-    // Generate ~15 sessions per course
-    for (let i = 0; i < 15; i++) {
-      const sessionDate = new Date(thirtyDaysAgo);
-      sessionDate.setDate(sessionDate.getDate() + (i * 2)); // Every 2 days
-      if (sessionDate > now) break;
-
-      const session = await prisma.session.create({
-        data: {
-          courseId: course.id,
-          subjectId: course.subjectId,
-          facultyId: course.facultyId,
-          topic: `Historical Lecture ${i + 1}`,
-          sessionType: "lecture",
-          date: sessionDate,
-          startTime: "09:00",
-          endTime: "10:00",
-          status: "completed",
-          attendanceCount: courseStudents.length
-        }
-      });
-
-      // Create attendance for students
-      const attendanceData = courseStudents.map(student => ({
-        sessionId: session.id,
-        studentId: student.user.id,
-        status: Math.random() > 0.15 ? "present" : "absent", // 85% attendance
-        timestamp: sessionDate
-      }));
-
-      await prisma.attendance.createMany({ data: attendanceData });
-    }
-
-    // Update totalClasses to match historical sessions
-    await prisma.course.update({
-      where: { id: course.id },
-      data: { totalClasses: 30 }
-    });
-
-    // Create a few grades for semester 5 (previous)
-    const gradeData = courseStudents.map(student => ({
-      studentId: student.user.id,
-      courseId: course.id,
-      subjectId: course.subjectId || course.id,
-      marksObtained: 60 + Math.floor(Math.random() * 35),
-      totalMarks: 100,
-      grade: "A",
-      semester: 5,
-      year: 2025
-    }));
-
-    await prisma.grade.createMany({ data: gradeData });
-  }
-
-  // Create some report archival entries
-  await prisma.report.create({
-    data: {
-      reportType: "attendance",
-      generatedBy: admin.id,
-      status: "completed",
-      fileName: "Attendance_Audit_Feb2026.pdf",
-      fileUrl: "/reports/download/1",
-      format: "pdf"
-    }
-  });
-
-  console.log("🎉 Seed complete!");
+  console.log("🎉 Seed complete! Core data (Faculty, Courses, Students) is ready. No historical sessions or grades created.");
 }
 
 main()

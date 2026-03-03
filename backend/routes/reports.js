@@ -473,14 +473,56 @@ router.get("/", authMiddleware, async (req, res, next) => {
 // @access  Admin, Faculty
 router.post("/generate", authMiddleware, async (req, res, next) => {
   try {
-    const { type, scope, dateFrom, dateTo, format = "PDF" } = req.body;
+    const { type, filters: reqFilters, format = "CSV" } = req.body;
+    const fs = require("fs");
+    const path = require("path");
+
+    // Ensure reports directory exists
+    const reportsDir = path.join(__dirname, "../generated/reports");
+    if (!fs.existsSync(reportsDir)) {
+      fs.mkdirSync(reportsDir, { recursive: true });
+    }
+
+    const fileName = `report_${type}_${Date.now()}.${format.toLowerCase()}`;
+    const filePath = path.join(reportsDir, fileName);
+
+    // Fetch data based on type
+    let reportData = [];
+    if (type === "attendance") {
+      reportData = await prisma.attendance.findMany({
+        where: reqFilters || {},
+        include: { student: { include: { studentProfile: true } }, session: { include: { course: true } } }
+      });
+    } else if (type === "performance") {
+      reportData = await prisma.grade.findMany({
+        where: reqFilters || {},
+        include: { student: { include: { studentProfile: true } }, course: true }
+      });
+    }
+
+    // Basic CSV generation
+    let content = "";
+    if (reportData.length > 0) {
+      const headers = Object.keys(reportData[0]).join(",");
+      const rows = reportData.map(row =>
+        Object.values(row).map(val =>
+          typeof val === 'object' ? JSON.stringify(val).replace(/,/g, ';') : val
+        ).join(",")
+      );
+      content = [headers, ...rows].join("\n");
+    } else {
+      content = "No data found for the selected filters.";
+    }
+
+    fs.writeFileSync(filePath, content);
 
     const report = await prisma.report.create({
       data: {
         reportType: type,
-        parameters: JSON.stringify({ dateFrom, dateTo, format }),
+        filters: reqFilters || {},
         status: "completed",
-        fileUrl: `/reports/download/${Date.now()}.pdf`,
+        fileName: fileName,
+        fileUrl: `/api/reports/download/${fileName}`,
         generatedBy: req.user.id
       }
     });
@@ -491,14 +533,25 @@ router.post("/generate", authMiddleware, async (req, res, next) => {
   }
 });
 
-// @route   GET /api/reports/download/:id
+// @route   GET /api/reports/download/:fileName
 // @desc    Download report file
 // @access  Admin, Faculty
-router.get("/download/:id", authMiddleware, async (req, res, next) => {
-  // Mock file download
-  res.setHeader("Content-Type", "application/pdf");
-  res.setHeader("Content-Disposition", "attachment; filename=report.pdf");
-  res.send(Buffer.from("Fake PDF Content"));
+router.get("/download/:fileName", authMiddleware, async (req, res, next) => {
+  try {
+    const fs = require("fs");
+    const path = require("path");
+    const filePath = path.join(__dirname, "../generated/reports", req.params.fileName);
+
+    if (!fs.existsSync(filePath)) {
+      const error = new Error("File not found");
+      error.statusCode = 404;
+      throw error;
+    }
+
+    res.download(filePath);
+  } catch (error) {
+    next(error);
+  }
 });
 
 // Helper function to get departments where faculty teaches

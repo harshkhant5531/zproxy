@@ -17,7 +17,7 @@ export default function CreateSession() {
   const [courseId, setCourseId] = useState("");
   const [subjectId, setSubjectId] = useState("");
   const [topic, setTopic] = useState("");
-  const [room, setRoom] = useState("LH-201");
+  const [room, setRoom] = useState("");
 
   const { data: coursesData, isLoading: isCoursesLoading } = useQuery({
     queryKey: ["faculty", "my-courses", user?.id],
@@ -90,7 +90,7 @@ export default function CreateSession() {
     <div className="space-y-6 max-w-2xl mx-auto py-8">
       <div className="text-center space-y-2">
         <h1 className="text-3xl font-black tracking-tighter text-white uppercase italic">Initialize Session</h1>
-        <p className="text-sm text-slate-500 font-mono tracking-[0.2em]">ESTABLISH NEURAL LINK & ATTENDANCE GATEWAY</p>
+        <p className="text-sm text-slate-500 font-mono tracking-[0.2em]">ESTABLISH SESSION & ATTENDANCE GATEWAY</p>
       </div>
 
       {/* Steps Progress */}
@@ -203,7 +203,7 @@ export default function CreateSession() {
       </Card>
 
       <div className="text-center">
-        <p className="text-[9px] text-slate-700 font-mono uppercase tracking-[0.5em]">System.Aura v4.0 // Secured via Neural-Integrity</p>
+        <p className="text-[9px] text-slate-700 font-mono uppercase tracking-[0.5em]">Academic Integrity Engine // Secure Authentication</p>
       </div>
     </div>
   );

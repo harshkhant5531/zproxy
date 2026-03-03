@@ -54,8 +54,8 @@ export default function FacultyDashboard() {
   const todaySessions = sessionsData || [];
   const completedToday = todaySessions.filter((s: any) => s.status === "completed").length;
 
-  const attainmentData = performanceData?.students?.slice(0, 6).map((s: any, i: number) => ({
-    name: `CO${i + 1}`,
+  const attainmentData = performanceData?.students?.slice(0, 6).map((s: any) => ({
+    name: s.student?.studentProfile?.fullName?.split(' ').map((n: string) => n[0]).join('') || s.student?.username?.substring(0, 3).toUpperCase() || "STU",
     attainment: s.averagePercentage || 0
   })) || [];
 
@@ -75,8 +75,8 @@ export default function FacultyDashboard() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard title="Today's Sessions" value={todaySessions.length.toString()} subtitle={`${completedToday} completed, ${todaySessions.length - completedToday} upcoming`} icon={CalendarCheck} />
         <StatCard title="Assigned Courses" value={coursesData?.length.toString() || "0"} subtitle="Active semester" icon={Users} />
-        <StatCard title="Class Average" value={`${performanceData?.statistics?.classAverage || 0}%`} trend={{ value: 0, label: "real-time" }} icon={BarChart3} />
-        <StatCard title="Total COs" value="6" subtitle="Across all subjects" icon={BarChart3} />
+        <StatCard title="Class Average" value={`${performanceData?.statistics?.classAverage || 0}%`} icon={BarChart3} />
+        <StatCard title="Total Students" value={performanceData?.statistics?.totalStudents?.toString() || "0"} subtitle="In assigned courses" icon={Users} />
       </div>
 
       {/* Today's Sessions */}
@@ -117,7 +117,7 @@ export default function FacultyDashboard() {
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card className="bg-slate-900/40 border-slate-800 backdrop-blur-sm">
-          <CardHeader className="pb-3 px-6"><CardTitle className="text-sm font-medium text-slate-300">CO Attainment Overview</CardTitle></CardHeader>
+          <CardHeader className="pb-3 px-6"><CardTitle className="text-sm font-medium text-slate-300">Top Performance Overview</CardTitle></CardHeader>
           <CardContent className="px-6 pb-6">
             <ResponsiveContainer width="100%" height={240}>
               <BarChart data={attainmentData}>

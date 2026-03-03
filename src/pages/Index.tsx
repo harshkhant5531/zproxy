@@ -85,13 +85,8 @@ const Index = () => {
             Secure, transparent, and seamless. Monitor academic integrity with real-time analytics and decentralized proof of presence.
           </p>
           <div className="flex gap-4 animate-in fade-in slide-in-from-left duration-700 delay-300">
-            <div className="flex -space-x-3">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="w-10 h-10 rounded-full border-2 border-[#020817] bg-slate-800" />
-              ))}
-            </div>
-            <p className="text-sm text-slate-400 self-center">
-              Joined by <span className="text-white font-semibold">2.4k+</span> students this semester.
+            <p className="text-sm text-slate-400 self-center italic">
+              Empowering academic excellence through transparency.
             </p>
           </div>
         </div>
@@ -107,7 +102,7 @@ const Index = () => {
             <CardTitle className="text-2xl font-bold text-center">Secure Sign In</CardTitle>
             <div className="flex justify-center items-center gap-2 mt-2">
               <div className={`h-1.5 w-1.5 rounded-full animate-pulse ${apiStatus === "online" ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]" :
-                  apiStatus === "offline" ? "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.6)]" : "bg-slate-500"
+                apiStatus === "offline" ? "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.6)]" : "bg-slate-500"
                 }`} />
               <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-slate-500">
                 Backend {apiStatus}

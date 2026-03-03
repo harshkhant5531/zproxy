@@ -40,8 +40,8 @@ export default function AttendanceRecords() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-white uppercase tracking-tighter italic">Session Archive</h1>
-        <p className="text-sm text-slate-400 font-mono tracking-wider">HISTORICAL ATTENDANCE LEDGER & AUDIT LOGS</p>
+        <h1 className="text-2xl font-bold tracking-tight text-white uppercase tracking-tighter">Attendance History</h1>
+        <p className="text-sm text-slate-400 font-mono tracking-wider">RECORDS & AUDIT LOGS</p>
       </div>
 
       <div className="relative max-w-sm group">
@@ -79,7 +79,7 @@ export default function AttendanceRecords() {
                     <span className="block text-[10px] font-normal text-slate-500">{s.course?.name}</span>
                   </TableCell>
                   <TableCell className="text-sm text-slate-300 italic max-w-[200px] truncate">{s.topic}</TableCell>
-                  <TableCell className="text-[11px] text-slate-500 font-mono">ROOM: {s.room || "LH-201"}</TableCell>
+                  <TableCell className="text-[11px] text-slate-500 font-mono">ROOM: {s.room || "—"}</TableCell>
                   <TableCell className="text-xs font-mono font-bold text-primary bg-primary/5 px-2 py-1 rounded w-fit">
                     {s.presentCount || 0}/{s.totalStudents || 0}
                   </TableCell>
@@ -97,7 +97,7 @@ export default function AttendanceRecords() {
               ))}
               {filtered.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={7} className="h-32 text-center text-slate-500 italic font-mono uppercase tracking-widest text-[10px]">No archives found in neural buffer</TableCell>
+                  <TableCell colSpan={7} className="h-32 text-center text-slate-500 italic font-mono uppercase tracking-widest text-[10px]">No records found</TableCell>
                 </TableRow>
               )}
             </TableBody>
