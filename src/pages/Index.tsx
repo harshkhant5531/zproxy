@@ -19,7 +19,10 @@ const Index = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { login, user } = useAuth();
+  const [apiStatus, setApiStatus] = useState<"checking" | "online" | "offline">(
+    "checking",
+  );
+  const { login, user, loading } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -30,15 +33,12 @@ const Index = () => {
     location.state?.from ||
     (user ? `/${user.role}/dashboard` : null);
 
-  // If already logged in and not in the middle of a submission, redirect away
-  if (user && !isSubmitting) {
-    navigate(from || `/${user.role}/dashboard`, { replace: true });
-    return null;
-  }
-
-  const [apiStatus, setApiStatus] = useState<"checking" | "online" | "offline">(
-    "checking",
-  );
+  // If already logged in and auth is resolved, redirect away
+  useEffect(() => {
+    if (!loading && user) {
+      navigate(from || `/${user.role}/dashboard`, { replace: true });
+    }
+  }, [user, loading, from, navigate]);
 
   useEffect(() => {
     const checkApi = async () => {
@@ -59,6 +59,8 @@ const Index = () => {
     };
     checkApi();
   }, []);
+
+  if (loading) return null;
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();

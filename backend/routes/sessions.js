@@ -36,10 +36,9 @@ router.get("/", authMiddleware, async (req, res, next) => {
     if (status) where.status = status;
     if (date) where.date = new Date(date);
 
-    // ─── Timetable-only filter for student manual check-in ─────────────────
+    // ─── Active sessions filter for student manual check-in ────────────────
     if (req.query.timetableOnly === "true" && req.user.role === "student") {
       const today = new Date();
-      const dayOfWeek = today.getDay(); // 0 = Sun … 6 = Sat
       const startOfToday = new Date(
         today.getFullYear(),
         today.getMonth(),
@@ -51,36 +50,9 @@ router.get("/", authMiddleware, async (req, res, next) => {
         today.getDate() + 1,
       );
 
-      const timetableEntries = await prisma.timetable.findMany({
-        where: {
-          course: { students: { some: { id: req.user.id } } },
-          dayOfWeek,
-        },
-        select: { courseId: true },
-      });
-
-      const timetableCourseIds = [
-        ...new Set(timetableEntries.map((t) => t.courseId)),
-      ];
-
-      if (timetableCourseIds.length === 0) {
-        return res.json({
-          success: true,
-          data: {
-            sessions: [],
-            pagination: {
-              page: parseInt(page),
-              limit: parseInt(limit),
-              total: 0,
-              pages: 0,
-            },
-          },
-        });
-      }
-
-      // Override filters: today's date range, timetable courses, exclude completed
+      // Show any of today's non-completed sessions for enrolled courses,
+      // regardless of whether a timetable entry exists for today.
       where.date = { gte: startOfToday, lt: endOfToday };
-      where.courseId = { in: timetableCourseIds };
       where.status = { not: "completed" };
     }
 

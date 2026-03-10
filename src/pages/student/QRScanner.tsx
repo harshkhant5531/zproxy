@@ -550,13 +550,13 @@ export default function QRScanner() {
                     <CardContent className="p-10 text-center space-y-3">
                       <BookOpen className="h-10 w-10 text-muted-foreground/20 mx-auto" />
                       <p className="text-sm font-bold text-foreground">
-                        No Classes Today
+                        No Active Sessions
                       </p>
                       <p className="text-xs text-muted-foreground leading-relaxed">
-                        No sessions from today's timetable are currently open.
+                        No sessions are currently open for your enrolled
+                        courses.
                         <br />
-                        Ensure your timetable is set up, then ask faculty to
-                        start a session.
+                        Ask your faculty to start a session, then refresh.
                       </p>
                       <Button
                         variant="outline"
