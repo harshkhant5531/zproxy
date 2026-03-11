@@ -115,31 +115,51 @@ export default function AdminDashboard() {
         </div>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          <StatCard
-            title="Total Students"
-            value={studentsData?.length.toString() || "0"}
-            icon={Users}
-            className="glass-card aura-glow border-none"
-          />
-          <StatCard
-            title="Staff Faculty"
-            value={facultyData?.length.toString() || "0"}
-            icon={ShieldAlert}
-            className="glass-card aura-glow border-none"
-          />
-          <StatCard
-            title="Active Courses"
-            value={coursesData?.length.toString() || "0"}
-            subtitle={`${deptData?.length || 0} SECTORS`}
-            icon={BookOpen}
-            className="glass-card aura-glow border-none"
-          />
-          <StatCard
-            title="Avg Attendance"
-            value={`${avgAttendance}%`}
-            icon={TrendingUp}
-            className="glass-card aura-glow border-none"
-          />
+          <div
+            className="motion-page-enter motion-surface"
+            style={{ animationDelay: "30ms" }}
+          >
+            <StatCard
+              title="Total Students"
+              value={studentsData?.length.toString() || "0"}
+              icon={Users}
+              className="glass-card aura-glow border-none"
+            />
+          </div>
+          <div
+            className="motion-page-enter motion-surface"
+            style={{ animationDelay: "90ms" }}
+          >
+            <StatCard
+              title="Staff Faculty"
+              value={facultyData?.length.toString() || "0"}
+              icon={ShieldAlert}
+              className="glass-card aura-glow border-none"
+            />
+          </div>
+          <div
+            className="motion-page-enter motion-surface"
+            style={{ animationDelay: "150ms" }}
+          >
+            <StatCard
+              title="Active Courses"
+              value={coursesData?.length.toString() || "0"}
+              subtitle={`${deptData?.length || 0} SECTORS`}
+              icon={BookOpen}
+              className="glass-card aura-glow border-none"
+            />
+          </div>
+          <div
+            className="motion-page-enter motion-surface"
+            style={{ animationDelay: "210ms" }}
+          >
+            <StatCard
+              title="Avg Attendance"
+              value={`${avgAttendance}%`}
+              icon={TrendingUp}
+              className="glass-card aura-glow border-none"
+            />
+          </div>
         </div>
 
         <div className="grid gap-8 lg:grid-cols-2">
@@ -211,7 +231,7 @@ export default function AdminDashboard() {
             </CardHeader>
             <CardContent className="space-y-3 p-6 h-[260px] overflow-y-auto custom-scrollbar">
               {shortageStudents.length > 0 ? (
-                shortageStudents.map((s: any) => {
+                shortageStudents.map((s: any, i: number) => {
                   const severity =
                     s.attendance < 50
                       ? "CRITICAL"
@@ -227,7 +247,8 @@ export default function AdminDashboard() {
                   return (
                     <div
                       key={s.id}
-                      className="flex items-center justify-between rounded-xl bg-muted/20 border border-border/40 p-4 hover:border-destructive/30 transition-all hover:bg-muted/30"
+                      className="flex items-center justify-between rounded-xl bg-muted/20 border border-border/40 p-4 hover:border-destructive/30 transition-all hover:bg-muted/30 motion-page-enter"
+                      style={{ animationDelay: `${40 + i * 55}ms` }}
                     >
                       <div>
                         <p className="text-sm font-semibold text-foreground">
@@ -267,10 +288,11 @@ export default function AdminDashboard() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-3">
-          {deptData?.map((dept: any) => (
+          {deptData?.map((dept: any, i: number) => (
             <Card
               key={dept.department}
-              className="glass-card aura-glow border-none hover:scale-[1.01] transition-all duration-300 group overflow-hidden"
+              className="glass-card aura-glow border-none hover:scale-[1.01] transition-all duration-300 group overflow-hidden motion-page-enter motion-surface"
+              style={{ animationDelay: `${60 + i * 45}ms` }}
             >
               <CardContent className="p-5 relative">
                 <div className="absolute top-0 right-0 w-20 h-20 bg-primary/5 rounded-full blur-2xl -mr-6 -mt-6 group-hover:bg-primary/10 transition-colors pointer-events-none" />

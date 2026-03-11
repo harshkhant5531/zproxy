@@ -92,14 +92,14 @@ export default function FacultyTimetable() {
           <CardContent className="p-0">
             <div className="min-w-[800px]">
               {/* Header */}
-              <div className="grid grid-cols-[120px_repeat(5,1fr)] bg-muted/35 dark:bg-muted/20 border-b border-border/70">
-                <div className="p-4 text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] flex items-center gap-2">
+              <div className="grid grid-cols-[130px_repeat(5,1fr)] bg-muted/35 dark:bg-muted/20 border-b border-border/70">
+                <div className="p-4 text-xs font-semibold text-foreground/80 uppercase tracking-[0.12em] flex items-center gap-2">
                   <Clock className="h-3 w-3" /> Time
                 </div>
                 {days.map((day) => (
                   <div
                     key={day}
-                    className="p-4 text-[10px] font-black text-foreground/75 text-center border-l border-border/50 uppercase tracking-[0.3em]"
+                    className="p-4 text-sm font-semibold text-foreground text-center border-l border-border/50 uppercase tracking-[0.08em]"
                   >
                     {day}
                   </div>
@@ -110,9 +110,9 @@ export default function FacultyTimetable() {
               {timeSlots.map((slot) => (
                 <div
                   key={slot.start}
-                  className="grid grid-cols-[120px_repeat(5,1fr)] border-b border-border/45 group"
+                  className="grid grid-cols-[130px_repeat(5,1fr)] border-b border-border/45 group"
                 >
-                  <div className="p-4 text-[11px] text-muted-foreground font-mono font-bold bg-muted/20 group-hover:text-primary transition-colors flex items-center justify-center">
+                  <div className="p-4 text-sm text-foreground/85 font-mono font-semibold bg-muted/20 group-hover:text-primary transition-colors flex items-center justify-center">
                     {slot.start} - {slot.end}
                   </div>
                   {days.map((day, dayIdx) => {
@@ -125,11 +125,11 @@ export default function FacultyTimetable() {
                     return (
                       <div
                         key={day}
-                        className="p-3 border-l border-border/45 min-h-[140px] hover:bg-accent/35 transition-all duration-300 relative"
+                        className="p-3 border-l border-border/45 min-h-[146px] hover:bg-accent/35 transition-all duration-300 relative"
                       >
                         {session ? (
                           <div
-                            className={`h-full rounded-xl p-3 text-xs space-y-2 relative overflow-hidden flex flex-col justify-between shadow-lg group/card transition-all duration-500 border
+                            className={`h-full rounded-xl p-3.5 text-sm space-y-2 relative overflow-hidden flex flex-col justify-between shadow-lg group/card transition-all duration-500 border
                                                     ${session.startTime === "07:45" && dayIdx === 0 ? "bg-primary/10 border-primary/30 aura-glow animate-aura-pulse" : "bg-card/95 dark:bg-card/85 border-border/65"}
                                                 `}
                           >
@@ -142,17 +142,17 @@ export default function FacultyTimetable() {
                               </Badge>
                             </div>
                             <div>
-                              <p className="text-foreground font-bold text-[11px] leading-tight uppercase tracking-tight">
+                              <p className="text-foreground font-semibold text-sm leading-snug tracking-tight">
                                 {session.subject?.name || session.course?.name}
                               </p>
                             </div>
 
                             <div className="space-y-1.5 pt-2">
-                              <div className="flex items-center gap-1.5 text-[9px] text-muted-foreground font-bold uppercase tracking-[0.15em]">
+                              <div className="flex items-center gap-1.5 text-xs text-foreground/80 font-medium tracking-wide">
                                 <MapPin className="h-3.5 w-3.5 text-primary" />{" "}
                                 {session.roomNumber || "LECTURE HALL"}
                               </div>
-                              <div className="flex items-center gap-1.5 text-[9px] text-muted-foreground/85 font-mono">
+                              <div className="flex items-center gap-1.5 text-xs text-foreground/70 font-mono">
                                 <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 pulsate" />
                                 REAL-TIME SYNC
                               </div>
@@ -163,7 +163,7 @@ export default function FacultyTimetable() {
                             </div>
                           </div>
                         ) : (
-                          <div className="h-full border border-dashed border-border/45 rounded-xl flex items-center justify-center opacity-10 text-[9px] text-muted-foreground font-mono uppercase tracking-widest">
+                          <div className="h-full border border-dashed border-border/45 rounded-xl flex items-center justify-center opacity-20 text-xs text-foreground/60 font-mono uppercase tracking-wide">
                             Slot Available
                           </div>
                         )}
@@ -181,10 +181,10 @@ export default function FacultyTimetable() {
             <Clock className="h-4 w-4 text-primary" />
           </div>
           <div className="space-y-1">
-            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">
+            <p className="text-xs font-semibold text-foreground/70 uppercase tracking-wide">
               Procedural Note
             </p>
-            <p className="text-xs text-muted-foreground font-mono leading-relaxed">
+            <p className="text-sm text-foreground/80 leading-relaxed">
               The timetable is fixed by the institutional oversight. Any
               schedule conflicts or room reassignments must be authorized via
               the HOD terminal. Sessions marked with{" "}

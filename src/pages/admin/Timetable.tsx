@@ -291,14 +291,14 @@ export default function Timetable() {
           <CardContent className="p-0">
             <div className="min-w-[1000px]">
               {/* Header */}
-              <div className="grid grid-cols-[120px_repeat(5,1fr)] bg-muted/35 dark:bg-muted/20 border-b border-border/70">
-                <div className="p-4 text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] flex items-center gap-2">
+              <div className="grid grid-cols-[130px_repeat(5,1fr)] bg-muted/35 dark:bg-muted/20 border-b border-border/70">
+                <div className="p-4 text-xs font-semibold text-foreground/80 uppercase tracking-[0.12em] flex items-center gap-2">
                   <Clock className="h-3 w-3" /> Time Slots
                 </div>
                 {days.map((day, idx) => (
                   <div
                     key={day}
-                    className="p-4 text-[10px] font-black text-foreground/70 text-center border-l border-border/50 uppercase tracking-[0.3em]"
+                    className="p-4 text-sm font-semibold text-foreground text-center border-l border-border/50 uppercase tracking-[0.08em]"
                   >
                     {day}
                   </div>
@@ -309,9 +309,9 @@ export default function Timetable() {
               {timeSlots.map((slot) => (
                 <div
                   key={slot.start}
-                  className="grid grid-cols-[120px_repeat(5,1fr)] border-b border-border/45 group"
+                  className="grid grid-cols-[130px_repeat(5,1fr)] border-b border-border/45 group"
                 >
-                  <div className="p-4 text-[11px] text-muted-foreground font-mono font-bold bg-muted/20 group-hover:text-primary transition-colors">
+                  <div className="p-4 text-sm text-foreground/85 font-mono font-semibold bg-muted/20 group-hover:text-primary transition-colors">
                     {slot.start} - {slot.end}
                   </div>
                   {days.map((day, dayIdx) => {
@@ -325,13 +325,13 @@ export default function Timetable() {
                     return (
                       <div
                         key={day}
-                        className="p-3 border-l border-border/45 min-h-[120px] hover:bg-accent/35 transition-all duration-300 cursor-pointer group/slot relative"
+                        className="p-3 border-l border-border/45 min-h-[132px] hover:bg-accent/35 transition-all duration-300 cursor-pointer group/slot relative"
                         onClick={() =>
                           !session && handleSlotClick(dayIdx, slot)
                         }
                       >
                         {session ? (
-                          <div className="h-full rounded-xl bg-card/95 dark:bg-card/85 border border-border/65 p-3 text-xs space-y-2 group/card relative overflow-hidden flex flex-col justify-between shadow-lg transition-all hover:border-primary/30">
+                          <div className="h-full rounded-xl bg-card/95 dark:bg-card/85 border border-border/65 p-3.5 text-sm space-y-2 group/card relative overflow-hidden flex flex-col justify-between shadow-lg transition-all hover:border-primary/30">
                             <button
                               className="absolute top-1 right-1 p-1 opacity-0 group-hover/card:opacity-100 transition-opacity bg-red-500/10 hover:bg-red-500/20 rounded-md text-red-500 border border-red-500/20"
                               onClick={(e) => {
@@ -343,16 +343,16 @@ export default function Timetable() {
                               <Trash2 className="h-3 w-3" />
                             </button>
                             <div>
-                              <p className="text-foreground font-bold text-[11px] leading-tight uppercase tracking-tight">
+                              <p className="text-foreground font-semibold text-sm leading-snug tracking-tight">
                                 {session.subject?.name || session.course?.name}
                               </p>
                             </div>
                             <div className="space-y-1.5 pt-2">
-                              <div className="flex items-center gap-1.5 text-[9px] text-muted-foreground font-bold uppercase tracking-widest">
+                              <div className="flex items-center gap-1.5 text-xs text-foreground/80 font-medium tracking-wide">
                                 <MapPin className="h-3.5 w-3.5 text-primary/60" />{" "}
                                 {session.roomNumber || "UNASSIGNED"}
                               </div>
-                              <p className="text-[9px] text-muted-foreground/80 font-mono truncate uppercase">
+                              <p className="text-xs text-foreground/70 font-mono truncate">
                                 {session.facultyProfile?.fullName ||
                                   session.faculty?.username ||
                                   "SECURE ACCESS"}
@@ -361,7 +361,7 @@ export default function Timetable() {
                             <div className="absolute bottom-1 right-1">
                               <Badge
                                 variant="outline"
-                                className="text-[8px] border-primary/20 text-primary bg-primary/5 py-0 px-1.5 font-bold uppercase"
+                                className="text-[10px] border-primary/20 text-primary bg-primary/5 py-0 px-1.5 font-semibold"
                               >
                                 {session.type || "Theory"}
                               </Badge>
@@ -409,11 +409,11 @@ export default function Timetable() {
         )}
 
         <div className="flex justify-center gap-8 pt-4">
-          <div className="flex items-center gap-2 text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+          <div className="flex items-center gap-2 text-xs font-semibold text-foreground/80 uppercase tracking-wide">
             <div className="h-2 w-2 rounded-full bg-primary" /> Scheduled
             Session
           </div>
-          <div className="flex items-center gap-2 text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+          <div className="flex items-center gap-2 text-xs font-semibold text-foreground/70 uppercase tracking-wide">
             <div className="h-2 w-2 rounded-full bg-muted" /> Available Slot
           </div>
         </div>

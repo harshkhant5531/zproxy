@@ -78,18 +78,18 @@ export default function VerifyAttendance() {
 
   if (authLoading || (user && status === "verifying")) {
     return (
-      <div className="flex h-screen items-center justify-center bg-[#0B0E14] text-white">
+      <div className="flex h-screen items-center justify-center bg-[#0B0E14] text-white px-4">
         <div className="flex flex-col items-center gap-6">
-          <div className="relative h-20 w-20">
+          <div className="relative h-24 w-24">
             <div className="absolute inset-0 rounded-full border-4 border-primary/20" />
             <div className="absolute inset-0 rounded-full border-4 border-primary border-t-transparent animate-spin" />
-            <Shield className="absolute inset-0 m-auto h-8 w-8 text-primary animate-pulse" />
+            <Shield className="absolute inset-0 m-auto h-10 w-10 text-primary animate-pulse" />
           </div>
           <div className="text-center space-y-2">
-            <p className="text-xl font-black uppercase tracking-tight text-foreground">
+            <p className="text-2xl font-medium tracking-tight text-foreground">
               Initializing Integrity Check
             </p>
-            <p className="text-[10px] text-muted-foreground font-mono uppercase tracking-[0.3em]">
+            <p className="text-sm text-muted-foreground">
               Authenticating neural link & spatial vector...
             </p>
           </div>
@@ -99,57 +99,57 @@ export default function VerifyAttendance() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0B0E14] flex items-center justify-center p-4">
-      <Card className="w-full max-w-md bg-slate-900/60 border-slate-800 backdrop-blur-md shadow-2xl relative overflow-hidden">
+    <div className="min-h-screen bg-[#0B0E14] flex items-center justify-center p-5 sm:p-8">
+      <Card className="w-full max-w-xl bg-slate-900/65 border-slate-800 backdrop-blur-md shadow-2xl relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none" />
 
-        <CardHeader className="text-center pb-2">
-          <CardTitle className="text-2xl font-black uppercase tracking-tight text-foreground">
+        <CardHeader className="text-center pb-3 pt-7">
+          <CardTitle className="text-3xl font-medium tracking-tight text-foreground">
             Session Authentication
           </CardTitle>
-          <p className="text-[10px] text-muted-foreground font-mono tracking-widest uppercase mt-1">
+          <p className="text-sm text-muted-foreground mt-1">
             Secure Attendance Gateway
           </p>
         </CardHeader>
 
-        <CardContent className="p-8 space-y-8 text-center">
+        <CardContent className="p-10 space-y-8 text-center">
           {status === "success" ? (
             <div className="space-y-6 animate-in zoom-in-95 duration-500">
-              <div className="mx-auto h-24 w-24 bg-emerald-500/10 border-2 border-emerald-500 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(16,185,129,0.2)]">
-                <CheckCircle2 className="h-12 w-12 text-emerald-500" />
+              <div className="mx-auto h-28 w-28 bg-emerald-500/10 border-2 border-emerald-500 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(16,185,129,0.2)]">
+                <CheckCircle2 className="h-14 w-14 text-emerald-500" />
               </div>
               <div className="space-y-2">
-                <h2 className="text-emerald-500 font-semibold tracking-tight text-xl">
+                <h2 className="text-emerald-500 font-medium tracking-tight text-2xl">
                   Verification Complete
                 </h2>
-                <p className="text-slate-400 text-sm">
+                <p className="text-slate-300 text-base">
                   Your attendance has been recorded for this session.
                 </p>
               </div>
               <Button
                 onClick={() => navigate("/student/dashboard")}
-                className="w-full bg-emerald-500 hover:bg-emerald-600 text-black font-black uppercase tracking-widest"
+                className="w-full h-12 bg-emerald-500 hover:bg-emerald-600 text-black font-medium text-base"
               >
                 Return to Dashboard
               </Button>
             </div>
           ) : (
             <div className="space-y-6 animate-in fade-in duration-500">
-              <div className="mx-auto h-24 w-24 bg-red-500/10 border-2 border-red-500 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(239,68,68,0.2)]">
-                <AlertTriangle className="h-12 w-12 text-red-500" />
+              <div className="mx-auto h-28 w-28 bg-red-500/10 border-2 border-red-500 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(239,68,68,0.2)]">
+                <AlertTriangle className="h-14 w-14 text-red-500" />
               </div>
               <div className="space-y-2">
-                <h2 className="text-red-500 font-semibold tracking-tight text-xl">
+                <h2 className="text-red-500 font-medium tracking-tight text-2xl">
                   Verification Failed
                 </h2>
-                <p className="text-slate-400 text-sm font-medium">
+                <p className="text-slate-300 text-base font-medium">
                   {errorMessage}
                 </p>
               </div>
               <Button
                 onClick={handleRetry}
                 disabled={verifyMutation.isPending}
-                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase tracking-widest"
+                className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-medium text-base"
               >
                 {verifyMutation.isPending
                   ? "Re-verifying..."
@@ -158,14 +158,14 @@ export default function VerifyAttendance() {
               <Button
                 onClick={() => navigate("/student/scan")}
                 variant="outline"
-                className="w-full border-slate-800 text-slate-300 font-bold uppercase transition-all hover:bg-slate-800"
+                className="w-full h-12 border-slate-800 text-slate-300 font-medium text-base transition-all hover:bg-slate-800"
               >
                 Manual QR Scan
               </Button>
               <Button
                 onClick={() => navigate("/student/dashboard")}
                 variant="ghost"
-                className="w-full text-slate-500 hover:text-white flex items-center justify-center gap-2"
+                className="w-full h-11 text-slate-400 hover:text-white text-base flex items-center justify-center gap-2"
               >
                 <ArrowLeft className="h-4 w-4" /> Go Back
               </Button>

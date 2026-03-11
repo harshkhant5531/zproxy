@@ -136,35 +136,55 @@ export default function StudentDashboard() {
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <StatCard
-            title="Overall Attendance"
-            value={`${attendanceStats?.attendanceRate || 0}%`}
-            icon={GraduationCap}
-            trend={{ value: 0, label: "real-time" }}
-          />
-          <StatCard
-            title="This Week"
-            value={weeklyData.reduce((a, d) => a + d.present, 0).toString()}
-            subtitle={`${weeklyData.reduce((a, d) => a + d.total, 0)} classes this week`}
-            icon={CalendarCheck}
-          />
-          <StatCard
-            title="Total Present"
-            value={attendanceStats?.presentCount?.toString() || "0"}
-            subtitle="Current semester"
-            icon={Clock}
-          />
-          <StatCard
-            title="Flagged Courses"
-            value={flaggedCourses.length.toString()}
-            subtitle="Below 75% attendance"
-            icon={TrendingUp}
-            iconClassName={
-              flaggedCourses.length > 0
-                ? "bg-destructive/10 border-destructive/20"
-                : undefined
-            }
-          />
+          <div
+            className="motion-page-enter motion-surface"
+            style={{ animationDelay: "30ms" }}
+          >
+            <StatCard
+              title="Overall Attendance"
+              value={`${attendanceStats?.attendanceRate || 0}%`}
+              icon={GraduationCap}
+              trend={{ value: 0, label: "real-time" }}
+            />
+          </div>
+          <div
+            className="motion-page-enter motion-surface"
+            style={{ animationDelay: "90ms" }}
+          >
+            <StatCard
+              title="This Week"
+              value={weeklyData.reduce((a, d) => a + d.present, 0).toString()}
+              subtitle={`${weeklyData.reduce((a, d) => a + d.total, 0)} classes this week`}
+              icon={CalendarCheck}
+            />
+          </div>
+          <div
+            className="motion-page-enter motion-surface"
+            style={{ animationDelay: "150ms" }}
+          >
+            <StatCard
+              title="Total Present"
+              value={attendanceStats?.presentCount?.toString() || "0"}
+              subtitle="Current semester"
+              icon={Clock}
+            />
+          </div>
+          <div
+            className="motion-page-enter motion-surface"
+            style={{ animationDelay: "210ms" }}
+          >
+            <StatCard
+              title="Flagged Courses"
+              value={flaggedCourses.length.toString()}
+              subtitle="Below 75% attendance"
+              icon={TrendingUp}
+              iconClassName={
+                flaggedCourses.length > 0
+                  ? "bg-destructive/10 border-destructive/20"
+                  : undefined
+              }
+            />
+          </div>
         </div>
 
         <div className="grid gap-6 lg:grid-cols-2">
@@ -229,8 +249,12 @@ export default function StudentDashboard() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4 px-6 pb-6 pt-4 max-h-[260px] overflow-y-auto">
-              {courseAttendanceData.map((course: any) => (
-                <div key={course.id} className="space-y-1.5">
+              {courseAttendanceData.map((course: any, i: number) => (
+                <div
+                  key={course.id}
+                  className="space-y-1.5 motion-page-enter"
+                  style={{ animationDelay: `${50 + i * 45}ms` }}
+                >
                   <div className="flex items-center justify-between text-xs">
                     <span className="font-medium text-foreground font-mono tracking-tight">
                       {course.code} — {course.name}
@@ -279,10 +303,11 @@ export default function StudentDashboard() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {recentLogs.map((log: any) => (
+                  {recentLogs.map((log: any, i: number) => (
                     <TableRow
                       key={log.id}
-                      className="border-border/30 hover:bg-muted/20 transition-colors"
+                      className="border-border/30 hover:bg-muted/20 transition-colors motion-page-enter"
+                      style={{ animationDelay: `${60 + i * 35}ms` }}
                     >
                       <TableCell className="text-xs text-muted-foreground font-mono pl-6">
                         {log.session?.date

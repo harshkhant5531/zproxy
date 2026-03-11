@@ -84,40 +84,40 @@ export default function ExamPermit() {
   return (
     <>
       <FullScreenLoader show={isLoading} operation="loading" />
-      <div className="space-y-8 max-w-2xl mx-auto py-8">
+      <div className="space-y-8 max-w-4xl mx-auto py-8 motion-page-enter px-2">
         <div className="text-center space-y-2">
-          <h1 className="text-2xl font-semibold tracking-tight text-white">
+          <h1 className="text-3xl font-semibold tracking-tight text-white">
             Exam Permit
           </h1>
-          <p className="text-sm text-slate-400">
+          <p className="text-base text-slate-300">
             Examination access authorization.
           </p>
         </div>
 
-        <div className="relative group">
+        <div className="relative group motion-float-delayed">
           {/* Holographic Decorations */}
           <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 to-purple-600/30 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000" />
 
           <Card
-            className={`relative bg-slate-950/80 border-2 backdrop-blur-xl shadow-2xl overflow-hidden ${overallEligible ? "border-primary/20" : "border-rose-500/20"}`}
+            className={`relative bg-slate-950/80 border-2 backdrop-blur-xl shadow-2xl overflow-hidden motion-surface motion-sheen ${overallEligible ? "border-primary/20" : "border-rose-500/20"}`}
           >
             {/* Chip/HID visual element */}
-            <div className="absolute top-8 right-8 h-10 w-14 bg-gradient-to-br from-yellow-500/40 to-yellow-600/20 rounded-md border border-yellow-500/30 opacity-60" />
+            <div className="absolute top-8 right-8 h-10 w-14 bg-gradient-to-br from-yellow-500/40 to-yellow-600/20 rounded-md border border-yellow-500/30 opacity-60 motion-float" />
 
-            <CardContent className="p-8 space-y-8">
+            <CardContent className="p-10 space-y-8">
               <div className="flex justify-between items-start border-b border-slate-800 pb-6">
                 <div className="space-y-1">
-                  <p className="text-[9px] font-black text-primary uppercase tracking-[0.4em]">
+                  <p className="text-[11px] font-semibold text-primary uppercase tracking-[0.25em]">
                     Institution Record
                   </p>
-                  <h2 className="text-xl font-semibold text-white tracking-tight">
+                  <h2 className="text-2xl font-semibold text-white tracking-tight">
                     End-Term Examination 2026
                   </h2>
                   <div className="flex items-center gap-2 mt-2">
                     <div
                       className={`h-1.5 w-10 rounded-full ${overallEligible ? "bg-primary shadow-[0_0_8px_rgba(34,211,238,0.5)]" : "bg-rose-500"}`}
                     />
-                    <span className="text-[9px] font-mono text-slate-500 uppercase tracking-widest">
+                    <span className="text-xs font-mono text-slate-400 uppercase tracking-wide">
                       {overallEligible
                         ? "Status: Authorized"
                         : "Status: Inhibited"}
@@ -127,60 +127,60 @@ export default function ExamPermit() {
                 <Fingerprint className="h-8 w-8 text-slate-700" />
               </div>
 
-              <div className="grid grid-cols-2 gap-y-6 gap-x-12">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-12">
                 <div className="space-y-1">
-                  <label className="text-[10px] font-black text-slate-600 uppercase tracking-widest">
+                  <label className="text-xs font-semibold text-slate-400 uppercase tracking-wide">
                     Subject Identity
                   </label>
-                  <p className="text-sm font-bold text-slate-200 uppercase">
+                  <p className="text-base font-semibold text-slate-100">
                     {user?.profile?.fullName || user?.username}
                   </p>
                 </div>
                 <div className="space-y-1">
-                  <label className="text-[10px] font-black text-slate-600 uppercase tracking-widest">
+                  <label className="text-xs font-semibold text-slate-400 uppercase tracking-wide">
                     Serial Index
                   </label>
-                  <p className="text-sm font-mono text-slate-300">
+                  <p className="text-base font-mono text-slate-200">
                     # {user?.profile?.studentId || "STU-000"}
                   </p>
                 </div>
                 <div className="space-y-1">
-                  <label className="text-[10px] font-black text-slate-600 uppercase tracking-widest">
+                  <label className="text-xs font-semibold text-slate-400 uppercase tracking-wide">
                     Assigned Sector
                   </label>
-                  <p className="text-sm font-bold text-slate-200 uppercase">
+                  <p className="text-base font-semibold text-slate-100">
                     {user?.profile?.department || "General Computation"}
                   </p>
                 </div>
                 <div className="space-y-1">
-                  <label className="text-[10px] font-black text-slate-600 uppercase tracking-widest">
+                  <label className="text-xs font-semibold text-slate-400 uppercase tracking-wide">
                     Temporal Cycle
                   </label>
-                  <p className="text-sm font-bold text-slate-200">
+                  <p className="text-base font-semibold text-slate-100">
                     Segment 0{user?.profile?.semester || 5}
                   </p>
                 </div>
               </div>
 
               <div className="space-y-4 pt-4 border-t border-slate-900">
-                <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.2em]">
+                <p className="text-xs font-semibold text-slate-400 uppercase tracking-[0.14em]">
                   Course Integrity Metrics
                 </p>
                 <div className="grid gap-2">
                   {courseEligibility.map((course) => (
                     <div
                       key={course.id}
-                      className="flex items-center justify-between rounded-lg bg-slate-900/60 border border-slate-800 p-3 hover:border-slate-700 transition-colors"
+                      className="flex items-center justify-between rounded-lg bg-slate-900/60 border border-slate-800 p-4 hover:border-slate-700 transition-colors"
                     >
                       <div className="flex items-center gap-3">
                         <div
                           className={`h-1.5 w-1.5 rounded-full ${course.eligible ? "bg-primary animate-pulse" : "bg-rose-500"}`}
                         />
                         <div>
-                          <p className="text-xs font-black text-slate-200 uppercase tracking-tight">
+                          <p className="text-sm font-semibold text-slate-100 tracking-tight">
                             {course.id} // {course.name}
                           </p>
-                          <p className="text-[10px] text-slate-500 font-mono">
+                          <p className="text-xs text-slate-400 font-mono">
                             INTEGRITY: {course.attendance}%
                           </p>
                         </div>
@@ -205,7 +205,7 @@ export default function ExamPermit() {
                   <Button
                     onClick={handleDownload}
                     size="lg"
-                    className="w-full h-14 font-black uppercase tracking-[0.2em] italic bg-primary text-black hover:bg-primary/90 shadow-[0_0_25px_rgba(34,211,238,0.4)] relative overflow-hidden group/btn"
+                    className="w-full h-14 text-base font-semibold bg-primary text-black hover:bg-primary/90 shadow-[0_0_25px_rgba(34,211,238,0.4)] relative overflow-hidden group/btn"
                   >
                     <div className="absolute inset-x-0 bottom-0 h-[2px] bg-white/30 transform translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300" />
                     <Download className="mr-3 h-5 w-5" /> Download Hall Ticket
@@ -216,18 +216,18 @@ export default function ExamPermit() {
                       size="lg"
                       variant="destructive"
                       disabled
-                      className="w-full h-14 font-black uppercase tracking-[0.2em] bg-slate-900 border border-rose-500/40 text-rose-500 opacity-60"
+                      className="w-full h-14 text-base font-semibold bg-slate-900 border border-rose-500/40 text-rose-500 opacity-60"
                     >
                       <Lock className="mr-3 h-5 w-5" /> Hall Ticket Inhibited
                     </Button>
-                    <p className="text-[9px] text-rose-500 font-mono uppercase tracking-[0.1em]">
+                    <p className="text-xs text-rose-400 font-mono tracking-[0.03em]">
                       Minimum 75% attendance required across all sectors for
                       authorization.
                     </p>
                   </div>
                 )}
 
-                <p className="text-[9px] text-slate-700 font-mono uppercase tracking-[0.4em] mt-6">
+                <p className="text-[11px] text-slate-500 font-mono uppercase tracking-[0.18em] mt-6">
                   Verified by Aura Governance Engine v4.2
                 </p>
               </div>

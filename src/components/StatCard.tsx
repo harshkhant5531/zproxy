@@ -24,7 +24,7 @@ export function StatCard({
   return (
     <Card
       className={cn(
-        "glass-card aura-glow border-none group hover:scale-[1.015] transition-all duration-300",
+        "glass-card aura-glow border-none group hover:scale-[1.015] transition-all duration-300 stat-card-enter motion-surface",
         className,
       )}
     >
@@ -63,7 +63,7 @@ export function StatCard({
           </div>
           <div
             className={cn(
-              "rounded-xl bg-primary/10 dark:bg-primary/15 p-3 border border-primary/15 flex-shrink-0 group-hover:scale-110 group-hover:bg-primary/20 transition-all duration-300",
+              "rounded-xl bg-primary/10 dark:bg-primary/15 p-3 border border-primary/15 flex-shrink-0 group-hover:scale-110 group-hover:bg-primary/20 transition-all duration-300 motion-icon-hover",
               iconClassName,
             )}
           >

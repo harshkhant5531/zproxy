@@ -49,8 +49,8 @@ export function AppLayout() {
               </span>
             </div>
             <div className="flex items-center gap-3">
-              <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-primary/8 border border-primary/15">
-                <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+              <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-primary/8 border border-primary/15 motion-press">
+                <div className="h-1.5 w-1.5 rounded-full bg-primary animate-live-blink" />
                 <span className="text-[10px] font-mono text-primary/80 uppercase tracking-widest">
                   Live
                 </span>
@@ -58,7 +58,12 @@ export function AppLayout() {
               <ModeToggle />
             </div>
           </header>
-          <main className="flex-1 p-6 overflow-auto">
+          <main className="flex-1 p-6 overflow-auto relative isolate">
+            <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+              <div className="absolute -top-16 right-[6%] h-48 w-48 rounded-full bg-primary/10 blur-3xl motion-float" />
+              <div className="absolute top-[34%] -left-12 h-44 w-44 rounded-full bg-sky-300/10 blur-3xl motion-float-delayed" />
+              <div className="absolute -bottom-20 right-[28%] h-56 w-56 rounded-full bg-primary/8 blur-3xl motion-drift" />
+            </div>
             <Outlet />
           </main>
         </div>

@@ -227,17 +227,17 @@ export default function QRScanner() {
 
         {/* Title */}
         <div className="space-y-1">
-          <p className="text-emerald-500 font-black text-xs uppercase tracking-[0.25em]">
+          <p className="text-emerald-500 font-semibold text-xs tracking-wide">
             Attendance Recorded
           </p>
           {record?.attendance?.session && (
             <div className="space-y-1 pt-1">
-              <p className="text-foreground font-black text-base">
+              <p className="text-foreground font-semibold text-base">
                 {record.attendance.session.subject?.name ||
                   record.attendance.session.course?.name ||
                   "Session Authenticated"}
               </p>
-              <p className="text-[10px] text-muted-foreground font-medium tracking-wide uppercase">
+              <p className="text-[10px] text-muted-foreground font-medium tracking-wide">
                 {format(
                   new Date(record.attendance.session.date || Date.now()),
                   "MMM dd, yyyy",
@@ -262,7 +262,7 @@ export default function QRScanner() {
       <Button
         variant="outline"
         size="sm"
-        className="w-full border-border text-muted-foreground hover:text-foreground uppercase text-[10px] font-black tracking-[0.2em] h-10 rounded-xl transition-all hover:border-primary/40"
+        className="w-full border-border text-muted-foreground hover:text-foreground text-[11px] font-medium tracking-wide h-10 rounded-xl transition-all hover:border-primary/40"
         onClick={reset}
       >
         <RefreshCw className="mr-2 h-3 w-3" /> Mark Another Session
@@ -286,7 +286,7 @@ export default function QRScanner() {
             <XCircle className="h-4 w-4 text-destructive" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-black text-destructive">{title}</p>
+            <p className="text-sm font-semibold text-destructive">{title}</p>
             {rest.length > 0 && (
               <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed">
                 {rest.join(" — ")}
@@ -297,7 +297,7 @@ export default function QRScanner() {
         <Button
           variant="outline"
           size="sm"
-          className="w-full border-destructive/30 text-destructive hover:bg-destructive/10 hover:border-destructive/50 uppercase text-[10px] font-black tracking-[0.2em] h-9 rounded-xl"
+          className="w-full border-destructive/30 text-destructive hover:bg-destructive/10 hover:border-destructive/50 text-[11px] font-medium tracking-wide h-9 rounded-xl"
           onClick={onRetry}
         >
           Try Again
@@ -342,7 +342,7 @@ export default function QRScanner() {
           />
           <button
             onClick={() => switchMode("qr")}
-            className={`relative z-10 flex items-center justify-center gap-2 flex-1 py-2 text-[11px] font-black uppercase tracking-widest transition-colors duration-200 ${
+            className={`relative z-10 flex items-center justify-center gap-2 flex-1 py-2 text-xs font-medium tracking-wide transition-colors duration-200 ${
               mode === "qr"
                 ? "text-foreground"
                 : "text-muted-foreground hover:text-foreground"
@@ -353,7 +353,7 @@ export default function QRScanner() {
           </button>
           <button
             onClick={() => switchMode("manual")}
-            className={`relative z-10 flex items-center justify-center gap-2 flex-1 py-2 text-[11px] font-black uppercase tracking-widest transition-colors duration-200 ${
+            className={`relative z-10 flex items-center justify-center gap-2 flex-1 py-2 text-xs font-medium tracking-wide transition-colors duration-200 ${
               mode === "manual"
                 ? "text-foreground"
                 : "text-muted-foreground hover:text-foreground"
@@ -374,7 +374,7 @@ export default function QRScanner() {
                   <AlertTriangle className="h-4 w-4 text-amber-500" />
                 </div>
                 <div className="space-y-1">
-                  <p className="text-sm font-black text-amber-500">
+                  <p className="text-sm font-semibold text-amber-500">
                     Camera Unavailable on HTTP
                   </p>
                   <p className="text-[11px] text-muted-foreground leading-relaxed">
@@ -396,14 +396,14 @@ export default function QRScanner() {
               <div className="flex items-center justify-between px-5 py-3 border-b border-border bg-muted/30">
                 <div className="flex items-center gap-2">
                   <Camera className="h-3.5 w-3.5 text-muted-foreground" />
-                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
+                  <span className="text-[11px] font-medium tracking-wide text-muted-foreground">
                     Camera Viewfinder
                   </span>
                 </div>
                 {scanning && (
                   <div className="flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-live-blink" />
-                    <span className="text-[9px] font-black text-emerald-500 uppercase tracking-widest">
+                    <span className="text-[10px] font-medium text-emerald-500 tracking-wide">
                       Live
                     </span>
                   </div>
@@ -426,7 +426,7 @@ export default function QRScanner() {
                               <CameraOff className="h-8 w-8 text-destructive" />
                             </div>
                             <div>
-                              <p className="text-sm font-black text-foreground">
+                              <p className="text-sm font-semibold text-foreground">
                                 Camera Blocked
                               </p>
                               <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed">
@@ -438,7 +438,7 @@ export default function QRScanner() {
                               variant="outline"
                               size="sm"
                               onClick={() => window.location.reload()}
-                              className="uppercase text-[10px] font-black tracking-widest rounded-xl"
+                              className="text-[11px] font-medium tracking-wide rounded-xl"
                             >
                               Refresh Page
                             </Button>
@@ -448,10 +448,10 @@ export default function QRScanner() {
                             <div className="w-16 h-16 rounded-2xl bg-muted/80 border border-border flex items-center justify-center mx-auto">
                               <QrCode className="h-8 w-8 text-muted-foreground/40" />
                             </div>
-                            <p className="text-sm font-black text-foreground">
+                            <p className="text-sm font-semibold text-foreground">
                               Camera Inactive
                             </p>
-                            <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
+                            <p className="text-[11px] text-muted-foreground tracking-wide">
                               Press Start Scanner below
                             </p>
                           </div>
@@ -464,7 +464,7 @@ export default function QRScanner() {
                     <div className="absolute inset-0 bg-background/95 z-40 flex items-center justify-center">
                       <div className="text-center p-6 space-y-3">
                         <CameraOff className="h-12 w-12 text-muted-foreground/30 mx-auto" />
-                        <p className="text-[11px] text-muted-foreground uppercase tracking-widest font-black">
+                        <p className="text-[11px] text-muted-foreground tracking-wide font-medium">
                           Camera disabled on HTTP
                         </p>
                       </div>
@@ -528,7 +528,7 @@ export default function QRScanner() {
                   disabled={markQRMutation.isPending || !window.isSecureContext}
                   size="lg"
                   variant={scanning ? "outline" : "default"}
-                  className={`px-12 h-14 text-sm font-black uppercase tracking-[0.15em] rounded-xl transition-all duration-200 shadow-lg ${
+                  className={`px-12 h-14 text-sm font-medium tracking-wide rounded-xl transition-all duration-200 shadow-lg ${
                     scanning
                       ? "border-destructive/50 text-destructive hover:bg-destructive/10 hover:border-destructive"
                       : "shadow-primary/25 hover:shadow-primary/40 hover:shadow-xl"
@@ -544,7 +544,7 @@ export default function QRScanner() {
                     </>
                   )}
                 </Button>
-                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+                <p className="text-[11px] font-medium text-muted-foreground tracking-wide">
                   {!window.isSecureContext
                     ? "Camera unavailable — use Manual mode"
                     : scanning
@@ -567,7 +567,7 @@ export default function QRScanner() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <div className="w-1.5 h-4 bg-primary rounded-full" />
-                    <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">
+                    <p className="text-[11px] font-medium text-muted-foreground tracking-wide">
                       Today's Timetable Sessions
                     </p>
                   </div>
@@ -576,7 +576,7 @@ export default function QRScanner() {
                     size="sm"
                     onClick={() => refetchSessions()}
                     disabled={isSessionsLoading}
-                    className="text-[10px] uppercase font-black tracking-widest text-primary hover:text-primary/80 h-7 px-2 rounded-lg"
+                    className="text-[11px] font-medium tracking-wide text-primary hover:text-primary/80 h-7 px-2 rounded-lg"
                   >
                     <RefreshCw
                       className={`h-3 w-3 mr-1 ${isSessionsLoading ? "animate-spin" : ""}`}
@@ -606,7 +606,7 @@ export default function QRScanner() {
                         <AlertTriangle className="h-7 w-7 text-destructive/50" />
                       </div>
                       <div>
-                        <p className="text-sm font-black text-foreground">
+                        <p className="text-sm font-semibold text-foreground">
                           Failed to Load Sessions
                         </p>
                         <p className="text-[11px] text-muted-foreground mt-1">
@@ -617,7 +617,7 @@ export default function QRScanner() {
                         variant="outline"
                         size="sm"
                         onClick={() => refetchSessions()}
-                        className="uppercase text-[10px] font-black tracking-widest rounded-xl"
+                        className="text-[11px] font-medium tracking-wide rounded-xl"
                       >
                         Retry
                       </Button>
@@ -635,7 +635,7 @@ export default function QRScanner() {
                           <BookOpen className="h-7 w-7 text-muted-foreground/30" />
                         </div>
                         <div>
-                          <p className="text-sm font-black text-foreground">
+                          <p className="text-sm font-semibold text-foreground">
                             No Active Sessions
                           </p>
                           <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed max-w-xs mx-auto">
@@ -647,7 +647,7 @@ export default function QRScanner() {
                           variant="outline"
                           size="sm"
                           onClick={() => refetchSessions()}
-                          className="uppercase text-[10px] font-black tracking-widest rounded-xl"
+                          className="text-[11px] font-medium tracking-wide rounded-xl"
                         >
                           <RefreshCw className="mr-1.5 h-3 w-3" /> Refresh
                         </Button>
@@ -687,17 +687,17 @@ export default function QRScanner() {
                               <CardContent className="p-4 flex items-center justify-between gap-4 flex-1">
                                 <div className="flex-1 min-w-0 space-y-1.5">
                                   <div className="flex items-center gap-2 flex-wrap">
-                                    <p className="font-black text-foreground text-sm truncate">
+                                    <p className="font-semibold text-foreground text-sm truncate">
                                       {sess.subject?.name ||
                                         sess.course?.name ||
                                         "Session"}
                                     </p>
                                     {sess.subject?.name && (
-                                      <span className="text-[9px] font-black text-muted-foreground bg-muted px-1.5 py-0.5 rounded-md uppercase tracking-tight shrink-0">
+                                      <span className="text-[9px] font-semibold text-muted-foreground bg-muted px-1.5 py-0.5 rounded-md uppercase tracking-tight shrink-0">
                                         {sess.course?.code}
                                       </span>
                                     )}
-                                    <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[9px] font-black uppercase px-2 shrink-0 gap-1">
+                                    <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[9px] font-semibold uppercase px-2 shrink-0 gap-1">
                                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-live-blink inline-block" />
                                       Live
                                     </Badge>
@@ -719,7 +719,7 @@ export default function QRScanner() {
                                       {sess.batches.map((b: string) => (
                                         <span
                                           key={b}
-                                          className="text-[9px] px-1.5 py-0.5 bg-primary/10 text-primary border border-primary/20 rounded-md font-black uppercase"
+                                          className="text-[9px] px-1.5 py-0.5 bg-primary/10 text-primary border border-primary/20 rounded-md font-medium"
                                         >
                                           Batch {b}
                                         </span>
@@ -735,7 +735,7 @@ export default function QRScanner() {
                                     markManualMutation.mutate(sess.id);
                                   }}
                                   disabled={markManualMutation.isPending}
-                                  className="font-black uppercase tracking-widest text-[10px] shrink-0 h-10 px-4 rounded-xl shadow-md shadow-primary/20 hover:shadow-primary/35 transition-all hover:scale-[1.03] active:scale-[0.97]"
+                                  className="font-medium tracking-wide text-[11px] shrink-0 h-10 px-4 rounded-xl shadow-md shadow-primary/20 hover:shadow-primary/35 transition-all hover:scale-[1.03] active:scale-[0.97]"
                                 >
                                   {isPending ? (
                                     <span className="flex items-center gap-1">
@@ -812,11 +812,11 @@ export default function QRScanner() {
                   <item.icon className={`h-4 w-4 ${item.color}`} />
                 </div>
                 <div className="space-y-0.5 flex-1">
-                  <p className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em] leading-none">
+                  <p className="text-[10px] font-medium text-muted-foreground tracking-wide leading-none">
                     {item.label}
                   </p>
                   <p
-                    className={`text-[10px] font-black uppercase tracking-tight ${item.color}`}
+                    className={`text-[11px] font-medium tracking-wide ${item.color}`}
                   >
                     {item.status}
                   </p>
@@ -833,7 +833,7 @@ export default function QRScanner() {
         <Card className="bg-muted/30 border-border/50 rounded-xl">
           <CardContent className="p-4 flex items-center gap-4 text-muted-foreground">
             <Clock className="h-4 w-4 opacity-40 shrink-0" />
-            <p className="text-[10px] font-medium leading-relaxed uppercase tracking-wider">
+            <p className="text-[11px] font-medium leading-relaxed tracking-wide">
               Attendance window is active. Mark within the first 10 minutes for
               full credit.
             </p>

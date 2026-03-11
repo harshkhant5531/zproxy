@@ -111,32 +111,52 @@ export default function FacultyDashboard() {
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <StatCard
-            title="Today's Sessions"
-            value={todaySessions.length.toString()}
-            subtitle={`${completedToday} completed, ${todaySessions.length - completedToday} upcoming`}
-            icon={CalendarCheck}
-          />
-          <StatCard
-            title="Assigned Subjects"
-            value={subjectsData?.length.toString() || "0"}
-            subtitle="Active academic session"
-            icon={BookOpen}
-          />
-          <StatCard
-            title="Class Average"
-            value={`${performanceData?.statistics?.classAverage || 0}%`}
-            subtitle="Across all active subjects"
-            icon={BarChart3}
-          />
-          <StatCard
-            title="Total Students"
-            value={
-              performanceData?.statistics?.totalStudents?.toString() || "0"
-            }
-            subtitle="Enrolled in assigned modules"
-            icon={Users}
-          />
+          <div
+            className="motion-page-enter motion-surface"
+            style={{ animationDelay: "30ms" }}
+          >
+            <StatCard
+              title="Today's Sessions"
+              value={todaySessions.length.toString()}
+              subtitle={`${completedToday} completed, ${todaySessions.length - completedToday} upcoming`}
+              icon={CalendarCheck}
+            />
+          </div>
+          <div
+            className="motion-page-enter motion-surface"
+            style={{ animationDelay: "90ms" }}
+          >
+            <StatCard
+              title="Assigned Subjects"
+              value={subjectsData?.length.toString() || "0"}
+              subtitle="Active academic session"
+              icon={BookOpen}
+            />
+          </div>
+          <div
+            className="motion-page-enter motion-surface"
+            style={{ animationDelay: "150ms" }}
+          >
+            <StatCard
+              title="Class Average"
+              value={`${performanceData?.statistics?.classAverage || 0}%`}
+              subtitle="Across all active subjects"
+              icon={BarChart3}
+            />
+          </div>
+          <div
+            className="motion-page-enter motion-surface"
+            style={{ animationDelay: "210ms" }}
+          >
+            <StatCard
+              title="Total Students"
+              value={
+                performanceData?.statistics?.totalStudents?.toString() || "0"
+              }
+              subtitle="Enrolled in assigned modules"
+              icon={Users}
+            />
+          </div>
         </div>
 
         {/* Today's Sessions */}
@@ -148,10 +168,11 @@ export default function FacultyDashboard() {
           </CardHeader>
           <CardContent className="p-6 space-y-4">
             {todaySessions.length > 0 ? (
-              todaySessions.map((session: any) => (
+              todaySessions.map((session: any, i: number) => (
                 <div
                   key={session.id}
-                  className="flex items-center justify-between rounded-2xl bg-muted/10 border border-white/5 p-5 transition-all hover:bg-muted/20 hover:border-primary/40 group relative overflow-hidden"
+                  className="flex items-center justify-between rounded-2xl bg-muted/10 border border-white/5 p-5 transition-all hover:bg-muted/20 hover:border-primary/40 group relative overflow-hidden motion-page-enter"
+                  style={{ animationDelay: `${50 + i * 60}ms` }}
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/[0.02] to-primary/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
 
@@ -270,7 +291,8 @@ export default function FacultyDashboard() {
                 recentActivity.map((item, i) => (
                   <div
                     key={i}
-                    className="flex items-start gap-4 p-4 rounded-xl border border-transparent hover:border-border hover:bg-muted/20 transition-all cursor-default group"
+                    className="flex items-start gap-4 p-4 rounded-xl border border-transparent hover:border-border hover:bg-muted/20 transition-all cursor-default group motion-page-enter"
+                    style={{ animationDelay: `${70 + i * 70}ms` }}
                   >
                     <div className="mt-1 h-2 w-2 rounded-full bg-primary shadow-[0_0_8px_rgba(var(--primary),0.5)] shrink-0 group-hover:scale-125 transition-transform" />
                     <div className="space-y-1">

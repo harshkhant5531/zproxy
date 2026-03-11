@@ -74,7 +74,7 @@ export default function StudentTimetable() {
             <h1 className="text-2xl font-semibold tracking-tight text-foreground flex items-center gap-2">
               <Calendar className="h-6 w-6 text-primary" /> Academic Schedule
             </h1>
-            <p className="text-xs text-muted-foreground font-mono uppercase tracking-[0.2em] mt-1">
+            <p className="text-sm text-muted-foreground mt-1">
               {user?.profile?.fullName || user?.username} &mdash; Current
               Semester
             </p>
@@ -87,16 +87,16 @@ export default function StudentTimetable() {
         {/* Timetable grid */}
         <Card className="glass-card aura-glow border-none overflow-hidden">
           <CardContent className="p-0 overflow-x-auto">
-            <div className="min-w-[700px]">
+            <div className="min-w-[860px]">
               {/* Column headers */}
-              <div className="grid grid-cols-[100px_repeat(5,1fr)] bg-muted/20 border-b border-border/40">
-                <div className="p-3 flex items-center gap-1 text-[10px] font-semibold text-muted-foreground/60 uppercase tracking-widest">
+              <div className="grid grid-cols-[130px_repeat(5,1fr)] bg-muted/20 border-b border-border/40">
+                <div className="p-3.5 flex items-center gap-1.5 text-xs font-semibold text-foreground/75 uppercase tracking-wide">
                   <Clock className="h-3 w-3" /> Time
                 </div>
                 {days.map((day, i) => (
                   <div
                     key={day}
-                    className={`p-3 text-center text-[11px] font-semibold uppercase tracking-widest border-l border-border/30 transition-colors ${
+                    className={`p-3.5 text-center text-sm font-semibold uppercase tracking-wide border-l border-border/30 transition-colors ${
                       i === todayIdx ? "text-primary" : "text-muted-foreground"
                     }`}
                   >
@@ -112,16 +112,16 @@ export default function StudentTimetable() {
               {timeSlots.map((slot) => (
                 <div
                   key={slot.start}
-                  className="grid grid-cols-[100px_repeat(5,1fr)] border-b border-border/20 last:border-0"
+                  className="grid grid-cols-[130px_repeat(5,1fr)] border-b border-border/20 last:border-0"
                 >
-                  <div className="p-3 flex flex-col justify-center bg-muted/10">
-                    <span className="text-[10px] font-mono text-muted-foreground/70">
+                  <div className="p-3.5 flex flex-col justify-center bg-muted/10">
+                    <span className="text-xs font-mono text-foreground/75">
                       {slot.start}
                     </span>
-                    <span className="text-[10px] font-mono text-muted-foreground/40">
+                    <span className="text-xs font-mono text-foreground/55">
                       – {slot.end}
                     </span>
-                    <span className="text-[9px] text-muted-foreground/30 uppercase tracking-widest mt-0.5">
+                    <span className="text-[10px] text-foreground/45 uppercase tracking-wide mt-0.5">
                       {slot.label}
                     </span>
                   </div>
@@ -140,35 +140,35 @@ export default function StudentTimetable() {
                     return (
                       <div
                         key={day}
-                        className={`p-2 border-l border-border/20 min-h-[120px] transition-colors ${
+                        className={`p-2.5 border-l border-border/20 min-h-[132px] transition-colors ${
                           isToday ? "bg-primary/[0.03]" : "hover:bg-muted/10"
                         }`}
                       >
                         {session ? (
                           <div
-                            className={`h-full rounded-xl border p-3 text-xs flex flex-col gap-2 ${colorClass}`}
+                            className={`h-full rounded-xl border p-3.5 text-sm flex flex-col gap-2.5 ${colorClass}`}
                           >
                             <div className="flex items-start justify-between gap-1">
-                              <p className="font-semibold text-[11px] leading-tight line-clamp-2 text-foreground">
+                              <p className="font-semibold text-sm leading-snug line-clamp-2 text-foreground">
                                 {session.subject?.name ||
                                   session.course?.name ||
                                   "—"}
                               </p>
                               <Badge
                                 variant="outline"
-                                className="text-[8px] px-1.5 py-0 shrink-0 border-current"
+                                className="text-[10px] px-1.5 py-0 shrink-0 border-current"
                               >
                                 {session.type || "Theory"}
                               </Badge>
                             </div>
 
                             <div className="mt-auto space-y-1">
-                              <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
+                              <div className="flex items-center gap-1.5 text-xs text-foreground/80">
                                 <MapPin className="h-3 w-3 shrink-0" />
                                 {session.roomNumber || "TBA"}
                               </div>
                               {session.faculty && (
-                                <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
+                                <div className="flex items-center gap-1.5 text-xs text-foreground/70">
                                   <BookOpen className="h-3 w-3 shrink-0" />
                                   {session.faculty.profile?.fullName ||
                                     session.faculty.username ||
@@ -179,7 +179,7 @@ export default function StudentTimetable() {
                           </div>
                         ) : (
                           <div className="h-full border border-dashed border-border/20 rounded-xl flex items-center justify-center">
-                            <span className="text-[9px] text-muted-foreground/20 uppercase tracking-widest">
+                            <span className="text-[10px] text-foreground/40 uppercase tracking-wide">
                               Free
                             </span>
                           </div>
@@ -198,7 +198,7 @@ export default function StudentTimetable() {
           {Object.entries(typeColors).map(([type, cls]) => (
             <div
               key={type}
-              className={`flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium ${cls}`}
+              className={`flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm font-medium ${cls}`}
             >
               <span className="h-1.5 w-1.5 rounded-full bg-current" />
               {type}
@@ -211,7 +211,7 @@ export default function StudentTimetable() {
           <div className="p-2 bg-primary/10 rounded-lg border border-primary/20 shrink-0">
             <Clock className="h-4 w-4 text-primary" />
           </div>
-          <p className="text-xs text-muted-foreground leading-relaxed">
+          <p className="text-sm text-foreground/80 leading-relaxed">
             Your timetable is managed by your department. Sessions marked as{" "}
             <span className="text-primary font-medium">Practical / Lab</span>{" "}
             require physical attendance. Any conflicts must be reported to the

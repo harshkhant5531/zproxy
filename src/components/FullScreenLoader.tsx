@@ -229,8 +229,10 @@ export function FullScreenLoader({
   // For initial page data loading use an inline skeleton — no fullscreen overlay
   if (operation === "loading") {
     return (
-      <div className="fixed inset-0 z-[9999] bg-background flex flex-col p-6 pt-8 animate-in fade-in duration-100">
-        <PageSkeleton />
+      <div className="absolute inset-0 z-10 bg-background/72 backdrop-blur-[1px] p-2 sm:p-4 animate-in fade-in duration-100 pointer-events-none">
+        <div className="max-w-full">
+          <PageSkeleton />
+        </div>
       </div>
     );
   }
