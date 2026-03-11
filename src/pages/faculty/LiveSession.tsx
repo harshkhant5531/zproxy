@@ -296,15 +296,21 @@ export default function LiveSession() {
                       <>
                         <QRCodeSVG
                           value={(() => {
+                            // If deployed to Vercel (or any production domain), use the frontend origin directly
+                            if (window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1") {
+                              return `${window.location.origin}/student/verify?token=${session.qrCode.codeValue}`;
+                            }
+
+                            // For local LAN testing only 
                             const port = window.location.port
                               ? `:${window.location.port}`
                               : "";
-                            const base = session.networkIp
-                              ? `http://${session.networkIp}${port}`
-                              : window.location.hostname === "localhost" &&
-                                  import.meta.env.VITE_NETWORK_IP
+                            const base = session.networkIp && session.networkIp !== "localhost"
+                              ? (session.networkIp.startsWith("http") ? session.networkIp : `http://${session.networkIp}${port}`)
+                              : import.meta.env.VITE_NETWORK_IP
                                 ? `http://${import.meta.env.VITE_NETWORK_IP}${import.meta.env.VITE_PORT ? `:${import.meta.env.VITE_PORT}` : port}`
                                 : window.location.origin;
+                                
                             return `${base}/student/verify?token=${session.qrCode.codeValue}`;
                           })()}
                           size={240}
