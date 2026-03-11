@@ -185,7 +185,7 @@ model Session {
   faculty           Users       @relation("FacultySessions", fields: [facultyId], references: [id], onDelete: Cascade)
   subject           Subject?    @relation("SubjectSessions", fields: [subjectId], references: [id], onDelete: SetNull)
   attendanceRecords Attendance[]
-  qrCode            QrCode?
+  qrCodes           QrCode[]
 }
 
 model Attendance {
@@ -211,8 +211,8 @@ model Attendance {
 
 model QrCode {
   id           Int      @id @default(autoincrement())
-  sessionId    Int      @unique
-  codeValue    String
+  sessionId    Int
+  codeValue    String   @unique
   validFrom    DateTime
   validTo      DateTime
   scannedCount Int      @default(0)
@@ -221,6 +221,8 @@ model QrCode {
   updatedAt    DateTime @updatedAt
 
   session Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
 }
 
 // ─── Exams ────────────────────────────────────────────────────────────────────
