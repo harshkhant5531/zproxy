@@ -30,7 +30,8 @@ export type LoaderOperation =
   | "refreshing"
   | "qr-verify"
   | "manual-mark"
-  | "load-sessions";
+  | "load-sessions"
+  | "locating";
 
 interface Config {
   icon: LucideIcon;
@@ -124,6 +125,12 @@ const CONFIGS: Record<LoaderOperation, Config> = {
     subtitle: "Fetching today's active class sessions…",
     color: "primary",
   },
+  locating: {
+    icon: Radio,
+    title: "Triangulating Location",
+    subtitle: "Locking classroom spatial coordinates…",
+    color: "amber",
+  },
 };
 
 const COLOR_MAP = {
@@ -190,14 +197,14 @@ export function FullScreenLoader({
   operation = "loading",
   label,
 }: FullScreenLoaderProps) {
-  if (!show || operation === "loading") return null;
+  if (!show) return null;
 
   const cfg = CONFIGS[operation];
   const cl = COLOR_MAP[cfg.color];
   const Icon = cfg.icon;
 
   return (
-    <div className="absolute inset-0 z-[9999] bg-background/97 backdrop-blur-2xl flex flex-col items-center justify-center gap-8 animate-in fade-in duration-150 rounded-[inherit]">
+    <div className="fixed inset-0 z-[9999] bg-background/90 backdrop-blur-2xl flex flex-col items-center justify-center gap-8 animate-in fade-in duration-300">
       {/* Expanding rings + icon */}
       <div className="relative flex items-center justify-center">
         {[0, 0.3, 0.6].map((delay, i) => (
