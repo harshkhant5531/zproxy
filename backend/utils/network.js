@@ -2,7 +2,7 @@ const os = require("os");
 
 /**
  * Gets the local IPv4 address of the machine, or the production frontend URL.
- * @returns {string} The local IPv4 address, FRONTEND_URL, or "localhost".
+ * @returns {string|null} The local IPv4 address, FRONTEND_URL, "localhost", or null in production without FRONTEND_URL.
  */
 function getLocalIp() {
     // If in production, getting the local container IP is incorrect for QR codes.
