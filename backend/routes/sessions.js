@@ -173,7 +173,9 @@ router.post(
     body("date").isISO8601().withMessage("Valid date is required"),
     body("startTime").notEmpty().withMessage("Start time is required"),
     body("endTime").notEmpty().withMessage("End time is required"),
-    body("geofenceRadius").optional().isInt({ min: 10, max: 5000 }).withMessage("Radius must be between 10m and 5000m"),
+    body("geofenceRadius").optional().isInt({ min: 10, max: 200 }).withMessage("Radius must be between 10m and 200m"),
+    body("facultyLat").optional().isFloat().withMessage("Invalid latitude"),
+    body("facultyLng").optional().isFloat().withMessage("Invalid longitude"),
   ],
   async (req, res, next) => {
     try {
@@ -200,6 +202,8 @@ router.post(
         status,
         batches,
         geofenceRadius,
+        facultyLat,
+        facultyLng,
       } = req.body;
 
       // Check if faculty has access to this course or specialized subject
@@ -245,6 +249,8 @@ router.post(
           status: status || "scheduled",
           batches: batches || [],
           geofenceRadius: geofenceRadius || 500,
+          facultyLat: facultyLat ? parseFloat(facultyLat) : null,
+          facultyLng: facultyLng ? parseFloat(facultyLng) : null,
         },
         include: {
           course: { select: { id: true, name: true, code: true } },

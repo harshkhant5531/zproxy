@@ -25,6 +25,7 @@ import {
   Loader2,
   RefreshCw,
   CheckCircle2,
+  MapPin,
 } from "lucide-react";
 import { FullScreenLoader } from "@/components/FullScreenLoader";
 import { useParams } from "react-router-dom";
@@ -248,6 +249,11 @@ export default function LiveSession() {
                     Batch {b}
                   </span>
                 ))}
+                {session?.geofenceRadius && (
+                  <span className="px-2 py-0.5 bg-amber-500/10 text-amber-500 border border-amber-500/20 rounded text-[10px] font-black uppercase tracking-wider flex items-center gap-1">
+                    <MapPin className="h-3 w-3" /> Grid: {session.geofenceRadius}m
+                  </span>
+                )}
               </div>
             )}
           </div>

@@ -26,7 +26,8 @@ export default function CreateSession() {
   const [topic, setTopic] = useState("");
   const [room, setRoom] = useState("");
   const [selectedBatches, setSelectedBatches] = useState<string[]>([]);
-  const [radius, setRadius] = useState("500");
+  const [radius, setRadius] = useState("25");
+  const [locating, setLocating] = useState(false);
 
   const { data: subjectsData, isLoading: isSubjectsLoading } = useQuery({
     queryKey: ["faculty", "my-subjects", user?.id],
@@ -67,25 +68,49 @@ export default function CreateSession() {
     const end = new Date(now.getTime() + 60 * 60 * 1000);
     const endTime = end.toTimeString().split(" ")[0].substring(0, 5);
 
-    createSessionMutation.mutate({
-      courseId: selectedSubject.courseId,
-      subjectId: parseInt(subjectId),
-      topic,
-      room,
-      batches: selectedBatches,
-      date: now.toISOString(),
-      startTime,
-      endTime,
-      geofenceRadius: parseInt(radius),
-    });
+    if (!navigator.geolocation) {
+      toast.error("Spatial mismatch: Your browser doesn't support geolocation.");
+      return;
+    }
+
+    setLocating(true);
+    
+    // Get precise faculty location to anchor the session
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setLocating(false);
+        createSessionMutation.mutate({
+          courseId: selectedSubject.courseId,
+          subjectId: parseInt(subjectId),
+          topic,
+          room,
+          batches: selectedBatches,
+          date: now.toISOString(),
+          startTime,
+          endTime,
+          geofenceRadius: parseInt(radius),
+          facultyLat: position.coords.latitude,
+          facultyLng: position.coords.longitude,
+        });
+      },
+      (error) => {
+        setLocating(false);
+        toast.error(
+          error.code === 1 
+            ? "Permission Denied: Faculty must provide location to lock session grid."
+            : "Location Timeout: Failed to acquire stable coordinates. Please try again."
+        );
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+    );
   };
 
   return (
     <>
       <FullScreenLoader show={isSubjectsLoading} operation="loading" />
       <FullScreenLoader
-        show={createSessionMutation.isPending}
-        operation="creating"
+        show={createSessionMutation.isPending || locating}
+        operation={locating ? "locating" : "creating"}
       />
       <div className="space-y-6 max-w-2xl mx-auto py-8">
         <div className="text-center space-y-2">
@@ -233,27 +258,32 @@ export default function CreateSession() {
                   />
                 </div>
 
-                <div className="space-y-3">
-                  <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em] ml-1">
-                    Geofence Radius (meters)
-                  </label>
-                  <div className="flex gap-2">
-                    {["100", "250", "500", "1000", "2000"].map((r) => (
-                      <div
-                        key={r}
-                        onClick={() => setRadius(r)}
-                        className={`flex-1 cursor-pointer h-10 flex items-center justify-center rounded-lg border font-black text-xs transition-colors duration-300 ${
-                          radius === r
-                            ? "bg-primary/10 border-primary text-primary shadow-[0_0_10px_rgba(34,211,238,0.1)]"
-                            : "bg-background border-border text-muted-foreground hover:border-primary/50"
-                        }`}
-                      >
-                        {r}m
-                      </div>
-                    ))}
+                <div className="space-y-4">
+                  <div className="flex justify-between items-end">
+                    <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em] ml-1">
+                      Geofence Radius (meters)
+                    </label>
+                    <span className="text-xs font-black text-primary font-mono tracking-tighter bg-primary/10 px-2 py-0.5 rounded border border-primary/20">
+                      {radius}m
+                    </span>
+                  </div>
+                  <div className="px-2 pt-2">
+                    <input
+                      type="range"
+                      min="10"
+                      max="200"
+                      step="5"
+                      value={radius}
+                      onChange={(e) => setRadius(e.target.value)}
+                      className="w-full h-1.5 bg-muted rounded-lg appearance-none cursor-pointer accent-primary"
+                    />
+                    <div className="flex justify-between mt-2">
+                      <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest">Small Lab (10m)</span>
+                      <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest">Auditorium (200m)</span>
+                    </div>
                   </div>
                   <p className="text-[9px] text-muted-foreground italic ml-1">
-                    Maximum allowed distance for student authentication.
+                    Defines the valid spatial grid centered at your current location.
                   </p>
                 </div>
               </div>

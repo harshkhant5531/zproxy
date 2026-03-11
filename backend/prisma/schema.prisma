@@ -175,6 +175,8 @@ model Session {
   status          String   @default("scheduled")
   batches         String[] // Multi-batch selection
   geofenceRadius  Int      @default(500)
+  facultyLat      Float?
+  facultyLng      Float?
   attendanceCount Int      @default(0)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt

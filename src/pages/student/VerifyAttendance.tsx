@@ -55,7 +55,7 @@ export default function VerifyAttendance() {
     },
   });
 
-  const handleVerify = () => {
+  const handleVerify = (retryWithLowAccuracy = false) => {
     if (!token) return;
 
     if (!navigator.geolocation) {
@@ -66,6 +66,12 @@ export default function VerifyAttendance() {
 
     setStatus("verifying");
     
+    const geoOptions = { 
+      enableHighAccuracy: !retryWithLowAccuracy, 
+      timeout: 15000, 
+      maximumAge: 0 
+    };
+
     navigator.geolocation.getCurrentPosition(
       (position) => {
         verifyMutation.mutate({
@@ -75,14 +81,23 @@ export default function VerifyAttendance() {
         });
       },
       (error) => {
+        if (!retryWithLowAccuracy && error.code === 3) {
+          // Timeout occurred with high accuracy, retry with standard accuracy
+          console.warn("High accuracy timeout, retrying with standard accuracy...");
+          handleVerify(true);
+          return;
+        }
+
         setStatus("error");
-        setErrorMessage(
-          error.code === 1 
-            ? "Permission Denied: Please enable GPS/Location access to verify your presence."
-            : "Location Error: Failed to acquire spatial coordinates."
-        );
+        let msg = "Location Error: Failed to acquire spatial coordinates.";
+        if (error.code === 1) {
+          msg = "Permission Denied: Please enable GPS/Location access to verify your presence.";
+        } else if (error.code === 3) {
+          msg = "Location Timeout: GPS signal is weak. Try moving near a window or outdoors.";
+        }
+        setErrorMessage(msg);
       },
-      { enableHighAccuracy: true, timeout: 5000 }
+      geoOptions
     );
   };
 

@@ -517,24 +517,25 @@ router.post(
         throw error;
       }
 
-      // 🛡️ Geofencing Validation
+      // 🛡️ Geofencing Validation (Faculty-Student Proximity)
       const { lat, lng } = req.body;
       const geolib = require("geolib");
       
-      const CAMPUS_LOCATION = {
-        latitude: parseFloat(process.env.CAMPUS_LAT) || 23.0225,
-        longitude: parseFloat(process.env.CAMPUS_LNG) || 72.5714
+      // Use faculty location if available, else fallback to campus grid
+      const REFERENCE_LOCATION = {
+        latitude: qrCodeData.session.facultyLat || parseFloat(process.env.CAMPUS_LAT) || 23.0225,
+        longitude: qrCodeData.session.facultyLng || parseFloat(process.env.CAMPUS_LNG) || 72.5714
       };
-      const RADIUS = qrCodeData.session.geofenceRadius || parseInt(process.env.CAMPUS_RADIUS) || 500; // per-session or global default
+      const RADIUS = qrCodeData.session.geofenceRadius || parseInt(process.env.CAMPUS_RADIUS) || 25; 
 
       if (lat && lng) {
         const distance = geolib.getDistance(
           { latitude: lat, longitude: lng },
-          CAMPUS_LOCATION
+          REFERENCE_LOCATION
         );
 
         if (distance > RADIUS) {
-          const error = new Error(`Spatial Protocol Violation: Device outside campus grid (${distance}m). Access Denied.`);
+          const error = new Error(`Spatial Protocol Violation: You are ${distance}m away from the instructor. Verification requires proximity to the classroom grid.`);
           error.statusCode = 403;
           throw error;
         }
