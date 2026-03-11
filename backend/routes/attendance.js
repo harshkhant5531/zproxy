@@ -517,6 +517,34 @@ router.post(
         throw error;
       }
 
+      // 🛡️ Geofencing Validation
+      const { lat, lng } = req.body;
+      const geolib = require("geolib");
+      
+      const CAMPUS_LOCATION = {
+        latitude: parseFloat(process.env.CAMPUS_LAT) || 23.0225,
+        longitude: parseFloat(process.env.CAMPUS_LNG) || 72.5714
+      };
+      const RADIUS = parseInt(process.env.CAMPUS_RADIUS) || 500; // 500 meters
+
+      if (lat && lng) {
+        const distance = geolib.getDistance(
+          { latitude: lat, longitude: lng },
+          CAMPUS_LOCATION
+        );
+
+        if (distance > RADIUS) {
+          const error = new Error(`Spatial Protocol Violation: Device outside campus grid (${distance}m). Access Denied.`);
+          error.statusCode = 403;
+          throw error;
+        }
+      } else {
+        // Force location if geofencing is strictly required
+        const error = new Error("Spatial Authentication Required: Enable GPS to verify presence.");
+        error.statusCode = 400;
+        throw error;
+      }
+
       // Check if attendance already exists
       const existingAttendance = await prisma.attendance.findFirst({
         where: {
@@ -526,44 +554,66 @@ router.post(
       });
 
       if (existingAttendance) {
-        const error = new Error("Attendance already recorded");
+        const error = new Error("Neural Link Active: Attendance already recorded.");
         error.statusCode = 409;
         throw error;
       }
 
       // ─── Proxy Detection ────────────────────────────────────────────────
+      let status = "present";
       let qrNotes = null;
+      
       if (req.ip) {
         const sameIpRecord = await prisma.attendance.findFirst({
           where: {
             sessionId: qrCodeData.sessionId,
             studentId: { not: req.user.id },
             ipAddress: req.ip,
-            status: "present",
           },
           select: { id: true, studentId: true, notes: true },
         });
+
         if (sameIpRecord) {
-          qrNotes = `[PROXY_SUSPECT:sharedWith:${sameIpRecord.studentId}]`;
-          if (!sameIpRecord.notes?.includes("[PROXY_SUSPECT")) {
-            await prisma.attendance.update({
-              where: { id: sameIpRecord.id },
-              data: {
-                notes: `[PROXY_SUSPECT:sharedWith:${req.user.id}]${sameIpRecord.notes ? " " + sameIpRecord.notes : ""}`,
-              },
-            });
-          }
+          // PROXY DETECTED: Mark both as ABSENT
+          status = "absent";
+          qrNotes = `[PROXY_DETECTED:sharedWith:${sameIpRecord.studentId}] Duplicate IP authentication attempt.`;
+          
+          // Update the existing record to also be absent if it wasn't already flagged
+          await prisma.attendance.update({
+            where: { id: sameIpRecord.id },
+            data: {
+              status: "absent",
+              notes: `[PROXY_DETECTED:sharedWith:${req.user.id}] Duplicate IP suspected.`
+            }
+          });
+
+          // Create the failed record and error out
+          await prisma.attendance.create({
+            data: {
+              sessionId: qrCodeData.sessionId,
+              studentId: req.user.id,
+              status: "absent",
+              notes: qrNotes,
+              location: `${lat},${lng}`,
+              ipAddress: req.ip,
+              deviceInfo: req.body.deviceInfo,
+            }
+          });
+
+          const error = new Error("Security Protocol Violation: Simultaneous multi-device authentication detected from this IP. Both records marked as ABSENT.");
+          error.statusCode = 403;
+          throw error;
         }
       }
 
-      // Create attendance record
+      // Create valid attendance record
       const attendance = await prisma.attendance.create({
         data: {
           sessionId: qrCodeData.sessionId,
           studentId: req.user.id,
-          status: "present",
+          status: status,
           notes: qrNotes,
-          location: req.body.location,
+          location: `${lat},${lng}`,
           ipAddress: req.ip,
           deviceInfo: req.body.deviceInfo,
         },
