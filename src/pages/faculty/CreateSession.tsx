@@ -26,6 +26,7 @@ export default function CreateSession() {
   const [topic, setTopic] = useState("");
   const [room, setRoom] = useState("");
   const [selectedBatches, setSelectedBatches] = useState<string[]>([]);
+  const [radius, setRadius] = useState("500");
 
   const { data: subjectsData, isLoading: isSubjectsLoading } = useQuery({
     queryKey: ["faculty", "my-subjects", user?.id],
@@ -75,6 +76,7 @@ export default function CreateSession() {
       date: now.toISOString(),
       startTime,
       endTime,
+      geofenceRadius: parseInt(radius),
     });
   };
 
@@ -230,6 +232,30 @@ export default function CreateSession() {
                     }}
                   />
                 </div>
+
+                <div className="space-y-3">
+                  <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em] ml-1">
+                    Geofence Radius (meters)
+                  </label>
+                  <div className="flex gap-2">
+                    {["100", "250", "500", "1000", "2000"].map((r) => (
+                      <div
+                        key={r}
+                        onClick={() => setRadius(r)}
+                        className={`flex-1 cursor-pointer h-10 flex items-center justify-center rounded-lg border font-black text-xs transition-colors duration-300 ${
+                          radius === r
+                            ? "bg-primary/10 border-primary text-primary shadow-[0_0_10px_rgba(34,211,238,0.1)]"
+                            : "bg-background border-border text-muted-foreground hover:border-primary/50"
+                        }`}
+                      >
+                        {r}m
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-[9px] text-muted-foreground italic ml-1">
+                    Maximum allowed distance for student authentication.
+                  </p>
+                </div>
               </div>
             )}
 
@@ -272,6 +298,13 @@ export default function CreateSession() {
                           Topic:{" "}
                         </span>
                         <span className="font-bold">{topic}</span>
+                      </p>
+                      <p className="text-foreground font-mono text-sm flex items-center gap-2">
+                        <BookOpen className="h-4 w-4 text-primary" />
+                        <span className="text-muted-foreground text-xs uppercase italic min-w-[70px]">
+                          Radius:{" "}
+                        </span>
+                        <span className="font-bold">{radius} Meters</span>
                       </p>
                     </div>
                   </div>

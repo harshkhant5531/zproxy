@@ -173,6 +173,7 @@ router.post(
     body("date").isISO8601().withMessage("Valid date is required"),
     body("startTime").notEmpty().withMessage("Start time is required"),
     body("endTime").notEmpty().withMessage("End time is required"),
+    body("geofenceRadius").optional().isInt({ min: 10, max: 5000 }).withMessage("Radius must be between 10m and 5000m"),
   ],
   async (req, res, next) => {
     try {
@@ -198,6 +199,7 @@ router.post(
         duration,
         status,
         batches,
+        geofenceRadius,
       } = req.body;
 
       // Check if faculty has access to this course or specialized subject
@@ -242,6 +244,7 @@ router.post(
           duration: duration || 60,
           status: status || "scheduled",
           batches: batches || [],
+          geofenceRadius: geofenceRadius || 500,
         },
         include: {
           course: { select: { id: true, name: true, code: true } },

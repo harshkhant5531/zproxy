@@ -170,8 +170,8 @@ export const attendanceAPI = {
 
   markAttendance: (data: any) => api.post("/attendance", data),
 
-  markAttendanceQR: (qrCode: string, location?: string, deviceInfo?: string) =>
-    api.post("/attendance/qr", { qrCode, location, deviceInfo }),
+  markAttendanceQR: (qrCode: string, lat: number, lng: number, deviceInfo?: string) =>
+    api.post("/attendance/qr", { qrCode, lat, lng, deviceInfo }),
 
   updateAttendance: (id: string | number, data: any) =>
     api.put(`/attendance/${id}`, data),

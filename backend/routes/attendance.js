@@ -525,7 +525,7 @@ router.post(
         latitude: parseFloat(process.env.CAMPUS_LAT) || 23.0225,
         longitude: parseFloat(process.env.CAMPUS_LNG) || 72.5714
       };
-      const RADIUS = parseInt(process.env.CAMPUS_RADIUS) || 500; // 500 meters
+      const RADIUS = qrCodeData.session.geofenceRadius || parseInt(process.env.CAMPUS_RADIUS) || 500; // per-session or global default
 
       if (lat && lng) {
         const distance = geolib.getDistance(

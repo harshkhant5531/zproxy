@@ -27,11 +27,12 @@ export default function VerifyAttendance() {
   const token = searchParams.get("token");
 
   const verifyMutation = useMutation({
-    mutationFn: (token: string) =>
+    mutationFn: (data: { token: string; lat: number; lng: number }) =>
       attendanceAPI.markAttendanceQR(
-        token,
-        "Mobile Direct (Geofenced)",
-        `AuraBrowser-${user?.id}`,
+        data.token,
+        data.lat,
+        data.lng,
+        `AuraSecure-${user?.id}`
       ),
     onSuccess: () => {
       setStatus("success");
@@ -45,23 +46,53 @@ export default function VerifyAttendance() {
       const detail =
         err.response?.data?.message || err.message || "Network Timeout";
       setErrorMessage(
-        `${detail}. Please ensure your device is on the campus network.`,
+        detail.includes("Spatial") 
+          ? detail 
+          : `${detail}. Please ensure your device is on the campus network.`
       );
       console.error("Verification error details:", err);
       toast.error("Verification failed");
     },
   });
 
-  const handleRetry = () => {
-    if (token) {
-      setStatus("verifying");
-      verifyMutation.mutate(token);
+  const handleVerify = () => {
+    if (!token) return;
+
+    if (!navigator.geolocation) {
+      setStatus("error");
+      setErrorMessage("Spatial mismatch: Geolocation is not supported by your browser.");
+      return;
     }
+
+    setStatus("verifying");
+    
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        verifyMutation.mutate({
+          token,
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        });
+      },
+      (error) => {
+        setStatus("error");
+        setErrorMessage(
+          error.code === 1 
+            ? "Permission Denied: Please enable GPS/Location access to verify your presence."
+            : "Location Error: Failed to acquire spatial coordinates."
+        );
+      },
+      { enableHighAccuracy: true, timeout: 5000 }
+    );
+  };
+
+  const handleRetry = () => {
+    handleVerify();
   };
 
   useEffect(() => {
     if (!authLoading && user && token && status === "verifying") {
-      verifyMutation.mutate(token);
+      handleVerify();
     }
   }, [user, token, authLoading]);
 

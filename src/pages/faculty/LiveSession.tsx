@@ -168,13 +168,13 @@ export default function LiveSession() {
       }))
     : absentees;
 
-  // Proxy suspects: attendance records whose notes contain [PROXY_SUSPECT…]
+  // Proxy suspects: attendance records whose notes contain [PROXY_SUSPECT…] or [PROXY_DETECTED…]
   const proxyRecords = (attendanceData || []).filter((a: any) =>
-    a.notes?.includes("[PROXY_SUSPECT"),
+    a.notes?.includes("[PROXY_SUSPECT") || a.notes?.includes("[PROXY_DETECTED"),
   );
   const parseProxyFlag = (notes: string | null): number | null => {
     if (!notes) return null;
-    const m = notes.match(/\[PROXY_SUSPECT:sharedWith:(\d+)\]/);
+    const m = notes.match(/\[PROXY_(?:SUSPECT|DETECTED):sharedWith:(\d+)\]/);
     return m ? parseInt(m[1]) : null;
   };
 
@@ -184,9 +184,21 @@ export default function LiveSession() {
   const copyAbsenteeReport = () => {
     const dateStr = format(new Date(session?.date), "MMM dd, yyyy");
     const subjectName = session?.subject?.name || session?.course?.name;
-    const report = `ABSENTEE REPORT\nSubject: ${subjectName}\nDate: ${dateStr}\n\nPresent: ${presentCount}\nAbsent: ${absentees.length}\n\nABSENTEES:\n${absentees.map((s: any, i: number) => `${i + 1}. ${s.fullName || s.username}`).join("\n")}`;
-    navigator.clipboard.writeText(report);
-    toast.success("Report copied!");
+    
+    let reportText = `AURA INTEGRITY REPORT\nSubject: ${subjectName}\nDate: ${dateStr}\n\nPresent: ${presentCount}\nAbsent: ${absentees.length}\nProxies Caught: ${proxyRecords.length}\n\n`;
+    
+    if (proxyRecords.length > 0) {
+      reportText += `SECURITY ALERTS (PROXY ATTEMPTS):\n`;
+      proxyRecords.forEach((p: any, i: number) => {
+        reportText += `${i + 1}. ${p.student?.studentProfile?.fullName || p.student?.username} (MARKED ABSENT)\n`;
+      });
+      reportText += `\n`;
+    }
+
+    reportText += `ABSENTEES:\n${absentees.map((s: any, i: number) => `${i + 1}. ${s.studentProfile?.fullName || s.username}`).join("\n")}`;
+    
+    navigator.clipboard.writeText(reportText);
+    toast.success("Intelligence report copied!");
   };
 
   const handleManualOverride = () => {
@@ -296,15 +308,21 @@ export default function LiveSession() {
                       <>
                         <QRCodeSVG
                           value={(() => {
-                            // If deployed to Vercel (or any production domain), use the frontend origin directly
-                            if (window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1") {
+                            // PRIORITIZE VERCEL DEPLOYED URL
+                            // If we have VITE_API_URL or are not on localhost/localIP, we are likely on Vercel
+                            const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+                            
+                            if (!isLocal) {
                               return `${window.location.origin}/student/verify?token=${session.qrCode.codeValue}`;
                             }
 
-                            // For local LAN testing only 
-                            const port = window.location.port
-                              ? `:${window.location.port}`
-                              : "";
+                            // If we are on local, check if the session networkIp is a public URL (like Vercel)
+                            if (session.networkIp && (session.networkIp.includes("vercel.app") || session.networkIp.includes("http"))) {
+                               return `${session.networkIp.startsWith("http") ? session.networkIp : `https://${session.networkIp}`}/student/verify?token=${session.qrCode.codeValue}`;
+                            }
+
+                            // Only use local LAN IP if specifically requested or as absolute last resort
+                            const port = window.location.port ? `:${window.location.port}` : "";
                             const base = session.networkIp && session.networkIp !== "localhost"
                               ? (session.networkIp.startsWith("http") ? session.networkIp : `http://${session.networkIp}${port}`)
                               : import.meta.env.VITE_NETWORK_IP
@@ -482,8 +500,8 @@ export default function LiveSession() {
             <CardHeader className="pb-2 px-6 pt-4">
               <CardTitle className="text-[10px] font-black text-amber-500 uppercase tracking-[0.2em] flex items-center gap-2">
                 <AlertTriangle className="h-4 w-4" />
-                {proxyRecords.length} Proxy Suspect
-                {proxyRecords.length > 1 ? "s" : ""} Detected
+                {proxyRecords.length} Proxy Detected
+                {proxyRecords.length > 1 ? "s" : ""}
               </CardTitle>
             </CardHeader>
             <CardContent className="px-6 pb-4">
@@ -518,7 +536,7 @@ export default function LiveSession() {
                         </p>
                       </div>
                       <span className="text-[9px] font-black text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded uppercase tracking-wider shrink-0">
-                        Suspect
+                        Violation
                       </span>
                     </div>
                   );
@@ -637,7 +655,7 @@ export default function LiveSession() {
                               <div className="flex items-center gap-1 mt-1">
                                 <AlertTriangle className="h-3 w-3 text-amber-500" />
                                 <span className="text-[9px] font-black text-amber-500 uppercase tracking-wider">
-                                  Proxy — shared with{" "}
+                                  Proxy Violation — shared with{" "}
                                   {proxyPartner?.student?.studentProfile
                                     ?.fullName ||
                                     proxyPartner?.student?.username ||
