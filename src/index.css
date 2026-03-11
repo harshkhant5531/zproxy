@@ -268,3 +268,124 @@
   background-size: 200% 100%;
   animation: aura-shimmer 1.6s ease-in-out infinite;
 }
+
+/* ── Full-screen operation loader: pulsing rings ─────────────────── */
+@keyframes aura-ring-expand {
+  0% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  100% {
+    transform: scale(2.8);
+    opacity: 0;
+  }
+}
+.animate-ring-pulse {
+  animation: aura-ring-expand 0.9s ease-out infinite;
+}
+
+/* ── CW / CCW rotating dashed borders ────────────────────────────── */
+@keyframes aura-spin-cw {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes aura-spin-ccw {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+.animate-rotate-cw {
+  animation: aura-spin-cw 0.9s linear infinite;
+}
+.animate-rotate-ccw {
+  animation: aura-spin-ccw 1.4s linear infinite;
+}
+
+/* ── Bouncing dots ────────────────────────────────────────────────── */
+@keyframes aura-dot-bounce {
+  0%,
+  80%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.3;
+  }
+  40% {
+    transform: translateY(-6px);
+    opacity: 1;
+  }
+}
+.animate-bounce-dot {
+  animation: aura-dot-bounce 0.7s ease-in-out infinite;
+}
+
+/* ── Indeterminate progress bar ──────────────────────────────────── */
+@keyframes aura-indeterminate {
+  0% {
+    transform: translateX(-100%) scaleX(0.4);
+  }
+  50% {
+    transform: translateX(60%) scaleX(0.9);
+  }
+  100% {
+    transform: translateX(160%) scaleX(0.4);
+  }
+}
+.animate-progress-indeterminate {
+  width: 45%;
+  transform-origin: left;
+  animation: aura-indeterminate 1s ease-in-out infinite;
+}
+
+/* ── QR corner bracket pulse ──────────────────────────────────────── */
+@keyframes aura-bracket-pulse {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 0 0 8px 2px hsl(var(--primary) / 0.4);
+  }
+}
+.animate-bracket-pulse {
+  animation: aura-bracket-pulse 1.6s ease-in-out infinite;
+}
+
+/* ── Success ripple rings ─────────────────────────────────────────── */
+@keyframes aura-success-ripple {
+  from {
+    transform: scale(0.6);
+    opacity: 0.7;
+  }
+  to {
+    transform: scale(3.5);
+    opacity: 0;
+  }
+}
+.animate-success-ripple {
+  animation: aura-success-ripple 1.2s ease-out forwards;
+}
+.animate-success-ripple-late {
+  animation: aura-success-ripple 1.2s ease-out 0.35s forwards;
+}
+
+/* ── Live indicator blink ─────────────────────────────────────────── */
+@keyframes aura-live-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.2;
+  }
+}
+.animate-live-blink {
+  animation: aura-live-blink 1.4s ease-in-out infinite;
+}

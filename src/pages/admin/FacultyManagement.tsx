@@ -4,16 +4,84 @@ import { usersAPI, coursesAPI } from "@/lib/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { toast } from "sonner";
-import { UserPlus, BookOpen, Trash2, Mail, Shield, Loader2, Edit2, Save } from "lucide-react";
+import {
+  UserPlus,
+  BookOpen,
+  Trash2,
+  Mail,
+  Shield,
+  Loader2,
+  Edit2,
+  Save,
+} from "lucide-react";
+import { FullScreenLoader } from "@/components/FullScreenLoader";
 
 export default function FacultyManagement() {
-    const queryClient = useQueryClient();
-    const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-    const [formData, setFormData] = useState({
+  const queryClient = useQueryClient();
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+    fullName: "",
+    email: "",
+    employeeId: "",
+    department: "",
+    designation: "",
+    qualification: "",
+    phone: "",
+    address: "",
+    bio: "",
+  });
+
+  const { data: facultyData, isLoading: isFacultyLoading } = useQuery({
+    queryKey: ["admin", "faculty"],
+    queryFn: async () => {
+      const resp = await usersAPI.getFaculty();
+      return resp.data.data.faculty;
+    },
+  });
+
+  const { data: coursesData } = useQuery({
+    queryKey: ["admin", "courses"],
+    queryFn: async () => {
+      const resp = await coursesAPI.getCourses();
+      return resp.data.data.courses;
+    },
+  });
+
+  const faculty = facultyData;
+  const courses = coursesData;
+
+  const createFacultyMutation = useMutation({
+    mutationFn: (data: any) => usersAPI.createFaculty(data),
+    onSuccess: () => {
+      toast.success("Faculty member created successfully");
+      queryClient.invalidateQueries({ queryKey: ["admin", "faculty"] });
+      setIsAddDialogOpen(false);
+      setFormData({
         username: "",
         password: "",
         fullName: "",
@@ -24,382 +92,495 @@ export default function FacultyManagement() {
         qualification: "",
         phone: "",
         address: "",
-        bio: ""
+        bio: "",
+      });
+    },
+    onError: (err: any) => {
+      toast.error(err.response?.data?.message || "Failed to create faculty");
+    },
+  });
+
+  const updateFacultyMutation = useMutation({
+    mutationFn: ({ id, data }: { id: number; data: any }) =>
+      usersAPI.updateStudentProfile(id, data),
+    onSuccess: () => {
+      toast.success("Faculty profile updated successfully");
+      queryClient.invalidateQueries({ queryKey: ["admin", "faculty"] });
+      setIsEditOpen(false);
+      setSelectedFaculty(null);
+    },
+    onError: (err: any) =>
+      toast.error(err.response?.data?.message || "Failed to update faculty"),
+  });
+
+  const deleteFacultyMutation = useMutation({
+    mutationFn: (id: number) => usersAPI.deleteUser(id),
+    onSuccess: () => {
+      toast.success("Faculty member removed from system");
+      queryClient.invalidateQueries({ queryKey: ["admin", "faculty"] });
+    },
+    onError: (err: any) =>
+      toast.error(err.response?.data?.message || "Failed to delete faculty"),
+  });
+
+  const assignSubjectMutation = useMutation({
+    mutationFn: ({
+      facultyId,
+      courseId,
+    }: {
+      facultyId: number;
+      courseId: number;
+    }) => coursesAPI.updateCourse(courseId, { facultyId }),
+    onSuccess: () => {
+      toast.success("Subject assigned successfully");
+      queryClient.invalidateQueries({ queryKey: ["admin", "courses"] });
+      queryClient.invalidateQueries({ queryKey: ["admin", "faculty"] });
+      setIsAssignOpen(false);
+    },
+  });
+
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isAssignOpen, setIsAssignOpen] = useState(false);
+  const [selectedFaculty, setSelectedFaculty] = useState<any>(null);
+
+  const handleEdit = (member: any) => {
+    setSelectedFaculty(member);
+    setFormData({
+      username: member.username,
+      password: "",
+      fullName: member.facultyProfile?.fullName || "",
+      email: member.email,
+      employeeId: member.facultyProfile?.employeeId || "",
+      department: member.facultyProfile?.department || "",
+      designation: member.facultyProfile?.designation || "",
+      qualification: member.facultyProfile?.qualification || "",
+      phone: member.facultyProfile?.phone || "",
+      address: member.facultyProfile?.address || "",
+      bio: member.facultyProfile?.bio || "",
     });
+    setIsEditOpen(true);
+  };
 
-    const { data: facultyData, isLoading: isFacultyLoading } = useQuery({
-        queryKey: ["admin", "faculty"],
-        queryFn: async () => {
-            const resp = await usersAPI.getFaculty();
-            return resp.data.data.faculty;
-        }
-    });
-
-    const { data: coursesData } = useQuery({
-        queryKey: ["admin", "courses"],
-        queryFn: async () => {
-            const resp = await coursesAPI.getCourses();
-            return resp.data.data.courses;
-        }
-    });
-
-    const faculty = facultyData;
-    const courses = coursesData;
-
-    const createFacultyMutation = useMutation({
-        mutationFn: (data: any) => usersAPI.createFaculty(data),
-        onSuccess: () => {
-            toast.success("Faculty member created successfully");
-            queryClient.invalidateQueries({ queryKey: ["admin", "faculty"] });
-            setIsAddDialogOpen(false);
-            setFormData({ username: "", password: "", fullName: "", email: "", employeeId: "", department: "", designation: "", qualification: "", phone: "", address: "", bio: "" });
-        },
-        onError: (err: any) => {
-            toast.error(err.response?.data?.message || "Failed to create faculty");
-        }
-    });
-
-    const updateFacultyMutation = useMutation({
-        mutationFn: ({ id, data }: { id: number, data: any }) => usersAPI.updateStudentProfile(id, data),
-        onSuccess: () => {
-            toast.success("Faculty profile updated successfully");
-            queryClient.invalidateQueries({ queryKey: ["admin", "faculty"] });
-            setIsEditOpen(false);
-            setSelectedFaculty(null);
-        },
-        onError: (err: any) => toast.error(err.response?.data?.message || "Failed to update faculty")
-    });
-
-    const deleteFacultyMutation = useMutation({
-        mutationFn: (id: number) => usersAPI.deleteUser(id),
-        onSuccess: () => {
-            toast.success("Faculty member removed from system");
-            queryClient.invalidateQueries({ queryKey: ["admin", "faculty"] });
-        },
-        onError: (err: any) => toast.error(err.response?.data?.message || "Failed to delete faculty")
-    });
-
-    const assignSubjectMutation = useMutation({
-        mutationFn: ({ facultyId, courseId }: { facultyId: number, courseId: number }) =>
-            coursesAPI.updateCourse(courseId, { facultyId }),
-        onSuccess: () => {
-            toast.success("Subject assigned successfully");
-            queryClient.invalidateQueries({ queryKey: ["admin", "courses"] });
-            queryClient.invalidateQueries({ queryKey: ["admin", "faculty"] });
-            setIsAssignOpen(false);
-        }
-    });
-
-    const [isEditOpen, setIsEditOpen] = useState(false);
-    const [isAssignOpen, setIsAssignOpen] = useState(false);
-    const [selectedFaculty, setSelectedFaculty] = useState<any>(null);
-
-    const handleEdit = (member: any) => {
-        setSelectedFaculty(member);
-        setFormData({
-            username: member.username,
-            password: "",
-            fullName: member.facultyProfile?.fullName || "",
-            email: member.email,
-            employeeId: member.facultyProfile?.employeeId || "",
-            department: member.facultyProfile?.department || "",
-            designation: member.facultyProfile?.designation || "",
-            qualification: member.facultyProfile?.qualification || "",
-            phone: member.facultyProfile?.phone || "",
-            address: member.facultyProfile?.address || "",
-            bio: member.facultyProfile?.bio || ""
-        });
-        setIsEditOpen(true);
-    };
-
-    const handleDelete = (id: number) => {
-        if (confirm("Are you sure you want to remove this faculty member? This action cannot be undone.")) {
-            deleteFacultyMutation.mutate(id);
-        }
-    };
-
-    if (isFacultyLoading) {
-        return (
-            <div className="flex h-[60vh] items-center justify-center">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            </div>
-        );
+  const handleDelete = (id: number) => {
+    if (
+      confirm(
+        "Are you sure you want to remove this faculty member? This action cannot be undone.",
+      )
+    ) {
+      deleteFacultyMutation.mutate(id);
     }
+  };
 
-    return (
-        <div className="space-y-6">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-2xl font-black tracking-tight text-foreground uppercase aura-text-glow">Faculty Command</h1>
-                    <p className="text-[10px] text-muted-foreground font-mono uppercase tracking-[0.2em] mt-1">Manage institutional faculty and course assignments</p>
+  if (isFacultyLoading) {
+    return <div className="flex h-[60vh] items-center justify-center" />;
+  }
+
+  return (
+    <>
+      <FullScreenLoader show={isFacultyLoading} operation="loading" />
+      <FullScreenLoader
+        show={createFacultyMutation.isPending}
+        operation="creating"
+      />
+      <FullScreenLoader
+        show={updateFacultyMutation.isPending}
+        operation="saving"
+      />
+      <FullScreenLoader
+        show={deleteFacultyMutation.isPending}
+        operation="deleting"
+      />
+      <FullScreenLoader
+        show={assignSubjectMutation.isPending}
+        operation="saving"
+      />
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-black tracking-tight text-foreground uppercase aura-text-glow">
+              Faculty Command
+            </h1>
+            <p className="text-[10px] text-muted-foreground font-mono uppercase tracking-[0.2em] mt-1">
+              Manage institutional faculty and course assignments
+            </p>
+          </div>
+          <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+            <DialogTrigger asChild>
+              <Button className="bg-primary hover:bg-primary/90">
+                <UserPlus className="mr-2 h-4 w-4" /> Add Faculty
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="bg-card border-border">
+              <DialogHeader>
+                <DialogTitle>Add New Faculty Member</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-xs font-semibold text-muted-foreground/70 uppercase">
+                      Username
+                    </label>
+                    <Input
+                      value={formData.username}
+                      onChange={(e) =>
+                        setFormData({ ...formData, username: e.target.value })
+                      }
+                      className="bg-background border-border"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-xs font-semibold text-muted-foreground/70 uppercase">
+                      Password
+                    </label>
+                    <Input
+                      type="password"
+                      value={formData.password}
+                      onChange={(e) =>
+                        setFormData({ ...formData, password: e.target.value })
+                      }
+                      className="bg-background border-border"
+                    />
+                  </div>
                 </div>
-                <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-                    <DialogTrigger asChild>
-                        <Button className="bg-primary hover:bg-primary/90">
-                            <UserPlus className="mr-2 h-4 w-4" /> Add Faculty
-                        </Button>
-                    </DialogTrigger>
-                    <DialogContent className="bg-card border-border">
-                        <DialogHeader>
-                            <DialogTitle>Add New Faculty Member</DialogTitle>
-                        </DialogHeader>
-                        <div className="space-y-4 py-4">
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="space-y-2">
-                                    <label className="text-xs font-semibold text-muted-foreground/70 uppercase">Username</label>
-                                    <Input
-                                        value={formData.username}
-                                        onChange={e => setFormData({ ...formData, username: e.target.value })}
-                                        className="bg-background border-border"
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-xs font-semibold text-muted-foreground/70 uppercase">Password</label>
-                                    <Input
-                                        type="password"
-                                        value={formData.password}
-                                        onChange={e => setFormData({ ...formData, password: e.target.value })}
-                                        className="bg-background border-border"
-                                    />
-                                </div>
-                            </div>
-                            <div className="space-y-2">
-                                <label className="text-xs font-semibold text-muted-foreground/70 uppercase">Full Name</label>
-                                <Input
-                                    value={formData.fullName}
-                                    onChange={e => setFormData({ ...formData, fullName: e.target.value })}
-                                    className="bg-background border-border"
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <label className="text-xs font-semibold text-muted-foreground/70 uppercase">Email</label>
-                                <Input
-                                    type="email"
-                                    value={formData.email}
-                                    onChange={e => setFormData({ ...formData, email: e.target.value })}
-                                    className="bg-background border-border"
-                                />
-                            </div>
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="space-y-2">
-                                    <label className="text-xs font-semibold text-muted-foreground/70 uppercase">Employee ID</label>
-                                    <Input
-                                        value={formData.employeeId}
-                                        onChange={e => setFormData({ ...formData, employeeId: e.target.value })}
-                                        className="bg-background border-border"
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-xs font-semibold text-muted-foreground/70 uppercase">Department</label>
-                                    <Input
-                                        value={formData.department}
-                                        onChange={e => setFormData({ ...formData, department: e.target.value })}
-                                        className="bg-background border-border"
-                                    />
-                                </div>
-                            </div>
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="space-y-2">
-                                    <label className="text-xs font-semibold text-muted-foreground/70 uppercase">Designation</label>
-                                    <Input
-                                        value={formData.designation}
-                                        onChange={e => setFormData({ ...formData, designation: e.target.value })}
-                                        className="bg-background border-border"
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-xs font-semibold text-muted-foreground/70 uppercase">Qualification</label>
-                                    <Input
-                                        value={formData.qualification}
-                                        onChange={e => setFormData({ ...formData, qualification: e.target.value })}
-                                        className="bg-background border-border"
-                                    />
-                                </div>
-                            </div>
-                            <Button
-                                className="w-full mt-4"
-                                onClick={() => createFacultyMutation.mutate(formData)}
-                                disabled={createFacultyMutation.isPending}
-                            >
-                                {createFacultyMutation.isPending ? <Loader2 className="animate-spin h-4 w-4 mr-2" /> : null}
-                                Create Account
-                            </Button>
-                        </div>
-                    </DialogContent>
-                </Dialog>
-            </div>
-
-            <div className="grid gap-6">
-                <Card className="bg-slate-900/40 border-slate-800 backdrop-blur-sm">
-                    <CardHeader>
-                        <CardTitle className="text-sm font-medium text-slate-400 uppercase tracking-wider">Active Faculty Members</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <Table>
-                            <TableHeader className="bg-slate-950/60">
-                                <TableRow className="border-slate-800">
-                                    <TableHead className="text-slate-400 font-bold text-[10px] uppercase">Faculty Info</TableHead>
-                                    <TableHead className="text-slate-400 font-bold text-[10px] uppercase">Department & Role</TableHead>
-                                    <TableHead className="text-slate-400 font-bold text-[10px] uppercase">Assigned Subjects</TableHead>
-                                    <TableHead className="text-slate-400 font-bold text-[10px] uppercase text-right">Actions</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {faculty?.map((member: any) => (
-                                    <TableRow key={member.id} className="border-slate-800 hover:bg-white/5 transition-colors">
-                                        <TableCell>
-                                            <div className="flex items-center gap-3">
-                                                <div className="h-8 w-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center">
-                                                    <Shield className="h-4 w-4 text-primary" />
-                                                </div>
-                                                <div>
-                                                    <p className="font-bold text-sm text-foreground">{member.facultyProfile?.fullName || member.username}</p>
-                                                    <p className="text-[10px] text-muted-foreground font-medium">{member.facultyProfile?.employeeId || "EMPID-MISSING"}</p>
-                                                </div>
-                                            </div>
-                                        </TableCell>
-                                        <TableCell>
-                                            <p className="text-xs text-muted-foreground font-medium">{member.facultyProfile?.department || "N/A"}</p>
-                                            <p className="text-[10px] text-muted-foreground">{member.facultyProfile?.designation || "Faculty"}</p>
-                                        </TableCell>
-                                        <TableCell>
-                                            <div className="flex flex-wrap gap-1">
-                                                {member.facultyCourses?.map((course: any) => (
-                                                    <span key={course.id} className="text-[9px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded border border-slate-700">
-                                                        {course.code}
-                                                    </span>
-                                                ))}
-                                            </div>
-                                        </TableCell>
-                                        <TableCell className="text-right">
-                                            <div className="flex justify-end gap-2">
-                                                <Button
-                                                    variant="ghost"
-                                                    size="sm"
-                                                    className="text-primary hover:text-primary hover:bg-primary/10"
-                                                    onClick={() => {
-                                                        setSelectedFaculty(member);
-                                                        setIsAssignOpen(true);
-                                                    }}
-                                                >
-                                                    <BookOpen className="h-4 w-4" />
-                                                </Button>
-                                                <Button
-                                                    variant="ghost"
-                                                    size="sm"
-                                                    className="text-slate-400 hover:text-white hover:bg-white/10"
-                                                    onClick={() => handleEdit(member)}
-                                                >
-                                                    <Edit2 className="h-4 w-4" />
-                                                </Button>
-                                                <Button
-                                                    variant="ghost"
-                                                    size="sm"
-                                                    className="text-red-400 hover:text-red-500 hover:bg-red-500/10"
-                                                    onClick={() => handleDelete(member.id)}
-                                                >
-                                                    <Trash2 className="h-4 w-4" />
-                                                </Button>
-                                            </div>
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </CardContent>
-                </Card>
-            </div>
-
-            {/* Edit Dialog */}
-            <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-                <DialogContent className="bg-card border-border">
-                    <DialogHeader>
-                        <DialogTitle>Edit Faculty Profile</DialogTitle>
-                    </DialogHeader>
-                    <div className="space-y-4 py-4">
-                        <div className="space-y-2">
-                            <label className="text-xs font-semibold text-muted-foreground/70 uppercase">Full Name</label>
-                            <Input
-                                value={formData.fullName}
-                                onChange={e => setFormData({ ...formData, fullName: e.target.value })}
-                                className="bg-background border-border"
-                            />
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                                <label className="text-xs font-semibold text-muted-foreground/70 uppercase">Employee ID</label>
-                                <Input
-                                    value={formData.employeeId}
-                                    onChange={e => setFormData({ ...formData, employeeId: e.target.value })}
-                                    className="bg-background border-border"
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <label className="text-xs font-semibold text-muted-foreground/70 uppercase">Department</label>
-                                <Input
-                                    value={formData.department}
-                                    onChange={e => setFormData({ ...formData, department: e.target.value })}
-                                    className="bg-background border-border"
-                                />
-                            </div>
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                                <label className="text-xs font-semibold text-muted-foreground/70 uppercase">Designation</label>
-                                <Input
-                                    value={formData.designation}
-                                    onChange={e => setFormData({ ...formData, designation: e.target.value })}
-                                    className="bg-background border-border"
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <label className="text-xs font-semibold text-muted-foreground/70 uppercase">Qualification</label>
-                                <Input
-                                    value={formData.qualification}
-                                    onChange={e => setFormData({ ...formData, qualification: e.target.value })}
-                                    className="bg-background border-border"
-                                />
-                            </div>
-                        </div>
-                        <Button
-                            className="w-full mt-4"
-                            onClick={() => updateFacultyMutation.mutate({ id: selectedFaculty?.id, data: formData })}
-                            disabled={updateFacultyMutation.isPending}
-                        >
-                            {updateFacultyMutation.isPending ? <Loader2 className="animate-spin h-4 w-4 mr-2" /> : <Save className="h-4 w-4 mr-2" />}
-                            Update Profile
-                        </Button>
-                    </div>
-                </DialogContent>
-            </Dialog>
-
-            {/* Assign Subject Dialog */}
-            <Dialog open={isAssignOpen} onOpenChange={setIsAssignOpen}>
-                <DialogContent className="bg-card border-border">
-                    <DialogHeader>
-                        <DialogTitle>Assign Subject to {selectedFaculty?.username}</DialogTitle>
-                    </DialogHeader>
-                    <div className="py-4 space-y-4">
-                        <Select onValueChange={(val) => assignSubjectMutation.mutate({ facultyId: selectedFaculty?.id, courseId: parseInt(val) })}>
-                            <SelectTrigger className="bg-background border-border">
-                                <SelectValue placeholder="Select a subject..." />
-                            </SelectTrigger>
-                            <SelectContent className="bg-card border-border">
-                                {courses?.filter((c: any) => c.facultyId !== selectedFaculty?.id).map((course: any) => (
-                                    <SelectItem key={course.id} value={course.id.toString()}>
-                                        {course.code} — {course.name}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                        {assignSubjectMutation.isPending && (
-                            <div className="flex items-center justify-center py-2">
-                                <Loader2 className="animate-spin h-4 w-4 text-primary" />
-                            </div>
-                        )}
-                    </div>
-                </DialogContent>
-            </Dialog>
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold text-muted-foreground/70 uppercase">
+                    Full Name
+                  </label>
+                  <Input
+                    value={formData.fullName}
+                    onChange={(e) =>
+                      setFormData({ ...formData, fullName: e.target.value })
+                    }
+                    className="bg-background border-border"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold text-muted-foreground/70 uppercase">
+                    Email
+                  </label>
+                  <Input
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) =>
+                      setFormData({ ...formData, email: e.target.value })
+                    }
+                    className="bg-background border-border"
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-xs font-semibold text-muted-foreground/70 uppercase">
+                      Employee ID
+                    </label>
+                    <Input
+                      value={formData.employeeId}
+                      onChange={(e) =>
+                        setFormData({ ...formData, employeeId: e.target.value })
+                      }
+                      className="bg-background border-border"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-xs font-semibold text-muted-foreground/70 uppercase">
+                      Department
+                    </label>
+                    <Input
+                      value={formData.department}
+                      onChange={(e) =>
+                        setFormData({ ...formData, department: e.target.value })
+                      }
+                      className="bg-background border-border"
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-xs font-semibold text-muted-foreground/70 uppercase">
+                      Designation
+                    </label>
+                    <Input
+                      value={formData.designation}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          designation: e.target.value,
+                        })
+                      }
+                      className="bg-background border-border"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-xs font-semibold text-muted-foreground/70 uppercase">
+                      Qualification
+                    </label>
+                    <Input
+                      value={formData.qualification}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          qualification: e.target.value,
+                        })
+                      }
+                      className="bg-background border-border"
+                    />
+                  </div>
+                </div>
+                <Button
+                  className="w-full mt-4"
+                  onClick={() => createFacultyMutation.mutate(formData)}
+                  disabled={createFacultyMutation.isPending}
+                >
+                  {createFacultyMutation.isPending ? (
+                    <Loader2 className="animate-spin h-4 w-4 mr-2" />
+                  ) : null}
+                  Create Account
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
-    );
+
+        <div className="grid gap-6">
+          <Card className="bg-slate-900/40 border-slate-800 backdrop-blur-sm">
+            <CardHeader>
+              <CardTitle className="text-sm font-medium text-slate-400 uppercase tracking-wider">
+                Active Faculty Members
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader className="bg-slate-950/60">
+                  <TableRow className="border-slate-800">
+                    <TableHead className="text-slate-400 font-bold text-[10px] uppercase">
+                      Faculty Info
+                    </TableHead>
+                    <TableHead className="text-slate-400 font-bold text-[10px] uppercase">
+                      Department & Role
+                    </TableHead>
+                    <TableHead className="text-slate-400 font-bold text-[10px] uppercase">
+                      Assigned Subjects
+                    </TableHead>
+                    <TableHead className="text-slate-400 font-bold text-[10px] uppercase text-right">
+                      Actions
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {faculty?.map((member: any) => (
+                    <TableRow
+                      key={member.id}
+                      className="border-slate-800 hover:bg-white/5 transition-colors"
+                    >
+                      <TableCell>
+                        <div className="flex items-center gap-3">
+                          <div className="h-8 w-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center">
+                            <Shield className="h-4 w-4 text-primary" />
+                          </div>
+                          <div>
+                            <p className="font-bold text-sm text-foreground">
+                              {member.facultyProfile?.fullName ||
+                                member.username}
+                            </p>
+                            <p className="text-[10px] text-muted-foreground font-medium">
+                              {member.facultyProfile?.employeeId ||
+                                "EMPID-MISSING"}
+                            </p>
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <p className="text-xs text-muted-foreground font-medium">
+                          {member.facultyProfile?.department || "N/A"}
+                        </p>
+                        <p className="text-[10px] text-muted-foreground">
+                          {member.facultyProfile?.designation || "Faculty"}
+                        </p>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex flex-wrap gap-1">
+                          {member.facultyCourses?.map((course: any) => (
+                            <span
+                              key={course.id}
+                              className="text-[9px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded border border-slate-700"
+                            >
+                              {course.code}
+                            </span>
+                          ))}
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex justify-end gap-2">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-primary hover:text-primary hover:bg-primary/10"
+                            onClick={() => {
+                              setSelectedFaculty(member);
+                              setIsAssignOpen(true);
+                            }}
+                          >
+                            <BookOpen className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-slate-400 hover:text-white hover:bg-white/10"
+                            onClick={() => handleEdit(member)}
+                          >
+                            <Edit2 className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-red-400 hover:text-red-500 hover:bg-red-500/10"
+                            onClick={() => handleDelete(member.id)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Edit Dialog */}
+        <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
+          <DialogContent className="bg-card border-border">
+            <DialogHeader>
+              <DialogTitle>Edit Faculty Profile</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <label className="text-xs font-semibold text-muted-foreground/70 uppercase">
+                  Full Name
+                </label>
+                <Input
+                  value={formData.fullName}
+                  onChange={(e) =>
+                    setFormData({ ...formData, fullName: e.target.value })
+                  }
+                  className="bg-background border-border"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold text-muted-foreground/70 uppercase">
+                    Employee ID
+                  </label>
+                  <Input
+                    value={formData.employeeId}
+                    onChange={(e) =>
+                      setFormData({ ...formData, employeeId: e.target.value })
+                    }
+                    className="bg-background border-border"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold text-muted-foreground/70 uppercase">
+                    Department
+                  </label>
+                  <Input
+                    value={formData.department}
+                    onChange={(e) =>
+                      setFormData({ ...formData, department: e.target.value })
+                    }
+                    className="bg-background border-border"
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold text-muted-foreground/70 uppercase">
+                    Designation
+                  </label>
+                  <Input
+                    value={formData.designation}
+                    onChange={(e) =>
+                      setFormData({ ...formData, designation: e.target.value })
+                    }
+                    className="bg-background border-border"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold text-muted-foreground/70 uppercase">
+                    Qualification
+                  </label>
+                  <Input
+                    value={formData.qualification}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        qualification: e.target.value,
+                      })
+                    }
+                    className="bg-background border-border"
+                  />
+                </div>
+              </div>
+              <Button
+                className="w-full mt-4"
+                onClick={() =>
+                  updateFacultyMutation.mutate({
+                    id: selectedFaculty?.id,
+                    data: formData,
+                  })
+                }
+                disabled={updateFacultyMutation.isPending}
+              >
+                {updateFacultyMutation.isPending ? (
+                  <Loader2 className="animate-spin h-4 w-4 mr-2" />
+                ) : (
+                  <Save className="h-4 w-4 mr-2" />
+                )}
+                Update Profile
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Assign Subject Dialog */}
+        <Dialog open={isAssignOpen} onOpenChange={setIsAssignOpen}>
+          <DialogContent className="bg-card border-border">
+            <DialogHeader>
+              <DialogTitle>
+                Assign Subject to {selectedFaculty?.username}
+              </DialogTitle>
+            </DialogHeader>
+            <div className="py-4 space-y-4">
+              <Select
+                onValueChange={(val) =>
+                  assignSubjectMutation.mutate({
+                    facultyId: selectedFaculty?.id,
+                    courseId: parseInt(val),
+                  })
+                }
+              >
+                <SelectTrigger className="bg-background border-border">
+                  <SelectValue placeholder="Select a subject..." />
+                </SelectTrigger>
+                <SelectContent className="bg-card border-border">
+                  {courses
+                    ?.filter((c: any) => c.facultyId !== selectedFaculty?.id)
+                    .map((course: any) => (
+                      <SelectItem key={course.id} value={course.id.toString()}>
+                        {course.code} — {course.name}
+                      </SelectItem>
+                    ))}
+                </SelectContent>
+              </Select>
+              {assignSubjectMutation.isPending && (
+                <div className="flex items-center justify-center py-2">
+                  <Loader2 className="animate-spin h-4 w-4 text-primary" />
+                </div>
+              )}
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
+    </>
+  );
 }

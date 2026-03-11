@@ -10,7 +10,6 @@ import {
   CheckCircle2,
   Wifi,
   Fingerprint,
-  Loader2,
   Camera,
   CameraOff,
   QrCode,
@@ -19,6 +18,8 @@ import {
   BookOpen,
   RefreshCw,
   XCircle,
+  ShieldCheck,
+  Radio,
 } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { attendanceAPI, sessionsAPI } from "@/lib/api";
@@ -26,8 +27,10 @@ import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { Html5Qrcode } from "html5-qrcode";
 import { format } from "date-fns";
+import { FullScreenLoader } from "@/components/FullScreenLoader";
 
 type ScanMode = "qr" | "manual";
+type OverlayType = "qr-verify" | "manual-mark" | "load-sessions" | null;
 
 function errorLabel(err: any): string {
   const msg: string = err?.response?.data?.message || err?.message || "";
@@ -51,6 +54,7 @@ function errorLabel(err: any): string {
   return msg || "Verification failed. Please try again.";
 }
 
+// ── Main component ───────────────────────────────────────────────────────────
 export default function QRScanner() {
   const [mode, setMode] = useState<ScanMode>(
     !window.isSecureContext ? "manual" : "qr",
@@ -187,7 +191,6 @@ export default function QRScanner() {
     setLastError(null);
   };
 
-  // Switch mode — also reset state and stop any active scan
   const switchMode = (m: ScanMode) => {
     if (m === mode) return;
     reset();
@@ -200,45 +203,74 @@ export default function QRScanner() {
     };
   }, []);
 
-  // ─── Shared success card ────────────────────────────────────────────────────
+  // Determine which full-screen overlay to show
+  const overlayType: OverlayType = markQRMutation.isPending
+    ? "qr-verify"
+    : markManualMutation.isPending
+      ? "manual-mark"
+      : mode === "manual" && activeSessions === undefined && isSessionsLoading
+        ? "load-sessions"
+        : null;
+
+  // ─── Success card with ripple ───────────────────────────────────────────
   const SuccessCard = ({ record }: { record: any }) => (
-    <div className="space-y-4 animate-in slide-in-from-bottom-4">
-      <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-6 text-center space-y-3">
-        <div className="mx-auto w-14 h-14 rounded-full bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center">
-          <CheckCircle2 className="h-7 w-7 text-emerald-500" />
-        </div>
-        <p className="text-emerald-500 font-black text-sm uppercase tracking-widest">
-          Attendance Recorded
-        </p>
-        {record?.attendance?.session && (
-          <div className="space-y-0.5">
-            <p className="text-foreground font-bold">
-              {record.attendance.session.subject?.name ||
-                record.attendance.session.course?.name ||
-                "Session Authenticated"}
-            </p>
-            <p className="text-[10px] text-primary/70 font-medium tracking-wide uppercase">
-              {format(
-                new Date(record.attendance.session.date || Date.now()),
-                "MMM dd, yyyy",
-              )}{" "}
-              • {new Date().toLocaleTimeString()}
-            </p>
+    <div className="space-y-4 animate-in slide-in-from-bottom-4 duration-500">
+      <div className="relative bg-emerald-500/10 border border-emerald-500/25 rounded-2xl p-8 text-center space-y-4 overflow-hidden">
+        {/* Ripple rings behind icon */}
+        <div className="relative mx-auto w-20 h-20 flex items-center justify-center">
+          <div className="absolute inset-0 rounded-full bg-emerald-500/15 animate-success-ripple" />
+          <div className="absolute inset-0 rounded-full bg-emerald-500/10 animate-success-ripple-late" />
+          <div className="relative w-20 h-20 rounded-full bg-emerald-500/20 border-2 border-emerald-500/40 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+            <CheckCircle2 className="h-9 w-9 text-emerald-500 animate-in zoom-in-50 duration-500" />
           </div>
-        )}
+        </div>
+
+        {/* Title */}
+        <div className="space-y-1">
+          <p className="text-emerald-500 font-black text-xs uppercase tracking-[0.25em]">
+            Attendance Recorded
+          </p>
+          {record?.attendance?.session && (
+            <div className="space-y-1 pt-1">
+              <p className="text-foreground font-black text-base">
+                {record.attendance.session.subject?.name ||
+                  record.attendance.session.course?.name ||
+                  "Session Authenticated"}
+              </p>
+              <p className="text-[10px] text-muted-foreground font-medium tracking-wide uppercase">
+                {format(
+                  new Date(record.attendance.session.date || Date.now()),
+                  "MMM dd, yyyy",
+                )}{" "}
+                · {new Date().toLocaleTimeString()}
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* Subtle background grid */}
+        <div
+          className="absolute inset-0 opacity-[0.04] pointer-events-none"
+          style={{
+            backgroundImage:
+              "linear-gradient(hsl(var(--primary)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary)) 1px, transparent 1px)",
+            backgroundSize: "20px 20px",
+          }}
+        />
       </div>
+
       <Button
         variant="outline"
         size="sm"
-        className="w-full border-border text-muted-foreground hover:text-foreground uppercase text-[10px] font-black tracking-widest"
+        className="w-full border-border text-muted-foreground hover:text-foreground uppercase text-[10px] font-black tracking-[0.2em] h-10 rounded-xl transition-all hover:border-primary/40"
         onClick={reset}
       >
-        <RefreshCw className="mr-2 h-3 w-3" /> Mark Again
+        <RefreshCw className="mr-2 h-3 w-3" /> Mark Another Session
       </Button>
     </div>
   );
 
-  // ─── Error display ──────────────────────────────────────────────────────────
+  // ─── Error banner ───────────────────────────────────────────────────────
   const ErrorBanner = ({
     message,
     onRetry,
@@ -248,13 +280,15 @@ export default function QRScanner() {
   }) => {
     const [title, ...rest] = message.split("—").map((s) => s.trim());
     return (
-      <div className="bg-destructive/10 border border-destructive/25 rounded-xl p-4 space-y-3 animate-in fade-in">
+      <div className="bg-destructive/8 border border-destructive/20 rounded-2xl p-5 space-y-3 animate-in fade-in slide-in-from-bottom-2 duration-300">
         <div className="flex items-start gap-3">
-          <XCircle className="h-5 w-5 text-destructive mt-0.5 shrink-0" />
-          <div>
-            <p className="text-sm font-bold text-destructive">{title}</p>
+          <div className="w-8 h-8 rounded-lg bg-destructive/15 border border-destructive/20 flex items-center justify-center shrink-0 mt-0.5">
+            <XCircle className="h-4 w-4 text-destructive" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-black text-destructive">{title}</p>
             {rest.length > 0 && (
-              <p className="text-[11px] text-muted-foreground mt-0.5 leading-relaxed">
+              <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed">
                 {rest.join(" — ")}
               </p>
             )}
@@ -263,7 +297,7 @@ export default function QRScanner() {
         <Button
           variant="outline"
           size="sm"
-          className="w-full border-destructive/40 text-destructive hover:bg-destructive/10 uppercase text-[10px] font-black tracking-widest"
+          className="w-full border-destructive/30 text-destructive hover:bg-destructive/10 hover:border-destructive/50 uppercase text-[10px] font-black tracking-[0.2em] h-9 rounded-xl"
           onClick={onRetry}
         >
           Try Again
@@ -273,433 +307,539 @@ export default function QRScanner() {
   };
 
   return (
-    <div className="space-y-6 max-w-2xl mx-auto">
-      {/* Header */}
-      <div>
-        <h1 className="text-2xl font-black tracking-tighter text-foreground uppercase aura-text-glow">
-          Biometric Verification
-        </h1>
-        <p className="text-sm text-muted-foreground font-medium uppercase tracking-wider">
-          Secure Attendance Authentication System
-        </p>
-      </div>
+    <>
+      {/* Full-screen operation overlay */}
+      <FullScreenLoader
+        show={overlayType !== null}
+        operation={overlayType ?? "loading"}
+      />
 
-      {/* Mode toggle */}
-      <div className="flex gap-2 p-1 bg-muted/50 rounded-xl border border-border w-fit">
-        <button
-          onClick={() => switchMode("qr")}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-[11px] font-black uppercase tracking-widest transition-all ${
-            mode === "qr"
-              ? "bg-background text-foreground shadow-sm border border-border"
-              : "text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          <QrCode className="h-3.5 w-3.5" />
-          QR Camera
-        </button>
-        <button
-          onClick={() => switchMode("manual")}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-[11px] font-black uppercase tracking-widest transition-all ${
-            mode === "manual"
-              ? "bg-background text-foreground shadow-sm border border-border"
-              : "text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          <Hand className="h-3.5 w-3.5" />
-          Manual Check-In
-        </button>
-      </div>
+      <div className="space-y-6 max-w-2xl mx-auto">
+        {/* ─── Header ─────────────────────────────────────────────────────── */}
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center animate-aura-pulse shrink-0">
+            <ShieldCheck className="h-6 w-6 text-primary" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-black tracking-tighter text-foreground uppercase aura-text-glow">
+              Biometric Verification
+            </h1>
+            <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.2em]">
+              Secure Attendance Authentication System
+            </p>
+          </div>
+        </div>
 
-      {/* ─── QR MODE ─────────────────────────────────────────────────────── */}
-      {mode === "qr" && (
-        <>
-          {/* Insecure context warning banner (non-blocking) */}
-          {!window.isSecureContext && (
-            <div className="bg-amber-500/10 border border-amber-500/25 rounded-xl p-4 flex items-start gap-3">
-              <AlertTriangle className="h-5 w-5 text-amber-500 mt-0.5 shrink-0" />
-              <div className="space-y-1">
-                <p className="text-sm font-bold text-amber-500">
-                  Camera Unavailable on HTTP
-                </p>
-                <p className="text-[11px] text-muted-foreground leading-relaxed">
-                  Browsers block camera access on non-HTTPS origins. Switch to{" "}
-                  <strong className="text-foreground">Manual Check-In</strong>{" "}
-                  above, or enable the flag{" "}
-                  <code className="bg-background/80 px-1 rounded text-primary text-[10px]">
-                    chrome://flags/#unsafely-treat-insecure-origin-as-secure
-                  </code>{" "}
-                  and add{" "}
-                  <code className="bg-background/80 px-1 rounded text-primary text-[10px]">
-                    {window.location.origin}
-                  </code>
-                  .
-                </p>
+        {/* ─── Mode toggle with sliding indicator ─────────────────────────── */}
+        <div className="relative flex p-1 bg-muted/50 rounded-xl border border-border w-[270px]">
+          {/* Sliding pill */}
+          <div
+            className={`absolute top-1 bottom-1 w-[calc(50%-6px)] rounded-lg bg-background shadow border border-border transition-transform duration-300 ease-in-out pointer-events-none ${
+              mode === "manual"
+                ? "translate-x-[calc(100%+4px)]"
+                : "translate-x-0"
+            }`}
+          />
+          <button
+            onClick={() => switchMode("qr")}
+            className={`relative z-10 flex items-center justify-center gap-2 flex-1 py-2 text-[11px] font-black uppercase tracking-widest transition-colors duration-200 ${
+              mode === "qr"
+                ? "text-foreground"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <QrCode className="h-3.5 w-3.5" />
+            QR Camera
+          </button>
+          <button
+            onClick={() => switchMode("manual")}
+            className={`relative z-10 flex items-center justify-center gap-2 flex-1 py-2 text-[11px] font-black uppercase tracking-widest transition-colors duration-200 ${
+              mode === "manual"
+                ? "text-foreground"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <Hand className="h-3.5 w-3.5" />
+            Manual
+          </button>
+        </div>
+
+        {/* ─── QR MODE ─────────────────────────────────────────────────────── */}
+        {mode === "qr" && (
+          <>
+            {/* Insecure context warning */}
+            {!window.isSecureContext && (
+              <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 flex items-start gap-3">
+                <div className="w-8 h-8 rounded-lg bg-amber-500/15 border border-amber-500/20 flex items-center justify-center shrink-0">
+                  <AlertTriangle className="h-4 w-4 text-amber-500" />
+                </div>
+                <div className="space-y-1">
+                  <p className="text-sm font-black text-amber-500">
+                    Camera Unavailable on HTTP
+                  </p>
+                  <p className="text-[11px] text-muted-foreground leading-relaxed">
+                    Browsers block camera access on non-HTTPS origins. Switch to{" "}
+                    <strong className="text-foreground">Manual</strong> above,
+                    or enable the insecure-origin flag in{" "}
+                    <code className="bg-background/80 px-1 rounded text-primary text-[10px]">
+                      chrome://flags
+                    </code>
+                    .
+                  </p>
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Scanner viewfinder */}
-          <Card className="bg-card border-border overflow-hidden shadow-xl">
-            <CardContent className="p-0">
-              <div className="relative bg-muted/20 aspect-square max-h-80 flex items-center justify-center overflow-hidden">
-                <div id={SCANNER_ID} className="w-full h-full object-cover" />
+            {/* Scanner card */}
+            <Card className="bg-card border-border overflow-hidden shadow-2xl rounded-2xl">
+              {/* Card header strip */}
+              <div className="flex items-center justify-between px-5 py-3 border-b border-border bg-muted/30">
+                <div className="flex items-center gap-2">
+                  <Camera className="h-3.5 w-3.5 text-muted-foreground" />
+                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
+                    Camera Viewfinder
+                  </span>
+                </div>
+                {scanning && (
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-live-blink" />
+                    <span className="text-[9px] font-black text-emerald-500 uppercase tracking-widest">
+                      Live
+                    </span>
+                  </div>
+                )}
+              </div>
 
-                {/* Idle overlay */}
-                {!scanning &&
-                  !scannedData &&
-                  !markQRMutation.isPending &&
-                  window.isSecureContext && (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/80 z-30">
-                      {permissionStatus === "denied" ? (
-                        <div className="text-center p-6 space-y-3">
-                          <CameraOff className="h-14 w-14 text-destructive mx-auto" />
-                          <p className="text-sm font-bold text-foreground">
-                            Camera Blocked
-                          </p>
-                          <p className="text-xs text-muted-foreground">
-                            Enable camera permission in your browser settings,
-                            then refresh.
-                          </p>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => window.location.reload()}
-                            className="uppercase text-[10px] font-black tracking-widest"
-                          >
-                            Refresh Page
-                          </Button>
-                        </div>
-                      ) : (
-                        <div className="text-center p-6 space-y-2">
-                          <Camera className="h-14 w-14 text-primary/40 mx-auto" />
-                          <p className="text-sm font-medium text-muted-foreground">
-                            Camera not active
-                          </p>
-                          <p className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">
-                            Press Start Scanner below
-                          </p>
-                        </div>
-                      )}
+              <CardContent className="p-0">
+                <div className="relative bg-black aspect-square max-h-80 flex items-center justify-center overflow-hidden">
+                  <div id={SCANNER_ID} className="w-full h-full object-cover" />
+
+                  {/* Idle overlay */}
+                  {!scanning &&
+                    !scannedData &&
+                    !markQRMutation.isPending &&
+                    window.isSecureContext && (
+                      <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/90 backdrop-blur-sm z-30">
+                        {permissionStatus === "denied" ? (
+                          <div className="text-center p-6 space-y-4">
+                            <div className="w-16 h-16 rounded-2xl bg-destructive/10 border border-destructive/20 flex items-center justify-center mx-auto">
+                              <CameraOff className="h-8 w-8 text-destructive" />
+                            </div>
+                            <div>
+                              <p className="text-sm font-black text-foreground">
+                                Camera Blocked
+                              </p>
+                              <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed">
+                                Enable camera permission in browser settings,
+                                then refresh.
+                              </p>
+                            </div>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => window.location.reload()}
+                              className="uppercase text-[10px] font-black tracking-widest rounded-xl"
+                            >
+                              Refresh Page
+                            </Button>
+                          </div>
+                        ) : (
+                          <div className="text-center p-6 space-y-3">
+                            <div className="w-16 h-16 rounded-2xl bg-muted/80 border border-border flex items-center justify-center mx-auto">
+                              <QrCode className="h-8 w-8 text-muted-foreground/40" />
+                            </div>
+                            <p className="text-sm font-black text-foreground">
+                              Camera Inactive
+                            </p>
+                            <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
+                              Press Start Scanner below
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                  {/* HTTP block overlay */}
+                  {!window.isSecureContext && (
+                    <div className="absolute inset-0 bg-background/95 z-40 flex items-center justify-center">
+                      <div className="text-center p-6 space-y-3">
+                        <CameraOff className="h-12 w-12 text-muted-foreground/30 mx-auto" />
+                        <p className="text-[11px] text-muted-foreground uppercase tracking-widest font-black">
+                          Camera disabled on HTTP
+                        </p>
+                      </div>
                     </div>
                   )}
 
-                {/* HTTP block overlay */}
-                {!window.isSecureContext && (
-                  <div className="absolute inset-0 bg-background/90 z-40 flex items-center justify-center">
-                    <div className="text-center p-6 space-y-2">
-                      <CameraOff className="h-12 w-12 text-muted-foreground/40 mx-auto" />
-                      <p className="text-xs text-muted-foreground uppercase tracking-widest font-bold">
-                        Camera disabled on HTTP
-                      </p>
+                  {/* Scan beam */}
+                  {scanning && !markQRMutation.isPending && (
+                    <div
+                      className="animate-scan-beam bg-gradient-to-r from-transparent via-primary to-transparent z-20"
+                      style={{
+                        boxShadow: "0 0 14px 6px hsl(var(--primary) / 0.4)",
+                      }}
+                    />
+                  )}
+
+                  {/* Corner brackets — pulsing when scanning */}
+                  <div
+                    className={`absolute w-60 h-60 z-10 pointer-events-none transition-opacity duration-500 ${
+                      scanning
+                        ? "opacity-100 animate-bracket-pulse"
+                        : "opacity-20"
+                    }`}
+                  >
+                    <div className="absolute top-0 left-0 w-9 h-9 border-t-2 border-l-2 border-primary rounded-tl-xl" />
+                    <div className="absolute top-0 right-0 w-9 h-9 border-t-2 border-r-2 border-primary rounded-tr-xl" />
+                    <div className="absolute bottom-0 left-0 w-9 h-9 border-b-2 border-l-2 border-primary rounded-bl-xl" />
+                    <div className="absolute bottom-0 right-0 w-9 h-9 border-b-2 border-r-2 border-primary rounded-br-xl" />
+                    {scanning && (
+                      <>
+                        <div className="absolute top-0 left-0 w-2 h-2 bg-primary rounded-full shadow-[0_0_6px_2px_hsl(var(--primary)/0.8)]" />
+                        <div className="absolute top-0 right-0 w-2 h-2 bg-primary rounded-full shadow-[0_0_6px_2px_hsl(var(--primary)/0.8)]" />
+                        <div className="absolute bottom-0 left-0 w-2 h-2 bg-primary rounded-full shadow-[0_0_6px_2px_hsl(var(--primary)/0.8)]" />
+                        <div className="absolute bottom-0 right-0 w-2 h-2 bg-primary rounded-full shadow-[0_0_6px_2px_hsl(var(--primary)/0.8)]" />
+                      </>
+                    )}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      {scannedData && (
+                        <div className="h-16 w-16 bg-emerald-500/20 rounded-full flex items-center justify-center border-2 border-emerald-500 shadow-xl shadow-emerald-500/20 animate-in zoom-in-50 duration-400">
+                          <CheckCircle2 className="h-8 w-8 text-emerald-500" />
+                        </div>
+                      )}
                     </div>
                   </div>
-                )}
-
-                {/* Scan beam animation */}
-                {scanning && !markQRMutation.isPending && (
-                  <div
-                    className="animate-scan-beam bg-gradient-to-r from-transparent via-primary to-transparent z-20"
-                    style={{
-                      boxShadow: "0 0 12px 4px hsl(var(--primary) / 0.35)",
-                    }}
-                  />
-                )}
-
-                {/* Corner targeting brackets */}
-                <div
-                  className={`absolute w-64 h-64 z-10 pointer-events-none transition-opacity duration-300 ${scanning ? "opacity-100" : "opacity-20"}`}
-                >
-                  <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-primary/60 rounded-tl-lg" />
-                  <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-primary/60 rounded-tr-lg" />
-                  <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-primary/60 rounded-bl-lg" />
-                  <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-primary/60 rounded-br-lg" />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    {markQRMutation.isPending && (
-                      <div className="flex flex-col items-center gap-3">
-                        <Loader2 className="h-10 w-10 text-primary animate-spin" />
-                        <span className="text-[10px] font-black text-primary animate-pulse uppercase tracking-widest">
-                          Verifying…
-                        </span>
-                      </div>
-                    )}
-                    {scannedData && (
-                      <div className="h-16 w-16 bg-emerald-500/20 rounded-full flex items-center justify-center border border-emerald-500 shadow-lg shadow-emerald-500/10 animate-in zoom-in-50">
-                        <CheckCircle2 className="h-8 w-8 text-emerald-500" />
-                      </div>
-                    )}
-                    {scanning && !markQRMutation.isPending && (
-                      <ScanLine className="h-12 w-12 text-primary/30 animate-pulse" />
-                    )}
-                  </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
 
-          {/* Action / result area */}
-          {scannedData ? (
-            <SuccessCard record={scannedData} />
-          ) : lastError ? (
-            <ErrorBanner
-              message={lastError}
-              onRetry={() => {
-                setLastError(null);
-              }}
-            />
-          ) : (
-            <div className="text-center space-y-3">
-              <Button
-                onClick={scanning ? stopScanner : startScanner}
-                disabled={markQRMutation.isPending || !window.isSecureContext}
-                size="lg"
-                variant={scanning ? "outline" : "default"}
-                className={`px-12 h-14 text-base font-black uppercase tracking-widest transition-all ${
-                  scanning
-                    ? "border-destructive text-destructive hover:bg-destructive/10"
-                    : ""
-                }`}
-              >
-                {scanning ? (
-                  <>
-                    <CameraOff className="mr-3 h-5 w-5" /> Stop Scanner
-                  </>
-                ) : (
-                  <>
-                    <ScanLine className="mr-3 h-5 w-5" /> Start Scanner
-                  </>
-                )}
-              </Button>
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-                {!window.isSecureContext
-                  ? "Camera unavailable — use Manual Check-In"
-                  : scanning
-                    ? "Active • Align QR code with viewfinder"
-                    : "Center the QR code in the viewfinder"}
-              </p>
-            </div>
-          )}
-        </>
-      )}
-
-      {/* ─── MANUAL MODE ─────────────────────────────────────────────────── */}
-      {mode === "manual" && (
-        <div className="space-y-4">
-          {manualResult ? (
-            <SuccessCard record={manualResult} />
-          ) : (
-            <>
-              <div className="flex items-center justify-between">
-                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">
-                  Today's Timetable Sessions
-                </p>
+            {/* Action / result area */}
+            {scannedData ? (
+              <SuccessCard record={scannedData} />
+            ) : lastError ? (
+              <ErrorBanner
+                message={lastError}
+                onRetry={() => setLastError(null)}
+              />
+            ) : (
+              <div className="text-center space-y-3">
                 <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => refetchSessions()}
-                  disabled={isSessionsLoading}
-                  className="text-[10px] uppercase font-black tracking-widest text-primary hover:text-primary/80 h-7 px-2"
+                  onClick={scanning ? stopScanner : startScanner}
+                  disabled={markQRMutation.isPending || !window.isSecureContext}
+                  size="lg"
+                  variant={scanning ? "outline" : "default"}
+                  className={`px-12 h-14 text-sm font-black uppercase tracking-[0.15em] rounded-xl transition-all duration-200 shadow-lg ${
+                    scanning
+                      ? "border-destructive/50 text-destructive hover:bg-destructive/10 hover:border-destructive"
+                      : "shadow-primary/25 hover:shadow-primary/40 hover:shadow-xl"
+                  }`}
                 >
-                  <RefreshCw
-                    className={`h-3 w-3 mr-1 ${isSessionsLoading ? "animate-spin" : ""}`}
-                  />
-                  Refresh
+                  {scanning ? (
+                    <>
+                      <CameraOff className="mr-3 h-5 w-5" /> Stop Scanner
+                    </>
+                  ) : (
+                    <>
+                      <ScanLine className="mr-3 h-5 w-5" /> Start Scanner
+                    </>
+                  )}
                 </Button>
+                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+                  {!window.isSecureContext
+                    ? "Camera unavailable — use Manual mode"
+                    : scanning
+                      ? "Active · Align QR code within the frame"
+                      : "Position the QR code inside the viewfinder"}
+                </p>
               </div>
+            )}
+          </>
+        )}
 
-              {/* Loading skeleton */}
-              {isSessionsLoading && (
-                <div className="space-y-3">
-                  {[0, 1, 2].map((i) => (
-                    <div
-                      key={i}
-                      className="h-20 rounded-xl animate-shimmer"
-                      style={{ animationDelay: `${i * 150}ms` }}
+        {/* ─── MANUAL MODE ─────────────────────────────────────────────────── */}
+        {mode === "manual" && (
+          <div className="space-y-4">
+            {manualResult ? (
+              <SuccessCard record={manualResult} />
+            ) : (
+              <>
+                {/* Section header */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-1.5 h-4 bg-primary rounded-full" />
+                    <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">
+                      Today's Timetable Sessions
+                    </p>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => refetchSessions()}
+                    disabled={isSessionsLoading}
+                    className="text-[10px] uppercase font-black tracking-widest text-primary hover:text-primary/80 h-7 px-2 rounded-lg"
+                  >
+                    <RefreshCw
+                      className={`h-3 w-3 mr-1 ${isSessionsLoading ? "animate-spin" : ""}`}
                     />
-                  ))}
+                    Refresh
+                  </Button>
                 </div>
-              )}
 
-              {/* Error fetching sessions */}
-              {isSessionsError && !isSessionsLoading && (
-                <Card className="bg-card border-border">
-                  <CardContent className="p-8 text-center space-y-3">
-                    <AlertTriangle className="h-10 w-10 text-destructive/40 mx-auto" />
-                    <p className="text-sm font-bold text-foreground">
-                      Failed to Load Sessions
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      Could not reach the server. Check your connection.
-                    </p>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => refetchSessions()}
-                      className="uppercase text-[10px] font-black tracking-widest"
-                    >
-                      Retry
-                    </Button>
-                  </CardContent>
-                </Card>
-              )}
+                {/* Skeleton — shows only on refetch (initial load shows full-screen overlay) */}
+                {isSessionsLoading && activeSessions !== undefined && (
+                  <div className="space-y-3">
+                    {[0, 1, 2].map((i) => (
+                      <div
+                        key={i}
+                        className="h-20 rounded-xl animate-shimmer"
+                        style={{ animationDelay: `${i * 150}ms` }}
+                      />
+                    ))}
+                  </div>
+                )}
 
-              {/* No timetable sessions today */}
-              {!isSessionsLoading &&
-                !isSessionsError &&
-                activeSessions?.length === 0 && (
-                  <Card className="bg-card border-border">
-                    <CardContent className="p-10 text-center space-y-3">
-                      <BookOpen className="h-10 w-10 text-muted-foreground/20 mx-auto" />
-                      <p className="text-sm font-bold text-foreground">
-                        No Active Sessions
-                      </p>
-                      <p className="text-xs text-muted-foreground leading-relaxed">
-                        No sessions are currently open for your enrolled
-                        courses.
-                        <br />
-                        Ask your faculty to start a session, then refresh.
-                      </p>
+                {/* Error fetching sessions */}
+                {isSessionsError && !isSessionsLoading && (
+                  <Card className="bg-card border-border rounded-2xl">
+                    <CardContent className="p-8 text-center space-y-4">
+                      <div className="w-14 h-14 rounded-2xl bg-destructive/10 border border-destructive/15 flex items-center justify-center mx-auto">
+                        <AlertTriangle className="h-7 w-7 text-destructive/50" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-black text-foreground">
+                          Failed to Load Sessions
+                        </p>
+                        <p className="text-[11px] text-muted-foreground mt-1">
+                          Could not reach the server. Check your connection.
+                        </p>
+                      </div>
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={() => refetchSessions()}
-                        className="uppercase text-[10px] font-black tracking-widest mt-2"
+                        className="uppercase text-[10px] font-black tracking-widest rounded-xl"
                       >
-                        <RefreshCw className="mr-1.5 h-3 w-3" /> Refresh
+                        Retry
                       </Button>
                     </CardContent>
                   </Card>
                 )}
 
-              {/* Error from last mark attempt */}
-              {lastError && (
-                <ErrorBanner
-                  message={lastError}
-                  onRetry={() => setLastError(null)}
-                />
-              )}
-
-              {/* Session list */}
-              {!isSessionsLoading &&
-                !isSessionsError &&
-                (activeSessions?.length ?? 0) > 0 && (
-                  <div className="space-y-3">
-                    {activeSessions!.map((sess: any, i: number) => {
-                      const isPending =
-                        markManualMutation.isPending &&
-                        markManualMutation.variables === sess.id;
-                      return (
-                        <Card
-                          key={sess.id}
-                          className="bg-card border-border hover:border-primary/40 transition-colors shadow-md animate-in slide-in-from-bottom-2"
-                          style={{
-                            animationDelay: `${i * 80}ms`,
-                            animationFillMode: "both",
-                          }}
+                {/* No sessions today */}
+                {!isSessionsLoading &&
+                  !isSessionsError &&
+                  activeSessions?.length === 0 && (
+                    <Card className="bg-card border-border rounded-2xl">
+                      <CardContent className="p-10 text-center space-y-4">
+                        <div className="w-14 h-14 rounded-2xl bg-muted border border-border flex items-center justify-center mx-auto">
+                          <BookOpen className="h-7 w-7 text-muted-foreground/30" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-black text-foreground">
+                            No Active Sessions
+                          </p>
+                          <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed max-w-xs mx-auto">
+                            No sessions are currently open for your enrolled
+                            courses. Ask your faculty to start a session.
+                          </p>
+                        </div>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => refetchSessions()}
+                          className="uppercase text-[10px] font-black tracking-widest rounded-xl"
                         >
-                          <CardContent className="p-4 flex items-center justify-between gap-4">
-                            <div className="flex-1 min-w-0 space-y-1">
-                              <div className="flex items-center gap-2 flex-wrap">
-                                <p className="font-black text-foreground text-sm truncate">
-                                  {sess.subject?.name ||
-                                    sess.course?.name ||
-                                    "Session"}
-                                </p>
-                                {sess.subject?.name && (
-                                  <span className="text-[9px] font-bold text-muted-foreground bg-muted px-2 py-0.5 rounded uppercase tracking-tight shrink-0">
-                                    {sess.course?.code}
-                                  </span>
-                                )}
-                                <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[9px] font-black uppercase px-2 shrink-0">
-                                  Live
-                                </Badge>
-                              </div>
-                              <div className="flex items-center gap-3 text-[10px] text-muted-foreground font-medium">
-                                <span className="flex items-center gap-1">
-                                  <Clock className="h-3 w-3" />
-                                  {sess.startTime} – {sess.endTime}
-                                </span>
-                                <span className="flex items-center gap-1">
-                                  <BookOpen className="h-3 w-3" />
-                                  {sess.topic}
-                                </span>
-                              </div>
-                              {sess.batches?.length > 0 && (
-                                <div className="flex flex-wrap gap-1 pt-0.5">
-                                  {sess.batches.map((b: string) => (
-                                    <span
-                                      key={b}
-                                      className="text-[9px] px-1.5 py-0.5 bg-primary/10 text-primary border border-primary/20 rounded font-black uppercase"
-                                    >
-                                      Batch {b}
-                                    </span>
-                                  ))}
-                                </div>
-                              )}
-                            </div>
-                            <Button
-                              size="sm"
-                              onClick={() => {
-                                setLastError(null);
-                                markManualMutation.mutate(sess.id);
-                              }}
-                              disabled={markManualMutation.isPending}
-                              className="font-black uppercase tracking-widest text-[10px] shrink-0 h-10 px-4"
-                            >
-                              {isPending ? (
-                                <Loader2 className="h-4 w-4 animate-spin" />
-                              ) : (
-                                <>
-                                  <Hand className="mr-1.5 h-3.5 w-3.5" /> Mark
-                                  Present
-                                </>
-                              )}
-                            </Button>
-                          </CardContent>
-                        </Card>
-                      );
-                    })}
-                  </div>
+                          <RefreshCw className="mr-1.5 h-3 w-3" /> Refresh
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  )}
+
+                {/* Error from last mark attempt */}
+                {lastError && (
+                  <ErrorBanner
+                    message={lastError}
+                    onRetry={() => setLastError(null)}
+                  />
                 )}
-            </>
-          )}
+
+                {/* Session list */}
+                {!isSessionsLoading &&
+                  !isSessionsError &&
+                  (activeSessions?.length ?? 0) > 0 && (
+                    <div className="space-y-3">
+                      {activeSessions!.map((sess: any, i: number) => {
+                        const isPending =
+                          markManualMutation.isPending &&
+                          markManualMutation.variables === sess.id;
+                        return (
+                          <Card
+                            key={sess.id}
+                            className="bg-card border-border rounded-2xl hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5 transition-all duration-200 animate-in slide-in-from-bottom-2 overflow-hidden"
+                            style={{
+                              animationDelay: `${i * 80}ms`,
+                              animationFillMode: "both",
+                            }}
+                          >
+                            <div className="flex">
+                              {/* Colored accent bar */}
+                              <div className="w-1 bg-gradient-to-b from-primary/80 to-primary/20 shrink-0" />
+                              <CardContent className="p-4 flex items-center justify-between gap-4 flex-1">
+                                <div className="flex-1 min-w-0 space-y-1.5">
+                                  <div className="flex items-center gap-2 flex-wrap">
+                                    <p className="font-black text-foreground text-sm truncate">
+                                      {sess.subject?.name ||
+                                        sess.course?.name ||
+                                        "Session"}
+                                    </p>
+                                    {sess.subject?.name && (
+                                      <span className="text-[9px] font-black text-muted-foreground bg-muted px-1.5 py-0.5 rounded-md uppercase tracking-tight shrink-0">
+                                        {sess.course?.code}
+                                      </span>
+                                    )}
+                                    <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[9px] font-black uppercase px-2 shrink-0 gap-1">
+                                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-live-blink inline-block" />
+                                      Live
+                                    </Badge>
+                                  </div>
+                                  <div className="flex items-center gap-3 text-[10px] text-muted-foreground font-medium flex-wrap">
+                                    <span className="flex items-center gap-1">
+                                      <Clock className="h-3 w-3" />
+                                      {sess.startTime} – {sess.endTime}
+                                    </span>
+                                    {sess.topic && (
+                                      <span className="flex items-center gap-1 truncate max-w-[160px]">
+                                        <BookOpen className="h-3 w-3 shrink-0" />
+                                        {sess.topic}
+                                      </span>
+                                    )}
+                                  </div>
+                                  {sess.batches?.length > 0 && (
+                                    <div className="flex flex-wrap gap-1 pt-0.5">
+                                      {sess.batches.map((b: string) => (
+                                        <span
+                                          key={b}
+                                          className="text-[9px] px-1.5 py-0.5 bg-primary/10 text-primary border border-primary/20 rounded-md font-black uppercase"
+                                        >
+                                          Batch {b}
+                                        </span>
+                                      ))}
+                                    </div>
+                                  )}
+                                </div>
+
+                                <Button
+                                  size="sm"
+                                  onClick={() => {
+                                    setLastError(null);
+                                    markManualMutation.mutate(sess.id);
+                                  }}
+                                  disabled={markManualMutation.isPending}
+                                  className="font-black uppercase tracking-widest text-[10px] shrink-0 h-10 px-4 rounded-xl shadow-md shadow-primary/20 hover:shadow-primary/35 transition-all hover:scale-[1.03] active:scale-[0.97]"
+                                >
+                                  {isPending ? (
+                                    <span className="flex items-center gap-1">
+                                      <span
+                                        className="w-1.5 h-1.5 rounded-full bg-primary-foreground animate-bounce-dot"
+                                        style={{ animationDelay: "0s" }}
+                                      />
+                                      <span
+                                        className="w-1.5 h-1.5 rounded-full bg-primary-foreground animate-bounce-dot"
+                                        style={{ animationDelay: "0.22s" }}
+                                      />
+                                      <span
+                                        className="w-1.5 h-1.5 rounded-full bg-primary-foreground animate-bounce-dot"
+                                        style={{ animationDelay: "0.44s" }}
+                                      />
+                                    </span>
+                                  ) : (
+                                    <>
+                                      <Hand className="mr-1.5 h-3.5 w-3.5" />
+                                      Mark Present
+                                    </>
+                                  )}
+                                </Button>
+                              </CardContent>
+                            </div>
+                          </Card>
+                        );
+                      })}
+                    </div>
+                  )}
+              </>
+            )}
+          </div>
+        )}
+
+        {/* ─── Security indicators ─────────────────────────────────────────── */}
+        <div className="grid gap-3 sm:grid-cols-3">
+          {[
+            {
+              label: "Location",
+              status: "Geofenced",
+              icon: MapPin,
+              color: "text-blue-500",
+              iconBg: "bg-blue-500/10 border-blue-500/20",
+              dot: "bg-blue-500",
+            },
+            {
+              label: "Network",
+              status: "Encrypted",
+              icon: Wifi,
+              color: "text-violet-500",
+              iconBg: "bg-violet-500/10 border-violet-500/20",
+              dot: "bg-violet-500",
+            },
+            {
+              label: "Identity",
+              status: "Validated",
+              icon: Fingerprint,
+              color: "text-emerald-500",
+              iconBg: "bg-emerald-500/10 border-emerald-500/20",
+              dot: "bg-emerald-500",
+            },
+          ].map((item, i) => (
+            <Card
+              key={i}
+              className="bg-card border-border rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 animate-in fade-in slide-in-from-bottom-2"
+              style={{
+                animationDelay: `${i * 60}ms`,
+                animationFillMode: "both",
+              }}
+            >
+              <CardContent className="p-4 flex items-center gap-3">
+                <div className={`rounded-xl ${item.iconBg} border p-2.5`}>
+                  <item.icon className={`h-4 w-4 ${item.color}`} />
+                </div>
+                <div className="space-y-0.5 flex-1">
+                  <p className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em] leading-none">
+                    {item.label}
+                  </p>
+                  <p
+                    className={`text-[10px] font-black uppercase tracking-tight ${item.color}`}
+                  >
+                    {item.status}
+                  </p>
+                </div>
+                <span
+                  className={`block w-1.5 h-1.5 rounded-full ${item.dot} animate-live-blink shrink-0`}
+                />
+              </CardContent>
+            </Card>
+          ))}
         </div>
-      )}
 
-      {/* Status indicators */}
-      <div className="grid gap-4 sm:grid-cols-3">
-        {[
-          { label: "Location", status: "Geofenced", icon: MapPin },
-          { label: "Network", status: "Encrypted", icon: Wifi },
-          { label: "Identity", status: "Validated", icon: Fingerprint },
-        ].map((item, i) => (
-          <Card key={i} className="bg-card border-border shadow-sm">
-            <CardContent className="p-4 flex items-center gap-4">
-              <div className="rounded-lg bg-muted p-2 border border-border">
-                <item.icon className="h-4 w-4 text-primary" />
-              </div>
-              <div className="space-y-0.5">
-                <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest leading-none mb-1">
-                  {item.label}
-                </p>
-                <p className="text-[10px] font-black text-primary uppercase tracking-tighter">
-                  {item.status}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+        {/* ─── Info notice ─────────────────────────────────────────────────── */}
+        <Card className="bg-muted/30 border-border/50 rounded-xl">
+          <CardContent className="p-4 flex items-center gap-4 text-muted-foreground">
+            <Clock className="h-4 w-4 opacity-40 shrink-0" />
+            <p className="text-[10px] font-medium leading-relaxed uppercase tracking-wider">
+              Attendance window is active. Mark within the first 10 minutes for
+              full credit.
+            </p>
+          </CardContent>
+        </Card>
       </div>
-
-      {/* Info notice */}
-      <Card className="bg-card/50 border-border/50">
-        <CardContent className="p-4 flex items-center gap-4 text-muted-foreground">
-          <Clock className="h-5 w-5 opacity-40 shrink-0" />
-          <p className="text-[10px] font-medium leading-relaxed uppercase tracking-wider">
-            Attendance window is active. Mark within the first 10 minutes for
-            full credit.
-          </p>
-        </CardContent>
-      </Card>
-    </div>
+    </>
   );
 }

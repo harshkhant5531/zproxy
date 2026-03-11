@@ -45,6 +45,7 @@ import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
+import { FullScreenLoader } from "@/components/FullScreenLoader";
 
 export default function StudentManagement() {
   const [search, setSearch] = useState("");
@@ -226,589 +227,600 @@ export default function StudentManagement() {
   const students = Array.isArray(userData) ? userData : [];
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-black tracking-tighter text-foreground uppercase flex items-center gap-3 aura-text-glow">
-            <Shield className="h-8 w-8 text-primary" />
-            Student Registry
-          </h1>
-          <p className="text-[10px] text-muted-foreground font-mono tracking-[0.2em] mt-1 uppercase">
-            {isLoading
-              ? "INITIALIZING SECURE LINK..."
-              : `${students.length} VERIFIED IDENTITIES IN CORE ENGINE`}
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm">
-            <Download className="mr-2 h-4 w-4" /> Export
-          </Button>
-          <Button
-            size="sm"
-            onClick={() => {
-              resetForm();
-              setIsCreateOpen(true);
-            }}
-            className="bg-primary hover:bg-primary/90 font-bold"
-          >
-            <UserPlus className="mr-2 h-4 w-4" /> Add Student
-          </Button>
-        </div>
-      </div>
-
-      <Card className="glass-card aura-glow border-none overflow-hidden">
-        <CardHeader className="card-header-muted pb-4">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="relative w-full md:max-w-md group">
-              {isFetching ? (
-                <Loader2 className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-primary animate-spin" />
-              ) : (
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
-              )}
-              <Input
-                placeholder="Search by name, enrollment, or department..."
-                className="pl-10 bg-background border-border h-10"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-              {search && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setSearch("")}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 h-7 w-7 text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              )}
-            </div>
+    <>
+      <FullScreenLoader show={createMutation.isPending} operation="creating" />
+      <FullScreenLoader show={updateMutation.isPending} operation="saving" />
+      <FullScreenLoader show={deleteMutation.isPending} operation="deleting" />
+      <FullScreenLoader
+        show={enrollmentMutation.isPending}
+        operation="enrolling"
+      />
+      <div className="space-y-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-black tracking-tighter text-foreground uppercase flex items-center gap-3 aura-text-glow">
+              <Shield className="h-8 w-8 text-primary" />
+              Student Registry
+            </h1>
+            <p className="text-[10px] text-muted-foreground font-mono tracking-[0.2em] mt-1 uppercase">
+              {isLoading
+                ? "INITIALIZING SECURE LINK..."
+                : `${students.length} VERIFIED IDENTITIES IN CORE ENGINE`}
+            </p>
           </div>
-        </CardHeader>
-        <CardContent className="p-0">
-          <Table>
-            <TableHeader className="">
-              <TableRow className="border-border/40 hover:bg-transparent">
-                <TableHead className="text-muted-foreground/60 font-semibold text-[10px] uppercase tracking-widest h-11 px-6">
-                  Identity
-                </TableHead>
-                <TableHead className="text-muted-foreground/60 font-semibold text-[10px] uppercase tracking-widest h-11">
-                  Registry Data
-                </TableHead>
-                <TableHead className="text-muted-foreground/60 font-semibold text-[10px] uppercase tracking-widest h-11">
-                  Cohort
-                </TableHead>
-                <TableHead className="text-muted-foreground/60 font-semibold text-[10px] uppercase tracking-widest h-11">
-                  Hardware
-                </TableHead>
-                <TableHead className="text-muted-foreground/60 font-semibold text-[10px] uppercase tracking-widest h-11 text-right px-6">
-                  Engine Actions
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody
-              className={
-                isFetching && !isLoading ? "opacity-50 transition-opacity" : ""
-              }
-            >
-              {students.map((s: any) => (
-                <TableRow
-                  key={s.id}
-                  className="border-border/30 hover:bg-muted/20 transition-colors group"
-                >
-                  <TableCell className="px-6 py-4">
-                    <div className="flex flex-col">
-                      <span className="font-semibold text-foreground text-sm">
-                        {s.studentProfile?.fullName || s.username}
-                      </span>
-                      <span className="text-[10px] font-mono text-muted-foreground/60 uppercase">
-                        {s.email}
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex flex-col">
-                      <span className="text-xs font-bold text-primary uppercase tracking-tight">
-                        ID: {s.studentProfile?.enrollmentNumber || "PENDING"}
-                      </span>
-                      <span className="text-[10px] text-muted-foreground/60 font-mono">
-                        ROLL: {s.studentProfile?.rollNumber || "N/A"}
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex flex-col">
-                      <span className="text-xs text-foreground font-semibold uppercase">
-                        {s.studentProfile?.department || "N/A"}
-                      </span>
-                      <span className="text-[10px] text-muted-foreground/60">
-                        SEM {s.studentProfile?.currentSemester || "?"} •{" "}
-                        {s.studentProfile?.batch || "N/A"}
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <div
-                        className={`h-1.5 w-1.5 rounded-full ${s.deviceId ? "bg-emerald-500" : "bg-muted-foreground/30"}`}
-                      />
-                      <span className="text-[10px] font-mono text-muted-foreground/60 uppercase truncate max-w-[80px]">
-                        {s.deviceId ? "LINKED" : "UNBOUND"}
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-right px-6">
-                    <div className="flex justify-end gap-1 opacity-20 group-hover:opacity-100 transition-opacity">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleEnrollment(s)}
-                        title="Manage Enrollment"
-                        className="h-8 w-8 text-amber-500 hover:bg-amber-500/10"
-                      >
-                        <BookOpen className="h-3.5 w-3.5" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleEdit(s)}
-                        className="h-8 w-8 text-primary hover:bg-primary/10"
-                      >
-                        <Edit2 className="h-3.5 w-3.5" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => {
-                          if (confirm("Delete student?"))
-                            deleteMutation.mutate(s.id);
-                        }}
-                        className="h-8 w-8 text-red-500 hover:bg-red-500/10"
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-              {students.length === 0 && !isLoading && (
-                <TableRow>
-                  <TableCell colSpan={5} className="h-40 text-center">
-                    <div className="flex flex-col items-center justify-center text-muted-foreground gap-2">
-                      <Search className="h-8 w-8 opacity-20" />
-                      <p className="text-sm font-medium">
-                        No matches found in the registry core
-                      </p>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              )}
-              {isLoading && (
-                <TableRow>
-                  <TableCell colSpan={5} className="h-60 text-center">
-                    <div className="flex flex-col items-center justify-center gap-4">
-                      <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                      <p className="text-xs font-mono text-muted-foreground/60 uppercase tracking-widest">
-                        Querying Cloud Registry...
-                      </p>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
-
-      {/* CREATE DIALOG */}
-      <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-        <DialogContent className="max-w-2xl bg-card border-border">
-          <DialogHeader>
-            <DialogTitle className="text-xl font-bold flex items-center gap-2">
-              <UserPlus className="h-5 w-5 text-primary" /> Initialize New
-              Student Profile
-            </DialogTitle>
-            <DialogDescription className="text-muted-foreground">
-              Enter comprehensive institutional data for registry enrollment.
-            </DialogDescription>
-          </DialogHeader>
-          <ScrollArea className="max-h-[70vh] px-1">
-            <div className="grid gap-6 py-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label className="text-slate-400 text-[10px] uppercase font-bold">
-                    Username
-                  </Label>
-                  <Input
-                    value={formData.username}
-                    onChange={(e) =>
-                      setFormData({ ...formData, username: e.target.value })
-                    }
-                    className="bg-background border-border"
-                    placeholder="jdoe2023"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-slate-400 text-[10px] uppercase font-bold">
-                    Primary Email
-                  </Label>
-                  <Input
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) =>
-                      setFormData({ ...formData, email: e.target.value })
-                    }
-                    className="bg-background border-border"
-                    placeholder="enroll@darshan.ac.in"
-                  />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label className="text-slate-400 text-[10px] uppercase font-bold">
-                  Account Password
-                </Label>
-                <Input
-                  type="password"
-                  value={formData.password}
-                  onChange={(e) =>
-                    setFormData({ ...formData, password: e.target.value })
-                  }
-                  className="bg-background border-border"
-                  placeholder="••••••••"
-                />
-              </div>
-              <div className="h-px bg-white/5" />
-              <div className="space-y-2">
-                <Label className="text-slate-400 text-[10px] uppercase font-bold">
-                  Full Legal Name
-                </Label>
-                <Input
-                  value={formData.fullName}
-                  onChange={(e) =>
-                    setFormData({ ...formData, fullName: e.target.value })
-                  }
-                  className="bg-background border-border"
-                  placeholder="Johnathan Doe"
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label className="text-slate-400 text-[10px] uppercase font-bold">
-                    Enrollment Number
-                  </Label>
-                  <Input
-                    value={formData.enrollmentNumber}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        enrollmentNumber: e.target.value,
-                      })
-                    }
-                    className="bg-background border-border"
-                    placeholder="NIT22CS045"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-slate-400 text-[10px] uppercase font-bold">
-                    Roll Number
-                  </Label>
-                  <Input
-                    value={formData.rollNumber}
-                    onChange={(e) =>
-                      setFormData({ ...formData, rollNumber: e.target.value })
-                    }
-                    className="bg-background border-border"
-                    placeholder="220101"
-                  />
-                </div>
-              </div>
-              <div className="grid grid-cols-3 gap-4">
-                <div className="space-y-2">
-                  <Label className="text-slate-400 text-[10px] uppercase font-bold">
-                    Department
-                  </Label>
-                  <Input
-                    value={formData.department}
-                    onChange={(e) =>
-                      setFormData({ ...formData, department: e.target.value })
-                    }
-                    className="bg-background border-border"
-                    placeholder="CSE"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-slate-400 text-[10px] uppercase font-bold">
-                    Batch
-                  </Label>
-                  <Input
-                    value={formData.batch}
-                    onChange={(e) =>
-                      setFormData({ ...formData, batch: e.target.value })
-                    }
-                    className="bg-background border-border"
-                    placeholder="2022-26"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-slate-400 text-[10px] uppercase font-bold">
-                    Semester
-                  </Label>
-                  <Input
-                    type="number"
-                    value={formData.currentSemester}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        currentSemester: e.target.value,
-                      })
-                    }
-                    className="bg-background border-border"
-                  />
-                </div>
-              </div>
-            </div>
-          </ScrollArea>
-          <DialogFooter className="border-t border-white/5 pt-6">
-            <Button
-              variant="ghost"
-              onClick={() => setIsCreateOpen(false)}
-              className="text-slate-500"
-            >
-              Cancel
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm">
+              <Download className="mr-2 h-4 w-4" /> Export
             </Button>
             <Button
-              onClick={() => createMutation.mutate(formData)}
-              disabled={createMutation.isPending}
-              className="bg-primary font-bold"
-            >
-              {createMutation.isPending ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                "Verify & Initialize"
-              )}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* EDIT DIALOG */}
-      <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-        <DialogContent className="max-w-2xl bg-card border-border">
-          <DialogHeader>
-            <DialogTitle className="text-xl font-bold flex items-center gap-2">
-              <Edit2 className="h-5 w-5 text-primary" /> Modify Registry
-              Identity
-            </DialogTitle>
-            <DialogDescription className="text-muted-foreground">
-              Updating profile for {selectedStudent?.username}. Credentials
-              cannot be changed here.
-            </DialogDescription>
-          </DialogHeader>
-          <ScrollArea className="max-h-[70vh] px-1">
-            <div className="grid gap-6 py-4">
-              <div className="space-y-2">
-                <Label className="text-slate-400 text-[10px] uppercase font-bold">
-                  Full Legal Name
-                </Label>
-                <Input
-                  value={formData.fullName}
-                  onChange={(e) =>
-                    setFormData({ ...formData, fullName: e.target.value })
-                  }
-                  className="bg-background border-border"
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label className="text-slate-400 text-[10px] uppercase font-bold">
-                    Enrollment ID
-                  </Label>
-                  <Input
-                    value={formData.enrollmentNumber}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        enrollmentNumber: e.target.value,
-                      })
-                    }
-                    className="bg-background border-border"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-slate-400 text-[10px] uppercase font-bold">
-                    Roll Sequence
-                  </Label>
-                  <Input
-                    value={formData.rollNumber}
-                    onChange={(e) =>
-                      setFormData({ ...formData, rollNumber: e.target.value })
-                    }
-                    className="bg-background border-border"
-                  />
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label className="text-slate-400 text-[10px] uppercase font-bold">
-                    Core Department
-                  </Label>
-                  <Input
-                    value={formData.department}
-                    onChange={(e) =>
-                      setFormData({ ...formData, department: e.target.value })
-                    }
-                    className="bg-background border-border"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-slate-400 text-[10px] uppercase font-bold">
-                    Semester Level
-                  </Label>
-                  <Input
-                    type="number"
-                    value={formData.currentSemester}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        currentSemester: e.target.value,
-                      })
-                    }
-                    className="bg-background border-border"
-                  />
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label className="text-slate-400 text-[10px] uppercase font-bold">
-                    Contact Node
-                  </Label>
-                  <Input
-                    value={formData.phone}
-                    onChange={(e) =>
-                      setFormData({ ...formData, phone: e.target.value })
-                    }
-                    className="bg-background border-border"
-                    placeholder="+91 ..."
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-slate-400 text-[10px] uppercase font-bold">
-                    Physical Address
-                  </Label>
-                  <Input
-                    value={formData.address}
-                    onChange={(e) =>
-                      setFormData({ ...formData, address: e.target.value })
-                    }
-                    className="bg-background border-border"
-                  />
-                </div>
-              </div>
-            </div>
-          </ScrollArea>
-          <DialogFooter className="border-t border-white/5 pt-6">
-            <Button
-              variant="ghost"
-              onClick={() => setIsEditOpen(false)}
-              className="text-slate-500"
-            >
-              Abort
-            </Button>
-            <Button
-              onClick={() =>
-                updateMutation.mutate({
-                  id: selectedStudent.id,
-                  data: formData,
-                })
-              }
-              disabled={updateMutation.isPending}
+              size="sm"
+              onClick={() => {
+                resetForm();
+                setIsCreateOpen(true);
+              }}
               className="bg-primary hover:bg-primary/90 font-bold"
             >
-              {updateMutation.isPending ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <>
-                  <Save className="mr-2 h-4 w-4" /> Commit Changes
-                </>
-              )}
+              <UserPlus className="mr-2 h-4 w-4" /> Add Student
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-      {/* ENROLLMENT DIALOG */}
-      <Dialog open={isEnrollOpen} onOpenChange={setIsEnrollOpen}>
-        <DialogContent className="max-w-2xl bg-card border-border">
-          <DialogHeader>
-            <DialogTitle className="text-xl font-bold flex items-center gap-2 text-amber-500">
-              <BookOpen className="h-5 w-5" /> Manage Student Enrollment
-            </DialogTitle>
-            <DialogDescription className="text-muted-foreground">
-              Select courses to enroll{" "}
-              {selectedStudent?.studentProfile?.fullName ||
-                selectedStudent?.username}
-              .
-            </DialogDescription>
-          </DialogHeader>
-          <div className="py-4">
-            <ScrollArea className="h-[400px] pr-4">
-              <div className="grid grid-cols-1 gap-2">
-                {allCourses?.map((course: any) => (
-                  <div
-                    key={course.id}
-                    className={`flex items-center justify-between p-3 rounded-lg border transition-all cursor-pointer ${
-                      selectedCourses.includes(course.id)
-                        ? "bg-primary/10 border-primary/50"
-                        : "bg-muted/20 border-border hover:border-border/80"
-                    }`}
-                    onClick={() => toggleCourse(course.id)}
+          </div>
+        </div>
+
+        <Card className="glass-card aura-glow border-none overflow-hidden">
+          <CardHeader className="card-header-muted pb-4">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div className="relative w-full md:max-w-md group">
+                {isFetching ? (
+                  <Loader2 className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-primary animate-spin" />
+                ) : (
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                )}
+                <Input
+                  placeholder="Search by name, enrollment, or department..."
+                  className="pl-10 bg-background border-border h-10"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+                {search && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setSearch("")}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 h-7 w-7 text-muted-foreground hover:text-foreground transition-colors"
                   >
-                    <div className="flex items-center gap-3">
-                      <Checkbox
-                        checked={selectedCourses.includes(course.id)}
-                        onCheckedChange={() => toggleCourse(course.id)}
-                        className="border-border data-[state=checked]:bg-primary data-[state=checked]:border-primary"
-                      />
-                      <div>
-                        <p className="font-semibold text-sm text-foreground">
-                          {course.code} — {course.name}
-                        </p>
-                        <p className="text-[10px] text-muted-foreground/60 uppercase font-mono">
-                          {course.department} • SEMESTER {course.semester} •{" "}
-                          {course.credits} CREDITS
+                    <X className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="p-0">
+            <Table>
+              <TableHeader className="">
+                <TableRow className="border-border/40 hover:bg-transparent">
+                  <TableHead className="text-muted-foreground/60 font-semibold text-[10px] uppercase tracking-widest h-11 px-6">
+                    Identity
+                  </TableHead>
+                  <TableHead className="text-muted-foreground/60 font-semibold text-[10px] uppercase tracking-widest h-11">
+                    Registry Data
+                  </TableHead>
+                  <TableHead className="text-muted-foreground/60 font-semibold text-[10px] uppercase tracking-widest h-11">
+                    Cohort
+                  </TableHead>
+                  <TableHead className="text-muted-foreground/60 font-semibold text-[10px] uppercase tracking-widest h-11">
+                    Hardware
+                  </TableHead>
+                  <TableHead className="text-muted-foreground/60 font-semibold text-[10px] uppercase tracking-widest h-11 text-right px-6">
+                    Engine Actions
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody
+                className={
+                  isFetching && !isLoading
+                    ? "opacity-50 transition-opacity"
+                    : ""
+                }
+              >
+                {students.map((s: any) => (
+                  <TableRow
+                    key={s.id}
+                    className="border-border/30 hover:bg-muted/20 transition-colors group"
+                  >
+                    <TableCell className="px-6 py-4">
+                      <div className="flex flex-col">
+                        <span className="font-semibold text-foreground text-sm">
+                          {s.studentProfile?.fullName || s.username}
+                        </span>
+                        <span className="text-[10px] font-mono text-muted-foreground/60 uppercase">
+                          {s.email}
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex flex-col">
+                        <span className="text-xs font-bold text-primary uppercase tracking-tight">
+                          ID: {s.studentProfile?.enrollmentNumber || "PENDING"}
+                        </span>
+                        <span className="text-[10px] text-muted-foreground/60 font-mono">
+                          ROLL: {s.studentProfile?.rollNumber || "N/A"}
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex flex-col">
+                        <span className="text-xs text-foreground font-semibold uppercase">
+                          {s.studentProfile?.department || "N/A"}
+                        </span>
+                        <span className="text-[10px] text-muted-foreground/60">
+                          SEM {s.studentProfile?.currentSemester || "?"} •{" "}
+                          {s.studentProfile?.batch || "N/A"}
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <div
+                          className={`h-1.5 w-1.5 rounded-full ${s.deviceId ? "bg-emerald-500" : "bg-muted-foreground/30"}`}
+                        />
+                        <span className="text-[10px] font-mono text-muted-foreground/60 uppercase truncate max-w-[80px]">
+                          {s.deviceId ? "LINKED" : "UNBOUND"}
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-right px-6">
+                      <div className="flex justify-end gap-1 opacity-20 group-hover:opacity-100 transition-opacity">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleEnrollment(s)}
+                          title="Manage Enrollment"
+                          className="h-8 w-8 text-amber-500 hover:bg-amber-500/10"
+                        >
+                          <BookOpen className="h-3.5 w-3.5" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleEdit(s)}
+                          className="h-8 w-8 text-primary hover:bg-primary/10"
+                        >
+                          <Edit2 className="h-3.5 w-3.5" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => {
+                            if (confirm("Delete student?"))
+                              deleteMutation.mutate(s.id);
+                          }}
+                          className="h-8 w-8 text-red-500 hover:bg-red-500/10"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+                {students.length === 0 && !isLoading && (
+                  <TableRow>
+                    <TableCell colSpan={5} className="h-40 text-center">
+                      <div className="flex flex-col items-center justify-center text-muted-foreground gap-2">
+                        <Search className="h-8 w-8 opacity-20" />
+                        <p className="text-sm font-medium">
+                          No matches found in the registry core
                         </p>
                       </div>
-                    </div>
-                    {selectedCourses.includes(course.id) && (
-                      <Badge className="bg-primary/20 text-primary border-primary/20 hover:bg-primary/30">
-                        ENROLLED
-                      </Badge>
-                    )}
+                    </TableCell>
+                  </TableRow>
+                )}
+                {isLoading && (
+                  <TableRow>
+                    <TableCell colSpan={5} className="h-60 text-center">
+                      <div className="flex flex-col items-center justify-center gap-4">
+                        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                        <p className="text-xs font-mono text-muted-foreground/60 uppercase tracking-widest">
+                          Querying Cloud Registry...
+                        </p>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+
+        {/* CREATE DIALOG */}
+        <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+          <DialogContent className="max-w-2xl bg-card border-border">
+            <DialogHeader>
+              <DialogTitle className="text-xl font-bold flex items-center gap-2">
+                <UserPlus className="h-5 w-5 text-primary" /> Initialize New
+                Student Profile
+              </DialogTitle>
+              <DialogDescription className="text-muted-foreground">
+                Enter comprehensive institutional data for registry enrollment.
+              </DialogDescription>
+            </DialogHeader>
+            <ScrollArea className="max-h-[70vh] px-1">
+              <div className="grid gap-6 py-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label className="text-slate-400 text-[10px] uppercase font-bold">
+                      Username
+                    </Label>
+                    <Input
+                      value={formData.username}
+                      onChange={(e) =>
+                        setFormData({ ...formData, username: e.target.value })
+                      }
+                      className="bg-background border-border"
+                      placeholder="jdoe2023"
+                    />
                   </div>
-                ))}
+                  <div className="space-y-2">
+                    <Label className="text-slate-400 text-[10px] uppercase font-bold">
+                      Primary Email
+                    </Label>
+                    <Input
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) =>
+                        setFormData({ ...formData, email: e.target.value })
+                      }
+                      className="bg-background border-border"
+                      placeholder="enroll@darshan.ac.in"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-slate-400 text-[10px] uppercase font-bold">
+                    Account Password
+                  </Label>
+                  <Input
+                    type="password"
+                    value={formData.password}
+                    onChange={(e) =>
+                      setFormData({ ...formData, password: e.target.value })
+                    }
+                    className="bg-background border-border"
+                    placeholder="••••••••"
+                  />
+                </div>
+                <div className="h-px bg-white/5" />
+                <div className="space-y-2">
+                  <Label className="text-slate-400 text-[10px] uppercase font-bold">
+                    Full Legal Name
+                  </Label>
+                  <Input
+                    value={formData.fullName}
+                    onChange={(e) =>
+                      setFormData({ ...formData, fullName: e.target.value })
+                    }
+                    className="bg-background border-border"
+                    placeholder="Johnathan Doe"
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label className="text-slate-400 text-[10px] uppercase font-bold">
+                      Enrollment Number
+                    </Label>
+                    <Input
+                      value={formData.enrollmentNumber}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          enrollmentNumber: e.target.value,
+                        })
+                      }
+                      className="bg-background border-border"
+                      placeholder="NIT22CS045"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-slate-400 text-[10px] uppercase font-bold">
+                      Roll Number
+                    </Label>
+                    <Input
+                      value={formData.rollNumber}
+                      onChange={(e) =>
+                        setFormData({ ...formData, rollNumber: e.target.value })
+                      }
+                      className="bg-background border-border"
+                      placeholder="220101"
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-3 gap-4">
+                  <div className="space-y-2">
+                    <Label className="text-slate-400 text-[10px] uppercase font-bold">
+                      Department
+                    </Label>
+                    <Input
+                      value={formData.department}
+                      onChange={(e) =>
+                        setFormData({ ...formData, department: e.target.value })
+                      }
+                      className="bg-background border-border"
+                      placeholder="CSE"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-slate-400 text-[10px] uppercase font-bold">
+                      Batch
+                    </Label>
+                    <Input
+                      value={formData.batch}
+                      onChange={(e) =>
+                        setFormData({ ...formData, batch: e.target.value })
+                      }
+                      className="bg-background border-border"
+                      placeholder="2022-26"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-slate-400 text-[10px] uppercase font-bold">
+                      Semester
+                    </Label>
+                    <Input
+                      type="number"
+                      value={formData.currentSemester}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          currentSemester: e.target.value,
+                        })
+                      }
+                      className="bg-background border-border"
+                    />
+                  </div>
+                </div>
               </div>
             </ScrollArea>
-          </div>
-          <DialogFooter className="border-t border-white/5 pt-6">
-            <Button
-              variant="ghost"
-              onClick={() => setIsEnrollOpen(false)}
-              className="text-slate-500"
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={saveEnrollment}
-              disabled={enrollmentMutation.isPending}
-              className="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold"
-            >
-              {enrollmentMutation.isPending ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                "Sync Enrollment"
-              )}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </div>
+            <DialogFooter className="border-t border-white/5 pt-6">
+              <Button
+                variant="ghost"
+                onClick={() => setIsCreateOpen(false)}
+                className="text-slate-500"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={() => createMutation.mutate(formData)}
+                disabled={createMutation.isPending}
+                className="bg-primary font-bold"
+              >
+                {createMutation.isPending ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  "Verify & Initialize"
+                )}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* EDIT DIALOG */}
+        <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
+          <DialogContent className="max-w-2xl bg-card border-border">
+            <DialogHeader>
+              <DialogTitle className="text-xl font-bold flex items-center gap-2">
+                <Edit2 className="h-5 w-5 text-primary" /> Modify Registry
+                Identity
+              </DialogTitle>
+              <DialogDescription className="text-muted-foreground">
+                Updating profile for {selectedStudent?.username}. Credentials
+                cannot be changed here.
+              </DialogDescription>
+            </DialogHeader>
+            <ScrollArea className="max-h-[70vh] px-1">
+              <div className="grid gap-6 py-4">
+                <div className="space-y-2">
+                  <Label className="text-slate-400 text-[10px] uppercase font-bold">
+                    Full Legal Name
+                  </Label>
+                  <Input
+                    value={formData.fullName}
+                    onChange={(e) =>
+                      setFormData({ ...formData, fullName: e.target.value })
+                    }
+                    className="bg-background border-border"
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label className="text-slate-400 text-[10px] uppercase font-bold">
+                      Enrollment ID
+                    </Label>
+                    <Input
+                      value={formData.enrollmentNumber}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          enrollmentNumber: e.target.value,
+                        })
+                      }
+                      className="bg-background border-border"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-slate-400 text-[10px] uppercase font-bold">
+                      Roll Sequence
+                    </Label>
+                    <Input
+                      value={formData.rollNumber}
+                      onChange={(e) =>
+                        setFormData({ ...formData, rollNumber: e.target.value })
+                      }
+                      className="bg-background border-border"
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label className="text-slate-400 text-[10px] uppercase font-bold">
+                      Core Department
+                    </Label>
+                    <Input
+                      value={formData.department}
+                      onChange={(e) =>
+                        setFormData({ ...formData, department: e.target.value })
+                      }
+                      className="bg-background border-border"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-slate-400 text-[10px] uppercase font-bold">
+                      Semester Level
+                    </Label>
+                    <Input
+                      type="number"
+                      value={formData.currentSemester}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          currentSemester: e.target.value,
+                        })
+                      }
+                      className="bg-background border-border"
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label className="text-slate-400 text-[10px] uppercase font-bold">
+                      Contact Node
+                    </Label>
+                    <Input
+                      value={formData.phone}
+                      onChange={(e) =>
+                        setFormData({ ...formData, phone: e.target.value })
+                      }
+                      className="bg-background border-border"
+                      placeholder="+91 ..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-slate-400 text-[10px] uppercase font-bold">
+                      Physical Address
+                    </Label>
+                    <Input
+                      value={formData.address}
+                      onChange={(e) =>
+                        setFormData({ ...formData, address: e.target.value })
+                      }
+                      className="bg-background border-border"
+                    />
+                  </div>
+                </div>
+              </div>
+            </ScrollArea>
+            <DialogFooter className="border-t border-white/5 pt-6">
+              <Button
+                variant="ghost"
+                onClick={() => setIsEditOpen(false)}
+                className="text-slate-500"
+              >
+                Abort
+              </Button>
+              <Button
+                onClick={() =>
+                  updateMutation.mutate({
+                    id: selectedStudent.id,
+                    data: formData,
+                  })
+                }
+                disabled={updateMutation.isPending}
+                className="bg-primary hover:bg-primary/90 font-bold"
+              >
+                {updateMutation.isPending ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <>
+                    <Save className="mr-2 h-4 w-4" /> Commit Changes
+                  </>
+                )}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+        {/* ENROLLMENT DIALOG */}
+        <Dialog open={isEnrollOpen} onOpenChange={setIsEnrollOpen}>
+          <DialogContent className="max-w-2xl bg-card border-border">
+            <DialogHeader>
+              <DialogTitle className="text-xl font-bold flex items-center gap-2 text-amber-500">
+                <BookOpen className="h-5 w-5" /> Manage Student Enrollment
+              </DialogTitle>
+              <DialogDescription className="text-muted-foreground">
+                Select courses to enroll{" "}
+                {selectedStudent?.studentProfile?.fullName ||
+                  selectedStudent?.username}
+                .
+              </DialogDescription>
+            </DialogHeader>
+            <div className="py-4">
+              <ScrollArea className="h-[400px] pr-4">
+                <div className="grid grid-cols-1 gap-2">
+                  {allCourses?.map((course: any) => (
+                    <div
+                      key={course.id}
+                      className={`flex items-center justify-between p-3 rounded-lg border transition-all cursor-pointer ${
+                        selectedCourses.includes(course.id)
+                          ? "bg-primary/10 border-primary/50"
+                          : "bg-muted/20 border-border hover:border-border/80"
+                      }`}
+                      onClick={() => toggleCourse(course.id)}
+                    >
+                      <div className="flex items-center gap-3">
+                        <Checkbox
+                          checked={selectedCourses.includes(course.id)}
+                          onCheckedChange={() => toggleCourse(course.id)}
+                          className="border-border data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                        />
+                        <div>
+                          <p className="font-semibold text-sm text-foreground">
+                            {course.code} — {course.name}
+                          </p>
+                          <p className="text-[10px] text-muted-foreground/60 uppercase font-mono">
+                            {course.department} • SEMESTER {course.semester} •{" "}
+                            {course.credits} CREDITS
+                          </p>
+                        </div>
+                      </div>
+                      {selectedCourses.includes(course.id) && (
+                        <Badge className="bg-primary/20 text-primary border-primary/20 hover:bg-primary/30">
+                          ENROLLED
+                        </Badge>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
+            </div>
+            <DialogFooter className="border-t border-white/5 pt-6">
+              <Button
+                variant="ghost"
+                onClick={() => setIsEnrollOpen(false)}
+                className="text-slate-500"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={saveEnrollment}
+                disabled={enrollmentMutation.isPending}
+                className="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold"
+              >
+                {enrollmentMutation.isPending ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  "Sync Enrollment"
+                )}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </div>
+    </>
   );
 }
