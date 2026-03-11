@@ -185,57 +185,12 @@ interface FullScreenLoaderProps {
   label?: string;
 }
 
-function PageSkeleton() {
-  return (
-    <div className="space-y-6 animate-in fade-in duration-150">
-      {/* header row */}
-      <div className="flex items-start justify-between gap-4">
-        <div className="space-y-2">
-          <div className="h-7 w-48 rounded-lg bg-muted animate-pulse" />
-          <div className="h-3 w-64 rounded-md bg-muted/60 animate-pulse" />
-        </div>
-        <div className="h-9 w-24 rounded-lg bg-muted animate-pulse" />
-      </div>
-      {/* stat cards */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {[...Array(4)].map((_, i) => (
-          <div
-            key={i}
-            className="h-24 rounded-xl bg-muted animate-pulse"
-            style={{ animationDelay: `${i * 60}ms` }}
-          />
-        ))}
-      </div>
-      {/* main content block */}
-      <div className="h-64 rounded-xl bg-muted animate-pulse" />
-      <div className="grid gap-4 lg:grid-cols-2">
-        <div className="h-48 rounded-xl bg-muted animate-pulse" />
-        <div
-          className="h-48 rounded-xl bg-muted animate-pulse"
-          style={{ animationDelay: "80ms" }}
-        />
-      </div>
-    </div>
-  );
-}
-
 export function FullScreenLoader({
   show,
   operation = "loading",
   label,
 }: FullScreenLoaderProps) {
   if (!show) return null;
-
-  // For initial page data loading use an inline skeleton — no fullscreen overlay
-  if (operation === "loading") {
-    return (
-      <div className="absolute inset-0 z-10 bg-background/72 backdrop-blur-[1px] p-2 sm:p-4 animate-in fade-in duration-100 pointer-events-none">
-        <div className="max-w-full">
-          <PageSkeleton />
-        </div>
-      </div>
-    );
-  }
 
   const cfg = CONFIGS[operation];
   const cl = COLOR_MAP[cfg.color];

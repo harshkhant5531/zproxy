@@ -585,16 +585,13 @@ export default function QRScanner() {
                   </Button>
                 </div>
 
-                {/* Skeleton — shows only on refetch (initial load shows full-screen overlay) */}
+                {/* Loading state indicator (replaces skeleton) */}
                 {isSessionsLoading && activeSessions !== undefined && (
-                  <div className="space-y-3">
-                    {[0, 1, 2].map((i) => (
-                      <div
-                        key={i}
-                        className="h-20 rounded-xl animate-shimmer"
-                        style={{ animationDelay: `${i * 150}ms` }}
-                      />
-                    ))}
+                  <div className="py-8 text-center bg-card rounded-2xl border border-border">
+                    <RefreshCw className="h-6 w-6 text-primary animate-spin mx-auto mb-3" />
+                    <p className="text-xs font-medium text-muted-foreground tracking-wide">
+                      Loading latest sessions...
+                    </p>
                   </div>
                 )}
 
