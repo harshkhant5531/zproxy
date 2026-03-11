@@ -71,3 +71,83 @@ Yes, you can!
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+
+## Google Sign-In Setup
+
+Google Sign-In is implemented for login and uses these endpoints/components:
+
+- Backend route: `POST /api/auth/google`
+- Frontend login page: `src/pages/Index.tsx`
+
+### 1. Configure environment files
+
+Create `.env` files from the examples:
+
+```sh
+copy .env.example .env
+copy backend\.env.example backend\.env
+```
+
+Update the values:
+
+- Root `.env`
+  - `VITE_API_URL`
+  - `VITE_GOOGLE_CLIENT_ID`
+- `backend/.env`
+  - `GOOGLE_CLIENT_ID`
+  - `GOOGLE_ALLOWED_DOMAIN`
+  - `JWT_SECRET`, `DATABASE_URL`, and other backend values
+
+Important: `VITE_GOOGLE_CLIENT_ID` and backend `GOOGLE_CLIENT_ID` must be the same Google OAuth Web Client ID.
+
+### 2. Google Cloud Console settings
+
+Create an OAuth 2.0 Web Client and add Authorized JavaScript origins:
+
+- `http://localhost:8080`
+- your deployed frontend origin
+
+For LAN/device testing with Google Sign-In, use a public HTTPS URL (for example, ngrok) instead of local IP origins.
+
+### 2.1 Optional: ngrok setup for Google Sign-In testing
+
+```sh
+# terminal 1 (frontend)
+npm run dev
+
+# terminal 2 (start tunnel)
+npm run tunnel
+```
+
+Copy the HTTPS forwarding URL from ngrok and set it in root `.env`:
+
+```env
+PUBLIC_FRONTEND_URL=https://your-subdomain.ngrok-free.app
+```
+
+Then resync env values:
+
+```sh
+npm run sync:env
+```
+
+Finally, add the same ngrok URL in Google Cloud Console as an Authorized JavaScript origin.
+
+### 3. Run frontend and backend
+
+```sh
+# terminal 1
+cd backend
+npm install
+npm run dev
+
+# terminal 2
+cd ..
+npm install
+npm run dev
+```
+
+### 4. Domain restriction behavior
+
+Backend enforces `GOOGLE_ALLOWED_DOMAIN` (default: `darshan.ac.in`).
+Only Google accounts from that domain can sign in.

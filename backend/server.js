@@ -27,11 +27,35 @@ const allowedOrigins = [
   ]),
 ];
 
+const isPrivateNetworkOrigin = (origin) => {
+  try {
+    const parsed = new URL(origin);
+    const host = parsed.hostname;
+    if (host === "localhost" || host === "127.0.0.1") return true;
+
+    // Allow common private IPv4 ranges for local-network development.
+    return (
+      /^10\.(\d{1,3}\.){2}\d{1,3}$/.test(host) ||
+      /^192\.168\.(\d{1,3})\.(\d{1,3})$/.test(host) ||
+      /^172\.(1[6-9]|2\d|3[0-1])\.(\d{1,3})\.(\d{1,3})$/.test(host)
+    );
+  } catch {
+    return false;
+  }
+};
+
+const allowPrivateNetworkOrigins =
+  process.env.CORS_ALLOW_PRIVATE_NETWORK !== "false";
+
 app.use(
   cors({
     origin: (origin, callback) => {
       // Allow if no origin (like mobile apps) or if it's in our allowed list
-      if (!origin || allowedOrigins.includes(origin)) {
+      if (
+        !origin ||
+        allowedOrigins.includes(origin) ||
+        (allowPrivateNetworkOrigins && isPrivateNetworkOrigin(origin))
+      ) {
         callback(null, true);
       } else {
         callback(

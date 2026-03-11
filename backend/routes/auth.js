@@ -51,7 +51,13 @@ const makeUniqueEnrollment = async (base) => {
 
 const RESET_PASSWORD_EXPIRES_IN =
   process.env.RESET_PASSWORD_EXPIRES_IN || "15m";
-const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:8080";
+
+const getFrontendUrl = (req) => {
+  if (process.env.FRONTEND_URL) return process.env.FRONTEND_URL;
+  const origin = req.get("origin");
+  if (origin) return origin;
+  return "http://localhost:8080";
+};
 
 const isDefaultPassword = async (passwordHash) => {
   try {
@@ -639,7 +645,8 @@ router.post(
       }
 
       const resetToken = generateResetPasswordToken(user);
-      const resetUrl = `${FRONTEND_URL}/reset-password?token=${encodeURIComponent(resetToken)}`;
+      const frontendUrl = getFrontendUrl(req);
+      const resetUrl = `${frontendUrl}/reset-password?token=${encodeURIComponent(resetToken)}`;
 
       res.json({
         success: true,
