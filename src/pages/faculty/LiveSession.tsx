@@ -97,6 +97,10 @@ export default function LiveSession() {
       }));
       setQrTimer(15);
     },
+    onError: (err: any) => {
+      console.error("QR Generation Failure:", err);
+      toast.error("Spatial Link Failure: Could not synchronize QR code.");
+    }
   });
 
   const overrideMutation = useMutation({
@@ -248,7 +252,7 @@ export default function LiveSession() {
         operation="saving"
         label="Applying Override..."
       />
-      <div className="space-y-6 px-4 sm:px-0 relative min-h-screen">
+      <div className="space-y-6 px-4 sm:px-0 scroll-mt-20">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="min-w-0 flex-1">
             <h1 className="text-2xl font-semibold tracking-tight text-foreground">
@@ -328,11 +332,11 @@ export default function LiveSession() {
                 </span>
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-4 sm:p-8 text-center relative h-full bg-gradient-to-b from-transparent to-primary/5">
+            <CardContent className="p-4 sm:p-8 text-center h-full bg-gradient-to-b from-transparent to-primary/5">
               {!isCompleted ? (
                 <div className="space-y-6">
                   <div className="aspect-square bg-white rounded-xl flex items-center justify-center border-4 border-background shadow-inner relative overflow-hidden">
-                    {session?.qrCode ? (
+                    {session?.qrCode?.codeValue ? (
                       <>
                         <QRCodeSVG
                           value={(() => {
@@ -375,7 +379,24 @@ export default function LiveSession() {
                         )}
                       </>
                     ) : (
-                      <Loader2 className="h-12 w-12 text-primary animate-spin" />
+                      <div className="flex flex-col items-center gap-6">
+                        <div className="h-48 w-48 bg-muted animate-pulse rounded-full flex items-center justify-center border-4 border-dashed border-primary/20">
+                          <Loader2 className="h-10 w-10 text-primary animate-spin" />
+                        </div>
+                        <div className="space-y-2">
+                          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground animate-pulse">Syncing Spatial Link...</p>
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            onClick={() => generateQRMutation.mutate()}
+                            disabled={generateQRMutation.isPending}
+                            className="h-8 text-[10px] uppercase font-black tracking-wider border-primary/20 text-primary"
+                          >
+                            <RefreshCw className={`mr-2 h-3 w-3 ${generateQRMutation.isPending ? 'animate-spin' : ''}`} />
+                            Force Pulse Start
+                          </Button>
+                        </div>
+                      </div>
                     )}
                   </div>
                   <div className="p-5 bg-background border border-border rounded-xl shadow-lg">
@@ -634,11 +655,11 @@ export default function LiveSession() {
                 ? "Final Attendance Record"
                 : "Live Authentication Stream"}
               {!isCompleted && (
-                <span className="ml-auto h-2 w-2 rounded-full bg-primary animate-pulse" />
+                <span className="ml-auto h-2 w-2 rounded-full bg-primary animate-pulse shadow-[0_0_8px_rgba(var(--primary),0.5)]" />
               )}
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={handleCopyExport}
                 className="ml-auto h-7 px-2 text-[9px] font-black uppercase tracking-widest border-primary/20 text-primary hover:bg-primary/5"
               >

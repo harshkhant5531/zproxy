@@ -514,11 +514,7 @@ router.post(
 
       if (req.user.role === "faculty") {
         const isCreator = session.facultyId === req.user.id;
-        const course = await prisma.course.findUnique({
-          where: { id: session.courseId },
-          select: { facultyId: true },
-        });
-        if (!isCreator && course?.facultyId !== req.user.id) {
+        if (!isCreator && session.course.facultyId !== req.user.id) {
           const error = new Error("Forbidden");
           error.statusCode = 403;
           throw error;
@@ -616,6 +612,12 @@ router.post(
       await prisma.attendance.createMany({
         data: absentRecords,
         skipDuplicates: true,
+      });
+
+      // Update session status to completed
+      await prisma.session.update({
+        where: { id: sessionId },
+        data: { status: "completed" },
       });
 
       res.json({
