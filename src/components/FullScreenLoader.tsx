@@ -190,7 +190,7 @@ export function FullScreenLoader({
   operation = "loading",
   label,
 }: FullScreenLoaderProps) {
-  if (!show) return null;
+  if (!show || operation === "loading") return null;
 
   const cfg = CONFIGS[operation];
   const cl = COLOR_MAP[cfg.color];
