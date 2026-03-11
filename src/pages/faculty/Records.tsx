@@ -62,10 +62,10 @@ export default function AttendanceRecords() {
     });
   };
 
+  if (isLoading) return <FullScreenLoader show operation="loading" />;
+
   return (
-    <>
-      <FullScreenLoader show={isLoading} operation="loading" />
-      <div className="space-y-6">
+    <div className="space-y-6 relative min-h-screen">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-semibold tracking-tight text-foreground">
@@ -212,6 +212,5 @@ export default function AttendanceRecords() {
           </p>
         </div>
       </div>
-    </>
   );
 }

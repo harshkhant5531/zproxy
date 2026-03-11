@@ -232,9 +232,12 @@ export default function LiveSession() {
     });
   };
 
+  if (isSessionLoading || !session) {
+    return <FullScreenLoader show operation="loading" />;
+  }
+
   return (
     <>
-      <FullScreenLoader show={isSessionLoading} operation="loading" />
       <FullScreenLoader
         show={endSessionMutation.isPending}
         operation="submitting"
@@ -245,7 +248,7 @@ export default function LiveSession() {
         operation="saving"
         label="Applying Override..."
       />
-      <div className="space-y-6 px-4 sm:px-0">
+      <div className="space-y-6 px-4 sm:px-0 relative min-h-screen">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="min-w-0 flex-1">
             <h1 className="text-2xl font-semibold tracking-tight text-foreground">
@@ -342,8 +345,8 @@ export default function LiveSession() {
                             }
 
                             // If we are on local, check if the session networkIp is a public URL (like Vercel)
-                            if (session.networkIp && (session.networkIp.includes("vercel.app") || session.networkIp.includes("http"))) {
-                               return `${session.networkIp.startsWith("http") ? session.networkIp : `https://${session.networkIp}`}/student/verify?token=${session.qrCode.codeValue}`;
+                            if (session?.networkIp && (session.networkIp.includes("vercel.app") || session.networkIp.includes("http"))) {
+                               return `${session.networkIp.startsWith("http") ? session.networkIp : `https://${session.networkIp}`}/student/verify?token=${session.qrCode?.codeValue}`;
                             }
 
                             // Only use local LAN IP if specifically requested or as absolute last resort
@@ -644,9 +647,9 @@ export default function LiveSession() {
             </CardTitle>
             <div className="flex flex-wrap gap-2 items-center mt-2 px-6">
               <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest border border-emerald-500/30 px-2 py-0.5 rounded">
-                Grid Status: Active ({sessionData.session.geofenceRadius}m)
+                Grid Status: Active ({sessionData?.geofenceRadius}m)
               </span>
-              {sessionData.session.facultyLat ? (
+              {sessionData?.facultyLat ? (
                 <span className="text-[10px] font-black text-primary uppercase tracking-widest border border-primary/30 px-2 py-0.5 rounded flex items-center gap-1">
                   <MapPin className="h-3 w-3" /> Anchor Locked
                 </span>

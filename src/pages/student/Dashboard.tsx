@@ -119,10 +119,10 @@ export default function StudentDashboard() {
   );
   const recentLogs = records.slice(0, 10);
 
+  if (isLoading) return <FullScreenLoader show operation="loading" />;
+
   return (
-    <>
-      <FullScreenLoader show={isLoading} operation="loading" />
-      <div className="space-y-6">
+    <div className="space-y-6 relative min-h-screen">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight text-foreground">
             Student Dashboard
@@ -336,6 +336,5 @@ export default function StudentDashboard() {
           </CardContent>
         </Card>
       </div>
-    </>
   );
 }

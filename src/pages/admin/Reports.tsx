@@ -109,10 +109,10 @@ export default function Reports() {
     }
   };
 
+  if (isReportsLoading) return <FullScreenLoader show operation="loading" />;
+
   return (
-    <>
-      <FullScreenLoader show={isGenerating} operation="generating" />
-      <div className="space-y-6">
+    <div className="space-y-6 relative min-h-screen">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight text-foreground flex items-center gap-3">
             <FileBarChart className="h-6 w-6 text-primary" /> Reports &
@@ -247,7 +247,7 @@ export default function Reports() {
             )}
           </div>
         </div>
+        <FullScreenLoader show={isGenerating} operation="generating" />
       </div>
-    </>
   );
 }
