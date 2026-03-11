@@ -213,6 +213,25 @@ export default function LiveSession() {
     });
   };
 
+  const handleCopyExport = () => {
+    if (!attendanceData || attendanceData.length === 0) {
+      toast.error("No data to export");
+      return;
+    }
+    const headers = "Student ID\tFull Name\tStatus\tTimestamp\tMethod\n";
+    const body = attendanceData.map((log: any) => {
+      const name = log.student?.studentProfile?.fullName || log.student?.username || "N/A";
+      const id = log.student?.studentProfile?.studentId || log.student?.username || "N/A";
+      const timestamp = format(new Date(log.timestamp), "yyyy-MM-dd HH:mm:ss");
+      const method = log.method || "QR_SCAN";
+      return `${id}\t${name}\t${log.status}\t${timestamp}\t${method}`;
+    }).join("\n");
+    
+    navigator.clipboard.writeText(headers + body).then(() => {
+      toast.success("Attendance copied to clipboard (Excel format)");
+    });
+  };
+
   return (
     <>
       <FullScreenLoader show={isSessionLoading} operation="loading" />
@@ -614,7 +633,29 @@ export default function LiveSession() {
               {!isCompleted && (
                 <span className="ml-auto h-2 w-2 rounded-full bg-primary animate-pulse" />
               )}
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={handleCopyExport}
+                className="ml-auto h-7 px-2 text-[9px] font-black uppercase tracking-widest border-primary/20 text-primary hover:bg-primary/5"
+              >
+                Copy Export
+              </Button>
             </CardTitle>
+            <div className="flex flex-wrap gap-2 items-center mt-2 px-6">
+              <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest border border-emerald-500/30 px-2 py-0.5 rounded">
+                Grid Status: Active ({sessionData.session.geofenceRadius}m)
+              </span>
+              {sessionData.session.facultyLat ? (
+                <span className="text-[10px] font-black text-primary uppercase tracking-widest border border-primary/30 px-2 py-0.5 rounded flex items-center gap-1">
+                  <MapPin className="h-3 w-3" /> Anchor Locked
+                </span>
+              ) : (
+                <span className="text-[10px] font-black text-amber-500 uppercase tracking-widest border border-amber-500/30 px-2 py-0.5 rounded flex items-center gap-1">
+                  <AlertTriangle className="h-3 w-3" /> Campus Fallback
+                </span>
+              )}
+            </div>
           </CardHeader>
           <CardContent className="p-0">
             <div className="max-h-[500px] overflow-auto custom-scrollbar">

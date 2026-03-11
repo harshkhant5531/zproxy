@@ -65,19 +65,23 @@ export default function VerifyAttendance() {
     }
 
     setStatus("verifying");
+    setErrorMessage("");
     
     const geoOptions = { 
       enableHighAccuracy: !retryWithLowAccuracy, 
-      timeout: 15000, 
-      maximumAge: 0 
+      timeout: 25000, // Increased to 25s for difficult environments
+      maximumAge: 5000 // Only allow coordinates from the last 5s
     };
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
+        const { latitude, longitude, accuracy } = position.coords;
+        console.log(`Presence confirmed at: ${latitude}, ${longitude} (±${accuracy}m)`);
+        
         verifyMutation.mutate({
           token,
-          lat: position.coords.latitude,
-          lng: position.coords.longitude
+          lat: latitude,
+          lng: longitude
         });
       },
       (error) => {
@@ -133,11 +137,18 @@ export default function VerifyAttendance() {
           </div>
           <div className="text-center space-y-2">
             <p className="text-2xl font-medium tracking-tight text-foreground">
-              Initializing Integrity Check
+              {authLoading ? "Identity Check" : "Spatial Verification"}
             </p>
-            <p className="text-sm text-muted-foreground">
-              Authenticating neural link & spatial vector...
+            <p className="text-sm text-muted-foreground animate-pulse">
+              {authLoading 
+                ? "Authenticating neural link..." 
+                : "Triangulating presence in faculty grid..."}
             </p>
+            {!authLoading && (
+               <p className="text-[10px] text-muted-foreground/50 font-mono italic">
+                 Keep device stable. Searching for high-accuracy telemetry...
+               </p>
+            )}
           </div>
         </div>
       </div>

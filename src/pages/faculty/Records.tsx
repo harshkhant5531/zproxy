@@ -16,6 +16,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { sessionsAPI } from "@/lib/api";
 import { format } from "date-fns";
+import { toast } from "sonner";
 
 export default function AttendanceRecords() {
   const navigate = useNavigate();
@@ -42,6 +43,25 @@ export default function AttendanceRecords() {
       s.course?.code?.toLowerCase().includes(search.toLowerCase()),
   );
 
+  const handleCopyExport = () => {
+    if (!filtered || filtered.length === 0) {
+      toast.error("No data to export");
+      return;
+    }
+    const headers = "Date\tTime\tSubject\tCode\tTopic\tVerified\n";
+    const body = filtered.map((s: any) => {
+      const dateStr = format(new Date(s.date), "yyyy-MM-dd");
+      const timeStr = `${s.startTime} - ${s.endTime}`;
+      const subject = s.subject?.name || s.course?.name || "N/A";
+      const verified = `${s.attendance?.length || 0}/${s.totalStudents || "?"}`;
+      return `${dateStr}\t${timeStr}\t${subject}\t${s.course?.code}\t${s.topic}\t${verified}`;
+    }).join("\n");
+    
+    navigator.clipboard.writeText(headers + body).then(() => {
+      toast.success("History exported to clipboard");
+    });
+  };
+
   return (
     <>
       <FullScreenLoader show={isLoading} operation="loading" />
@@ -66,6 +86,9 @@ export default function AttendanceRecords() {
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
+          <Button variant="outline" size="sm" onClick={handleCopyExport} className="border-primary/20 text-primary">
+            Copy Export
+          </Button>
         </div>
 
         <Card className="bg-card border-border backdrop-blur-sm shadow-xl overflow-hidden">

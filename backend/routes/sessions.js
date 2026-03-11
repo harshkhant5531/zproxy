@@ -260,7 +260,7 @@ router.post(
           duration: duration || 60,
           status: status || "scheduled",
           batches: batches || [],
-          geofenceRadius: geofenceRadius || 500,
+          geofenceRadius: geofenceRadius || 25,
           facultyLat: facultyLat ? parseFloat(facultyLat) : null,
           facultyLng: facultyLng ? parseFloat(facultyLng) : null,
         },
@@ -274,7 +274,7 @@ router.post(
             },
           },
           subject: { select: { id: true, name: true } },
-          qrCode: true,
+          qrCodes: true,
           // New session has 0 records, no need to include
         },
       });

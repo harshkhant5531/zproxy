@@ -10,12 +10,9 @@ const getBaseUrl = () => {
     return url;
   }
 
-  // Dynamic fallback: if we're on localhost but want to hit the network IP
-  if (
-    window.location.hostname === "localhost" &&
-    import.meta.env.VITE_NETWORK_IP
-  ) {
-    return `http://${import.meta.env.VITE_NETWORK_IP}:3001/api`;
+  // Production/Vercel Auto-detection
+  if (window.location.hostname.includes("vercel.app")) {
+    return `${window.location.origin}/api`;
   }
 
   // Otherwise, use the current host but with the backend port

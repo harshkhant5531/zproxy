@@ -271,19 +271,21 @@ export default function CreateSession() {
                     <input
                       type="range"
                       min="10"
-                      max="200"
+                      max="500"
                       step="5"
                       value={radius}
                       onChange={(e) => setRadius(e.target.value)}
                       className="w-full h-1.5 bg-muted rounded-lg appearance-none cursor-pointer accent-primary"
                     />
                     <div className="flex justify-between mt-2">
-                      <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest">Small Lab (10m)</span>
-                      <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest">Auditorium (200m)</span>
+                      <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest text-left">Office (10m)</span>
+                      <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest text-primary text-center">Class (25m)</span>
+                      <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest text-emerald-500 text-center">Auditorium (100m)</span>
+                      <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest text-right">Campus (500m)</span>
                     </div>
                   </div>
                   <p className="text-[9px] text-muted-foreground italic ml-1">
-                    Defines the valid spatial grid centered at your current location.
+                    Defines the valid spatial grid centered at your current location. Students must be within this {radius}m radius to authenticate.
                   </p>
                 </div>
               </div>

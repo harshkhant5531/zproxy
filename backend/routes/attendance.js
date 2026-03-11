@@ -236,8 +236,37 @@ router.post(
         throw error;
       }
 
+      // 🛡️ Geofencing Validation (Faculty-Student Proximity) - For students only
+      if (req.user.role === "student") {
+        const { lat, lng } = req.body;
+        const geolib = require("geolib");
+
+        const REFERENCE_LOCATION = {
+          latitude: session.facultyLat || parseFloat(process.env.CAMPUS_LAT) || 23.0225,
+          longitude: session.facultyLng || parseFloat(process.env.CAMPUS_LNG) || 72.5714
+        };
+        const RADIUS = session.geofenceRadius || parseInt(process.env.CAMPUS_RADIUS) || 25;
+
+        if (lat && lng) {
+          const distance = geolib.getDistance(
+            { latitude: lat, longitude: lng },
+            REFERENCE_LOCATION
+          );
+
+          if (distance > RADIUS) {
+            const error = new Error(`Spatial Protocol Violation: You are ${distance}m away from the instructor. Verification requires proximity to the classroom grid.`);
+            error.statusCode = 403;
+            throw error;
+          }
+        } else {
+          const error = new Error("Spatial Authentication Required: Enable GPS to verify presence.");
+          error.statusCode = 400;
+          throw error;
+        }
+      }
+
       // ─── Proxy Detection ────────────────────────────────────────────────
-      // Flag when two students mark attendance from the same IP in one session
+      let finalStatus = status || "present";
       let finalNotes = notes || null;
       if (req.ip && req.user.role === "student") {
         const sameIpRecord = await prisma.attendance.findFirst({
@@ -245,21 +274,22 @@ router.post(
             sessionId,
             studentId: { not: studentId },
             ipAddress: req.ip,
-            status: "present",
           },
           select: { id: true, studentId: true, notes: true },
         });
+
         if (sameIpRecord) {
+          finalStatus = "absent";
           finalNotes = `[PROXY_SUSPECT:sharedWith:${sameIpRecord.studentId}]${notes ? " " + notes : ""}`;
-          // Retroactively flag the earlier record if not already flagged
-          if (!sameIpRecord.notes?.includes("[PROXY_SUSPECT")) {
-            await prisma.attendance.update({
-              where: { id: sameIpRecord.id },
-              data: {
-                notes: `[PROXY_SUSPECT:sharedWith:${studentId}]${sameIpRecord.notes ? " " + sameIpRecord.notes : ""}`,
-              },
-            });
-          }
+
+          // Retroactively penalize previous record
+          await prisma.attendance.update({
+            where: { id: sameIpRecord.id },
+            data: {
+              status: "absent",
+              notes: `[PROXY_SUSPECT:sharedWith:${studentId}]${sameIpRecord.notes ? " " + sameIpRecord.notes : ""}`,
+            },
+          });
         }
       }
 
@@ -268,9 +298,9 @@ router.post(
         data: {
           sessionId,
           studentId,
-          status: status || "present",
+          status: finalStatus,
           notes: finalNotes,
-          location: req.body.location,
+          location: req.body.lat && req.body.lng ? `${req.body.lat},${req.body.lng}` : req.body.location,
           ipAddress: req.ip,
           deviceInfo: req.body.deviceInfo,
         },
@@ -520,13 +550,13 @@ router.post(
       // 🛡️ Geofencing Validation (Faculty-Student Proximity)
       const { lat, lng } = req.body;
       const geolib = require("geolib");
-      
+
       // Use faculty location if available, else fallback to campus grid
       const REFERENCE_LOCATION = {
         latitude: qrCodeData.session.facultyLat || parseFloat(process.env.CAMPUS_LAT) || 23.0225,
         longitude: qrCodeData.session.facultyLng || parseFloat(process.env.CAMPUS_LNG) || 72.5714
       };
-      const RADIUS = qrCodeData.session.geofenceRadius || parseInt(process.env.CAMPUS_RADIUS) || 25; 
+      const RADIUS = qrCodeData.session.geofenceRadius || parseInt(process.env.CAMPUS_RADIUS) || 25;
 
       if (lat && lng) {
         const distance = geolib.getDistance(
@@ -563,7 +593,7 @@ router.post(
       // ─── Proxy Detection ────────────────────────────────────────────────
       let status = "present";
       let qrNotes = null;
-      
+
       if (req.ip) {
         const sameIpRecord = await prisma.attendance.findFirst({
           where: {
@@ -571,39 +601,20 @@ router.post(
             studentId: { not: req.user.id },
             ipAddress: req.ip,
           },
-          select: { id: true, studentId: true, notes: true },
         });
 
         if (sameIpRecord) {
           // PROXY DETECTED: Mark both as ABSENT
           status = "absent";
           qrNotes = `[PROXY_DETECTED:sharedWith:${sameIpRecord.studentId}] Duplicate IP authentication attempt.`;
-          
-          // Update the existing record to also be absent if it wasn't already flagged
+
           await prisma.attendance.update({
             where: { id: sameIpRecord.id },
             data: {
               status: "absent",
-              notes: `[PROXY_DETECTED:sharedWith:${req.user.id}] Duplicate IP suspected.`
-            }
+              notes: `[PROXY_DETECTED:sharedWith:${req.user.id}]${sameIpRecord.notes ? " " + sameIpRecord.notes : ""}`,
+            },
           });
-
-          // Create the failed record and error out
-          await prisma.attendance.create({
-            data: {
-              sessionId: qrCodeData.sessionId,
-              studentId: req.user.id,
-              status: "absent",
-              notes: qrNotes,
-              location: `${lat},${lng}`,
-              ipAddress: req.ip,
-              deviceInfo: req.body.deviceInfo,
-            }
-          });
-
-          const error = new Error("Security Protocol Violation: Simultaneous multi-device authentication detected from this IP. Both records marked as ABSENT.");
-          error.statusCode = 403;
-          throw error;
         }
       }
 

@@ -30,7 +30,7 @@ import { format } from "date-fns";
 import { FullScreenLoader } from "@/components/FullScreenLoader";
 
 type ScanMode = "qr" | "manual";
-type OverlayType = "qr-verify" | "manual-mark" | "load-sessions" | null;
+type OverlayType = "qr-verify" | "manual-mark" | "load-sessions" | "locating" | null;
 
 function errorLabel(err: any): string {
   const msg: string = err?.response?.data?.message || err?.message || "";
@@ -91,11 +91,12 @@ export default function QRScanner() {
   });
 
   const markQRMutation = useMutation({
-    mutationFn: (qrCode: string) =>
+    mutationFn: ({ qrCode, lat, lng }: { qrCode: string; lat: number; lng: number }) =>
       attendanceAPI.markAttendanceQR(
         qrCode,
-        "Institutional Geofence",
-        `UserDevice-${user?.id}`,
+        lat,
+        lng,
+        `ScannerDevice-${user?.id}`
       ),
     onSuccess: (resp) => {
       setScannedData(resp.data.data);
@@ -113,12 +114,13 @@ export default function QRScanner() {
   });
 
   const markManualMutation = useMutation({
-    mutationFn: (sessionId: number) =>
+    mutationFn: ({ sessionId, lat, lng }: { sessionId: number; lat: number; lng: number }) =>
       attendanceAPI.markAttendance({
         sessionId,
         status: "present",
-        deviceInfo: `UserDevice-${user?.id}`,
-        location: "Institutional Geofence",
+        deviceInfo: `ManualDevice-${user?.id}`,
+        lat,
+        lng
       }),
     onSuccess: (resp) => {
       setManualResult(resp.data.data);
@@ -132,6 +134,39 @@ export default function QRScanner() {
       setLastError(errorLabel(err));
     },
   });
+
+  const handleMarkWithLocation = (type: "qr" | "manual", id: string | number) => {
+    setLastError(null);
+    setLocating(true);
+    
+    const geoOptions = {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 0
+    };
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setLocating(false);
+        const { latitude, longitude } = pos.coords;
+        if (type === "qr") {
+          markQRMutation.mutate({ qrCode: id as string, lat: latitude, lng: longitude });
+        } else {
+          markManualMutation.mutate({ sessionId: id as number, lat: latitude, lng: longitude });
+        }
+      },
+      (err) => {
+        setLocating(false);
+        let msg = "Location error: Please enable GPS.";
+        if (err.code === 1) msg = "Permission denied: GPS access required.";
+        else if (err.code === 3) msg = "Location timeout: GPS signal weak.";
+        setLastError(msg);
+        toast.error(msg);
+        setScanning(false);
+      },
+      geoOptions
+    );
+  };
 
   const startScanner = async () => {
     setLastError(null);
@@ -157,7 +192,7 @@ export default function QRScanner() {
           } catch {
             /* ignore parse error */
           }
-          markQRMutation.mutate(token);
+          handleMarkWithLocation("qr", token);
         },
         () => {
           /* frame decode errors — ignore */
@@ -204,13 +239,16 @@ export default function QRScanner() {
   }, []);
 
   // Determine which full-screen overlay to show
+  const [locating, setLocating] = useState(false);
   const overlayType: OverlayType = markQRMutation.isPending
     ? "qr-verify"
     : markManualMutation.isPending
       ? "manual-mark"
-      : mode === "manual" && activeSessions === undefined && isSessionsLoading
-        ? "load-sessions"
-        : null;
+      : locating
+        ? "locating"
+        : mode === "manual" && activeSessions === undefined && isSessionsLoading
+          ? "load-sessions"
+          : null;
 
   // ─── Success card with ripple ───────────────────────────────────────────
   const SuccessCard = ({ record }: { record: any }) => (
@@ -728,10 +766,9 @@ export default function QRScanner() {
                                 <Button
                                   size="sm"
                                   onClick={() => {
-                                    setLastError(null);
-                                    markManualMutation.mutate(sess.id);
+                                    handleMarkWithLocation("manual", sess.id);
                                   }}
-                                  disabled={markManualMutation.isPending}
+                                  disabled={markManualMutation.isPending || locating}
                                   className="font-medium tracking-wide text-[11px] shrink-0 h-10 px-4 rounded-xl shadow-md shadow-primary/20 hover:shadow-primary/35 transition-all hover:scale-[1.03] active:scale-[0.97]"
                                 >
                                   {isPending ? (
