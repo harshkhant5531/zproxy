@@ -7,6 +7,29 @@ const { requireRole } = authMiddleware;
 
 const router = express.Router();
 
+const normalizeIp = (value) => {
+  if (!value || typeof value !== "string") return null;
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+  if (trimmed === "::1") return "127.0.0.1";
+  if (trimmed.startsWith("::ffff:")) return trimmed.substring(7);
+  return trimmed;
+};
+
+const getClientIp = (req) => {
+  const xff = req.headers["x-forwarded-for"];
+  const forwarded = Array.isArray(xff) ? xff[0] : xff;
+  const firstForwarded =
+    typeof forwarded === "string" ? forwarded.split(",")[0] : null;
+
+  return (
+    normalizeIp(req.headers["cf-connecting-ip"]) ||
+    normalizeIp(req.headers["x-real-ip"]) ||
+    normalizeIp(firstForwarded) ||
+    normalizeIp(req.ip)
+  );
+};
+
 // @route   GET /api/attendance
 // @desc    Get user's attendance or all attendance (admin)
 // @access  Admin, Faculty, Student
@@ -82,6 +105,213 @@ router.get("/", authMiddleware, async (req, res, next) => {
     next(error);
   }
 });
+
+// @route   GET /api/attendance/proxy-audit
+// @desc    Audit proxy-flagged attendance with analytics
+// @access  Admin, Faculty
+router.get(
+  "/proxy-audit",
+  authMiddleware,
+  requireRole(["admin", "faculty"]),
+  async (req, res, next) => {
+    try {
+      const {
+        sessionId,
+        courseId,
+        studentId,
+        from,
+        to,
+        page = 1,
+        limit = 20,
+      } = req.query;
+
+      const parsedPage = Math.max(1, parseInt(page, 10) || 1);
+      const parsedLimit = Math.min(100, Math.max(1, parseInt(limit, 10) || 20));
+      const skip = (parsedPage - 1) * parsedLimit;
+
+      const baseWhere = {};
+      if (sessionId) baseWhere.sessionId = parseInt(sessionId, 10);
+      if (studentId) baseWhere.studentId = parseInt(studentId, 10);
+      if (from || to) {
+        baseWhere.timestamp = {
+          ...(from ? { gte: new Date(from) } : {}),
+          ...(to ? { lte: new Date(to) } : {}),
+        };
+      }
+
+      // Scope by course and faculty ownership.
+      baseWhere.session = {
+        ...(courseId ? { courseId: parseInt(courseId, 10) } : {}),
+        ...(req.user.role === "faculty" ? { facultyId: req.user.id } : {}),
+      };
+
+      const flaggedWhere = {
+        ...baseWhere,
+        OR: [
+          { notes: { contains: "[PROXY_SUSPECT" } },
+          { notes: { contains: "[PROXY_DETECTED" } },
+          { notes: { contains: "[AUTO_ABSENT:PROXY" } },
+        ],
+      };
+
+      const [records, total, analyticsRecords] = await Promise.all([
+        prisma.attendance.findMany({
+          where: flaggedWhere,
+          skip,
+          take: parsedLimit,
+          include: {
+            student: {
+              select: {
+                id: true,
+                username: true,
+                studentProfile: {
+                  select: {
+                    fullName: true,
+                    enrollmentNumber: true,
+                    rollNumber: true,
+                    batch: true,
+                  },
+                },
+              },
+            },
+            session: {
+              select: {
+                id: true,
+                topic: true,
+                date: true,
+                facultyId: true,
+                course: { select: { id: true, code: true, name: true } },
+                subject: { select: { id: true, name: true } },
+              },
+            },
+          },
+          orderBy: { timestamp: "desc" },
+        }),
+        prisma.attendance.count({ where: flaggedWhere }),
+        prisma.attendance.findMany({
+          where: baseWhere,
+          select: {
+            id: true,
+            sessionId: true,
+            studentId: true,
+            status: true,
+            timestamp: true,
+            ipAddress: true,
+            notes: true,
+          },
+          orderBy: { timestamp: "desc" },
+          take: 5000,
+        }),
+      ]);
+
+      const ipSessionMap = new Map();
+      const hotspotHours = Array.from({ length: 24 }, (_, hour) => ({
+        hour,
+        flaggedCount: 0,
+      }));
+      const linkMap = new Map();
+
+      for (const row of analyticsRecords) {
+        const ip = row.ipAddress || "unknown";
+        const sessionKey = `${row.sessionId}::${ip}`;
+        const existing = ipSessionMap.get(sessionKey) || {
+          sessionId: row.sessionId,
+          ipAddress: ip,
+          attendanceIds: [],
+          students: new Set(),
+          flagged: 0,
+        };
+
+        existing.attendanceIds.push(row.id);
+        existing.students.add(row.studentId);
+        if ((row.notes || "").includes("[PROXY_")) existing.flagged += 1;
+
+        ipSessionMap.set(sessionKey, existing);
+
+        if ((row.notes || "").includes("[PROXY_")) {
+          const hr = new Date(row.timestamp).getHours();
+          if (hotspotHours[hr]) hotspotHours[hr].flaggedCount += 1;
+
+          const match = String(row.notes || "").match(/sharedWith:(\d+)/);
+          if (match) {
+            const otherId = parseInt(match[1], 10);
+            const a = Math.min(row.studentId, otherId);
+            const b = Math.max(row.studentId, otherId);
+            const edgeKey = `${a}-${b}`;
+            const edge = linkMap.get(edgeKey) || {
+              studentA: a,
+              studentB: b,
+              occurrences: 0,
+            };
+            edge.occurrences += 1;
+            linkMap.set(edgeKey, edge);
+          }
+        }
+      }
+
+      const sharedIpClusters = Array.from(ipSessionMap.values())
+        .filter((row) => row.students.size > 1)
+        .map((row) => ({
+          sessionId: row.sessionId,
+          ipAddress: row.ipAddress,
+          uniqueStudents: row.students.size,
+          attendanceEvents: row.attendanceIds.length,
+          flaggedEvents: row.flagged,
+        }))
+        .sort((a, b) => b.uniqueStudents - a.uniqueStudents)
+        .slice(0, 20);
+
+      const topLinkedPairs = Array.from(linkMap.values())
+        .sort((a, b) => b.occurrences - a.occurrences)
+        .slice(0, 20);
+
+      const flaggedRecords = records.map((row) => {
+        const note = row.notes || "";
+        let riskScore = 25;
+        if (note.includes("[PROXY_DETECTED")) riskScore += 50;
+        if (note.includes("[PROXY_SUSPECT")) riskScore += 35;
+        if (note.includes("[AUTO_ABSENT:PROXY")) riskScore += 20;
+        if (row.status === "absent") riskScore += 10;
+        riskScore = Math.min(100, riskScore);
+
+        return {
+          ...row,
+          riskScore,
+          riskLabel:
+            riskScore >= 80
+              ? "critical"
+              : riskScore >= 60
+                ? "high"
+                : riskScore >= 40
+                  ? "moderate"
+                  : "low",
+        };
+      });
+
+      res.json({
+        success: true,
+        data: {
+          records: flaggedRecords,
+          pagination: {
+            page: parsedPage,
+            limit: parsedLimit,
+            total,
+            pages: Math.ceil(total / parsedLimit),
+          },
+          analytics: {
+            totalFlagged: total,
+            sharedIpClusters,
+            hotspotHours,
+            topLinkedPairs,
+            generatedAt: new Date().toISOString(),
+          },
+        },
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+);
 
 // @route   GET /api/attendance/:id
 // @desc    Get attendance record by ID
@@ -245,12 +475,13 @@ router.post(
       // ─── Proxy Detection ────────────────────────────────────────────────
       let finalStatus = status || "present";
       let finalNotes = notes || null;
-      if (req.ip && req.user.role === "student") {
+      const clientIp = getClientIp(req);
+      if (clientIp && req.user.role === "student") {
         const sameIpRecord = await prisma.attendance.findFirst({
           where: {
             sessionId,
             studentId: { not: studentId },
-            ipAddress: req.ip,
+            ipAddress: clientIp,
           },
           select: { id: true, studentId: true, notes: true },
         });
@@ -281,7 +512,7 @@ router.post(
             req.body.lat && req.body.lng
               ? `${req.body.lat},${req.body.lng}`
               : req.body.location,
-          ipAddress: req.ip,
+          ipAddress: clientIp,
           deviceInfo: req.body.deviceInfo,
         },
         include: {
@@ -549,13 +780,14 @@ router.post(
       // ─── Proxy Detection ────────────────────────────────────────────────
       let status = "present";
       let qrNotes = null;
+      const clientIp = getClientIp(req);
 
-      if (req.ip) {
+      if (clientIp) {
         const sameIpRecord = await prisma.attendance.findFirst({
           where: {
             sessionId: qrCodeData.sessionId,
             studentId: { not: req.user.id },
-            ipAddress: req.ip,
+            ipAddress: clientIp,
           },
         });
 
@@ -582,7 +814,7 @@ router.post(
           status: status,
           notes: qrNotes,
           location: `${lat},${lng}`,
-          ipAddress: req.ip,
+          ipAddress: clientIp,
           deviceInfo: req.body.deviceInfo,
         },
         include: {

@@ -12,6 +12,16 @@ const errorHandler = require("./middleware/error");
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// Respect upstream proxy headers (Render/NGINX) so req.ip reflects real client IP.
+const trustProxyEnv = process.env.TRUST_PROXY;
+if (trustProxyEnv === "true") {
+  app.set("trust proxy", true);
+} else if (/^\d+$/.test(trustProxyEnv || "")) {
+  app.set("trust proxy", parseInt(trustProxyEnv, 10));
+} else if (process.env.NODE_ENV === "production") {
+  app.set("trust proxy", 1);
+}
+
 // CORS Configuration
 const { getLocalIp } = require("./utils/network");
 const networkIp = getLocalIp();
