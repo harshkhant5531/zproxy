@@ -28,6 +28,7 @@ export type LoaderOperation =
   | "rejecting"
   | "enrolling"
   | "refreshing"
+  | "locating"
   | "qr-verify"
   | "manual-mark"
   | "load-sessions";
@@ -105,6 +106,12 @@ const CONFIGS: Record<LoaderOperation, Config> = {
     title: "Refreshing Data",
     subtitle: "Syncing latest records from the server…",
     color: "primary",
+  },
+  locating: {
+    icon: Radio,
+    title: "Acquiring Location",
+    subtitle: "Requesting GPS permission and locking your current position…",
+    color: "amber",
   },
   "qr-verify": {
     icon: QrCode,
@@ -192,7 +199,7 @@ export function FullScreenLoader({
 }: FullScreenLoaderProps) {
   if (!show || operation === "loading") return null;
 
-  const cfg = CONFIGS[operation];
+  const cfg = CONFIGS[operation] || CONFIGS.refreshing;
   const cl = COLOR_MAP[cfg.color];
   const Icon = cfg.icon;
 
