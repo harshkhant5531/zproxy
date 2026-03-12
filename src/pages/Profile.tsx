@@ -48,6 +48,15 @@ const getInitials = (value: string) =>
     .toUpperCase()
     .slice(0, 2);
 
+const DEFAULT_PASSWORD_BY_ROLE: Record<string, string> = {
+  admin: "admin123",
+  faculty: "faculty123",
+  student: "student123",
+};
+
+const getDefaultPasswordForRole = (role?: string) =>
+  role ? DEFAULT_PASSWORD_BY_ROLE[role] || "" : "";
+
 export default function ProfilePage() {
   const { user, refreshUser } = useAuth();
   const location = useLocation();
@@ -72,7 +81,9 @@ export default function ProfilePage() {
     parentEmail: "",
   });
   const [passwordForm, setPasswordForm] = useState({
-    currentPassword: forcedPasswordChange ? "student123" : "",
+    currentPassword: forcedPasswordChange
+      ? getDefaultPasswordForRole(user?.role)
+      : "",
     newPassword: "",
     confirmPassword: "",
   });
@@ -95,7 +106,9 @@ export default function ProfilePage() {
     });
     setPasswordForm((prev) => ({
       ...prev,
-      currentPassword: user.requiresPasswordChange ? "student123" : prev.currentPassword,
+      currentPassword: user.requiresPasswordChange
+        ? getDefaultPasswordForRole(user.role)
+        : prev.currentPassword,
     }));
   }, [user]);
 
@@ -171,14 +184,22 @@ export default function ProfilePage() {
         passwordForm.newPassword,
       );
       await refreshUser();
-      setPasswordForm({ currentPassword: "", newPassword: "", confirmPassword: "" });
+      setPasswordForm({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      });
       toast.success(
         forcedPasswordChange
           ? "Default password replaced. Your account is now secure."
           : "Password updated successfully.",
       );
     } catch (error: any) {
-      toast.error(error.response?.data?.message || "Failed to update password.");
+      const detail =
+        error.response?.data?.errors?.[0]?.msg ||
+        error.response?.data?.message ||
+        "Failed to update password.";
+      toast.error(detail);
     } finally {
       setIsSavingPassword(false);
     }
@@ -210,7 +231,8 @@ export default function ProfilePage() {
                   variant="outline"
                   className="rounded-full border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.16em] text-emerald-600 dark:text-emerald-400"
                 >
-                  <BadgeCheck className="mr-1.5 h-3 w-3" /> {user.status || "active"}
+                  <BadgeCheck className="mr-1.5 h-3 w-3" />{" "}
+                  {user.status || "active"}
                 </Badge>
                 {user.requiresPasswordChange && (
                   <Badge
@@ -235,7 +257,8 @@ export default function ProfilePage() {
                 </span>
                 {user.profile?.department && (
                   <span className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-white/80 px-3 py-1.5 dark:bg-background/40">
-                    <Building2 className="h-3.5 w-3.5 text-primary" /> {user.profile.department}
+                    <Building2 className="h-3.5 w-3.5 text-primary" />{" "}
+                    {user.profile.department}
                   </span>
                 )}
               </div>
@@ -248,7 +271,9 @@ export default function ProfilePage() {
                 <p className="text-[10px] font-black uppercase tracking-[0.18em] text-muted-foreground">
                   Username
                 </p>
-                <p className="mt-2 text-sm font-bold text-foreground">{user.username}</p>
+                <p className="mt-2 text-sm font-bold text-foreground">
+                  {user.username}
+                </p>
               </CardContent>
             </Card>
             <Card className="border-white/60 bg-white/75 shadow-lg shadow-sky-100 dark:border-white/10 dark:bg-background/40">
@@ -257,7 +282,9 @@ export default function ProfilePage() {
                   Identifier
                 </p>
                 <p className="mt-2 text-sm font-bold text-foreground">
-                  {user.profile?.enrollmentNumber || user.profile?.employeeId || `ID-${user.id}`}
+                  {user.profile?.enrollmentNumber ||
+                    user.profile?.employeeId ||
+                    `ID-${user.id}`}
                 </p>
               </CardContent>
             </Card>
@@ -267,7 +294,9 @@ export default function ProfilePage() {
                   Security
                 </p>
                 <p className="mt-2 text-sm font-bold text-foreground">
-                  {user.requiresPasswordChange ? "Default password in use" : "Password healthy"}
+                  {user.requiresPasswordChange
+                    ? "Default password in use"
+                    : "Password healthy"}
                 </p>
               </CardContent>
             </Card>
@@ -287,7 +316,8 @@ export default function ProfilePage() {
                   Password change required
                 </p>
                 <p className="mt-1 text-sm text-amber-900/80 dark:text-amber-100/80">
-                  This account is still using the seeded default password. Replace it now before using the rest of the system.
+                  This account is still using the seeded default password.
+                  Replace it now before using the rest of the system.
                 </p>
               </div>
             </div>
@@ -309,110 +339,158 @@ export default function ProfilePage() {
             <form onSubmit={handleSaveProfile} className="space-y-6">
               <div className="grid gap-5 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">Full Name</Label>
+                  <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">
+                    Full Name
+                  </Label>
                   <Input
                     value={profileForm.fullName}
-                    onChange={(event) => handleProfileField("fullName", event.target.value)}
+                    onChange={(event) =>
+                      handleProfileField("fullName", event.target.value)
+                    }
                     className="h-12 rounded-2xl border-border/70 bg-background/80"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">Username</Label>
+                  <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">
+                    Username
+                  </Label>
                   <Input
                     value={profileForm.username}
-                    onChange={(event) => handleProfileField("username", event.target.value)}
+                    onChange={(event) =>
+                      handleProfileField("username", event.target.value)
+                    }
                     className="h-12 rounded-2xl border-border/70 bg-background/80"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">Email</Label>
+                  <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">
+                    Email
+                  </Label>
                   <Input
                     type="email"
                     value={profileForm.email}
-                    onChange={(event) => handleProfileField("email", event.target.value)}
+                    onChange={(event) =>
+                      handleProfileField("email", event.target.value)
+                    }
                     className="h-12 rounded-2xl border-border/70 bg-background/80"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">Phone</Label>
+                  <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">
+                    Phone
+                  </Label>
                   <Input
                     value={profileForm.phone}
-                    onChange={(event) => handleProfileField("phone", event.target.value)}
+                    onChange={(event) =>
+                      handleProfileField("phone", event.target.value)
+                    }
                     className="h-12 rounded-2xl border-border/70 bg-background/80"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">Department</Label>
+                  <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">
+                    Department
+                  </Label>
                   <Input
                     value={profileForm.department}
-                    onChange={(event) => handleProfileField("department", event.target.value)}
+                    onChange={(event) =>
+                      handleProfileField("department", event.target.value)
+                    }
                     className="h-12 rounded-2xl border-border/70 bg-background/80"
                   />
                 </div>
                 {user.role === "faculty" && (
                   <div className="space-y-2">
-                    <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">Designation</Label>
+                    <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">
+                      Designation
+                    </Label>
                     <Input
                       value={profileForm.designation}
-                      onChange={(event) => handleProfileField("designation", event.target.value)}
+                      onChange={(event) =>
+                        handleProfileField("designation", event.target.value)
+                      }
                       className="h-12 rounded-2xl border-border/70 bg-background/80"
                     />
                   </div>
                 )}
                 {user.role === "faculty" && (
                   <div className="space-y-2">
-                    <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">Qualification</Label>
+                    <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">
+                      Qualification
+                    </Label>
                     <Input
                       value={profileForm.qualification}
-                      onChange={(event) => handleProfileField("qualification", event.target.value)}
+                      onChange={(event) =>
+                        handleProfileField("qualification", event.target.value)
+                      }
                       className="h-12 rounded-2xl border-border/70 bg-background/80"
                     />
                   </div>
                 )}
                 {user.role === "faculty" && (
                   <div className="space-y-2 md:col-span-2">
-                    <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">Office Hours</Label>
+                    <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">
+                      Office Hours
+                    </Label>
                     <Input
                       value={profileForm.officeHours}
-                      onChange={(event) => handleProfileField("officeHours", event.target.value)}
+                      onChange={(event) =>
+                        handleProfileField("officeHours", event.target.value)
+                      }
                       className="h-12 rounded-2xl border-border/70 bg-background/80"
                     />
                   </div>
                 )}
                 {user.role === "student" && (
                   <div className="space-y-2">
-                    <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">Parent Phone</Label>
+                    <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">
+                      Parent Phone
+                    </Label>
                     <Input
                       value={profileForm.parentPhone}
-                      onChange={(event) => handleProfileField("parentPhone", event.target.value)}
+                      onChange={(event) =>
+                        handleProfileField("parentPhone", event.target.value)
+                      }
                       className="h-12 rounded-2xl border-border/70 bg-background/80"
                     />
                   </div>
                 )}
                 {user.role === "student" && (
                   <div className="space-y-2">
-                    <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">Parent Email</Label>
+                    <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">
+                      Parent Email
+                    </Label>
                     <Input
                       type="email"
                       value={profileForm.parentEmail}
-                      onChange={(event) => handleProfileField("parentEmail", event.target.value)}
+                      onChange={(event) =>
+                        handleProfileField("parentEmail", event.target.value)
+                      }
                       className="h-12 rounded-2xl border-border/70 bg-background/80"
                     />
                   </div>
                 )}
                 <div className="space-y-2 md:col-span-2">
-                  <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">Address</Label>
+                  <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">
+                    Address
+                  </Label>
                   <Input
                     value={profileForm.address}
-                    onChange={(event) => handleProfileField("address", event.target.value)}
+                    onChange={(event) =>
+                      handleProfileField("address", event.target.value)
+                    }
                     className="h-12 rounded-2xl border-border/70 bg-background/80"
                   />
                 </div>
                 <div className="space-y-2 md:col-span-2">
-                  <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">Bio</Label>
+                  <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">
+                    Bio
+                  </Label>
                   <Textarea
                     value={profileForm.bio}
-                    onChange={(event) => handleProfileField("bio", event.target.value)}
+                    onChange={(event) =>
+                      handleProfileField("bio", event.target.value)
+                    }
                     className="min-h-[130px] rounded-[1.5rem] border-border/70 bg-background/80 px-4 py-3"
                   />
                 </div>
@@ -433,7 +511,8 @@ export default function ProfilePage() {
           <Card className="overflow-hidden border-border/60 bg-card/90 shadow-xl shadow-sky-100/40 dark:shadow-none">
             <CardHeader className="border-b border-border/50 bg-[linear-gradient(180deg,rgba(34,197,94,0.06),transparent)]">
               <CardTitle className="flex items-center gap-3 text-xl font-black tracking-[-0.03em]">
-                <KeyRound className="h-5 w-5 text-emerald-600 dark:text-emerald-400" /> Password & Security
+                <KeyRound className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />{" "}
+                Password & Security
               </CardTitle>
             </CardHeader>
             <CardContent className="p-6">
@@ -450,31 +529,43 @@ export default function ProfilePage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">Current Password</Label>
+                  <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">
+                    Current Password
+                  </Label>
                   <Input
                     type="password"
                     value={passwordForm.currentPassword}
-                    onChange={(event) => handlePasswordField("currentPassword", event.target.value)}
+                    onChange={(event) =>
+                      handlePasswordField("currentPassword", event.target.value)
+                    }
                     className="h-12 rounded-2xl border-border/70 bg-background/80"
                     required
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">New Password</Label>
+                  <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">
+                    New Password
+                  </Label>
                   <Input
                     type="password"
                     value={passwordForm.newPassword}
-                    onChange={(event) => handlePasswordField("newPassword", event.target.value)}
+                    onChange={(event) =>
+                      handlePasswordField("newPassword", event.target.value)
+                    }
                     className="h-12 rounded-2xl border-border/70 bg-background/80"
                     required
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">Confirm New Password</Label>
+                  <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">
+                    Confirm New Password
+                  </Label>
                   <Input
                     type="password"
                     value={passwordForm.confirmPassword}
-                    onChange={(event) => handlePasswordField("confirmPassword", event.target.value)}
+                    onChange={(event) =>
+                      handlePasswordField("confirmPassword", event.target.value)
+                    }
                     className="h-12 rounded-2xl border-border/70 bg-background/80"
                     required
                   />
@@ -501,15 +592,21 @@ export default function ProfilePage() {
               <div className="space-y-3">
                 <div className="flex items-center justify-between gap-3 rounded-2xl border border-border/60 bg-background/70 px-4 py-3">
                   <span className="text-muted-foreground">Role</span>
-                  <span className="font-semibold capitalize text-foreground">{user.role}</span>
+                  <span className="font-semibold capitalize text-foreground">
+                    {user.role}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between gap-3 rounded-2xl border border-border/60 bg-background/70 px-4 py-3">
                   <span className="text-muted-foreground">Department</span>
-                  <span className="font-semibold text-foreground">{user.profile?.department || "Not set"}</span>
+                  <span className="font-semibold text-foreground">
+                    {user.profile?.department || "Not set"}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between gap-3 rounded-2xl border border-border/60 bg-background/70 px-4 py-3">
                   <span className="text-muted-foreground">Phone</span>
-                  <span className="font-semibold text-foreground">{user.profile?.phone || "Not set"}</span>
+                  <span className="font-semibold text-foreground">
+                    {user.profile?.phone || "Not set"}
+                  </span>
                 </div>
               </div>
               <Separator className="bg-border/60" />
@@ -518,7 +615,9 @@ export default function ProfilePage() {
                   Light Theme Note
                 </p>
                 <p className="mt-2 text-sm leading-6 text-slate-700 dark:text-muted-foreground">
-                  This profile UI is tuned for the light palette first: cleaner contrast, softer cards, and stronger information grouping without flattening the hierarchy.
+                  This profile UI is tuned for the light palette first: cleaner
+                  contrast, softer cards, and stronger information grouping
+                  without flattening the hierarchy.
                 </p>
               </div>
             </CardContent>

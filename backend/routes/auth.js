@@ -52,6 +52,12 @@ const makeUniqueEnrollment = async (base) => {
 const RESET_PASSWORD_EXPIRES_IN =
   process.env.RESET_PASSWORD_EXPIRES_IN || "15m";
 
+const DEFAULT_PASSWORD_BY_ROLE = {
+  admin: "admin123",
+  faculty: "faculty123",
+  student: "student123",
+};
+
 const getFrontendUrl = (req) => {
   if (process.env.FRONTEND_URL) return process.env.FRONTEND_URL;
   const origin = req.get("origin");
@@ -59,16 +65,32 @@ const getFrontendUrl = (req) => {
   return "http://localhost:8080";
 };
 
-const isDefaultPassword = async (passwordHash) => {
+const isDefaultPassword = async (passwordHash, role) => {
   try {
-    return await argon2.verify(passwordHash, "student123");
+    const preferredDefault = DEFAULT_PASSWORD_BY_ROLE[role];
+    if (preferredDefault && (await argon2.verify(passwordHash, preferredDefault))) {
+      return true;
+    }
+
+    // Backward compatibility for users migrated between role defaults.
+    for (const candidate of Object.values(DEFAULT_PASSWORD_BY_ROLE)) {
+      if (candidate === preferredDefault) continue;
+      if (await argon2.verify(passwordHash, candidate)) {
+        return true;
+      }
+    }
+
+    return false;
   } catch {
     return false;
   }
 };
 
 const serializeUser = async (user) => {
-  const requiresPasswordChange = await isDefaultPassword(user.passwordHash);
+  const requiresPasswordChange = await isDefaultPassword(
+    user.passwordHash,
+    user.role,
+  );
   return {
     id: user.id,
     username: user.username,
