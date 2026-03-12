@@ -175,6 +175,9 @@ export const sessionsAPI = {
 export const attendanceAPI = {
   getAttendance: (params?: any) => api.get("/attendance", { params }),
 
+  getProxyAudit: (params?: any) =>
+    api.get("/attendance/proxy-audit", { params }),
+
   getAttendanceBySession: (sessionId: string | number) =>
     api.get(`/attendance/session/${sessionId}`),
 
@@ -183,8 +186,13 @@ export const attendanceAPI = {
 
   markAttendance: (data: any) => api.post("/attendance", data),
 
-  markAttendanceQR: (qrCode: string, lat: number, lng: number, deviceInfo?: string) =>
-    api.post("/attendance/qr", { qrCode, lat, lng, deviceInfo }),
+  markAttendanceQR: (
+    qrCode: string,
+    lat: number,
+    lng: number,
+    deviceInfo?: string,
+    accuracy?: number,
+  ) => api.post("/attendance/qr", { qrCode, lat, lng, deviceInfo, accuracy }),
 
   updateAttendance: (id: string | number, data: any) =>
     api.put(`/attendance/${id}`, data),

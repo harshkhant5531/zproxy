@@ -33,12 +33,18 @@ export default function VerifyAttendance() {
   const token = searchParams.get("token");
 
   const verifyMutation = useMutation({
-    mutationFn: (data: { token: string; lat: number; lng: number }) =>
+    mutationFn: (data: {
+      token: string;
+      lat: number;
+      lng: number;
+      accuracy?: number;
+    }) =>
       attendanceAPI.markAttendanceQR(
         data.token,
         data.lat,
         data.lng,
         `AuraSecure-${user?.id}`,
+        data.accuracy,
       ),
     onSuccess: () => {
       setStatus("success");
@@ -99,6 +105,7 @@ export default function VerifyAttendance() {
           token,
           lat: latitude,
           lng: longitude,
+          accuracy,
         });
       })
       .catch((error: any) => {

@@ -24,6 +24,7 @@ import CreateSession from "./pages/faculty/CreateSession";
 import LiveSession from "./pages/faculty/LiveSession";
 import Records from "./pages/faculty/Records";
 import Analytics from "./pages/faculty/Analytics";
+import ProxyAuditPage from "./pages/shared/ProxyAuditPage";
 import FacultyTimetable from "./pages/faculty/Timetable";
 import FacultyLeaves from "./pages/faculty/Leaves";
 import AdminLeaves from "./pages/admin/Leaves";
@@ -87,6 +88,7 @@ const AppContent = () => {
             <Route path="/faculty/session/:id" element={<LiveSession />} />
             <Route path="/faculty/records" element={<Records />} />
             <Route path="/faculty/analytics" element={<Analytics />} />
+            <Route path="/faculty/proxy-audit" element={<ProxyAuditPage />} />
             <Route path="/faculty/timetable" element={<FacultyTimetable />} />
             <Route path="/faculty/leaves" element={<FacultyLeaves />} />
           </Route>
@@ -101,6 +103,7 @@ const AppContent = () => {
             <Route path="/admin/leaves" element={<AdminLeaves />} />
             <Route path="/admin/reports" element={<Reports />} />
             <Route path="/admin/alerts" element={<ShortageAlerts />} />
+            <Route path="/admin/proxy-audit" element={<ProxyAuditPage />} />
           </Route>
         </Route>
       </Route>

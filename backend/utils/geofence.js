@@ -2,6 +2,9 @@ const EARTH_RADIUS_METERS = 6371000;
 const DEFAULT_RADIUS_METERS = 25;
 const MIN_RADIUS_METERS = 10;
 const MAX_RADIUS_METERS = 200;
+const DEFAULT_GPS_TOLERANCE_METERS = 20;
+const MAX_GPS_TOLERANCE_METERS = 75;
+const MAX_ACCEPTABLE_ACCURACY_METERS = 120;
 
 function toFiniteNumber(value) {
   if (value === null || value === undefined || value === "") {
@@ -42,13 +45,17 @@ function resolveRadiusMeters(session) {
   );
 }
 
-function resolveReferenceLocation(session) {
-  const latitude =
-    normalizeLatitude(session?.facultyLat) ??
-    normalizeLatitude(process.env.CAMPUS_LAT);
-  const longitude =
-    normalizeLongitude(session?.facultyLng) ??
-    normalizeLongitude(process.env.CAMPUS_LNG);
+function resolveReferenceLocation(session, options = {}) {
+  const { allowCampusFallback = false } = options;
+
+  const latitude = allowCampusFallback
+    ? (normalizeLatitude(session?.facultyLat) ??
+      normalizeLatitude(process.env.CAMPUS_LAT))
+    : normalizeLatitude(session?.facultyLat);
+  const longitude = allowCampusFallback
+    ? (normalizeLongitude(session?.facultyLng) ??
+      normalizeLongitude(process.env.CAMPUS_LNG))
+    : normalizeLongitude(session?.facultyLng);
 
   if (latitude === null || longitude === null) {
     return null;
@@ -72,11 +79,35 @@ function haversineDistanceMeters(from, to) {
   return Math.round(EARTH_RADIUS_METERS * c);
 }
 
-function validateStudentGeofence(session, lat, lng) {
+function resolveAccuracyToleranceMeters(accuracyMetersInput) {
+  const parsedAccuracy = toFiniteNumber(accuracyMetersInput);
+  if (parsedAccuracy === null || parsedAccuracy <= 0) {
+    return DEFAULT_GPS_TOLERANCE_METERS;
+  }
+
+  return Math.min(
+    MAX_GPS_TOLERANCE_METERS,
+    Math.max(DEFAULT_GPS_TOLERANCE_METERS, Math.round(parsedAccuracy)),
+  );
+}
+
+function validateStudentGeofence(session, lat, lng, accuracyMetersInput) {
   const studentLocation = {
     latitude: normalizeLatitude(lat),
     longitude: normalizeLongitude(lng),
   };
+
+  const reportedAccuracyMeters = toFiniteNumber(accuracyMetersInput);
+  if (
+    reportedAccuracyMeters !== null &&
+    reportedAccuracyMeters > MAX_ACCEPTABLE_ACCURACY_METERS
+  ) {
+    const error = new Error(
+      `Your GPS signal is too weak (±${Math.round(reportedAccuracyMeters)}m). Move to an open area and try again.`,
+    );
+    error.statusCode = 400;
+    throw error;
+  }
 
   if (studentLocation.latitude === null || studentLocation.longitude === null) {
     const error = new Error(
@@ -86,7 +117,9 @@ function validateStudentGeofence(session, lat, lng) {
     throw error;
   }
 
-  const referenceLocation = resolveReferenceLocation(session);
+  const referenceLocation = resolveReferenceLocation(session, {
+    allowCampusFallback: false,
+  });
   if (!referenceLocation) {
     const error = new Error(
       "Faculty location is unavailable for this session. Ask faculty to refresh the session location and try again.",
@@ -96,10 +129,14 @@ function validateStudentGeofence(session, lat, lng) {
   }
 
   const radiusMeters = resolveRadiusMeters(session);
-  const distanceMeters = haversineDistanceMeters(
+  const rawDistanceMeters = haversineDistanceMeters(
     studentLocation,
     referenceLocation,
   );
+  const toleranceMeters = resolveAccuracyToleranceMeters(
+    reportedAccuracyMeters,
+  );
+  const distanceMeters = Math.max(0, rawDistanceMeters - toleranceMeters);
 
   if (distanceMeters > radiusMeters) {
     const error = new Error(
@@ -107,12 +144,16 @@ function validateStudentGeofence(session, lat, lng) {
     );
     error.statusCode = 403;
     error.distanceMeters = distanceMeters;
+    error.rawDistanceMeters = rawDistanceMeters;
+    error.toleranceMeters = toleranceMeters;
     error.radiusMeters = radiusMeters;
     throw error;
   }
 
   return {
     distanceMeters,
+    rawDistanceMeters,
+    toleranceMeters,
     radiusMeters,
     studentLocation,
     referenceLocation,

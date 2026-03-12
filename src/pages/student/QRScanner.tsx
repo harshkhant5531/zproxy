@@ -105,16 +105,19 @@ export default function QRScanner() {
       qrCode,
       lat,
       lng,
+      accuracy,
     }: {
       qrCode: string;
       lat: number;
       lng: number;
+      accuracy?: number;
     }) =>
       attendanceAPI.markAttendanceQR(
         qrCode,
         lat,
         lng,
         `ScannerDevice-${user?.id}`,
+        accuracy,
       ),
     onSuccess: (resp) => {
       setScannedData(resp.data.data);
@@ -136,10 +139,12 @@ export default function QRScanner() {
       sessionId,
       lat,
       lng,
+      accuracy,
     }: {
       sessionId: number;
       lat: number;
       lng: number;
+      accuracy?: number;
     }) =>
       attendanceAPI.markAttendance({
         sessionId,
@@ -147,6 +152,7 @@ export default function QRScanner() {
         deviceInfo: `ManualDevice-${user?.id}`,
         lat,
         lng,
+        accuracy,
       }),
     onSuccess: (resp) => {
       setManualResult(resp.data.data);
@@ -186,18 +192,20 @@ export default function QRScanner() {
       })
       .then((pos) => {
         setLocating(false);
-        const { latitude, longitude } = pos.coords;
+        const { latitude, longitude, accuracy } = pos.coords;
         if (type === "qr") {
           markQRMutation.mutate({
             qrCode: id as string,
             lat: latitude,
             lng: longitude,
+            accuracy,
           });
         } else {
           markManualMutation.mutate({
             sessionId: id as number,
             lat: latitude,
             lng: longitude,
+            accuracy,
           });
         }
       })

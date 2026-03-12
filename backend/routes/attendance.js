@@ -107,7 +107,7 @@ router.get("/", authMiddleware, async (req, res, next) => {
 });
 
 // @route   GET /api/attendance/proxy-audit
-// @desc    Audit proxy-flagged attendance with analytics
+// @desc    Audit proxy-flagged attendance with comprehensive analytics
 // @access  Admin, Faculty
 router.get(
   "/proxy-audit",
@@ -154,84 +154,155 @@ router.get(
         ],
       };
 
-      const [records, total, analyticsRecords] = await Promise.all([
-        prisma.attendance.findMany({
-          where: flaggedWhere,
-          skip,
-          take: parsedLimit,
-          include: {
-            student: {
-              select: {
-                id: true,
-                username: true,
-                studentProfile: {
-                  select: {
-                    fullName: true,
-                    enrollmentNumber: true,
-                    rollNumber: true,
-                    batch: true,
+      const [records, total, analyticsRecords, allRecordsForStats] =
+        await Promise.all([
+          prisma.attendance.findMany({
+            where: flaggedWhere,
+            skip,
+            take: parsedLimit,
+            include: {
+              student: {
+                select: {
+                  id: true,
+                  username: true,
+                  studentProfile: {
+                    select: {
+                      fullName: true,
+                      enrollmentNumber: true,
+                      rollNumber: true,
+                      batch: true,
+                    },
                   },
                 },
               },
-            },
-            session: {
-              select: {
-                id: true,
-                topic: true,
-                date: true,
-                facultyId: true,
-                course: { select: { id: true, code: true, name: true } },
-                subject: { select: { id: true, name: true } },
+              session: {
+                select: {
+                  id: true,
+                  topic: true,
+                  date: true,
+                  facultyId: true,
+                  course: { select: { id: true, code: true, name: true } },
+                  subject: { select: { id: true, name: true } },
+                },
               },
             },
-          },
-          orderBy: { timestamp: "desc" },
-        }),
-        prisma.attendance.count({ where: flaggedWhere }),
-        prisma.attendance.findMany({
-          where: baseWhere,
-          select: {
-            id: true,
-            sessionId: true,
-            studentId: true,
-            status: true,
-            timestamp: true,
-            ipAddress: true,
-            notes: true,
-          },
-          orderBy: { timestamp: "desc" },
-          take: 5000,
-        }),
-      ]);
+            orderBy: { timestamp: "desc" },
+          }),
+          prisma.attendance.count({ where: flaggedWhere }),
+          prisma.attendance.findMany({
+            where: baseWhere,
+            select: {
+              id: true,
+              sessionId: true,
+              studentId: true,
+              status: true,
+              timestamp: true,
+              ipAddress: true,
+              notes: true,
+              deviceInfo: true,
+            },
+            orderBy: { timestamp: "desc" },
+            take: 5000,
+          }),
+          prisma.attendance.findMany({
+            where: baseWhere,
+            select: {
+              studentId: true,
+              status: true,
+              timestamp: true,
+              ipAddress: true,
+              notes: true,
+            },
+            take: 10000,
+          }),
+        ]);
 
+      // Enhanced Analytics Calculations
       const ipSessionMap = new Map();
       const hotspotHours = Array.from({ length: 24 }, (_, hour) => ({
         hour,
         flaggedCount: 0,
+        totalCount: 0,
       }));
       const linkMap = new Map();
+      const dailyTrends = new Map();
+      const studentRiskMap = new Map();
+      const devicePatterns = new Map();
+      const ipGeoMap = new Map();
 
+      // Process analytics records
       for (const row of analyticsRecords) {
         const ip = row.ipAddress || "unknown";
         const sessionKey = `${row.sessionId}::${ip}`;
+        const isFlagged = (row.notes || "").includes("[PROXY_");
         const existing = ipSessionMap.get(sessionKey) || {
           sessionId: row.sessionId,
           ipAddress: ip,
           attendanceIds: [],
           students: new Set(),
           flagged: 0,
+          total: 0,
         };
 
         existing.attendanceIds.push(row.id);
         existing.students.add(row.studentId);
-        if ((row.notes || "").includes("[PROXY_")) existing.flagged += 1;
-
+        existing.total += 1;
+        if (isFlagged) existing.flagged += 1;
         ipSessionMap.set(sessionKey, existing);
 
-        if ((row.notes || "").includes("[PROXY_")) {
-          const hr = new Date(row.timestamp).getHours();
-          if (hotspotHours[hr]) hotspotHours[hr].flaggedCount += 1;
+        // Hourly heatmap
+        const timestamp = new Date(row.timestamp);
+        const hr = timestamp.getHours();
+        if (hotspotHours[hr]) {
+          hotspotHours[hr].totalCount += 1;
+          if (isFlagged) hotspotHours[hr].flaggedCount += 1;
+        }
 
+        // Daily trends
+        const dayKey = timestamp.toISOString().split("T")[0];
+        const dayEntry = dailyTrends.get(dayKey) || {
+          date: dayKey,
+          flagged: 0,
+          total: 0,
+          riskScore: 0,
+        };
+        dayEntry.total += 1;
+        if (isFlagged) dayEntry.flagged += 1;
+        dailyTrends.set(dayKey, dayEntry);
+
+        // Student risk profiles
+        const studentEntry = studentRiskMap.get(row.studentId) || {
+          studentId: row.studentId,
+          flaggedCount: 0,
+          totalCount: 0,
+          ips: new Set(),
+          severitySum: 0,
+        };
+        studentEntry.totalCount += 1;
+        studentEntry.ips.add(ip);
+        if (isFlagged) {
+          studentEntry.flaggedCount += 1;
+          if ((row.notes || "").includes("[PROXY_DETECTED"))
+            studentEntry.severitySum += 3;
+          else if ((row.notes || "").includes("[PROXY_SUSPECT"))
+            studentEntry.severitySum += 2;
+          else studentEntry.severitySum += 1;
+        }
+        studentRiskMap.set(row.studentId, studentEntry);
+
+        // Device patterns
+        const device = row.deviceInfo || "unknown-device";
+        const deviceEntry = devicePatterns.get(device) || {
+          device,
+          count: 0,
+          flagged: 0,
+        };
+        deviceEntry.count += 1;
+        if (isFlagged) deviceEntry.flagged += 1;
+        devicePatterns.set(device, deviceEntry);
+
+        // Linked pairs
+        if (isFlagged) {
           const match = String(row.notes || "").match(/sharedWith:(\d+)/);
           if (match) {
             const otherId = parseInt(match[1], 10);
@@ -249,6 +320,70 @@ router.get(
         }
       }
 
+      // Calculate day-by-day metrics
+      const dailyTrendArray = Array.from(dailyTrends.values())
+        .map((day) => ({
+          ...day,
+          riskScore: day.total
+            ? Math.round((day.flagged / day.total) * 100)
+            : 0,
+        }))
+        .sort((a, b) => new Date(a.date) - new Date(b.date))
+        .slice(-30); // Last 30 days
+
+      // Calculate peak risk hours
+      const peakRiskHours = hotspotHours
+        .map((h) => ({
+          ...h,
+          riskPercentage: h.totalCount
+            ? Math.round((h.flaggedCount / h.totalCount) * 100)
+            : 0,
+        }))
+        .sort((a, b) => b.riskPercentage - a.riskPercentage)
+        .slice(0, 5);
+
+      // Calculate student risk profiles with anomaly scoring
+      const studentRiskProfiles = Array.from(studentRiskMap.values())
+        .map((s) => {
+          const flagRate = s.totalCount
+            ? (s.flaggedCount / s.totalCount) * 100
+            : 0;
+          const ipVariance = s.ips.size;
+          let anomalyScore =
+            flagRate * 0.6 + ipVariance * 5 + (s.severitySum || 0) * 2;
+          anomalyScore = Math.min(100, anomalyScore);
+          return {
+            studentId: s.studentId,
+            flaggedCount: s.flaggedCount,
+            totalCount: s.totalCount,
+            uniqueIps: ipVariance,
+            flagRate: Math.round(flagRate),
+            anomalyScore: Math.round(anomalyScore),
+            riskLevel:
+              anomalyScore >= 75
+                ? "critical"
+                : anomalyScore >= 50
+                  ? "high"
+                  : anomalyScore >= 25
+                    ? "moderate"
+                    : "low",
+          };
+        })
+        .sort((a, b) => b.anomalyScore - a.anomalyScore)
+        .slice(0, 25);
+
+      // Device risk analysis
+      const deviceRiskAnalysis = Array.from(devicePatterns.values())
+        .map((d) => ({
+          device: d.device,
+          totalEvents: d.count,
+          flaggedEvents: d.flagged,
+          riskPercentage: d.count ? Math.round((d.flagged / d.count) * 100) : 0,
+        }))
+        .sort((a, b) => b.riskPercentage - a.riskPercentage)
+        .slice(0, 10);
+
+      // Shared IP clusters
       const sharedIpClusters = Array.from(ipSessionMap.values())
         .filter((row) => row.students.size > 1)
         .map((row) => ({
@@ -257,13 +392,88 @@ router.get(
           uniqueStudents: row.students.size,
           attendanceEvents: row.attendanceIds.length,
           flaggedEvents: row.flagged,
+          riskPercentage: row.total
+            ? Math.round((row.flagged / row.total) * 100)
+            : 0,
         }))
         .sort((a, b) => b.uniqueStudents - a.uniqueStudents)
-        .slice(0, 20);
+        .slice(0, 25);
 
+      // Top linked pairs
       const topLinkedPairs = Array.from(linkMap.values())
         .sort((a, b) => b.occurrences - a.occurrences)
         .slice(0, 20);
+
+      // IP address frequency analysis
+      const ipFrequencyMap = new Map();
+      for (const row of analyticsRecords) {
+        const ip = row.ipAddress || "unknown";
+        const entry = ipFrequencyMap.get(ip) || {
+          ipAddress: ip,
+          count: 0,
+          flagged: 0,
+          students: new Set(),
+        };
+        entry.count += 1;
+        entry.students.add(row.studentId);
+        if ((row.notes || "").includes("[PROXY_")) entry.flagged += 1;
+        ipFrequencyMap.set(ip, entry);
+      }
+
+      const topIpAddresses = Array.from(ipFrequencyMap.values())
+        .map((entry) => ({
+          ipAddress: entry.ipAddress,
+          totalEvents: entry.count,
+          flaggedEvents: entry.flagged,
+          uniqueStudents: entry.students.size,
+          riskPercentage: entry.count
+            ? Math.round((entry.flagged / entry.count) * 100)
+            : 0,
+        }))
+        .sort((a, b) => b.totalEvents - a.totalEvents)
+        .slice(0, 15);
+
+      // Time-based analysis: flagged events by day of week
+      const dayOfWeekMap = new Map();
+      const dayNames = [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+      ];
+      for (const row of analyticsRecords) {
+        const timestamp = new Date(row.timestamp);
+        const dayOfWeek = timestamp.getDay();
+        const dayEntry = dayOfWeekMap.get(dayOfWeek) || {
+          day: dayNames[dayOfWeek],
+          dayIndex: dayOfWeek,
+          flagged: 0,
+          total: 0,
+        };
+        dayEntry.total += 1;
+        if ((row.notes || "").includes("[PROXY_")) dayEntry.flagged += 1;
+        dayOfWeekMap.set(dayOfWeek, dayEntry);
+      }
+
+      const dayOfWeekAnalysis = Array.from(dayOfWeekMap.values())
+        .map((d) => ({
+          ...d,
+          riskPercentage: d.total ? Math.round((d.flagged / d.total) * 100) : 0,
+        }))
+        .sort((a, b) => a.dayIndex - b.dayIndex);
+
+      // Calculate overall statistics
+      const allFlaggedCount = allRecordsForStats.filter((r) =>
+        (r.notes || "").includes("[PROXY_"),
+      ).length;
+      const allTotalCount = allRecordsForStats.length;
+      const detectionAccuracy =
+        allTotalCount > 0
+          ? Math.round((allFlaggedCount / allTotalCount) * 100)
+          : 0;
 
       const flaggedRecords = records.map((row) => {
         const note = row.notes || "";
@@ -299,10 +509,33 @@ router.get(
             pages: Math.ceil(total / parsedLimit),
           },
           analytics: {
-            totalFlagged: total,
+            summary: {
+              totalFlagged: total,
+              totalAttendance: allTotalCount,
+              detectionAccuracy,
+              uniqueStudentsAtRisk: studentRiskProfiles.length,
+              criticalRiskCount: studentRiskProfiles.filter(
+                (s) => s.riskLevel === "critical",
+              ).length,
+              highRiskCount: studentRiskProfiles.filter(
+                (s) => s.riskLevel === "high",
+              ).length,
+              moderateRiskCount: studentRiskProfiles.filter(
+                (s) => s.riskLevel === "moderate",
+              ).length,
+              lowRiskCount: studentRiskProfiles.filter(
+                (s) => s.riskLevel === "low",
+              ).length,
+            },
             sharedIpClusters,
+            dailyTrends: dailyTrendArray,
             hotspotHours,
+            peakRiskHours,
             topLinkedPairs,
+            studentRiskProfiles,
+            deviceRiskAnalysis,
+            topIpAddresses,
+            dayOfWeekAnalysis,
             generatedAt: new Date().toISOString(),
           },
         },
@@ -469,7 +702,12 @@ router.post(
 
       // Enforce faculty-centered geofence for student attendance.
       if (req.user.role === "student") {
-        validateStudentGeofence(session, req.body.lat, req.body.lng);
+        validateStudentGeofence(
+          session,
+          req.body.lat,
+          req.body.lng,
+          req.body.accuracy,
+        );
       }
 
       // ─── Proxy Detection ────────────────────────────────────────────────
@@ -759,7 +997,7 @@ router.post(
       }
 
       const { lat, lng } = req.body;
-      validateStudentGeofence(qrCodeData.session, lat, lng);
+      validateStudentGeofence(qrCodeData.session, lat, lng, req.body.accuracy);
 
       // Check if attendance already exists
       const existingAttendance = await prisma.attendance.findFirst({
