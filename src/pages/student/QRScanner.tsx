@@ -42,6 +42,15 @@ type OverlayType =
   | "locating"
   | null;
 
+type GeofenceDebug = {
+  distanceMeters?: number;
+  rawDistanceMeters?: number;
+  toleranceMeters?: number;
+  radiusMeters?: number;
+  reportedAccuracyMeters?: number;
+  maxAcceptableAccuracyMeters?: number;
+};
+
 function errorLabel(err: any): string {
   const msg: string = err?.response?.data?.message || err?.message || "";
   if (msg.toLowerCase().includes("batch"))
@@ -73,6 +82,8 @@ export default function QRScanner() {
   const [scannedData, setScannedData] = useState<any>(null);
   const [manualResult, setManualResult] = useState<any>(null);
   const [lastError, setLastError] = useState<string | null>(null);
+  const [lastGeofenceDebug, setLastGeofenceDebug] =
+    useState<GeofenceDebug | null>(null);
   const [permissionStatus, setPermissionStatus] = useState<
     "not_requested" | "granted" | "denied"
   >("not_requested");
@@ -122,6 +133,7 @@ export default function QRScanner() {
     onSuccess: (resp) => {
       setScannedData(resp.data.data);
       setLastError(null);
+      setLastGeofenceDebug(null);
       toast.success("Attendance verified and recorded!");
       queryClient.invalidateQueries({
         queryKey: ["student", "recent-attendance"],
@@ -130,6 +142,7 @@ export default function QRScanner() {
     },
     onError: (err: any) => {
       setLastError(errorLabel(err));
+      setLastGeofenceDebug(err?.response?.data?.debug?.geofence || null);
       setScanning(false);
     },
   });
@@ -157,6 +170,7 @@ export default function QRScanner() {
     onSuccess: (resp) => {
       setManualResult(resp.data.data);
       setLastError(null);
+      setLastGeofenceDebug(null);
       toast.success("Attendance marked successfully!");
       queryClient.invalidateQueries({
         queryKey: ["student", "recent-attendance"],
@@ -164,6 +178,7 @@ export default function QRScanner() {
     },
     onError: (err: any) => {
       setLastError(errorLabel(err));
+      setLastGeofenceDebug(err?.response?.data?.debug?.geofence || null);
     },
   });
 
@@ -172,6 +187,7 @@ export default function QRScanner() {
     id: string | number,
   ) => {
     setLastError(null);
+    setLastGeofenceDebug(null);
     setLocating(true);
 
     const geoOptions = {
@@ -213,6 +229,7 @@ export default function QRScanner() {
         setLocating(false);
         const msg = getLocationErrorMessage(err);
         setLastError(msg);
+        setLastGeofenceDebug(null);
         toast.error(msg);
         setScanning(false);
       });
@@ -274,6 +291,7 @@ export default function QRScanner() {
     setScannedData(null);
     setManualResult(null);
     setLastError(null);
+    setLastGeofenceDebug(null);
   };
 
   const switchMode = (m: ScanMode) => {
@@ -361,9 +379,11 @@ export default function QRScanner() {
   // ─── Error banner ───────────────────────────────────────────────────────
   const ErrorBanner = ({
     message,
+    geofenceDebug,
     onRetry,
   }: {
     message: string;
+    geofenceDebug?: GeofenceDebug | null;
     onRetry: () => void;
   }) => {
     const [title, ...rest] = message.split("—").map((s) => s.trim());
@@ -382,6 +402,35 @@ export default function QRScanner() {
             )}
           </div>
         </div>
+        {geofenceDebug && (
+          <div className="rounded-xl border border-border/70 bg-background/70 p-3 space-y-1.5">
+            <p className="text-[10px] font-black uppercase tracking-[0.18em] text-muted-foreground">
+              Geofence Telemetry
+            </p>
+            <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-[11px] text-muted-foreground">
+              {geofenceDebug.rawDistanceMeters !== undefined && (
+                <p>Raw: {geofenceDebug.rawDistanceMeters}m</p>
+              )}
+              {geofenceDebug.toleranceMeters !== undefined && (
+                <p>Tolerance: {geofenceDebug.toleranceMeters}m</p>
+              )}
+              {geofenceDebug.distanceMeters !== undefined && (
+                <p>Effective: {geofenceDebug.distanceMeters}m</p>
+              )}
+              {geofenceDebug.radiusMeters !== undefined && (
+                <p>Radius: {geofenceDebug.radiusMeters}m</p>
+              )}
+              {geofenceDebug.reportedAccuracyMeters !== undefined && (
+                <p>Accuracy: ±{geofenceDebug.reportedAccuracyMeters}m</p>
+              )}
+              {geofenceDebug.maxAcceptableAccuracyMeters !== undefined && (
+                <p>
+                  Max Allowed: ±{geofenceDebug.maxAcceptableAccuracyMeters}m
+                </p>
+              )}
+            </div>
+          </div>
+        )}
         <Button
           variant="outline"
           size="sm"
@@ -607,7 +656,11 @@ export default function QRScanner() {
             ) : lastError ? (
               <ErrorBanner
                 message={lastError}
-                onRetry={() => setLastError(null)}
+                geofenceDebug={lastGeofenceDebug}
+                onRetry={() => {
+                  setLastError(null);
+                  setLastGeofenceDebug(null);
+                }}
               />
             ) : (
               <div className="text-center space-y-3">
@@ -744,7 +797,11 @@ export default function QRScanner() {
                 {lastError && (
                   <ErrorBanner
                     message={lastError}
-                    onRetry={() => setLastError(null)}
+                    geofenceDebug={lastGeofenceDebug}
+                    onRetry={() => {
+                      setLastError(null);
+                      setLastGeofenceDebug(null);
+                    }}
                   />
                 )}
 

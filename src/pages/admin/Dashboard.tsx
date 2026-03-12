@@ -104,14 +104,14 @@ export default function AdminDashboard() {
   return (
     <>
       <FullScreenLoader show={isLoading} operation="loading" />
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-            Institutional Overview
-          </h1>
-          <p className="text-[10px] text-muted-foreground font-mono uppercase tracking-[0.2em] mt-1">
-            Global System Metrics // Admin Portal
-          </p>
+      <div className="app-page">
+        <div className="app-page-header">
+          <div>
+            <h1 className="page-header-title">Institutional Overview</h1>
+            <p className="page-header-sub">
+              Global System Metrics // Admin Portal
+            </p>
+          </div>
         </div>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">

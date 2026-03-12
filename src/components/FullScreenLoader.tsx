@@ -190,21 +190,30 @@ interface FullScreenLoaderProps {
   show: boolean;
   operation?: LoaderOperation;
   label?: string;
+  position?: "fixed" | "absolute";
+  withSidebarOffset?: boolean;
 }
 
 export function FullScreenLoader({
   show,
   operation = "loading",
   label,
+  position = "fixed",
+  withSidebarOffset = false,
 }: FullScreenLoaderProps) {
-  if (!show || operation === "loading") return null;
+  if (!show) return null;
 
   const cfg = CONFIGS[operation] || CONFIGS.refreshing;
   const cl = COLOR_MAP[cfg.color];
   const Icon = cfg.icon;
 
+  const positionClass = position === "absolute" ? "absolute" : "fixed";
+  const sidebarClass = withSidebarOffset ? "lg:pl-[16rem]" : "";
+
   return (
-    <div className="fixed inset-0 z-[9999] bg-background/90 backdrop-blur-2xl flex flex-col items-center justify-center gap-8 animate-in fade-in duration-300 lg:pl-[16rem]">
+    <div
+      className={`${positionClass} inset-0 z-[9999] bg-background/90 backdrop-blur-2xl flex flex-col items-center justify-center gap-8 animate-in fade-in duration-300 ${sidebarClass}`}
+    >
       {/* Expanding rings + icon */}
       <div className="relative flex items-center justify-center">
         {[0, 0.3, 0.6].map((delay, i) => (

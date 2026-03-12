@@ -157,8 +157,12 @@ const Index = () => {
   };
 
   return (
-    <>
-      <FullScreenLoader show={isSubmitting} operation="authenticating" />
+    <div className="relative min-h-screen">
+      <FullScreenLoader
+        show={isSubmitting}
+        operation="authenticating"
+        position="absolute"
+      />
 
       <div className="flex min-h-screen relative overflow-hidden bg-background text-foreground">
         {/* Background grid + orbs */}
@@ -345,7 +349,7 @@ const Index = () => {
           </Card>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

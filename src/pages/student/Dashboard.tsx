@@ -122,219 +122,219 @@ export default function StudentDashboard() {
   if (isLoading) return <FullScreenLoader show operation="loading" />;
 
   return (
-    <div className="space-y-6 relative min-h-screen">
+    <div className="app-page">
+      <div className="app-page-header">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-            Student Dashboard
-          </h1>
-          <p className="text-sm text-muted-foreground mt-1">
+          <h1 className="page-header-title">Student Dashboard</h1>
+          <p className="page-header-sub">
             {user?.profile?.fullName || user?.username}
             {user?.profile?.enrollmentNumber
               ? ` (${user.profile.enrollmentNumber})`
               : ""}
           </p>
         </div>
+      </div>
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <div
-            className="motion-page-enter motion-surface"
-            style={{ animationDelay: "30ms" }}
-          >
-            <StatCard
-              title="Overall Attendance"
-              value={`${attendanceStats?.attendanceRate || 0}%`}
-              icon={GraduationCap}
-              trend={{ value: 0, label: "real-time" }}
-            />
-          </div>
-          <div
-            className="motion-page-enter motion-surface"
-            style={{ animationDelay: "90ms" }}
-          >
-            <StatCard
-              title="This Week"
-              value={weeklyData.reduce((a, d) => a + d.present, 0).toString()}
-              subtitle={`${weeklyData.reduce((a, d) => a + d.total, 0)} classes this week`}
-              icon={CalendarCheck}
-            />
-          </div>
-          <div
-            className="motion-page-enter motion-surface"
-            style={{ animationDelay: "150ms" }}
-          >
-            <StatCard
-              title="Total Present"
-              value={attendanceStats?.presentCount?.toString() || "0"}
-              subtitle="Current semester"
-              icon={Clock}
-            />
-          </div>
-          <div
-            className="motion-page-enter motion-surface"
-            style={{ animationDelay: "210ms" }}
-          >
-            <StatCard
-              title="Flagged Courses"
-              value={flaggedCourses.length.toString()}
-              subtitle="Below 75% attendance"
-              icon={TrendingUp}
-              iconClassName={
-                flaggedCourses.length > 0
-                  ? "bg-destructive/10 border-destructive/20"
-                  : undefined
-              }
-            />
-          </div>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div
+          className="motion-page-enter motion-surface"
+          style={{ animationDelay: "30ms" }}
+        >
+          <StatCard
+            title="Overall Attendance"
+            value={`${attendanceStats?.attendanceRate || 0}%`}
+            icon={GraduationCap}
+            trend={{ value: 0, label: "real-time" }}
+          />
         </div>
-
-        <div className="grid gap-6 lg:grid-cols-2">
-          <Card className="glass-card aura-glow border-none">
-            <CardHeader className="card-header-muted py-4 px-6">
-              <CardTitle className="text-sm font-semibold text-foreground">
-                This Week's Attendance
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="px-6 pb-6 pt-4">
-              <ResponsiveContainer width="100%" height={200}>
-                <BarChart data={weeklyData}>
-                  <XAxis
-                    dataKey="day"
-                    tick={{
-                      fill: "hsl(var(--muted-foreground))",
-                      fontSize: 12,
-                    }}
-                    axisLine={false}
-                    tickLine={false}
-                  />
-                  <YAxis
-                    tick={{
-                      fill: "hsl(var(--muted-foreground))",
-                      fontSize: 12,
-                    }}
-                    axisLine={false}
-                    tickLine={false}
-                  />
-                  <Tooltip
-                    cursor={{ fill: "hsl(var(--muted) / 0.3)" }}
-                    contentStyle={{
-                      background: "hsl(var(--card))",
-                      border: "1px solid hsl(var(--border))",
-                      borderRadius: 8,
-                      color: "hsl(var(--foreground))",
-                    }}
-                  />
-                  <Bar
-                    dataKey="present"
-                    fill="hsl(var(--primary))"
-                    radius={[4, 4, 0, 0]}
-                    barSize={20}
-                    name="Present"
-                  />
-                  <Bar
-                    dataKey="total"
-                    fill="hsl(var(--muted))"
-                    radius={[4, 4, 0, 0]}
-                    barSize={20}
-                    name="Total"
-                  />
-                </BarChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
-
-          <Card className="glass-card aura-glow border-none">
-            <CardHeader className="card-header-muted py-4 px-6">
-              <CardTitle className="text-sm font-semibold text-foreground">
-                Attendance by Course
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4 px-6 pb-6 pt-4 max-h-[260px] overflow-y-auto">
-              {courseAttendanceData.map((course: any, i: number) => (
-                <div
-                  key={course.id}
-                  className="space-y-1.5 motion-page-enter"
-                  style={{ animationDelay: `${50 + i * 45}ms` }}
-                >
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="font-medium text-foreground font-mono tracking-tight">
-                      {course.code} — {course.name}
-                    </span>
-                    <span
-                      className={`font-bold font-mono ${course.attendancePct < 75 ? "text-red-500" : "text-primary"}`}
-                    >
-                      {course.attendancePct}%
-                    </span>
-                  </div>
-                  <Progress value={course.attendancePct} className="h-1.5" />
-                </div>
-              ))}
-              {courseAttendanceData.length === 0 && (
-                <p className="text-sm text-muted-foreground text-center py-8">
-                  No enrolled courses found
-                </p>
-              )}
-            </CardContent>
-          </Card>
+        <div
+          className="motion-page-enter motion-surface"
+          style={{ animationDelay: "90ms" }}
+        >
+          <StatCard
+            title="This Week"
+            value={weeklyData.reduce((a, d) => a + d.present, 0).toString()}
+            subtitle={`${weeklyData.reduce((a, d) => a + d.total, 0)} classes this week`}
+            icon={CalendarCheck}
+          />
         </div>
+        <div
+          className="motion-page-enter motion-surface"
+          style={{ animationDelay: "150ms" }}
+        >
+          <StatCard
+            title="Total Present"
+            value={attendanceStats?.presentCount?.toString() || "0"}
+            subtitle="Current semester"
+            icon={Clock}
+          />
+        </div>
+        <div
+          className="motion-page-enter motion-surface"
+          style={{ animationDelay: "210ms" }}
+        >
+          <StatCard
+            title="Flagged Courses"
+            value={flaggedCourses.length.toString()}
+            subtitle="Below 75% attendance"
+            icon={TrendingUp}
+            iconClassName={
+              flaggedCourses.length > 0
+                ? "bg-destructive/10 border-destructive/20"
+                : undefined
+            }
+          />
+        </div>
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-2">
+        <Card className="glass-card aura-glow border-none">
+          <CardHeader className="card-header-muted py-4 px-6">
+            <CardTitle className="text-sm font-semibold text-foreground">
+              This Week's Attendance
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="px-6 pb-6 pt-4">
+            <ResponsiveContainer width="100%" height={200}>
+              <BarChart data={weeklyData}>
+                <XAxis
+                  dataKey="day"
+                  tick={{
+                    fill: "hsl(var(--muted-foreground))",
+                    fontSize: 12,
+                  }}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <YAxis
+                  tick={{
+                    fill: "hsl(var(--muted-foreground))",
+                    fontSize: 12,
+                  }}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <Tooltip
+                  cursor={{ fill: "hsl(var(--muted) / 0.3)" }}
+                  contentStyle={{
+                    background: "hsl(var(--card))",
+                    border: "1px solid hsl(var(--border))",
+                    borderRadius: 8,
+                    color: "hsl(var(--foreground))",
+                  }}
+                />
+                <Bar
+                  dataKey="present"
+                  fill="hsl(var(--primary))"
+                  radius={[4, 4, 0, 0]}
+                  barSize={20}
+                  name="Present"
+                />
+                <Bar
+                  dataKey="total"
+                  fill="hsl(var(--muted))"
+                  radius={[4, 4, 0, 0]}
+                  barSize={20}
+                  name="Total"
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
 
         <Card className="glass-card aura-glow border-none">
           <CardHeader className="card-header-muted py-4 px-6">
             <CardTitle className="text-sm font-semibold text-foreground">
-              Recent Attendance Log
+              Attendance by Course
             </CardTitle>
           </CardHeader>
-          <CardContent className="p-0">
-            <div className="overflow-hidden">
-              <Table>
-                <TableHeader>
-                  <TableRow className="border-border/40 hover:bg-transparent">
-                    <TableHead className="text-muted-foreground/60 font-semibold text-[10px] uppercase tracking-widest h-11 pl-6">
-                      Date
-                    </TableHead>
-                    <TableHead className="text-muted-foreground/60 font-semibold text-[10px] uppercase tracking-widest h-11">
-                      Course
-                    </TableHead>
-                    <TableHead className="text-muted-foreground/60 font-semibold text-[10px] uppercase tracking-widest h-11">
-                      Topic
-                    </TableHead>
-                    <TableHead className="text-muted-foreground/60 font-semibold text-[10px] uppercase tracking-widest h-11 pr-6">
-                      Status
-                    </TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {recentLogs.map((log: any, i: number) => (
-                    <TableRow
-                      key={log.id}
-                      className="border-border/30 hover:bg-muted/20 transition-colors motion-page-enter"
-                      style={{ animationDelay: `${60 + i * 35}ms` }}
-                    >
-                      <TableCell className="text-xs text-muted-foreground font-mono pl-6">
-                        {log.session?.date
-                          ? format(parseISO(log.session.date), "MMM dd, yyyy")
-                          : "—"}
-                      </TableCell>
-                      <TableCell className="text-sm font-semibold text-foreground uppercase tracking-tight">
-                        {log.session?.course?.code || "N/A"}
-                      </TableCell>
-                      <TableCell className="text-sm text-muted-foreground">
-                        {log.session?.topic}
-                      </TableCell>
-                      <TableCell className="pr-6">
-                        <StatusBadge status={log.status} />
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-              {recentLogs.length === 0 && (
-                <p className="text-sm text-muted-foreground text-center py-12">
-                  No recent logs found
-                </p>
-              )}
-            </div>
+          <CardContent className="space-y-4 px-6 pb-6 pt-4 max-h-[260px] overflow-y-auto">
+            {courseAttendanceData.map((course: any, i: number) => (
+              <div
+                key={course.id}
+                className="space-y-1.5 motion-page-enter"
+                style={{ animationDelay: `${50 + i * 45}ms` }}
+              >
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-medium text-foreground font-mono tracking-tight">
+                    {course.code} — {course.name}
+                  </span>
+                  <span
+                    className={`font-bold font-mono ${course.attendancePct < 75 ? "text-red-500" : "text-primary"}`}
+                  >
+                    {course.attendancePct}%
+                  </span>
+                </div>
+                <Progress value={course.attendancePct} className="h-1.5" />
+              </div>
+            ))}
+            {courseAttendanceData.length === 0 && (
+              <p className="text-sm text-muted-foreground text-center py-8">
+                No enrolled courses found
+              </p>
+            )}
           </CardContent>
         </Card>
       </div>
+
+      <Card className="glass-card aura-glow border-none">
+        <CardHeader className="card-header-muted py-4 px-6">
+          <CardTitle className="text-sm font-semibold text-foreground">
+            Recent Attendance Log
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-0">
+          <div className="overflow-hidden">
+            <Table>
+              <TableHeader>
+                <TableRow className="border-border/40 hover:bg-transparent">
+                  <TableHead className="text-muted-foreground/60 font-semibold text-[10px] uppercase tracking-widest h-11 pl-6">
+                    Date
+                  </TableHead>
+                  <TableHead className="text-muted-foreground/60 font-semibold text-[10px] uppercase tracking-widest h-11">
+                    Course
+                  </TableHead>
+                  <TableHead className="text-muted-foreground/60 font-semibold text-[10px] uppercase tracking-widest h-11">
+                    Topic
+                  </TableHead>
+                  <TableHead className="text-muted-foreground/60 font-semibold text-[10px] uppercase tracking-widest h-11 pr-6">
+                    Status
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {recentLogs.map((log: any, i: number) => (
+                  <TableRow
+                    key={log.id}
+                    className="border-border/30 hover:bg-muted/20 transition-colors motion-page-enter"
+                    style={{ animationDelay: `${60 + i * 35}ms` }}
+                  >
+                    <TableCell className="text-xs text-muted-foreground font-mono pl-6">
+                      {log.session?.date
+                        ? format(parseISO(log.session.date), "MMM dd, yyyy")
+                        : "—"}
+                    </TableCell>
+                    <TableCell className="text-sm font-semibold text-foreground uppercase tracking-tight">
+                      {log.session?.course?.code || "N/A"}
+                    </TableCell>
+                    <TableCell className="text-sm text-muted-foreground">
+                      {log.session?.topic}
+                    </TableCell>
+                    <TableCell className="pr-6">
+                      <StatusBadge status={log.status} />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+            {recentLogs.length === 0 && (
+              <p className="text-sm text-muted-foreground text-center py-12">
+                No recent logs found
+              </p>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 }
