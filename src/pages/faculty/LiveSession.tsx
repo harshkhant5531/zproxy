@@ -254,7 +254,7 @@ export default function LiveSession() {
       />
       <div className="space-y-6 px-4 sm:px-0 scroll-mt-20">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="min-w-0 flex-1">
+          <div>
             <h1 className="text-2xl font-semibold tracking-tight text-foreground">
               {session?.subject?.name || session?.course?.code} —{" "}
               {session?.topic}
@@ -283,7 +283,7 @@ export default function LiveSession() {
               </div>
             )}
           </div>
-          <div className="flex flex-wrap gap-2 sm:gap-3">
+          <div className="flex gap-3">
             {!isCompleted && (
               <>
                 <Button
@@ -332,7 +332,7 @@ export default function LiveSession() {
                 </span>
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-4 sm:p-8 text-center h-full bg-gradient-to-b from-transparent to-primary/5">
+            <CardContent className="p-4 sm:p-8 text-center relative h-full bg-gradient-to-b from-transparent to-primary/5">
               {!isCompleted ? (
                 <div className="space-y-6">
                   <div className="aspect-square bg-white rounded-xl flex items-center justify-center border-4 border-background shadow-inner relative overflow-hidden">
@@ -363,7 +363,7 @@ export default function LiveSession() {
                                 
                             return `${base}/student/verify?token=${session.qrCode.codeValue}`;
                           })()}
-                          size={window.innerWidth < 640 ? 200 : 240}
+                          size={240}
                           level="H"
                           includeMargin={true}
                           className={
@@ -471,8 +471,8 @@ export default function LiveSession() {
                 Participation Insight
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-4 sm:p-6">
-              <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-10">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-10">
                 <div className="text-center">
                   <p className="text-5xl font-black text-foreground tracking-tighter aura-text-glow">
                     {pct}%
@@ -484,11 +484,11 @@ export default function LiveSession() {
                 <div className="flex-1 space-y-2">
                   <Progress value={pct} className="h-3 bg-muted" />
                   <div className="flex justify-between text-[10px] font-bold text-muted-foreground uppercase font-mono tracking-wider">
-                    <span className="hidden xs:inline">0% Threshold</span>
-                    <span className="hidden xs:inline">100% Target</span>
+                    <span>0% Threshold</span>
+                    <span>100% Target</span>
                   </div>
                 </div>
-                <div className="text-center sm:text-right">
+                <div className="text-right">
                   <p className="text-2xl font-black text-foreground">
                     {presentCount}{" "}
                     <span className="text-muted-foreground text-sm">
@@ -682,7 +682,7 @@ export default function LiveSession() {
             </div>
           </CardHeader>
           <CardContent className="p-0">
-            <div className="max-h-[500px] overflow-auto custom-scrollbar">
+            <div className="max-h-[400px] overflow-y-auto custom-scrollbar">
               <Table>
                 <TableHeader className="bg-muted/10 sticky top-0 z-10">
                   <TableRow className="border-border hover:bg-transparent">

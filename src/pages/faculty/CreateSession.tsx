@@ -112,7 +112,7 @@ export default function CreateSession() {
         show={createSessionMutation.isPending || locating}
         operation={locating ? "locating" : "creating"}
       />
-      <div className="space-y-6 max-w-2xl mx-auto py-4 sm:py-8 px-4 sm:px-0">
+      <div className="space-y-6 max-w-2xl mx-auto py-8">
         <div className="text-center space-y-2">
           <h1 className="text-2xl font-semibold tracking-tight text-foreground px-4">
             Create Session
@@ -123,22 +123,22 @@ export default function CreateSession() {
         </div>
 
         {/* Steps Progress */}
-        <div className="flex items-center justify-center gap-2 sm:gap-4 py-2 sm:py-4">
+        <div className="flex items-center justify-center gap-4 py-4">
           {["Subject", "Logic", "Deploy"].map((label, i) => (
-            <div key={label} className="flex items-center gap-1.5 sm:gap-3">
+            <div key={label} className="flex items-center gap-3">
               <div
-                className={`h-7 w-7 sm:h-8 sm:w-8 rounded-lg flex items-center justify-center text-[10px] sm:text-xs font-black border transition-all duration-500 ${i + 1 <= step ? "bg-primary border-primary text-primary-foreground shadow-[0_0_15px_rgba(34,211,238,0.3)]" : "bg-muted border-border text-muted-foreground"}`}
+                className={`h-8 w-8 rounded-lg flex items-center justify-center text-xs font-black border transition-all duration-500 ${i + 1 <= step ? "bg-primary border-primary text-primary-foreground shadow-[0_0_15px_rgba(34,211,238,0.3)]" : "bg-muted border-border text-muted-foreground"}`}
               >
                 {i + 1}
               </div>
               <span
-                className={`text-[8px] sm:text-[10px] font-black uppercase tracking-widest ${i + 1 <= step ? "text-foreground" : "text-muted-foreground"} hidden xs:inline`}
+                className={`text-[10px] font-black uppercase tracking-widest ${i + 1 <= step ? "text-foreground" : "text-muted-foreground"}`}
               >
                 {label}
               </span>
               {i < 2 && (
                 <div
-                  className={`h-[1px] w-4 sm:w-8 ${i + 1 < step ? "bg-primary" : "bg-border"}`}
+                  className={`h-[1px] w-8 ${i + 1 < step ? "bg-primary" : "bg-border"}`}
                 />
               )}
             </div>
@@ -147,7 +147,7 @@ export default function CreateSession() {
 
         <Card className="bg-card border-border backdrop-blur-md shadow-2xl relative overflow-hidden group">
           <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none" />
-          <CardContent className="p-4 sm:p-8 space-y-6 sm:space-y-8 relative">
+          <CardContent className="p-8 space-y-8 relative">
             {step >= 1 && (
               <div className="space-y-3 animate-in fade-in slide-in-from-left-4 duration-500">
                 <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em] ml-1">
@@ -192,7 +192,7 @@ export default function CreateSession() {
                   <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em] ml-1">
                     Target Batches
                   </label>
-                  <div className="grid grid-cols-3 xs:grid-cols-4 sm:grid-cols-6 gap-2">
+                  <div className="grid grid-cols-4 sm:grid-cols-6 gap-2">
                     {[
                       "A1",
                       "A2",

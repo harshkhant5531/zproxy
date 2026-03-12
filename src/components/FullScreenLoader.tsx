@@ -30,8 +30,7 @@ export type LoaderOperation =
   | "refreshing"
   | "qr-verify"
   | "manual-mark"
-  | "load-sessions"
-  | "locating";
+  | "load-sessions";
 
 interface Config {
   icon: LucideIcon;
@@ -125,12 +124,6 @@ const CONFIGS: Record<LoaderOperation, Config> = {
     subtitle: "Fetching today's active class sessions…",
     color: "primary",
   },
-  locating: {
-    icon: Radio,
-    title: "Triangulating Location",
-    subtitle: "Locking classroom spatial coordinates…",
-    color: "amber",
-  },
 };
 
 const COLOR_MAP = {
@@ -197,14 +190,18 @@ export function FullScreenLoader({
   operation = "loading",
   label,
 }: FullScreenLoaderProps) {
-  if (!show) return null;
+  if (!show || operation === "loading") return null;
 
   const cfg = CONFIGS[operation];
   const cl = COLOR_MAP[cfg.color];
   const Icon = cfg.icon;
 
   return (
+<<<<<<< HEAD
     <div className="fixed inset-0 z-[9999] bg-background/90 backdrop-blur-2xl flex flex-col items-center justify-center gap-8 animate-in fade-in duration-300 lg:pl-[16rem]">
+=======
+    <div className="absolute inset-0 z-[9999] bg-background/97 backdrop-blur-2xl flex flex-col items-center justify-center gap-8 animate-in fade-in duration-150 rounded-[inherit]">
+>>>>>>> parent of 9d789f4 (mobile changes)
       {/* Expanding rings + icon */}
       <div className="relative flex items-center justify-center">
         {[0, 0.3, 0.6].map((delay, i) => (
