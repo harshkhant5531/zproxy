@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -99,8 +100,12 @@ export default function LiveSession() {
       setQrTimer(15);
     },
     onError: (err: any) => {
+      const detail =
+        err.response?.data?.message ||
+        err.message ||
+        "Could not synchronize QR code.";
       console.error("QR Generation Failure:", err);
-      toast.error("Spatial Link Failure: Could not synchronize QR code.");
+      toast.error(`Spatial Link Failure: ${detail}`);
     },
   });
 

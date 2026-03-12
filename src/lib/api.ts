@@ -1,21 +1,37 @@
 import axios from "axios";
 
-const getBaseUrl = () => {
-  if (import.meta.env.VITE_API_URL) {
-    let url = import.meta.env.VITE_API_URL as string;
-    // Auto-append /api if it was forgotten in the environment variables
-    if (!url.endsWith('/api') && !url.includes('/api/')) {
-      url = url.replace(/\/$/, '') + '/api';
-    }
-    return url;
+const normalizeApiUrl = (value?: string) => {
+  if (!value) {
+    return "";
   }
 
-  // Production/Vercel Auto-detection
+  let url = value.trim();
+  if (!url) {
+    return "";
+  }
+
+  if (!url.endsWith("/api") && !url.includes("/api/")) {
+    url = url.replace(/\/$/, "") + "/api";
+  }
+
+  return url;
+};
+
+const getBaseUrl = () => {
+  const configuredUrl =
+    normalizeApiUrl(import.meta.env.VITE_API_URL as string) ||
+    normalizeApiUrl(import.meta.env.VITE_PUBLIC_API_URL as string);
+
+  if (configuredUrl) {
+    return configuredUrl;
+  }
+
+  // Production/Vercel fallback only works if the backend is deployed behind the same origin.
   if (window.location.hostname.includes("vercel.app")) {
     return `${window.location.origin}/api`;
   }
 
-  // Otherwise, use the current host but with the backend port
+  // Otherwise, use the current host but with the backend port.
   return `${window.location.protocol}//${window.location.hostname}:3001/api`;
 };
 

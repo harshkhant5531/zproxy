@@ -144,7 +144,7 @@ router.get("/:id", authMiddleware, async (req, res, next) => {
       throw error;
     }
 
-    // Optimized student access check
+    // Optimized access checks by role
     if (req.user.role === "student") {
       const isEnrolled = await prisma.course.findFirst({
         where: {
@@ -156,6 +156,23 @@ router.get("/:id", authMiddleware, async (req, res, next) => {
 
       if (!isEnrolled) {
         const error = new Error("Forbidden");
+        error.statusCode = 403;
+        throw error;
+      }
+    }
+
+    if (req.user.role === "faculty") {
+      const isCreator = session.facultyId === req.user.id;
+      const course = await prisma.course.findUnique({
+        where: { id: session.courseId },
+        select: { facultyId: true },
+      });
+      const isCourseLead = course?.facultyId === req.user.id;
+
+      if (!isCreator && !isCourseLead) {
+        const error = new Error(
+          "Forbidden: You are not authorized to access this session",
+        );
         error.statusCode = 403;
         throw error;
       }
@@ -464,7 +481,11 @@ router.delete("/:id", authMiddleware, async (req, res, next) => {
 // @route   POST /api/sessions/:id/qr
 // @desc    Generate QR code for session
 // @access  Admin, Faculty
-router.post("/:id/qr", authMiddleware, async (req, res, next) => {
+router.post(
+  "/:id/qr",
+  authMiddleware,
+  requireRole(["admin", "faculty"]),
+  async (req, res, next) => {
   try {
     const session = await prisma.session.findUnique({
       where: { id: parseInt(req.params.id) },
