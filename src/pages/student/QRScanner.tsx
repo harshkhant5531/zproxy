@@ -31,7 +31,7 @@ import { FullScreenLoader } from "@/components/FullScreenLoader";
 import {
   getGeolocationPermissionState,
   getLocationErrorMessage,
-  requestCurrentPosition,
+  requestStabilizedPositionWithRetry,
 } from "@/lib/location";
 
 type ScanMode = "qr" | "manual";
@@ -46,9 +46,13 @@ type GeofenceDebug = {
   distanceMeters?: number;
   rawDistanceMeters?: number;
   toleranceMeters?: number;
+  retryBandMeters?: number;
   radiusMeters?: number;
   reportedAccuracyMeters?: number;
   maxAcceptableAccuracyMeters?: number;
+  locationAgeMs?: number;
+  maxLocationAgeMs?: number;
+  decisionReason?: string;
 };
 
 function errorLabel(err: any): string {
@@ -117,11 +121,19 @@ export default function QRScanner() {
       lat,
       lng,
       accuracy,
+      locationCapturedAt,
+      locationMeta,
     }: {
       qrCode: string;
       lat: number;
       lng: number;
       accuracy?: number;
+      locationCapturedAt?: string;
+      locationMeta?: {
+        sampleCount?: number;
+        sampleSpreadMeters?: number;
+        source?: string;
+      };
     }) =>
       attendanceAPI.markAttendanceQR(
         qrCode,
@@ -129,6 +141,8 @@ export default function QRScanner() {
         lng,
         `ScannerDevice-${user?.id}`,
         accuracy,
+        locationCapturedAt,
+        locationMeta,
       ),
     onSuccess: (resp) => {
       setScannedData(resp.data.data);
@@ -153,11 +167,19 @@ export default function QRScanner() {
       lat,
       lng,
       accuracy,
+      locationCapturedAt,
+      locationMeta,
     }: {
       sessionId: number;
       lat: number;
       lng: number;
       accuracy?: number;
+      locationCapturedAt?: string;
+      locationMeta?: {
+        sampleCount?: number;
+        sampleSpreadMeters?: number;
+        source?: string;
+      };
     }) =>
       attendanceAPI.markAttendance({
         sessionId,
@@ -166,6 +188,8 @@ export default function QRScanner() {
         lat,
         lng,
         accuracy,
+        locationCapturedAt,
+        locationMeta,
       }),
     onSuccess: (resp) => {
       setManualResult(resp.data.data);
@@ -182,7 +206,12 @@ export default function QRScanner() {
     },
   });
 
-  const handleMarkWithLocation = (
+  const shouldAutoRetryGeofence = (reason?: string) =>
+    reason === "borderline_retry" ||
+    reason === "gps_accuracy_too_low" ||
+    reason === "stale_location_sample";
+
+  const handleMarkWithLocation = async (
     type: "qr" | "manual",
     id: string | number,
   ) => {
@@ -190,49 +219,55 @@ export default function QRScanner() {
     setLastGeofenceDebug(null);
     setLocating(true);
 
-    const geoOptions = {
-      enableHighAccuracy: true,
-      timeout: 10000,
-      maximumAge: 0,
-    };
+    try {
+      const permissionState = await getGeolocationPermissionState();
+      if (permissionState === "denied") {
+        throw new Error(
+          "Location permission is blocked. Enable GPS/location access and try again.",
+        );
+      }
 
-    getGeolocationPermissionState()
-      .then((permissionState) => {
-        if (permissionState === "denied") {
-          throw new Error(
-            "Location permission is blocked. Enable GPS/location access and try again.",
-          );
-        }
-
-        return requestCurrentPosition(geoOptions);
-      })
-      .then((pos) => {
-        setLocating(false);
-        const { latitude, longitude, accuracy } = pos.coords;
-        if (type === "qr") {
-          markQRMutation.mutate({
-            qrCode: id as string,
-            lat: latitude,
-            lng: longitude,
-            accuracy,
-          });
-        } else {
-          markManualMutation.mutate({
-            sessionId: id as number,
-            lat: latitude,
-            lng: longitude,
-            accuracy,
-          });
-        }
-      })
-      .catch((err) => {
-        setLocating(false);
-        const msg = getLocationErrorMessage(err);
-        setLastError(msg);
-        setLastGeofenceDebug(null);
-        toast.error(msg);
-        setScanning(false);
+      const stabilized = await requestStabilizedPositionWithRetry({
+        sampleCount: 4,
+        maxRetries: 3,
+        desiredAccuracyMeters: 50,
+        enableHighAccuracy: true,
+        timeout: 15000,
+        maximumAge: 0,
       });
+
+      const payload = {
+        lat: stabilized.latitude,
+        lng: stabilized.longitude,
+        accuracy: stabilized.accuracy,
+        locationCapturedAt: stabilized.capturedAt,
+        locationMeta: {
+          sampleCount: stabilized.sampleCount,
+          sampleSpreadMeters: stabilized.sampleSpreadMeters,
+          source: "stabilized-median",
+        },
+      };
+
+      if (type === "qr") {
+        await markQRMutation.mutateAsync({
+          qrCode: id as string,
+          ...payload,
+        });
+      } else {
+        await markManualMutation.mutateAsync({
+          sessionId: id as number,
+          ...payload,
+        });
+      }
+      setLocating(false);
+    } catch (err: any) {
+      setLocating(false);
+      const msg = getLocationErrorMessage(err);
+      setLastError(msg);
+      setLastGeofenceDebug(err?.response?.data?.debug?.geofence || null);
+      toast.error(msg);
+      setScanning(false);
+    }
   };
 
   const startScanner = async () => {
@@ -259,7 +294,7 @@ export default function QRScanner() {
           } catch {
             /* ignore parse error */
           }
-          handleMarkWithLocation("qr", token);
+          void handleMarkWithLocation("qr", token);
         },
         () => {
           /* frame decode errors — ignore */
@@ -471,30 +506,27 @@ export default function QRScanner() {
         <div className="relative flex p-1 bg-muted/50 rounded-xl border border-border w-[270px]">
           {/* Sliding pill */}
           <div
-            className={`absolute top-1 bottom-1 w-[calc(50%-6px)] rounded-lg bg-background shadow border border-border transition-transform duration-300 ease-in-out pointer-events-none ${
-              mode === "manual"
+            className={`absolute top-1 bottom-1 w-[calc(50%-6px)] rounded-lg bg-background shadow border border-border transition-transform duration-300 ease-in-out pointer-events-none ${mode === "manual"
                 ? "translate-x-[calc(100%+4px)]"
                 : "translate-x-0"
-            }`}
+              }`}
           />
           <button
             onClick={() => switchMode("qr")}
-            className={`relative z-10 flex items-center justify-center gap-2 flex-1 py-2 text-xs font-medium tracking-wide transition-colors duration-200 ${
-              mode === "qr"
+            className={`relative z-10 flex items-center justify-center gap-2 flex-1 py-2 text-xs font-medium tracking-wide transition-colors duration-200 ${mode === "qr"
                 ? "text-foreground"
                 : "text-muted-foreground hover:text-foreground"
-            }`}
+              }`}
           >
             <QrCode className="h-3.5 w-3.5" />
             QR Camera
           </button>
           <button
             onClick={() => switchMode("manual")}
-            className={`relative z-10 flex items-center justify-center gap-2 flex-1 py-2 text-xs font-medium tracking-wide transition-colors duration-200 ${
-              mode === "manual"
+            className={`relative z-10 flex items-center justify-center gap-2 flex-1 py-2 text-xs font-medium tracking-wide transition-colors duration-200 ${mode === "manual"
                 ? "text-foreground"
                 : "text-muted-foreground hover:text-foreground"
-            }`}
+              }`}
           >
             <Hand className="h-3.5 w-3.5" />
             Manual
@@ -620,11 +652,10 @@ export default function QRScanner() {
 
                   {/* Corner brackets — pulsing when scanning */}
                   <div
-                    className={`absolute w-60 h-60 z-10 pointer-events-none transition-opacity duration-500 ${
-                      scanning
+                    className={`absolute w-60 h-60 z-10 pointer-events-none transition-opacity duration-500 ${scanning
                         ? "opacity-100 animate-bracket-pulse"
                         : "opacity-20"
-                    }`}
+                      }`}
                   >
                     <div className="absolute top-0 left-0 w-9 h-9 border-t-2 border-l-2 border-primary rounded-tl-xl" />
                     <div className="absolute top-0 right-0 w-9 h-9 border-t-2 border-r-2 border-primary rounded-tr-xl" />
@@ -669,11 +700,10 @@ export default function QRScanner() {
                   disabled={markQRMutation.isPending || !window.isSecureContext}
                   size="lg"
                   variant={scanning ? "outline" : "default"}
-                  className={`px-12 h-14 text-sm font-medium tracking-wide rounded-xl transition-all duration-200 shadow-lg ${
-                    scanning
+                  className={`px-12 h-14 text-sm font-medium tracking-wide rounded-xl transition-all duration-200 shadow-lg ${scanning
                       ? "border-destructive/50 text-destructive hover:bg-destructive/10 hover:border-destructive"
                       : "shadow-primary/25 hover:shadow-primary/40 hover:shadow-xl"
-                  }`}
+                    }`}
                 >
                   {scanning ? (
                     <>

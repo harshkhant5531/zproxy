@@ -2,7 +2,10 @@ const express = require("express");
 const { body, validationResult } = require("express-validator");
 const prisma = require("../prisma");
 const authMiddleware = require("../middleware/auth");
-const { validateStudentGeofence } = require("../utils/geofence");
+const {
+  haversineDistanceMeters,
+  validateStudentGeofence,
+} = require("../utils/geofence");
 const { requireRole } = authMiddleware;
 
 const router = express.Router();
@@ -28,6 +31,134 @@ const getClientIp = (req) => {
     normalizeIp(firstForwarded) ||
     normalizeIp(req.ip)
   );
+};
+
+const LOCATION_DECIMALS = 6;
+
+const parseStoredLocation = (locationValue) => {
+  if (!locationValue || typeof locationValue !== "string") return null;
+  const [latRaw, lngRaw] = locationValue.split(",").map((part) => part?.trim());
+  const lat = Number(latRaw);
+  const lng = Number(lngRaw);
+  if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+  return { latitude: lat, longitude: lng };
+};
+
+const formatLocation = (lat, lng) => {
+  const latValue = Number(lat);
+  const lngValue = Number(lng);
+  if (!Number.isFinite(latValue) || !Number.isFinite(lngValue)) return null;
+  return `${latValue.toFixed(LOCATION_DECIMALS)},${lngValue.toFixed(LOCATION_DECIMALS)}`;
+};
+
+const appendNotes = (existingNotes, tags = []) => {
+  const cleanTags = tags.filter(Boolean);
+  if (!cleanTags.length) return existingNotes || null;
+  const suffix = cleanTags.join(" ");
+  return existingNotes ? `${existingNotes} ${suffix}` : suffix;
+};
+
+const buildGeoRiskTags = async ({
+  req,
+  sessionId,
+  studentId,
+  lat,
+  lng,
+  locationString,
+}) => {
+  const tags = [];
+
+  if (typeof req.body?.locationMeta?.isMocked === "boolean") {
+    if (req.body.locationMeta.isMocked) {
+      tags.push("[GEO_RISK:MOCK_LOCATION_SIGNAL]");
+    }
+  } else {
+    tags.push("[GEO_INFO:MOCK_SIGNAL_UNAVAILABLE]");
+  }
+
+  const lastAttendance = await prisma.attendance.findFirst({
+    where: { studentId },
+    orderBy: { timestamp: "desc" },
+    select: {
+      id: true,
+      timestamp: true,
+      location: true,
+    },
+  });
+
+  if (lastAttendance?.location && lastAttendance?.timestamp) {
+    const previousLocation = parseStoredLocation(lastAttendance.location);
+    if (previousLocation) {
+      const distanceMeters = haversineDistanceMeters(previousLocation, {
+        latitude: Number(lat),
+        longitude: Number(lng),
+      });
+
+      const deltaSeconds =
+        (Date.now() - new Date(lastAttendance.timestamp).getTime()) / 1000;
+
+      if (Number.isFinite(deltaSeconds) && deltaSeconds > 0) {
+        const speedMetersPerSecond = distanceMeters / deltaSeconds;
+        if (speedMetersPerSecond > 120) {
+          tags.push(
+            `[GEO_RISK:IMPOSSIBLE_JUMP:${Math.round(speedMetersPerSecond)}mps]`,
+          );
+        }
+      }
+    }
+  }
+
+  if (locationString) {
+    const identicalLocationCount = await prisma.attendance.count({
+      where: {
+        sessionId,
+        studentId: { not: studentId },
+        location: locationString,
+      },
+    });
+
+    if (identicalLocationCount >= 2) {
+      tags.push(`[GEO_RISK:COORD_CLUSTER:others=${identicalLocationCount}]`);
+    }
+  }
+
+  return tags;
+};
+
+const logAttendanceAttempt = async ({
+  req,
+  userId,
+  sessionId,
+  attemptType,
+  decision,
+  reason,
+  geofence,
+}) => {
+  try {
+    await prisma.auditLog.create({
+      data: {
+        userId,
+        action: "ATTENDANCE_ATTEMPT",
+        resourceType: attemptType,
+        resourceId: Number.isFinite(sessionId) ? sessionId : null,
+        ipAddress: getClientIp(req),
+        userAgent: req.headers["user-agent"] || null,
+        details: {
+          decision,
+          reason,
+          geofence,
+          locationMeta: req.body?.locationMeta || null,
+          locationCapturedAt: req.body?.locationCapturedAt || null,
+          timestamp: new Date().toISOString(),
+        },
+      },
+    });
+  } catch (logError) {
+    console.warn(
+      "Failed to log attendance attempt:",
+      logError?.message || logError,
+    );
+  }
 };
 
 // @route   GET /api/attendance
@@ -114,6 +245,14 @@ router.get(
   authMiddleware,
   requireRole(["admin", "faculty"]),
   async (req, res, next) => {
+    let auditContext = {
+      attemptType: "manual",
+      sessionId: null,
+      decision: "rejected",
+      reason: "unknown",
+      geofence: null,
+    };
+
     try {
       const {
         sessionId,
@@ -641,6 +780,8 @@ router.post(
         studentId = reqStudentId;
       }
 
+      auditContext.sessionId = Number(sessionId) || null;
+
       // Check if student is enrolled in the course
       const isEnrolledInCourse = session.course.students.some(
         (student) => student.id === studentId,
@@ -701,19 +842,50 @@ router.post(
       }
 
       // Enforce faculty-centered geofence for student attendance.
+      let geofenceResult = null;
       if (req.user.role === "student") {
-        validateStudentGeofence(
+        geofenceResult = validateStudentGeofence(
           session,
           req.body.lat,
           req.body.lng,
           req.body.accuracy,
+          { capturedAt: req.body.locationCapturedAt },
         );
+
+        auditContext.geofence = {
+          decisionReason: geofenceResult.decisionReason,
+          distanceMeters: geofenceResult.distanceMeters,
+          rawDistanceMeters: geofenceResult.rawDistanceMeters,
+          toleranceMeters: geofenceResult.toleranceMeters,
+          retryBandMeters: geofenceResult.retryBandMeters,
+          radiusMeters: geofenceResult.radiusMeters,
+          reportedAccuracyMeters: geofenceResult.reportedAccuracyMeters,
+          locationAgeMs: geofenceResult.locationAgeMs,
+          maxLocationAgeMs: geofenceResult.maxLocationAgeMs,
+        };
       }
 
       // ─── Proxy Detection ────────────────────────────────────────────────
       let finalStatus = status || "present";
       let finalNotes = notes || null;
       const clientIp = getClientIp(req);
+      const locationString =
+        req.body.lat && req.body.lng
+          ? formatLocation(req.body.lat, req.body.lng)
+          : req.body.location;
+
+      if (req.user.role === "student" && locationString) {
+        const geoRiskTags = await buildGeoRiskTags({
+          req,
+          sessionId,
+          studentId,
+          lat: req.body.lat,
+          lng: req.body.lng,
+          locationString,
+        });
+        finalNotes = appendNotes(finalNotes, geoRiskTags);
+      }
+
       if (clientIp && req.user.role === "student") {
         const sameIpRecord = await prisma.attendance.findFirst({
           where: {
@@ -746,10 +918,7 @@ router.post(
           studentId,
           status: finalStatus,
           notes: finalNotes,
-          location:
-            req.body.lat && req.body.lng
-              ? `${req.body.lat},${req.body.lng}`
-              : req.body.location,
+          location: locationString,
           ipAddress: clientIp,
           deviceInfo: req.body.deviceInfo,
         },
@@ -773,12 +942,48 @@ router.post(
         },
       });
 
+      auditContext.decision = "accepted";
+      auditContext.reason =
+        finalStatus === "absent" ? "accepted_proxy_flagged" : "accepted";
+      await logAttendanceAttempt({
+        req,
+        userId: req.user.id,
+        sessionId,
+        attemptType: auditContext.attemptType,
+        decision: auditContext.decision,
+        reason: auditContext.reason,
+        geofence: auditContext.geofence,
+      });
+
       res.status(201).json({
         success: true,
         message: "Attendance recorded successfully",
         data: { attendance },
       });
     } catch (error) {
+      auditContext.reason = error.decisionReason || error.message || "rejected";
+      auditContext.geofence = {
+        ...(auditContext.geofence || {}),
+        decisionReason: error.decisionReason,
+        distanceMeters: error.distanceMeters,
+        rawDistanceMeters: error.rawDistanceMeters,
+        toleranceMeters: error.toleranceMeters,
+        retryBandMeters: error.retryBandMeters,
+        radiusMeters: error.radiusMeters,
+        reportedAccuracyMeters: error.reportedAccuracyMeters,
+        maxAcceptableAccuracyMeters: error.maxAcceptableAccuracyMeters,
+        locationAgeMs: error.locationAgeMs,
+        maxLocationAgeMs: error.maxLocationAgeMs,
+      };
+      await logAttendanceAttempt({
+        req,
+        userId: req.user.id,
+        sessionId: auditContext.sessionId,
+        attemptType: auditContext.attemptType,
+        decision: auditContext.decision,
+        reason: auditContext.reason,
+        geofence: auditContext.geofence,
+      });
       next(error);
     }
   },
@@ -914,6 +1119,14 @@ router.post(
   requireRole(["student"]),
   [body("qrCode").notEmpty().withMessage("QR code is required")],
   async (req, res, next) => {
+    let auditContext = {
+      attemptType: "qr",
+      sessionId: null,
+      decision: "rejected",
+      reason: "unknown",
+      geofence: null,
+    };
+
     try {
       // Role check handled by requireRole middleware
 
@@ -961,6 +1174,8 @@ router.post(
         throw error;
       }
 
+      auditContext.sessionId = qrCodeData.sessionId;
+
       // Combined enrollment check
       const studentData = qrCodeData.session.course.students[0];
       if (!studentData) {
@@ -997,7 +1212,24 @@ router.post(
       }
 
       const { lat, lng } = req.body;
-      validateStudentGeofence(qrCodeData.session, lat, lng, req.body.accuracy);
+      const geofenceResult = validateStudentGeofence(
+        qrCodeData.session,
+        lat,
+        lng,
+        req.body.accuracy,
+        { capturedAt: req.body.locationCapturedAt },
+      );
+      auditContext.geofence = {
+        decisionReason: geofenceResult.decisionReason,
+        distanceMeters: geofenceResult.distanceMeters,
+        rawDistanceMeters: geofenceResult.rawDistanceMeters,
+        toleranceMeters: geofenceResult.toleranceMeters,
+        retryBandMeters: geofenceResult.retryBandMeters,
+        radiusMeters: geofenceResult.radiusMeters,
+        reportedAccuracyMeters: geofenceResult.reportedAccuracyMeters,
+        locationAgeMs: geofenceResult.locationAgeMs,
+        maxLocationAgeMs: geofenceResult.maxLocationAgeMs,
+      };
 
       // Check if attendance already exists
       const existingAttendance = await prisma.attendance.findFirst({
@@ -1019,6 +1251,17 @@ router.post(
       let status = "present";
       let qrNotes = null;
       const clientIp = getClientIp(req);
+      const locationString = formatLocation(lat, lng) || `${lat},${lng}`;
+
+      const geoRiskTags = await buildGeoRiskTags({
+        req,
+        sessionId: qrCodeData.sessionId,
+        studentId: req.user.id,
+        lat,
+        lng,
+        locationString,
+      });
+      qrNotes = appendNotes(qrNotes, geoRiskTags);
 
       if (clientIp) {
         const sameIpRecord = await prisma.attendance.findFirst({
@@ -1051,7 +1294,7 @@ router.post(
           studentId: req.user.id,
           status: status,
           notes: qrNotes,
-          location: `${lat},${lng}`,
+          location: locationString,
           ipAddress: clientIp,
           deviceInfo: req.body.deviceInfo,
         },
@@ -1079,12 +1322,48 @@ router.post(
         data: { attendanceCount: { increment: 1 } },
       });
 
+      auditContext.decision = "accepted";
+      auditContext.reason =
+        status === "absent" ? "accepted_proxy_flagged" : "accepted";
+      await logAttendanceAttempt({
+        req,
+        userId: req.user.id,
+        sessionId: qrCodeData.sessionId,
+        attemptType: auditContext.attemptType,
+        decision: auditContext.decision,
+        reason: auditContext.reason,
+        geofence: auditContext.geofence,
+      });
+
       res.json({
         success: true,
         message: "Attendance recorded successfully using QR code",
         data: { attendance },
       });
     } catch (error) {
+      auditContext.reason = error.decisionReason || error.message || "rejected";
+      auditContext.geofence = {
+        ...(auditContext.geofence || {}),
+        decisionReason: error.decisionReason,
+        distanceMeters: error.distanceMeters,
+        rawDistanceMeters: error.rawDistanceMeters,
+        toleranceMeters: error.toleranceMeters,
+        retryBandMeters: error.retryBandMeters,
+        radiusMeters: error.radiusMeters,
+        reportedAccuracyMeters: error.reportedAccuracyMeters,
+        maxAcceptableAccuracyMeters: error.maxAcceptableAccuracyMeters,
+        locationAgeMs: error.locationAgeMs,
+        maxLocationAgeMs: error.maxLocationAgeMs,
+      };
+      await logAttendanceAttempt({
+        req,
+        userId: req.user.id,
+        sessionId: auditContext.sessionId,
+        attemptType: auditContext.attemptType,
+        decision: auditContext.decision,
+        reason: auditContext.reason,
+        geofence: auditContext.geofence,
+      });
       next(error);
     }
   },
