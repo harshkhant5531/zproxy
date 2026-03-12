@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -497,42 +498,43 @@ export default function ProxyAuditPage() {
       {/* Charts Grid - Row 2 */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         {/* Day of Week */}
-        {analytics.dayOfWeekAnalysis && analytics.dayOfWeekAnalysis.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-          >
-            <Card className="bg-slate-900 border-slate-700">
-              <CardHeader>
-                <CardTitle className="text-white flex items-center gap-2">
-                  <TrendingUp className="w-5 h-5 text-indigo-500" />
-                  Weekly Pattern
-                </CardTitle>
-                <CardDescription className="text-slate-400">
-                  By day of week
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ResponsiveContainer width="100%" height={300}>
-                  <ComposedChart data={analytics.dayOfWeekAnalysis}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                    <XAxis dataKey="day" stroke="#94a3b8" />
-                    <YAxis stroke="#94a3b8" />
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: "#1e293b",
-                        border: "1px solid #475569",
-                      }}
-                    />
-                    <Bar dataKey="flagged" fill="#6366f1" />
-                    <Bar dataKey="total" fill="#64748b" />
-                  </ComposedChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
-          </motion.div>
-        )}
+        {analytics.dayOfWeekAnalysis &&
+          analytics.dayOfWeekAnalysis.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+            >
+              <Card className="bg-slate-900 border-slate-700">
+                <CardHeader>
+                  <CardTitle className="text-white flex items-center gap-2">
+                    <TrendingUp className="w-5 h-5 text-indigo-500" />
+                    Weekly Pattern
+                  </CardTitle>
+                  <CardDescription className="text-slate-400">
+                    By day of week
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <ResponsiveContainer width="100%" height={300}>
+                    <ComposedChart data={analytics.dayOfWeekAnalysis}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                      <XAxis dataKey="day" stroke="#94a3b8" />
+                      <YAxis stroke="#94a3b8" />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: "#1e293b",
+                          border: "1px solid #475569",
+                        }}
+                      />
+                      <Bar dataKey="flagged" fill="#6366f1" />
+                      <Bar dataKey="total" fill="#64748b" />
+                    </ComposedChart>
+                  </ResponsiveContainer>
+                </CardContent>
+              </Card>
+            </motion.div>
+          )}
 
         {/* Top IP Addresses */}
         {analytics.topIpAddresses && analytics.topIpAddresses.length > 0 && (
@@ -555,7 +557,13 @@ export default function ProxyAuditPage() {
                 <ResponsiveContainer width="100%" height={300}>
                   <BarChart data={analytics.topIpAddresses.slice(0, 8)}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                    <XAxis dataKey="ipAddress" stroke="#94a3b8" angle={-45} textAnchor="end" height={100} />
+                    <XAxis
+                      dataKey="ipAddress"
+                      stroke="#94a3b8"
+                      angle={-45}
+                      textAnchor="end"
+                      height={100}
+                    />
                     <YAxis stroke="#94a3b8" />
                     <Tooltip
                       contentStyle={{
@@ -594,7 +602,13 @@ export default function ProxyAuditPage() {
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={analytics.sharedIpClusters.slice(0, 10)}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                  <XAxis dataKey="ipAddress" stroke="#94a3b8" angle={-45} textAnchor="end" height={80} />
+                  <XAxis
+                    dataKey="ipAddress"
+                    stroke="#94a3b8"
+                    angle={-45}
+                    textAnchor="end"
+                    height={80}
+                  />
                   <YAxis stroke="#94a3b8" />
                   <Tooltip
                     contentStyle={{
@@ -611,70 +625,80 @@ export default function ProxyAuditPage() {
       )}
 
       {/* Device Risk */}
-      {analytics.deviceRiskAnalysis && analytics.deviceRiskAnalysis.length > 0 && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.9 }}
-          className="mb-8"
-        >
-          <Card className="bg-slate-900 border-slate-700">
-            <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
-                <Smartphone className="w-5 h-5 text-green-500" />
-                Device Risk Profile
-              </CardTitle>
-              <CardDescription className="text-slate-400">
-                Risk by device type
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ResponsiveContainer width="100%" height={250}>
-                <BarChart data={analytics.deviceRiskAnalysis} layout="vertical">
-                  <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                  <XAxis type="number" stroke="#94a3b8" />
-                  <YAxis dataKey="device" type="category" stroke="#94a3b8" width={120} />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: "#1e293b",
-                      border: "1px solid #475569",
-                    }}
-                  />
-                  <Bar dataKey="riskPercentage" fill="#8b5cf6" />
-                </BarChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
-        </motion.div>
-      )}
+      {analytics.deviceRiskAnalysis &&
+        analytics.deviceRiskAnalysis.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.9 }}
+            className="mb-8"
+          >
+            <Card className="bg-slate-900 border-slate-700">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center gap-2">
+                  <Smartphone className="w-5 h-5 text-green-500" />
+                  Device Risk Profile
+                </CardTitle>
+                <CardDescription className="text-slate-400">
+                  Risk by device type
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={250}>
+                  <BarChart
+                    data={analytics.deviceRiskAnalysis}
+                    layout="vertical"
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                    <XAxis type="number" stroke="#94a3b8" />
+                    <YAxis
+                      dataKey="device"
+                      type="category"
+                      stroke="#94a3b8"
+                      width={120}
+                    />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: "#1e293b",
+                        border: "1px solid #475569",
+                      }}
+                    />
+                    <Bar dataKey="riskPercentage" fill="#8b5cf6" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
 
       {/* Student Risk Profiles */}
-      {analytics.studentRiskProfiles && analytics.studentRiskProfiles.length > 0 && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.0 }}
-          className="mb-8"
-        >
-          <Card className="bg-slate-900 border-slate-700">
-            <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
-                <Users className="w-5 h-5 text-pink-500" />
-                High-Risk Students
-              </CardTitle>
-              <CardDescription className="text-slate-400">
-                Top 10 by anomaly score
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <AnimatedTable
-                data={analytics.studentRiskProfiles.slice(0, 10)}
-                delay={1.0}
-              />
-            </CardContent>
-          </Card>
-        </motion.div>
-      )}
+      {analytics.studentRiskProfiles &&
+        analytics.studentRiskProfiles.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.0 }}
+            className="mb-8"
+          >
+            <Card className="bg-slate-900 border-slate-700">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center gap-2">
+                  <Users className="w-5 h-5 text-pink-500" />
+                  High-Risk Students
+                </CardTitle>
+                <CardDescription className="text-slate-400">
+                  Top 10 by anomaly score
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <AnimatedTable
+                  data={analytics.studentRiskProfiles.slice(0, 10)}
+                  delay={1.0}
+                />
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
 
       {/* Peak Risk Hours */}
       {analytics.peakRiskHours && analytics.peakRiskHours.length > 0 && (
@@ -704,16 +728,23 @@ export default function ProxyAuditPage() {
                     transition={{ delay: 1.1 + idx * 0.1 }}
                     className="flex items-center gap-4 p-3 bg-slate-800 rounded-lg border border-slate-700"
                   >
-                    <span className="font-bold text-white w-12">{hour.hour}:00</span>
+                    <span className="font-bold text-white w-12">
+                      {hour.hour}:00
+                    </span>
                     <div className="flex-1 h-3 bg-slate-700 rounded-full overflow-hidden">
                       <motion.div
                         className="h-full bg-gradient-to-r from-red-500 to-pink-600"
                         initial={{ width: 0 }}
                         animate={{ width: `${hour.riskPercentage}%` }}
-                        transition={{ delay: 1.1 + idx * 0.1 + 0.2, duration: 0.8 }}
+                        transition={{
+                          delay: 1.1 + idx * 0.1 + 0.2,
+                          duration: 0.8,
+                        }}
                       />
                     </div>
-                    <span className="font-semibold text-red-400">{hour.riskPercentage}%</span>
+                    <span className="font-semibold text-red-400">
+                      {hour.riskPercentage}%
+                    </span>
                   </motion.div>
                 ))}
               </div>
@@ -742,20 +773,24 @@ export default function ProxyAuditPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-2 max-h-96 overflow-y-auto">
-                {analytics.topLinkedPairs.slice(0, 20).map((pair: any, idx: number) => (
-                  <motion.div
-                    key={idx}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 1.2 + idx * 0.03 }}
-                    className="flex items-center justify-between p-2 bg-slate-800 rounded border border-slate-700 text-sm"
-                  >
-                    <span className="text-slate-300">
-                      Student {pair.studentA} ↔ {pair.studentB}
-                    </span>
-                    <Badge className="bg-red-900 text-red-200 text-xs">{pair.occurrences}x</Badge>
-                  </motion.div>
-                ))}
+                {analytics.topLinkedPairs
+                  .slice(0, 20)
+                  .map((pair: any, idx: number) => (
+                    <motion.div
+                      key={idx}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 1.2 + idx * 0.03 }}
+                      className="flex items-center justify-between p-2 bg-slate-800 rounded border border-slate-700 text-sm"
+                    >
+                      <span className="text-slate-300">
+                        Student {pair.studentA} ↔ {pair.studentB}
+                      </span>
+                      <Badge className="bg-red-900 text-red-200 text-xs">
+                        {pair.occurrences}x
+                      </Badge>
+                    </motion.div>
+                  ))}
               </div>
             </CardContent>
           </Card>
@@ -777,7 +812,9 @@ export default function ProxyAuditPage() {
                   <AlertTriangle className="w-5 h-5 text-orange-500" />
                   Flagged Records
                 </div>
-                <span className="text-sm font-normal text-slate-400">{records.length} total</span>
+                <span className="text-sm font-normal text-slate-400">
+                  {records.length} total
+                </span>
               </CardTitle>
               <CardDescription className="text-slate-400">
                 Recent proxy-flagged events
@@ -788,11 +825,21 @@ export default function ProxyAuditPage() {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-slate-700 bg-slate-800">
-                      <th className="text-left px-4 py-2 font-semibold text-slate-300">Student</th>
-                      <th className="text-left px-4 py-2 font-semibold text-slate-300">Course</th>
-                      <th className="text-left px-4 py-2 font-semibold text-slate-300">Time</th>
-                      <th className="text-left px-4 py-2 font-semibold text-slate-300">Risk</th>
-                      <th className="text-left px-4 py-2 font-semibold text-slate-300">Score</th>
+                      <th className="text-left px-4 py-2 font-semibold text-slate-300">
+                        Student
+                      </th>
+                      <th className="text-left px-4 py-2 font-semibold text-slate-300">
+                        Course
+                      </th>
+                      <th className="text-left px-4 py-2 font-semibold text-slate-300">
+                        Time
+                      </th>
+                      <th className="text-left px-4 py-2 font-semibold text-slate-300">
+                        Risk
+                      </th>
+                      <th className="text-left px-4 py-2 font-semibold text-slate-300">
+                        Score
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -805,9 +852,12 @@ export default function ProxyAuditPage() {
                         className="border-b border-slate-700 hover:bg-slate-800"
                       >
                         <td className="px-4 py-2 text-slate-300">
-                          {record.student?.studentProfile?.fullName || record.student?.username}
+                          {record.student?.studentProfile?.fullName ||
+                            record.student?.username}
                         </td>
-                        <td className="px-4 py-2 text-slate-400">{record.session?.course?.code}</td>
+                        <td className="px-4 py-2 text-slate-400">
+                          {record.session?.course?.code}
+                        </td>
                         <td className="px-4 py-2 text-slate-400 text-xs">
                           {new Date(record.timestamp).toLocaleString()}
                         </td>
@@ -821,10 +871,15 @@ export default function ProxyAuditPage() {
                                 className="h-full bg-gradient-to-r from-yellow-500 to-red-500"
                                 initial={{ width: 0 }}
                                 animate={{ width: `${record.riskScore}%` }}
-                                transition={{ delay: 1.3 + idx * 0.03 + 0.1, duration: 0.6 }}
+                                transition={{
+                                  delay: 1.3 + idx * 0.03 + 0.1,
+                                  duration: 0.6,
+                                }}
                               />
                             </div>
-                            <span className="text-xs font-semibold text-orange-400 w-6">{record.riskScore}</span>
+                            <span className="text-xs font-semibold text-orange-400 w-6">
+                              {record.riskScore}
+                            </span>
                           </div>
                         </td>
                       </motion.tr>
@@ -844,7 +899,10 @@ export default function ProxyAuditPage() {
         transition={{ delay: 1.5 }}
         className="mt-8 text-center text-slate-500 text-xs"
       >
-        Last updated: {analytics.generatedAt ? new Date(analytics.generatedAt).toLocaleString() : "N/A"}
+        Last updated:{" "}
+        {analytics.generatedAt
+          ? new Date(analytics.generatedAt).toLocaleString()
+          : "N/A"}
       </motion.div>
     </div>
   );
