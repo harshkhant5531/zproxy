@@ -31,6 +31,7 @@ import { FullScreenLoader } from "@/components/FullScreenLoader";
 import { useParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { sessionsAPI, attendanceAPI } from "@/lib/api";
+import { buildAttendanceVerifyUrl } from "@/lib/runtime";
 import { format } from "date-fns";
 import { toast } from "sonner";
 
@@ -100,7 +101,7 @@ export default function LiveSession() {
     onError: (err: any) => {
       console.error("QR Generation Failure:", err);
       toast.error("Spatial Link Failure: Could not synchronize QR code.");
-    }
+    },
   });
 
   const overrideMutation = useMutation({
@@ -174,8 +175,10 @@ export default function LiveSession() {
     : absentees;
 
   // Proxy suspects: attendance records whose notes contain [PROXY_SUSPECT…] or [PROXY_DETECTED…]
-  const proxyRecords = (attendanceData || []).filter((a: any) =>
-    a.notes?.includes("[PROXY_SUSPECT") || a.notes?.includes("[PROXY_DETECTED"),
+  const proxyRecords = (attendanceData || []).filter(
+    (a: any) =>
+      a.notes?.includes("[PROXY_SUSPECT") ||
+      a.notes?.includes("[PROXY_DETECTED"),
   );
   const parseProxyFlag = (notes: string | null): number | null => {
     if (!notes) return null;
@@ -189,9 +192,9 @@ export default function LiveSession() {
   const copyAbsenteeReport = () => {
     const dateStr = format(new Date(session?.date), "MMM dd, yyyy");
     const subjectName = session?.subject?.name || session?.course?.name;
-    
+
     let reportText = `AURA INTEGRITY REPORT\nSubject: ${subjectName}\nDate: ${dateStr}\n\nPresent: ${presentCount}\nAbsent: ${absentees.length}\nProxies Caught: ${proxyRecords.length}\n\n`;
-    
+
     if (proxyRecords.length > 0) {
       reportText += `SECURITY ALERTS (PROXY ATTEMPTS):\n`;
       proxyRecords.forEach((p: any, i: number) => {
@@ -201,7 +204,7 @@ export default function LiveSession() {
     }
 
     reportText += `ABSENTEES:\n${absentees.map((s: any, i: number) => `${i + 1}. ${s.studentProfile?.fullName || s.username}`).join("\n")}`;
-    
+
     navigator.clipboard.writeText(reportText);
     toast.success("Intelligence report copied!");
   };
@@ -223,14 +226,25 @@ export default function LiveSession() {
       return;
     }
     const headers = "Student ID\tFull Name\tStatus\tTimestamp\tMethod\n";
-    const body = attendanceData.map((log: any) => {
-      const name = log.student?.studentProfile?.fullName || log.student?.username || "N/A";
-      const id = log.student?.studentProfile?.studentId || log.student?.username || "N/A";
-      const timestamp = format(new Date(log.timestamp), "yyyy-MM-dd HH:mm:ss");
-      const method = log.method || "QR_SCAN";
-      return `${id}\t${name}\t${log.status}\t${timestamp}\t${method}`;
-    }).join("\n");
-    
+    const body = attendanceData
+      .map((log: any) => {
+        const name =
+          log.student?.studentProfile?.fullName ||
+          log.student?.username ||
+          "N/A";
+        const id =
+          log.student?.studentProfile?.studentId ||
+          log.student?.username ||
+          "N/A";
+        const timestamp = format(
+          new Date(log.timestamp),
+          "yyyy-MM-dd HH:mm:ss",
+        );
+        const method = log.method || "QR_SCAN";
+        return `${id}\t${name}\t${log.status}\t${timestamp}\t${method}`;
+      })
+      .join("\n");
+
     navigator.clipboard.writeText(headers + body).then(() => {
       toast.success("Attendance copied to clipboard (Excel format)");
     });
@@ -277,7 +291,8 @@ export default function LiveSession() {
                 ))}
                 {session?.geofenceRadius && (
                   <span className="px-2 py-0.5 bg-amber-500/10 text-amber-500 border border-amber-500/20 rounded text-[10px] font-black uppercase tracking-wider flex items-center gap-1">
-                    <MapPin className="h-3 w-3" /> Grid: {session.geofenceRadius}m
+                    <MapPin className="h-3 w-3" /> Grid:{" "}
+                    {session.geofenceRadius}m
                   </span>
                 )}
               </div>
@@ -339,30 +354,10 @@ export default function LiveSession() {
                     {session?.qrCode?.codeValue ? (
                       <>
                         <QRCodeSVG
-                          value={(() => {
-                            // PRIORITIZE VERCEL DEPLOYED URL
-                            // If we have VITE_API_URL or are not on localhost/localIP, we are likely on Vercel
-                            const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-                            
-                            if (!isLocal) {
-                              return `${window.location.origin}/student/verify?token=${session.qrCode.codeValue}`;
-                            }
-
-                            // If we are on local, check if the session networkIp is a public URL (like Vercel)
-                            if (session?.networkIp && (session.networkIp.includes("vercel.app") || session.networkIp.includes("http"))) {
-                               return `${session.networkIp.startsWith("http") ? session.networkIp : `https://${session.networkIp}`}/student/verify?token=${session.qrCode?.codeValue}`;
-                            }
-
-                            // Only use local LAN IP if specifically requested or as absolute last resort
-                            const port = window.location.port ? `:${window.location.port}` : "";
-                            const base = session.networkIp && session.networkIp !== "localhost"
-                              ? (session.networkIp.startsWith("http") ? session.networkIp : `http://${session.networkIp}${port}`)
-                              : import.meta.env.VITE_NETWORK_IP
-                                ? `http://${import.meta.env.VITE_NETWORK_IP}${import.meta.env.VITE_PORT ? `:${import.meta.env.VITE_PORT}` : port}`
-                                : window.location.origin;
-                                
-                            return `${base}/student/verify?token=${session.qrCode.codeValue}`;
-                          })()}
+                          value={buildAttendanceVerifyUrl(
+                            session.qrCode.codeValue,
+                            session.networkIp || window.location.origin,
+                          )}
                           size={240}
                           level="H"
                           includeMargin={true}
@@ -384,15 +379,19 @@ export default function LiveSession() {
                           <Loader2 className="h-10 w-10 text-primary animate-spin" />
                         </div>
                         <div className="space-y-2">
-                          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground animate-pulse">Syncing Spatial Link...</p>
-                          <Button 
-                            variant="outline" 
-                            size="sm" 
+                          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground animate-pulse">
+                            Syncing Spatial Link...
+                          </p>
+                          <Button
+                            variant="outline"
+                            size="sm"
                             onClick={() => generateQRMutation.mutate()}
                             disabled={generateQRMutation.isPending}
                             className="h-8 text-[10px] uppercase font-black tracking-wider border-primary/20 text-primary"
                           >
-                            <RefreshCw className={`mr-2 h-3 w-3 ${generateQRMutation.isPending ? 'animate-spin' : ''}`} />
+                            <RefreshCw
+                              className={`mr-2 h-3 w-3 ${generateQRMutation.isPending ? "animate-spin" : ""}`}
+                            />
                             Force Pulse Start
                           </Button>
                         </div>

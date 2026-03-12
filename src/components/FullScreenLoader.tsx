@@ -197,11 +197,7 @@ export function FullScreenLoader({
   const Icon = cfg.icon;
 
   return (
-<<<<<<< HEAD
     <div className="fixed inset-0 z-[9999] bg-background/90 backdrop-blur-2xl flex flex-col items-center justify-center gap-8 animate-in fade-in duration-300 lg:pl-[16rem]">
-=======
-    <div className="absolute inset-0 z-[9999] bg-background/97 backdrop-blur-2xl flex flex-col items-center justify-center gap-8 animate-in fade-in duration-150 rounded-[inherit]">
->>>>>>> parent of 9d789f4 (mobile changes)
       {/* Expanding rings + icon */}
       <div className="relative flex items-center justify-center">
         {[0, 0.3, 0.6].map((delay, i) => (

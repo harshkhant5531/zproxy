@@ -13,6 +13,12 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import {
+  getGeolocationPermissionState,
+  getLocationErrorMessage,
+  isGeolocationAvailable,
+  requestCurrentPosition,
+} from "@/lib/location";
 
 export default function VerifyAttendance() {
   const [searchParams] = useSearchParams();
@@ -32,7 +38,7 @@ export default function VerifyAttendance() {
         data.token,
         data.lat,
         data.lng,
-        `AuraSecure-${user?.id}`
+        `AuraSecure-${user?.id}`,
       ),
     onSuccess: () => {
       setStatus("success");
@@ -46,9 +52,9 @@ export default function VerifyAttendance() {
       const detail =
         err.response?.data?.message || err.message || "Network Timeout";
       setErrorMessage(
-        detail.includes("Spatial") 
-          ? detail 
-          : `${detail}. Please ensure your device is on the campus network.`
+        detail.includes("Spatial")
+          ? detail
+          : `${detail}. Please ensure your device is on the campus network.`,
       );
       console.error("Verification error details:", err);
       toast.error("Verification failed");
@@ -58,51 +64,56 @@ export default function VerifyAttendance() {
   const handleVerify = (retryWithLowAccuracy = false) => {
     if (!token) return;
 
-    if (!navigator.geolocation) {
+    if (!isGeolocationAvailable()) {
       setStatus("error");
-      setErrorMessage("Spatial mismatch: Geolocation is not supported by your browser.");
+      setErrorMessage("Location is not supported by your browser.");
       return;
     }
 
     setStatus("verifying");
     setErrorMessage("");
-    
-    const geoOptions = { 
-      enableHighAccuracy: !retryWithLowAccuracy, 
+
+    const geoOptions = {
+      enableHighAccuracy: !retryWithLowAccuracy,
       timeout: 25000, // Increased to 25s for difficult environments
-      maximumAge: 5000 // Only allow coordinates from the last 5s
+      maximumAge: 5000, // Only allow coordinates from the last 5s
     };
 
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
+    getGeolocationPermissionState()
+      .then((permissionState) => {
+        if (permissionState === "denied") {
+          throw new Error(
+            "Location permission is blocked. Enable location access to verify attendance.",
+          );
+        }
+
+        return requestCurrentPosition(geoOptions);
+      })
+      .then((position) => {
         const { latitude, longitude, accuracy } = position.coords;
-        console.log(`Presence confirmed at: ${latitude}, ${longitude} (±${accuracy}m)`);
-        
+        console.log(
+          `Presence confirmed at: ${latitude}, ${longitude} (±${accuracy}m)`,
+        );
+
         verifyMutation.mutate({
           token,
           lat: latitude,
-          lng: longitude
+          lng: longitude,
         });
-      },
-      (error) => {
+      })
+      .catch((error: any) => {
         if (!retryWithLowAccuracy && error.code === 3) {
           // Timeout occurred with high accuracy, retry with standard accuracy
-          console.warn("High accuracy timeout, retrying with standard accuracy...");
+          console.warn(
+            "High accuracy timeout, retrying with standard accuracy...",
+          );
           handleVerify(true);
           return;
         }
 
         setStatus("error");
-        let msg = "Location Error: Failed to acquire spatial coordinates.";
-        if (error.code === 1) {
-          msg = "Permission Denied: Please enable GPS/Location access to verify your presence.";
-        } else if (error.code === 3) {
-          msg = "Location Timeout: GPS signal is weak. Try moving near a window or outdoors.";
-        }
-        setErrorMessage(msg);
-      },
-      geoOptions
-    );
+        setErrorMessage(getLocationErrorMessage(error));
+      });
   };
 
   const handleRetry = () => {
@@ -140,14 +151,14 @@ export default function VerifyAttendance() {
               {authLoading ? "Identity Check" : "Spatial Verification"}
             </p>
             <p className="text-sm text-muted-foreground animate-pulse">
-              {authLoading 
-                ? "Authenticating neural link..." 
+              {authLoading
+                ? "Authenticating neural link..."
                 : "Triangulating presence in faculty grid..."}
             </p>
             {!authLoading && (
-               <p className="text-[10px] text-muted-foreground/50 font-mono italic">
-                 Keep device stable. Searching for high-accuracy telemetry...
-               </p>
+              <p className="text-[10px] text-muted-foreground/50 font-mono italic">
+                Keep device stable. Searching for high-accuracy telemetry...
+              </p>
             )}
           </div>
         </div>

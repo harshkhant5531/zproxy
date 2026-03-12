@@ -2,6 +2,11 @@ const express = require("express");
 const { body, validationResult } = require("express-validator");
 const prisma = require("../prisma");
 const authMiddleware = require("../middleware/auth");
+const {
+  MAX_RADIUS_METERS,
+  MIN_RADIUS_METERS,
+  resolveRadiusMeters,
+} = require("../utils/geofence");
 const { requireRole } = authMiddleware;
 
 const router = express.Router();
@@ -185,7 +190,12 @@ router.post(
     body("date").isISO8601().withMessage("Valid date is required"),
     body("startTime").notEmpty().withMessage("Start time is required"),
     body("endTime").notEmpty().withMessage("End time is required"),
-    body("geofenceRadius").optional().isInt({ min: 10, max: 200 }).withMessage("Radius must be between 10m and 200m"),
+    body("geofenceRadius")
+      .optional()
+      .isInt({ min: MIN_RADIUS_METERS, max: MAX_RADIUS_METERS })
+      .withMessage(
+        `Radius must be between ${MIN_RADIUS_METERS}m and ${MAX_RADIUS_METERS}m`,
+      ),
     body("facultyLat").optional().isFloat().withMessage("Invalid latitude"),
     body("facultyLng").optional().isFloat().withMessage("Invalid longitude"),
   ],
@@ -260,7 +270,7 @@ router.post(
           duration: duration || 60,
           status: status || "scheduled",
           batches: batches || [],
-          geofenceRadius: geofenceRadius || 25,
+          geofenceRadius: resolveRadiusMeters({ geofenceRadius }),
           facultyLat: facultyLat ? parseFloat(facultyLat) : null,
           facultyLng: facultyLng ? parseFloat(facultyLng) : null,
         },
@@ -293,83 +303,117 @@ router.post(
 // @route   PUT /api/sessions/:id
 // @desc    Update session
 // @access  Admin, Faculty
-router.put("/:id", authMiddleware, async (req, res, next) => {
-  try {
-    const session = await prisma.session.findUnique({
-      where: { id: parseInt(req.params.id) },
-    });
-
-    if (!session) {
-      const error = new Error("Session not found");
-      error.statusCode = 404;
-      throw error;
-    }
-
-    // Check if user has access to update this session (Creator or Course Lead)
-    if (req.user.role === "faculty") {
-      const isCreator = session.facultyId === req.user.id;
-      const course = await prisma.course.findUnique({
-        where: { id: session.courseId },
-        select: { facultyId: true },
-      });
-      const isCourseLead = course?.facultyId === req.user.id;
-
-      if (!isCreator && !isCourseLead) {
-        const error = new Error(
-          "Forbidden: You are not authorized to update this session",
-        );
-        error.statusCode = 403;
+router.put(
+  "/:id",
+  authMiddleware,
+  [
+    body("geofenceRadius")
+      .optional()
+      .isInt({ min: MIN_RADIUS_METERS, max: MAX_RADIUS_METERS })
+      .withMessage(
+        `Radius must be between ${MIN_RADIUS_METERS}m and ${MAX_RADIUS_METERS}m`,
+      ),
+    body("facultyLat").optional().isFloat().withMessage("Invalid latitude"),
+    body("facultyLng").optional().isFloat().withMessage("Invalid longitude"),
+  ],
+  async (req, res, next) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        const error = new Error("Validation Error");
+        error.statusCode = 400;
+        error.errors = errors.array();
         throw error;
       }
+
+      const session = await prisma.session.findUnique({
+        where: { id: parseInt(req.params.id) },
+      });
+
+      if (!session) {
+        const error = new Error("Session not found");
+        error.statusCode = 404;
+        throw error;
+      }
+
+      // Check if user has access to update this session (Creator or Course Lead)
+      if (req.user.role === "faculty") {
+        const isCreator = session.facultyId === req.user.id;
+        const course = await prisma.course.findUnique({
+          where: { id: session.courseId },
+          select: { facultyId: true },
+        });
+        const isCourseLead = course?.facultyId === req.user.id;
+
+        if (!isCreator && !isCourseLead) {
+          const error = new Error(
+            "Forbidden: You are not authorized to update this session",
+          );
+          error.statusCode = 403;
+          throw error;
+        }
+      }
+
+      const {
+        courseId,
+        subjectId,
+        topic,
+        description,
+        sessionType,
+        date,
+        startTime,
+        endTime,
+        duration,
+        status,
+        batches,
+        geofenceRadius,
+        facultyLat,
+        facultyLng,
+      } = req.body;
+
+      const updatedSession = await prisma.session.update({
+        where: { id: parseInt(req.params.id) },
+        data: {
+          ...(courseId && { courseId }),
+          ...(subjectId && { subjectId }),
+          ...(topic && { topic }),
+          ...(description && { description }),
+          ...(sessionType && { sessionType }),
+          ...(date && { date: new Date(date) }),
+          ...(startTime && { startTime }),
+          ...(endTime && { endTime }),
+          ...(duration && { duration }),
+          ...(status && { status }),
+          ...(batches && { batches }),
+          ...(geofenceRadius !== undefined && {
+            geofenceRadius: resolveRadiusMeters({ geofenceRadius }),
+          }),
+          ...(facultyLat !== undefined && {
+            facultyLat: facultyLat === null ? null : parseFloat(facultyLat),
+          }),
+          ...(facultyLng !== undefined && {
+            facultyLng: facultyLng === null ? null : parseFloat(facultyLng),
+          }),
+        },
+        include: {
+          course: true,
+          faculty: true,
+          subject: true,
+          qrCode: true,
+          attendanceRecords: true,
+        },
+      });
+
+      res.json({
+        success: true,
+        message: "Session updated successfully",
+        data: { session: updatedSession },
+      });
+    } catch (error) {
+      next(error);
     }
-
-    const {
-      courseId,
-      subjectId,
-      topic,
-      description,
-      sessionType,
-      date,
-      startTime,
-      endTime,
-      duration,
-      status,
-      batches,
-    } = req.body;
-
-    const updatedSession = await prisma.session.update({
-      where: { id: parseInt(req.params.id) },
-      data: {
-        ...(courseId && { courseId }),
-        ...(subjectId && { subjectId }),
-        ...(topic && { topic }),
-        ...(description && { description }),
-        ...(sessionType && { sessionType }),
-        ...(date && { date: new Date(date) }),
-        ...(startTime && { startTime }),
-        ...(endTime && { endTime }),
-        ...(duration && { duration }),
-        ...(status && { status }),
-        ...(batches && { batches }),
-      },
-      include: {
-        course: true,
-        faculty: true,
-        subject: true,
-        qrCode: true,
-        attendanceRecords: true,
-      },
-    });
-
-    res.json({
-      success: true,
-      message: "Session updated successfully",
-      data: { session: updatedSession },
-    });
-  } catch (error) {
-    next(error);
-  }
-});
+  },
+);
 
 // @route   DELETE /api/sessions/:id
 // @desc    Delete session
@@ -464,12 +508,14 @@ router.post("/:id/qr", authMiddleware, async (req, res, next) => {
 
     // Optional: Cleanup old codes for this session that are older than 5 minutes
     const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
-    await prisma.qrCode.deleteMany({
-      where: {
-        sessionId: session.id,
-        createdAt: { lt: fiveMinutesAgo }
-      }
-    }).catch(e => console.error("QR Cleanup Error:", e));
+    await prisma.qrCode
+      .deleteMany({
+        where: {
+          sessionId: session.id,
+          createdAt: { lt: fiveMinutesAgo },
+        },
+      })
+      .catch((e) => console.error("QR Cleanup Error:", e));
 
     res.json({
       success: true,

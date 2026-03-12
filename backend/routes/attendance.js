@@ -2,6 +2,7 @@ const express = require("express");
 const { body, validationResult } = require("express-validator");
 const prisma = require("../prisma");
 const authMiddleware = require("../middleware/auth");
+const { validateStudentGeofence } = require("../utils/geofence");
 const { requireRole } = authMiddleware;
 
 const router = express.Router();
@@ -236,33 +237,9 @@ router.post(
         throw error;
       }
 
-      // 🛡️ Geofencing Validation (Faculty-Student Proximity) - For students only
+      // Enforce faculty-centered geofence for student attendance.
       if (req.user.role === "student") {
-        const { lat, lng } = req.body;
-        const geolib = require("geolib");
-
-        const REFERENCE_LOCATION = {
-          latitude: session.facultyLat || parseFloat(process.env.CAMPUS_LAT) || 23.0225,
-          longitude: session.facultyLng || parseFloat(process.env.CAMPUS_LNG) || 72.5714
-        };
-        const RADIUS = session.geofenceRadius || parseInt(process.env.CAMPUS_RADIUS) || 25;
-
-        if (lat && lng) {
-          const distance = geolib.getDistance(
-            { latitude: lat, longitude: lng },
-            REFERENCE_LOCATION
-          );
-
-          if (distance > RADIUS) {
-            const error = new Error(`Spatial Protocol Violation: You are ${distance}m away from the instructor. Verification requires proximity to the classroom grid.`);
-            error.statusCode = 403;
-            throw error;
-          }
-        } else {
-          const error = new Error("Spatial Authentication Required: Enable GPS to verify presence.");
-          error.statusCode = 400;
-          throw error;
-        }
+        validateStudentGeofence(session, req.body.lat, req.body.lng);
       }
 
       // ─── Proxy Detection ────────────────────────────────────────────────
@@ -300,7 +277,10 @@ router.post(
           studentId,
           status: finalStatus,
           notes: finalNotes,
-          location: req.body.lat && req.body.lng ? `${req.body.lat},${req.body.lng}` : req.body.location,
+          location:
+            req.body.lat && req.body.lng
+              ? `${req.body.lat},${req.body.lng}`
+              : req.body.location,
           ipAddress: req.ip,
           deviceInfo: req.body.deviceInfo,
         },
@@ -547,34 +527,8 @@ router.post(
         throw error;
       }
 
-      // 🛡️ Geofencing Validation (Faculty-Student Proximity)
       const { lat, lng } = req.body;
-      const geolib = require("geolib");
-
-      // Use faculty location if available, else fallback to campus grid
-      const REFERENCE_LOCATION = {
-        latitude: qrCodeData.session.facultyLat || parseFloat(process.env.CAMPUS_LAT) || 23.0225,
-        longitude: qrCodeData.session.facultyLng || parseFloat(process.env.CAMPUS_LNG) || 72.5714
-      };
-      const RADIUS = qrCodeData.session.geofenceRadius || parseInt(process.env.CAMPUS_RADIUS) || 25;
-
-      if (lat && lng) {
-        const distance = geolib.getDistance(
-          { latitude: lat, longitude: lng },
-          REFERENCE_LOCATION
-        );
-
-        if (distance > RADIUS) {
-          const error = new Error(`Spatial Protocol Violation: You are ${distance}m away from the instructor. Verification requires proximity to the classroom grid.`);
-          error.statusCode = 403;
-          throw error;
-        }
-      } else {
-        // Force location if geofencing is strictly required
-        const error = new Error("Spatial Authentication Required: Enable GPS to verify presence.");
-        error.statusCode = 400;
-        throw error;
-      }
+      validateStudentGeofence(qrCodeData.session, lat, lng);
 
       // Check if attendance already exists
       const existingAttendance = await prisma.attendance.findFirst({
@@ -585,7 +539,9 @@ router.post(
       });
 
       if (existingAttendance) {
-        const error = new Error("Neural Link Active: Attendance already recorded.");
+        const error = new Error(
+          "Neural Link Active: Attendance already recorded.",
+        );
         error.statusCode = 409;
         throw error;
       }

@@ -15,8 +15,16 @@ import { FullScreenLoader } from "@/components/FullScreenLoader";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { subjectsAPI, sessionsAPI } from "@/lib/api";
+import {
+  getGeolocationPermissionState,
+  getLocationErrorMessage,
+  requestCurrentPosition,
+} from "@/lib/location";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+
+const MIN_RADIUS_METERS = 10;
+const MAX_RADIUS_METERS = 200;
 
 export default function CreateSession() {
   const navigate = useNavigate();
@@ -63,21 +71,36 @@ export default function CreateSession() {
       return;
     }
 
+    const normalizedRadius = Math.min(
+      MAX_RADIUS_METERS,
+      Math.max(MIN_RADIUS_METERS, Number.parseInt(radius, 10) || 25),
+    );
+    if (String(normalizedRadius) !== radius) {
+      setRadius(String(normalizedRadius));
+    }
+
     const now = new Date();
     const startTime = now.toTimeString().split(" ")[0].substring(0, 5);
     const end = new Date(now.getTime() + 60 * 60 * 1000);
     const endTime = end.toTimeString().split(" ")[0].substring(0, 5);
 
-    if (!navigator.geolocation) {
-      toast.error("Spatial mismatch: Your browser doesn't support geolocation.");
-      return;
-    }
-
     setLocating(true);
-    
-    // Get precise faculty location to anchor the session
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
+
+    getGeolocationPermissionState()
+      .then((permissionState) => {
+        if (permissionState === "denied") {
+          throw new Error(
+            "Location permission is blocked. Enable it in the browser and try again.",
+          );
+        }
+
+        return requestCurrentPosition({
+          enableHighAccuracy: true,
+          timeout: 15000,
+          maximumAge: 0,
+        });
+      })
+      .then((position) => {
         setLocating(false);
         createSessionMutation.mutate({
           courseId: selectedSubject.courseId,
@@ -88,21 +111,15 @@ export default function CreateSession() {
           date: now.toISOString(),
           startTime,
           endTime,
-          geofenceRadius: parseInt(radius),
+          geofenceRadius: normalizedRadius,
           facultyLat: position.coords.latitude,
           facultyLng: position.coords.longitude,
         });
-      },
-      (error) => {
+      })
+      .catch((error) => {
         setLocating(false);
-        toast.error(
-          error.code === 1 
-            ? "Permission Denied: Faculty must provide location to lock session grid."
-            : "Location Timeout: Failed to acquire stable coordinates. Please try again."
-        );
-      },
-      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
-    );
+        toast.error(getLocationErrorMessage(error));
+      });
   };
 
   return (
@@ -271,21 +288,40 @@ export default function CreateSession() {
                     <input
                       type="range"
                       min="10"
-                      max="500"
+                      max="200"
                       step="5"
                       value={radius}
-                      onChange={(e) => setRadius(e.target.value)}
+                      onChange={(e) => {
+                        const nextRadius = Math.min(
+                          MAX_RADIUS_METERS,
+                          Math.max(
+                            MIN_RADIUS_METERS,
+                            Number.parseInt(e.target.value, 10) || 25,
+                          ),
+                        );
+                        setRadius(String(nextRadius));
+                      }}
                       className="w-full h-1.5 bg-muted rounded-lg appearance-none cursor-pointer accent-primary"
                     />
                     <div className="flex justify-between mt-2">
-                      <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest text-left">Office (10m)</span>
-                      <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest text-primary text-center">Class (25m)</span>
-                      <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest text-emerald-500 text-center">Auditorium (100m)</span>
-                      <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest text-right">Campus (500m)</span>
+                      <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest text-left">
+                        Office (10m)
+                      </span>
+                      <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest text-primary text-center">
+                        Class (25m)
+                      </span>
+                      <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest text-emerald-500 text-center">
+                        Auditorium (100m)
+                      </span>
+                      <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest text-right">
+                        Max (200m)
+                      </span>
                     </div>
                   </div>
                   <p className="text-[9px] text-muted-foreground italic ml-1">
-                    Defines the valid spatial grid centered at your current location. Students must be within this {radius}m radius to authenticate.
+                    Defines the valid spatial grid centered at your current
+                    location. Students must be within this {radius}m radius to
+                    authenticate.
                   </p>
                 </div>
               </div>
