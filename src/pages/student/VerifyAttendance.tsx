@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useCallback, useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { attendanceAPI } from "@/lib/api";
@@ -20,6 +21,15 @@ import {
   requestCurrentPosition,
 } from "@/lib/location";
 
+type GeofenceDebug = {
+  distanceMeters?: number;
+  rawDistanceMeters?: number;
+  toleranceMeters?: number;
+  radiusMeters?: number;
+  reportedAccuracyMeters?: number;
+  maxAcceptableAccuracyMeters?: number;
+};
+
 export default function VerifyAttendance() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -29,8 +39,52 @@ export default function VerifyAttendance() {
     "verifying",
   );
   const [errorMessage, setErrorMessage] = useState("");
+  const [geofenceDebug, setGeofenceDebug] = useState<GeofenceDebug | null>(
+    null,
+  );
 
   const token = searchParams.get("token");
+
+  const extractErrorMessage = (error: unknown) => {
+    if (
+      typeof error === "object" &&
+      error !== null &&
+      "response" in error &&
+      typeof (error as { response?: unknown }).response === "object" &&
+      (error as { response?: unknown }).response !== null
+    ) {
+      const response = (error as { response?: { data?: { message?: string } } })
+        .response;
+      if (response?.data?.message) {
+        return response.data.message;
+      }
+    }
+
+    if (error instanceof Error && error.message) {
+      return error.message;
+    }
+
+    return "Network Timeout";
+  };
+
+  const extractGeofenceDebug = (error: unknown): GeofenceDebug | null => {
+    if (
+      typeof error === "object" &&
+      error !== null &&
+      "response" in error &&
+      typeof (error as { response?: unknown }).response === "object" &&
+      (error as { response?: unknown }).response !== null
+    ) {
+      const response = (
+        error as {
+          response?: { data?: { debug?: { geofence?: GeofenceDebug } } };
+        }
+      ).response;
+      return response?.data?.debug?.geofence || null;
+    }
+
+    return null;
+  };
 
   const verifyMutation = useMutation({
     mutationFn: (data: {
@@ -48,15 +102,16 @@ export default function VerifyAttendance() {
       ),
     onSuccess: () => {
       setStatus("success");
+      setGeofenceDebug(null);
       toast.success("Attendance verified successfully");
       queryClient.invalidateQueries({
         queryKey: ["student", "recent-attendance"],
       });
     },
-    onError: (err: any) => {
+    onError: (err: unknown) => {
       setStatus("error");
-      const detail =
-        err.response?.data?.message || err.message || "Network Timeout";
+      setGeofenceDebug(extractGeofenceDebug(err));
+      const detail = extractErrorMessage(err);
       setErrorMessage(
         detail.includes("Spatial")
           ? detail
@@ -67,7 +122,7 @@ export default function VerifyAttendance() {
     },
   });
 
-  const handleVerify = (retryWithLowAccuracy = false) => {
+  const handleVerify = useCallback(() => {
     if (!token) return;
 
     if (!isGeolocationAvailable()) {
@@ -78,50 +133,55 @@ export default function VerifyAttendance() {
 
     setStatus("verifying");
     setErrorMessage("");
+    setGeofenceDebug(null);
 
-    const geoOptions = {
-      enableHighAccuracy: !retryWithLowAccuracy,
-      timeout: 25000, // Increased to 25s for difficult environments
-      maximumAge: 5000, // Only allow coordinates from the last 5s
+    const attemptVerification = (highAccuracy: boolean) => {
+      const geoOptions = {
+        enableHighAccuracy: highAccuracy,
+        timeout: 25000,
+        maximumAge: 5000,
+      };
+
+      getGeolocationPermissionState()
+        .then((permissionState) => {
+          if (permissionState === "denied") {
+            throw new Error(
+              "Location permission is blocked. Enable location access to verify attendance.",
+            );
+          }
+
+          return requestCurrentPosition(geoOptions);
+        })
+        .then((position) => {
+          const { latitude, longitude, accuracy } = position.coords;
+          console.log(
+            `Presence confirmed at: ${latitude}, ${longitude} (±${accuracy}m)`,
+          );
+
+          verifyMutation.mutate({
+            token,
+            lat: latitude,
+            lng: longitude,
+            accuracy,
+          });
+        })
+        .catch((error: unknown) => {
+          const geolocationError = error as { code?: number };
+          if (highAccuracy && geolocationError.code === 3) {
+            console.warn(
+              "High accuracy timeout, retrying with standard accuracy...",
+            );
+            attemptVerification(false);
+            return;
+          }
+
+          setStatus("error");
+          setErrorMessage(getLocationErrorMessage(error));
+        });
     };
 
-    getGeolocationPermissionState()
-      .then((permissionState) => {
-        if (permissionState === "denied") {
-          throw new Error(
-            "Location permission is blocked. Enable location access to verify attendance.",
-          );
-        }
-
-        return requestCurrentPosition(geoOptions);
-      })
-      .then((position) => {
-        const { latitude, longitude, accuracy } = position.coords;
-        console.log(
-          `Presence confirmed at: ${latitude}, ${longitude} (±${accuracy}m)`,
-        );
-
-        verifyMutation.mutate({
-          token,
-          lat: latitude,
-          lng: longitude,
-          accuracy,
-        });
-      })
-      .catch((error: any) => {
-        if (!retryWithLowAccuracy && error.code === 3) {
-          // Timeout occurred with high accuracy, retry with standard accuracy
-          console.warn(
-            "High accuracy timeout, retrying with standard accuracy...",
-          );
-          handleVerify(true);
-          return;
-        }
-
-        setStatus("error");
-        setErrorMessage(getLocationErrorMessage(error));
-      });
-  };
+    attemptVerification(true);
+  }, [token, verifyMutation]);
 
   const handleRetry = () => {
     handleVerify();
@@ -131,7 +191,7 @@ export default function VerifyAttendance() {
     if (!authLoading && user && token && status === "verifying") {
       handleVerify();
     }
-  }, [user, token, authLoading]);
+  }, [authLoading, handleVerify, status, token, user]);
 
   // Handle case where user isn't logged in
   useEffect(() => {
@@ -220,6 +280,46 @@ export default function VerifyAttendance() {
                 <p className="text-slate-300 text-base font-medium">
                   {errorMessage}
                 </p>
+                {geofenceDebug && (
+                  <div className="mt-3 rounded-md border border-slate-700 bg-slate-950/70 p-3 text-left">
+                    <p className="text-[11px] uppercase tracking-[0.15em] text-slate-400 mb-2">
+                      Geofence Debug
+                    </p>
+                    {geofenceDebug.rawDistanceMeters !== undefined && (
+                      <p className="text-xs text-slate-300">
+                        Raw Distance: {geofenceDebug.rawDistanceMeters}m
+                      </p>
+                    )}
+                    {geofenceDebug.toleranceMeters !== undefined && (
+                      <p className="text-xs text-slate-300">
+                        GPS Tolerance: {geofenceDebug.toleranceMeters}m
+                      </p>
+                    )}
+                    {geofenceDebug.distanceMeters !== undefined && (
+                      <p className="text-xs text-slate-300">
+                        Effective Distance: {geofenceDebug.distanceMeters}m
+                      </p>
+                    )}
+                    {geofenceDebug.radiusMeters !== undefined && (
+                      <p className="text-xs text-slate-300">
+                        Allowed Radius: {geofenceDebug.radiusMeters}m
+                      </p>
+                    )}
+                    {geofenceDebug.reportedAccuracyMeters !== undefined && (
+                      <p className="text-xs text-slate-300">
+                        Reported GPS Accuracy: ±
+                        {geofenceDebug.reportedAccuracyMeters}m
+                      </p>
+                    )}
+                    {geofenceDebug.maxAcceptableAccuracyMeters !==
+                      undefined && (
+                      <p className="text-xs text-slate-300">
+                        Max Accepted Accuracy: ±
+                        {geofenceDebug.maxAcceptableAccuracyMeters}m
+                      </p>
+                    )}
+                  </div>
+                )}
               </div>
               <Button
                 onClick={handleRetry}

@@ -106,6 +106,8 @@ function validateStudentGeofence(session, lat, lng, accuracyMetersInput) {
       `Your GPS signal is too weak (±${Math.round(reportedAccuracyMeters)}m). Move to an open area and try again.`,
     );
     error.statusCode = 400;
+    error.reportedAccuracyMeters = Math.round(reportedAccuracyMeters);
+    error.maxAcceptableAccuracyMeters = MAX_ACCEPTABLE_ACCURACY_METERS;
     throw error;
   }
 
@@ -146,6 +148,7 @@ function validateStudentGeofence(session, lat, lng, accuracyMetersInput) {
     error.distanceMeters = distanceMeters;
     error.rawDistanceMeters = rawDistanceMeters;
     error.toleranceMeters = toleranceMeters;
+    error.reportedAccuracyMeters = reportedAccuracyMeters;
     error.radiusMeters = radiusMeters;
     throw error;
   }

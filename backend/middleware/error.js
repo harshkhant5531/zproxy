@@ -65,10 +65,30 @@ const errorHandler = (error, req, res, next) => {
   }
 
   // Send response
+  const debug = {};
+  if (error.distanceMeters !== undefined) {
+    debug.geofence = {
+      distanceMeters: error.distanceMeters,
+      rawDistanceMeters: error.rawDistanceMeters,
+      toleranceMeters: error.toleranceMeters,
+      radiusMeters: error.radiusMeters,
+      reportedAccuracyMeters: error.reportedAccuracyMeters,
+    };
+  }
+
+  if (error.maxAcceptableAccuracyMeters !== undefined) {
+    debug.geofence = {
+      ...(debug.geofence || {}),
+      maxAcceptableAccuracyMeters: error.maxAcceptableAccuracyMeters,
+      reportedAccuracyMeters: error.reportedAccuracyMeters,
+    };
+  }
+
   res.status(statusCode).json({
     success: false,
     message,
     errors: errors.length > 0 ? errors : undefined,
+    debug: Object.keys(debug).length > 0 ? debug : undefined,
     stack: process.env.NODE_ENV === "development" ? error.stack : undefined,
   });
 };
