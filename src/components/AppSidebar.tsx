@@ -12,6 +12,7 @@ import {
   Calendar,
   FileBarChart,
   AlertTriangle,
+  Network,
   Settings,
   LogOut,
   Shield,
@@ -77,6 +78,7 @@ const facultySections: MenuSection[] = [
         url: "/faculty/records",
         icon: ClipboardList,
       },
+      { title: "Proxy Audit", url: "/faculty/proxy-audit", icon: Network },
       { title: "Timetable", url: "/faculty/timetable", icon: Calendar },
       { title: "Analytics", url: "/faculty/analytics", icon: BarChart3 },
     ],
@@ -99,6 +101,7 @@ const adminSections: MenuSection[] = [
       { title: "Leave Approvals", url: "/admin/leaves", icon: FileText },
       { title: "Reports", url: "/admin/reports", icon: FileBarChart },
       { title: "Alerts", url: "/admin/alerts", icon: AlertTriangle },
+      { title: "Proxy Audit", url: "/admin/proxy-audit", icon: Network },
     ],
   },
   {

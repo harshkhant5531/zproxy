@@ -101,6 +101,15 @@ export default function CreateSession() {
         });
       })
       .then((position) => {
+        const facultyAccuracy = position.coords.accuracy;
+        if (Number.isFinite(facultyAccuracy) && facultyAccuracy > 80) {
+          setLocating(false);
+          toast.error(
+            `GPS accuracy is too low (±${Math.round(facultyAccuracy)}m). Move to an open area and try again.`,
+          );
+          return;
+        }
+
         setLocating(false);
         createSessionMutation.mutate({
           courseId: selectedSubject.courseId,
