@@ -4,7 +4,8 @@ const MIN_RADIUS_METERS = 10;
 const MAX_RADIUS_METERS = 200;
 const DEFAULT_GPS_TOLERANCE_METERS = 20;
 const MAX_GPS_TOLERANCE_METERS = 75;
-const MAX_ACCEPTABLE_ACCURACY_METERS = 120;
+const DEFAULT_MAX_ACCEPTABLE_ACCURACY_METERS = 250;
+const MAX_MAX_ACCEPTABLE_ACCURACY_METERS = 400;
 
 function toFiniteNumber(value) {
   if (value === null || value === undefined || value === "") {
@@ -91,6 +92,18 @@ function resolveAccuracyToleranceMeters(accuracyMetersInput) {
   );
 }
 
+function resolveMaxAcceptableAccuracyMeters() {
+  const parsed = toFiniteNumber(process.env.MAX_ACCEPTABLE_GPS_ACCURACY);
+  if (parsed === null || parsed <= 0) {
+    return DEFAULT_MAX_ACCEPTABLE_ACCURACY_METERS;
+  }
+
+  return Math.min(
+    MAX_MAX_ACCEPTABLE_ACCURACY_METERS,
+    Math.max(DEFAULT_GPS_TOLERANCE_METERS, Math.round(parsed)),
+  );
+}
+
 function validateStudentGeofence(session, lat, lng, accuracyMetersInput) {
   const studentLocation = {
     latitude: normalizeLatitude(lat),
@@ -98,16 +111,17 @@ function validateStudentGeofence(session, lat, lng, accuracyMetersInput) {
   };
 
   const reportedAccuracyMeters = toFiniteNumber(accuracyMetersInput);
+  const maxAcceptableAccuracyMeters = resolveMaxAcceptableAccuracyMeters();
   if (
     reportedAccuracyMeters !== null &&
-    reportedAccuracyMeters > MAX_ACCEPTABLE_ACCURACY_METERS
+    reportedAccuracyMeters > maxAcceptableAccuracyMeters
   ) {
     const error = new Error(
       `Your GPS signal is too weak (±${Math.round(reportedAccuracyMeters)}m). Move to an open area and try again.`,
     );
     error.statusCode = 400;
     error.reportedAccuracyMeters = Math.round(reportedAccuracyMeters);
-    error.maxAcceptableAccuracyMeters = MAX_ACCEPTABLE_ACCURACY_METERS;
+    error.maxAcceptableAccuracyMeters = maxAcceptableAccuracyMeters;
     throw error;
   }
 
