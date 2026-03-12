@@ -202,9 +202,10 @@ model Attendance {
   session Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   student Users   @relation("StudentAttendance", fields: [studentId], references: [id], onDelete: Cascade)
 
-  @@index([sessionId])
-  @@index([studentId])
-  @@index([timestamp])
+    @@unique([sessionId, studentId])
+    @@index([sessionId])
+    @@index([studentId])
+    @@index([timestamp])
 }
 
 // ─── QR Code ─────────────────────────────────────────────────────────────────
