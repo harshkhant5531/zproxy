@@ -28,9 +28,19 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Html5Qrcode } from "html5-qrcode";
 import { format } from "date-fns";
 import { FullScreenLoader } from "@/components/FullScreenLoader";
+import {
+  getGeolocationPermissionState,
+  getLocationErrorMessage,
+  requestCurrentPosition,
+} from "@/lib/location";
 
 type ScanMode = "qr" | "manual";
-type OverlayType = "qr-verify" | "manual-mark" | "load-sessions" | "locating" | null;
+type OverlayType =
+  | "qr-verify"
+  | "manual-mark"
+  | "load-sessions"
+  | "locating"
+  | null;
 
 function errorLabel(err: any): string {
   const msg: string = err?.response?.data?.message || err?.message || "";
@@ -91,12 +101,20 @@ export default function QRScanner() {
   });
 
   const markQRMutation = useMutation({
-    mutationFn: ({ qrCode, lat, lng }: { qrCode: string; lat: number; lng: number }) =>
+    mutationFn: ({
+      qrCode,
+      lat,
+      lng,
+    }: {
+      qrCode: string;
+      lat: number;
+      lng: number;
+    }) =>
       attendanceAPI.markAttendanceQR(
         qrCode,
         lat,
         lng,
-        `ScannerDevice-${user?.id}`
+        `ScannerDevice-${user?.id}`,
       ),
     onSuccess: (resp) => {
       setScannedData(resp.data.data);
@@ -114,13 +132,21 @@ export default function QRScanner() {
   });
 
   const markManualMutation = useMutation({
-    mutationFn: ({ sessionId, lat, lng }: { sessionId: number; lat: number; lng: number }) =>
+    mutationFn: ({
+      sessionId,
+      lat,
+      lng,
+    }: {
+      sessionId: number;
+      lat: number;
+      lng: number;
+    }) =>
       attendanceAPI.markAttendance({
         sessionId,
         status: "present",
         deviceInfo: `ManualDevice-${user?.id}`,
         lat,
-        lng
+        lng,
       }),
     onSuccess: (resp) => {
       setManualResult(resp.data.data);
@@ -135,37 +161,53 @@ export default function QRScanner() {
     },
   });
 
-  const handleMarkWithLocation = (type: "qr" | "manual", id: string | number) => {
+  const handleMarkWithLocation = (
+    type: "qr" | "manual",
+    id: string | number,
+  ) => {
     setLastError(null);
     setLocating(true);
-    
+
     const geoOptions = {
       enableHighAccuracy: true,
       timeout: 10000,
-      maximumAge: 0
+      maximumAge: 0,
     };
 
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
+    getGeolocationPermissionState()
+      .then((permissionState) => {
+        if (permissionState === "denied") {
+          throw new Error(
+            "Location permission is blocked. Enable GPS/location access and try again.",
+          );
+        }
+
+        return requestCurrentPosition(geoOptions);
+      })
+      .then((pos) => {
         setLocating(false);
         const { latitude, longitude } = pos.coords;
         if (type === "qr") {
-          markQRMutation.mutate({ qrCode: id as string, lat: latitude, lng: longitude });
+          markQRMutation.mutate({
+            qrCode: id as string,
+            lat: latitude,
+            lng: longitude,
+          });
         } else {
-          markManualMutation.mutate({ sessionId: id as number, lat: latitude, lng: longitude });
+          markManualMutation.mutate({
+            sessionId: id as number,
+            lat: latitude,
+            lng: longitude,
+          });
         }
-      },
-      (err) => {
+      })
+      .catch((err) => {
         setLocating(false);
-        let msg = "Location error: Please enable GPS.";
-        if (err.code === 1) msg = "Permission denied: GPS access required.";
-        else if (err.code === 3) msg = "Location timeout: GPS signal weak.";
+        const msg = getLocationErrorMessage(err);
         setLastError(msg);
         toast.error(msg);
         setScanning(false);
-      },
-      geoOptions
-    );
+      });
   };
 
   const startScanner = async () => {
@@ -768,7 +810,9 @@ export default function QRScanner() {
                                   onClick={() => {
                                     handleMarkWithLocation("manual", sess.id);
                                   }}
-                                  disabled={markManualMutation.isPending || locating}
+                                  disabled={
+                                    markManualMutation.isPending || locating
+                                  }
                                   className="font-medium tracking-wide text-[11px] shrink-0 h-10 px-4 rounded-xl shadow-md shadow-primary/20 hover:shadow-primary/35 transition-all hover:scale-[1.03] active:scale-[0.97]"
                                 >
                                   {isPending ? (
