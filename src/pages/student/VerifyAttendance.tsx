@@ -280,43 +280,36 @@ export default function VerifyAttendance() {
                   {errorMessage}
                 </p>
                 {geofenceDebug && (
-                  <div className="mt-3 rounded-md border border-slate-700 bg-slate-950/70 p-3 text-left">
-                    <p className="text-[11px] uppercase tracking-[0.15em] text-slate-400 mb-2">
-                      Geofence Debug
+                  <div className="mt-3 rounded-xl border border-slate-700 bg-slate-950/70 p-3 text-left space-y-2">
+                    <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400 font-black">
+                      Geofence Telemetry
                     </p>
-                    {geofenceDebug.rawDistanceMeters !== undefined && (
-                      <p className="text-xs text-slate-300">
-                        Raw Distance: {geofenceDebug.rawDistanceMeters}m
-                      </p>
-                    )}
-                    {geofenceDebug.toleranceMeters !== undefined && (
-                      <p className="text-xs text-slate-300">
-                        GPS Tolerance: {geofenceDebug.toleranceMeters}m
-                      </p>
-                    )}
-                    {geofenceDebug.distanceMeters !== undefined && (
-                      <p className="text-xs text-slate-300">
-                        Effective Distance: {geofenceDebug.distanceMeters}m
-                      </p>
-                    )}
-                    {geofenceDebug.radiusMeters !== undefined && (
-                      <p className="text-xs text-slate-300">
-                        Allowed Radius: {geofenceDebug.radiusMeters}m
-                      </p>
-                    )}
-                    {geofenceDebug.reportedAccuracyMeters !== undefined && (
-                      <p className="text-xs text-slate-300">
-                        Reported GPS Accuracy: ±
-                        {geofenceDebug.reportedAccuracyMeters}m
-                      </p>
-                    )}
-                    {geofenceDebug.maxAcceptableAccuracyMeters !==
-                      undefined && (
-                      <p className="text-xs text-slate-300">
-                        Max Accepted Accuracy: ±
-                        {geofenceDebug.maxAcceptableAccuracyMeters}m
-                      </p>
-                    )}
+                    <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-[11px] text-slate-300">
+                      {geofenceDebug.rawDistanceMeters !== undefined && (
+                        <p>Raw: {geofenceDebug.rawDistanceMeters}m</p>
+                      )}
+                      {geofenceDebug.toleranceMeters !== undefined && (
+                        <p>Tolerance: {geofenceDebug.toleranceMeters}m</p>
+                      )}
+                      {geofenceDebug.distanceMeters !== undefined && (
+                        <p>Effective: {geofenceDebug.distanceMeters}m</p>
+                      )}
+                      {geofenceDebug.radiusMeters !== undefined && (
+                        <p>Radius: {geofenceDebug.radiusMeters}m</p>
+                      )}
+                      {geofenceDebug.reportedAccuracyMeters !== undefined && (
+                        <p>
+                          Accuracy: ±{geofenceDebug.reportedAccuracyMeters}m
+                        </p>
+                      )}
+                      {geofenceDebug.maxAcceptableAccuracyMeters !==
+                        undefined && (
+                        <p>
+                          Max Allowed: ±
+                          {geofenceDebug.maxAcceptableAccuracyMeters}m
+                        </p>
+                      )}
+                    </div>
                   </div>
                 )}
               </div>

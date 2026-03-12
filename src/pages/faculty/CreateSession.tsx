@@ -25,6 +25,7 @@ import { toast } from "sonner";
 
 const MIN_RADIUS_METERS = 10;
 const MAX_RADIUS_METERS = 200;
+const DEFAULT_RADIUS_METERS = 60;
 
 export default function CreateSession() {
   const navigate = useNavigate();
@@ -34,7 +35,7 @@ export default function CreateSession() {
   const [topic, setTopic] = useState("");
   const [room, setRoom] = useState("");
   const [selectedBatches, setSelectedBatches] = useState<string[]>([]);
-  const [radius, setRadius] = useState("25");
+  const [radius, setRadius] = useState(String(DEFAULT_RADIUS_METERS));
   const [locating, setLocating] = useState(false);
 
   const { data: subjectsData, isLoading: isSubjectsLoading } = useQuery({
@@ -73,7 +74,10 @@ export default function CreateSession() {
 
     const normalizedRadius = Math.min(
       MAX_RADIUS_METERS,
-      Math.max(MIN_RADIUS_METERS, Number.parseInt(radius, 10) || 25),
+      Math.max(
+        MIN_RADIUS_METERS,
+        Number.parseInt(radius, 10) || DEFAULT_RADIUS_METERS,
+      ),
     );
     if (String(normalizedRadius) !== radius) {
       setRadius(String(normalizedRadius));
@@ -102,7 +106,7 @@ export default function CreateSession() {
       })
       .then((position) => {
         const facultyAccuracy = position.coords.accuracy;
-        if (Number.isFinite(facultyAccuracy) && facultyAccuracy > 80) {
+        if (Number.isFinite(facultyAccuracy) && facultyAccuracy > 35) {
           setLocating(false);
           toast.error(
             `GPS accuracy is too low (±${Math.round(facultyAccuracy)}m). Move to an open area and try again.`,

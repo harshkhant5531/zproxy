@@ -67,14 +67,14 @@ export default function StudentTimetable() {
   return (
     <>
       <FullScreenLoader show={isLoading} operation="loading" />
-      <div className="space-y-6">
+      <div className="app-page">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div className="app-page-header">
           <div>
-            <h1 className="text-2xl font-semibold tracking-tight text-foreground flex items-center gap-2">
+            <h1 className="page-header-title flex items-center gap-2">
               <Calendar className="h-6 w-6 text-primary" /> Academic Schedule
             </h1>
-            <p className="text-sm text-muted-foreground mt-1">
+            <p className="page-header-sub">
               {user?.profile?.fullName || user?.username} &mdash; Current
               Semester
             </p>

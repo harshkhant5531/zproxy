@@ -277,6 +277,19 @@
   @apply bg-muted/30 dark:bg-white/[0.02] border-b border-border/50 px-6 py-4;
 }
 
+/* Consistent page layout primitives */
+.app-page {
+  @apply space-y-6 relative min-h-screen motion-page-enter;
+}
+
+.app-page-header {
+  @apply flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4;
+}
+
+.app-surface {
+  @apply glass-card border-border/50 motion-surface;
+}
+
 /* Table readability helpers to keep hardcoded slate shades legible in light mode */
 :root :where(table) .text-slate-100,
 :root :where(table) .text-slate-200,
@@ -577,6 +590,10 @@
   transform: translateY(-3px);
 }
 
+.motion-panel-enter {
+  animation: app-page-enter 360ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 @keyframes app-breathe {
   0%,
   100% {
@@ -609,11 +626,25 @@
   transform: scale(0.98);
 }
 
+/* Logical animation pacing: keep loops subtle and not distracting */
+.animate-live-blink {
+  animation-duration: 1.8s;
+}
+
+.animate-ring-pulse {
+  animation-duration: 1.2s;
+}
+
+.animate-progress-indeterminate {
+  animation-duration: 1.2s;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .motion-page-enter,
   .motion-float,
   .motion-float-delayed,
   .motion-drift,
+  .motion-panel-enter,
   .motion-sheen::after,
   .motion-orbit,
   .motion-orbit-slow,
