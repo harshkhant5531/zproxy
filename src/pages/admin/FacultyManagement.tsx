@@ -430,7 +430,7 @@ export default function FacultyManagement() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="text-red-400 hover:text-red-500 hover:bg-red-500/10"
+                            className="text-destructive/90 hover:text-destructive hover:bg-destructive/10"
                             onClick={() => handleDelete(member.id)}
                           >
                             <Trash2 className="h-4 w-4" />

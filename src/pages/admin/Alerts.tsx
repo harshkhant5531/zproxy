@@ -76,22 +76,22 @@ export default function ShortageAlerts() {
         <div className="app-page-header">
           <div>
             <h1 className="page-header-title flex items-center gap-2">
-              <ShieldAlert className="h-5 w-5 text-rose-500" /> Attendance
+              <ShieldAlert className="h-5 w-5 text-destructive" /> Attendance
               Alerts
             </h1>
             <p className="page-header-sub">
               Monitor students below attendance threshold
             </p>
           </div>
-          <div className="bg-rose-500/10 border border-rose-500/20 px-4 py-2 rounded flex items-center gap-3">
-            <div className="h-2 w-2 rounded-full bg-rose-500" />
-            <p className="text-[10px] font-bold text-rose-500 uppercase tracking-widest">
+          <div className="bg-destructive/10 border border-destructive/20 px-4 py-2 rounded flex items-center gap-3">
+            <div className="h-2 w-2 rounded-full bg-destructive" />
+            <p className="text-[10px] font-bold text-destructive uppercase tracking-widest">
               {shortageStudents.length} Students Flagged
             </p>
           </div>
         </div>
 
-        <Card className="bg-card/75 border-rose-500/25 backdrop-blur-md shadow-2xl overflow-hidden relative">
+        <Card className="bg-card/75 border-destructive/25 backdrop-blur-md shadow-2xl overflow-hidden relative">
           <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-rose-600 to-transparent" />
           <CardContent className="p-0">
             <Table>
@@ -127,15 +127,15 @@ export default function ShortageAlerts() {
                         : "MODERATE";
                   const severityColor =
                     severity === "CRITICAL"
-                      ? "text-rose-500 bg-rose-500/10 border-rose-500/20"
+                      ? "text-destructive bg-destructive/10 border-destructive/20"
                       : severity === "HIGH"
-                        ? "text-orange-500 bg-orange-500/10 border-orange-500/20"
-                        : "text-yellow-500 bg-yellow-500/10 border-yellow-500/20";
+                        ? "text-warning bg-warning/10 border-warning/20"
+                        : "text-warning bg-warning/10 border-warning/20";
 
                   return (
                     <TableRow
                       key={s.id}
-                      className="border-border/50 hover:bg-rose-500/8 transition-colors"
+                      className="border-border/50 hover:bg-destructive/8 transition-colors"
                     >
                       <TableCell className="pl-6">
                         <p className="font-bold text-sm text-foreground">
@@ -152,7 +152,7 @@ export default function ShortageAlerts() {
                         </span>
                       </TableCell>
                       <TableCell>
-                        <span className="font-black text-sm text-rose-500 font-mono tracking-tighter shadow-rose-500/40 drop-shadow-sm">
+                        <span className="font-black text-sm text-destructive font-mono tracking-tighter shadow-rose-500/40 drop-shadow-sm">
                           {s.attendance}%
                         </span>
                       </TableCell>
@@ -186,7 +186,7 @@ export default function ShortageAlerts() {
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8 text-muted-foreground/80 hover:text-rose-500"
+                            className="h-8 w-8 text-muted-foreground/80 hover:text-destructive"
                             onClick={() =>
                               toast.error(`Inhibiting user access for ${s.id}`)
                             }
@@ -215,9 +215,9 @@ export default function ShortageAlerts() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4">
           {[
-            { label: "Critical Threshold", value: "50%", color: "bg-rose-500" },
-            { label: "High Sensitivity", value: "65%", color: "bg-orange-500" },
-            { label: "Watchlist Target", value: "75%", color: "bg-yellow-500" },
+            { label: "Critical Threshold", value: "50%", color: "bg-destructive" },
+            { label: "High Sensitivity", value: "65%", color: "bg-warning" },
+            { label: "Watchlist Target", value: "75%", color: "bg-warning" },
           ].map((item) => (
             <div
               key={item.label}

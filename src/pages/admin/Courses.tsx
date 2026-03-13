@@ -422,7 +422,7 @@ export default function CourseManagement() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="text-red-400 hover:text-red-500 hover:bg-red-500/10"
+                          className="text-destructive/90 hover:text-destructive hover:bg-destructive/10"
                           onClick={() => {
                             if (
                               confirm(
@@ -687,7 +687,7 @@ export default function CourseManagement() {
                             <Button
                               variant="ghost"
                               size="sm"
-                              className="text-red-400 hover:text-red-500 hover:bg-red-500/10 h-8 w-8 p-0"
+                              className="text-destructive/90 hover:text-destructive hover:bg-destructive/10 h-8 w-8 p-0"
                               onClick={() => {
                                 if (confirm("Purge this subject component?"))
                                   deleteSubjectMutation.mutate(s.id);

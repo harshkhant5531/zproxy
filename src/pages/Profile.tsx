@@ -125,7 +125,7 @@ export default function ProfilePage() {
       case "admin":
         return {
           label: "Admin Control",
-          accent: "text-amber-600 dark:text-amber-400",
+          accent: "text-warning dark:text-warning",
           subtitle: "Platform governance, policy, and operational control",
         };
       case "faculty":
@@ -233,7 +233,7 @@ export default function ProfilePage() {
                 </Badge>
                 <Badge
                   variant="outline"
-                  className="rounded-full border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.16em] text-emerald-600 dark:text-emerald-400"
+                  className="rounded-full border-success/20 bg-success/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.16em] text-emerald-600 dark:text-emerald-400"
                 >
                   <BadgeCheck className="mr-1.5 h-3 w-3" />{" "}
                   {user.status || "active"}
@@ -241,7 +241,7 @@ export default function ProfilePage() {
                 {user.requiresPasswordChange && (
                   <Badge
                     variant="outline"
-                    className="rounded-full border-amber-500/20 bg-amber-500/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.16em] text-amber-600 dark:text-amber-400"
+                    className="rounded-full border-warning/20 bg-warning/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.16em] text-warning dark:text-warning"
                   >
                     <AlertTriangle className="mr-1.5 h-3 w-3" /> Action Required
                   </Badge>
@@ -309,23 +309,23 @@ export default function ProfilePage() {
       </section>
 
       {forcedPasswordChange && (
-        <section className="rounded-[1.75rem] border border-amber-500/30 bg-[linear-gradient(135deg,rgba(254,243,199,0.9),rgba(255,251,235,0.9))] p-5 shadow-[0_20px_70px_-45px_rgba(245,158,11,0.8)] dark:bg-amber-500/10">
+        <section className="rounded-[1.75rem] border border-warning/30 bg-[linear-gradient(135deg,rgba(254,243,199,0.9),rgba(255,251,235,0.9))] p-5 shadow-[0_20px_70px_-45px_rgba(245,158,11,0.8)] dark:bg-warning/10">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-start gap-3">
-              <div className="mt-0.5 flex h-10 w-10 items-center justify-center rounded-2xl bg-amber-500/15 text-amber-600 dark:text-amber-400">
+              <div className="mt-0.5 flex h-10 w-10 items-center justify-center rounded-2xl bg-warning/15 text-warning dark:text-warning">
                 <ShieldCheck className="h-5 w-5" />
               </div>
               <div>
-                <p className="text-sm font-black uppercase tracking-[0.16em] text-amber-700 dark:text-amber-300">
+                <p className="text-sm font-black uppercase tracking-[0.16em] text-warning dark:text-warning/90">
                   Password change required
                 </p>
-                <p className="mt-1 text-sm text-amber-900/80 dark:text-amber-100/80">
+                <p className="mt-1 text-sm text-warning/90 dark:text-warning/80">
                   This account is still using the seeded default password.
                   Replace it now before using the rest of the system.
                 </p>
               </div>
             </div>
-            <Badge className="rounded-full bg-amber-600 px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-white shadow-none hover:bg-amber-600">
+            <Badge className="rounded-full bg-warning px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-white shadow-none hover:bg-warning">
               student123 detected
             </Badge>
           </div>
@@ -582,7 +582,7 @@ export default function ProfilePage() {
                 <Button
                   type="submit"
                   disabled={isSavingPassword}
-                  className="h-12 w-full rounded-2xl text-sm font-black uppercase tracking-[0.16em] shadow-lg shadow-emerald-500/20"
+                  className="h-12 w-full rounded-2xl text-sm font-black uppercase tracking-[0.16em] shadow-lg shadow-success/20"
                 >
                   <ShieldCheck className="mr-2 h-4 w-4" />
                   {isSavingPassword ? "Updating..." : "Update Password"}

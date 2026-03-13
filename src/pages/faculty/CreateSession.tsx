@@ -321,7 +321,7 @@ export default function CreateSession() {
                       <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest text-primary text-center">
                         Class (25m)
                       </span>
-                      <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest text-emerald-500 text-center">
+                      <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest text-success text-center">
                         Auditorium (100m)
                       </span>
                       <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest text-right">

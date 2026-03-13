@@ -360,7 +360,7 @@ export default function StudentManagement() {
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <div
-                          className={`h-1.5 w-1.5 rounded-full ${s.deviceId ? "bg-emerald-500" : "bg-muted-foreground/30"}`}
+                          className={`h-1.5 w-1.5 rounded-full ${s.deviceId ? "bg-success" : "bg-muted-foreground/30"}`}
                         />
                         <span className="text-[10px] font-mono text-muted-foreground/60 uppercase truncate max-w-[80px]">
                           {s.deviceId ? "LINKED" : "UNBOUND"}
@@ -374,7 +374,7 @@ export default function StudentManagement() {
                           size="icon"
                           onClick={() => handleEnrollment(s)}
                           title="Manage Enrollment"
-                          className="h-8 w-8 text-amber-500 hover:bg-amber-500/10"
+                          className="h-8 w-8 text-warning hover:bg-warning/10"
                         >
                           <BookOpen className="h-3.5 w-3.5" />
                         </Button>
@@ -393,7 +393,7 @@ export default function StudentManagement() {
                             if (confirm("Delete student?"))
                               deleteMutation.mutate(s.id);
                           }}
-                          className="h-8 w-8 text-red-500 hover:bg-red-500/10"
+                          className="h-8 w-8 text-destructive hover:bg-destructive/10"
                         >
                           <Trash2 className="h-3.5 w-3.5" />
                         </Button>
@@ -749,7 +749,7 @@ export default function StudentManagement() {
         <Dialog open={isEnrollOpen} onOpenChange={setIsEnrollOpen}>
           <DialogContent className="max-w-2xl bg-card border-border">
             <DialogHeader>
-              <DialogTitle className="text-xl font-bold flex items-center gap-2 text-amber-500">
+              <DialogTitle className="text-xl font-bold flex items-center gap-2 text-warning">
                 <BookOpen className="h-5 w-5" /> Manage Student Enrollment
               </DialogTitle>
               <DialogDescription className="text-muted-foreground">
@@ -809,7 +809,7 @@ export default function StudentManagement() {
               <Button
                 onClick={saveEnrollment}
                 disabled={enrollmentMutation.isPending}
-                className="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold"
+                className="bg-warning hover:bg-warning text-slate-950 font-bold"
               >
                 {enrollmentMutation.isPending ? (
                   <Loader2 className="h-4 w-4 animate-spin" />

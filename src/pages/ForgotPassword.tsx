@@ -125,7 +125,7 @@ export default function ForgotPassword() {
               </form>
 
               {resetUrl && (
-                <div className="mt-6 space-y-4 rounded-3xl border border-emerald-500/25 bg-emerald-500/8 p-5">
+                <div className="mt-6 space-y-4 rounded-3xl border border-success/25 bg-success/10 p-5">
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <p className="text-[11px] font-black uppercase tracking-[0.16em] text-emerald-600">
@@ -137,7 +137,7 @@ export default function ForgotPassword() {
                     </div>
                     <Link2 className="mt-0.5 h-4 w-4 text-emerald-600" />
                   </div>
-                  <div className="rounded-2xl border border-emerald-500/20 bg-white/80 p-4 text-xs leading-6 text-slate-700 shadow-sm dark:bg-background/70 dark:text-slate-200 break-all">
+                  <div className="rounded-2xl border border-success/20 bg-white/80 p-4 text-xs leading-6 text-slate-700 shadow-sm dark:bg-background/70 dark:text-slate-200 break-all">
                     {resetUrl}
                   </div>
                   <div className="flex gap-3">

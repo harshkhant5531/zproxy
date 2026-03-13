@@ -260,7 +260,7 @@ export default function StudentDashboard() {
                     {course.code} — {course.name}
                   </span>
                   <span
-                    className={`font-bold font-mono ${course.attendancePct < 75 ? "text-red-500" : "text-primary"}`}
+                    className={`font-bold font-mono ${course.attendancePct < 75 ? "text-destructive" : "text-primary"}`}
                   >
                     {course.attendancePct}%
                   </span>
