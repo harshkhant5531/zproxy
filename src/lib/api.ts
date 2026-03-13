@@ -192,7 +192,23 @@ export const attendanceAPI = {
     lng: number,
     deviceInfo?: string,
     accuracy?: number,
-  ) => api.post("/attendance/qr", { qrCode, lat, lng, deviceInfo, accuracy }),
+    locationCapturedAt?: string,
+    locationMeta?: {
+      sampleCount?: number;
+      sampleSpreadMeters?: number;
+      source?: string;
+      isMocked?: boolean;
+    },
+  ) =>
+    api.post("/attendance/qr", {
+      qrCode,
+      lat,
+      lng,
+      deviceInfo,
+      accuracy,
+      locationCapturedAt,
+      locationMeta,
+    }),
 
   updateAttendance: (id: string | number, data: any) =>
     api.put(`/attendance/${id}`, data),

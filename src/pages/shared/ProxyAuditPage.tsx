@@ -66,21 +66,21 @@ const AnimatedStatCard = ({
     transition={{ delay, duration: 0.5, ease: "easeOut" }}
   >
     <Card
-      className={`overflow-hidden border-l-4 ${color} bg-gradient-to-br from-slate-900 to-slate-800 hover:shadow-lg transition-all duration-300`}
+      className={`overflow-hidden border-l-4 ${color} bg-card hover:shadow-lg transition-all duration-300`}
     >
       <CardContent className="p-6">
         <div className="flex items-center justify-between">
           <div className="flex-1">
-            <p className="text-sm font-medium text-slate-400">{title}</p>
+            <p className="text-sm font-medium text-muted-foreground">{title}</p>
             <motion.h3
-              className="text-3xl font-bold text-white mt-2"
+              className="text-3xl font-bold text-foreground mt-2"
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: "spring", delay: delay + 0.2 }}
             >
               {value}
             </motion.h3>
-            <p className="text-xs text-slate-500 mt-1">{subtitle}</p>
+            <p className="text-xs text-muted-foreground mt-1">{subtitle}</p>
           </div>
           <motion.div
             className={`p-3 rounded-lg ${color} opacity-20`}
@@ -98,10 +98,10 @@ const AnimatedStatCard = ({
 
 const RiskLevelBadge = ({ level }: { level: string }) => {
   const colorMap = {
-    critical: "bg-red-900 text-red-200 border-red-700",
-    high: "bg-orange-900 text-orange-200 border-orange-700",
-    moderate: "bg-yellow-900 text-yellow-200 border-yellow-700",
-    low: "bg-green-900 text-green-200 border-green-700",
+    critical: "bg-red-100 text-red-700 border-red-200",
+    high: "bg-orange-100 text-orange-700 border-orange-200",
+    moderate: "bg-yellow-100 text-yellow-700 border-yellow-200",
+    low: "bg-green-100 text-green-700 border-green-200",
   };
   return (
     <Badge className={`${colorMap[level as keyof typeof colorMap]} border`}>
@@ -125,23 +125,23 @@ const AnimatedTable = ({
   >
     <table className="w-full text-sm">
       <thead>
-        <tr className="border-b border-slate-700 bg-slate-800">
-          <th className="text-left px-4 py-3 font-semibold text-slate-300">
+        <tr className="border-b border-border bg-muted/40">
+          <th className="text-left px-4 py-3 font-semibold text-foreground">
             Student
           </th>
-          <th className="text-left px-4 py-3 font-semibold text-slate-300">
+          <th className="text-left px-4 py-3 font-semibold text-foreground">
             Flagged
           </th>
-          <th className="text-left px-4 py-3 font-semibold text-slate-300">
+          <th className="text-left px-4 py-3 font-semibold text-foreground">
             Rate
           </th>
-          <th className="text-left px-4 py-3 font-semibold text-slate-300">
+          <th className="text-left px-4 py-3 font-semibold text-foreground">
             IPs
           </th>
-          <th className="text-left px-4 py-3 font-semibold text-slate-300">
+          <th className="text-left px-4 py-3 font-semibold text-foreground">
             Score
           </th>
-          <th className="text-left px-4 py-3 font-semibold text-slate-300">
+          <th className="text-left px-4 py-3 font-semibold text-foreground">
             Risk
           </th>
         </tr>
@@ -153,17 +153,17 @@ const AnimatedTable = ({
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: delay + idx * 0.05 }}
-            className="border-b border-slate-700 hover:bg-slate-800 transition-colors"
+            className="border-b border-border hover:bg-muted/40 transition-colors"
           >
-            <td className="px-4 py-3 text-slate-300">[#{row.studentId}]</td>
-            <td className="px-4 py-3 font-medium text-orange-400">
+            <td className="px-4 py-3 text-foreground">[#{row.studentId}]</td>
+            <td className="px-4 py-3 font-medium text-orange-600">
               {row.flaggedCount}
             </td>
-            <td className="px-4 py-3 text-slate-300">{row.flagRate}%</td>
-            <td className="px-4 py-3 text-slate-300">{row.uniqueIps}</td>
+            <td className="px-4 py-3 text-foreground">{row.flagRate}%</td>
+            <td className="px-4 py-3 text-foreground">{row.uniqueIps}</td>
             <td className="px-4 py-3">
               <motion.div
-                className="w-full bg-slate-700 rounded-full h-2 overflow-hidden max-w-20"
+                className="w-full bg-muted rounded-full h-2 overflow-hidden max-w-20"
                 initial={{ width: 0 }}
                 animate={{ width: "100%" }}
                 transition={{ delay: delay + idx * 0.05 + 0.2 }}
@@ -216,9 +216,9 @@ export default function ProxyAuditPage() {
   if (error)
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <Card className="bg-red-900 border-red-700">
+        <Card className="bg-red-50 border-red-200">
           <CardContent className="p-6">
-            <p className="text-red-200">Error loading proxy audit data</p>
+            <p className="text-red-700">Error loading proxy audit data</p>
           </CardContent>
         </Card>
       </div>
@@ -228,7 +228,7 @@ export default function ProxyAuditPage() {
   const records = auditData?.records || [];
 
   return (
-    <div className="min-h-screen bg-slate-950 p-6">
+    <div className="min-h-screen bg-background p-6">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0 }}
@@ -237,11 +237,11 @@ export default function ProxyAuditPage() {
       >
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-4xl font-bold text-white flex items-center gap-2">
+            <h1 className="text-4xl font-bold text-foreground flex items-center gap-2">
               <AlertTriangle className="w-8 h-8 text-orange-500" />
               Proxy Activity Audit
             </h1>
-            <p className="text-slate-400 mt-2">
+            <p className="text-muted-foreground mt-2">
               Real-time analysis & risk assessment
             </p>
           </div>
@@ -249,7 +249,7 @@ export default function ProxyAuditPage() {
             onClick={() => setShowFilters(!showFilters)}
             variant="outline"
             size="sm"
-            className="border-slate-600"
+            className="border-border"
           >
             {showFilters ? (
               <>
@@ -269,7 +269,7 @@ export default function ProxyAuditPage() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             transition={{ duration: 0.3 }}
-            className="bg-slate-800 p-4 rounded-lg border border-slate-700 mb-6"
+            className="bg-card p-4 rounded-lg border border-border mb-6"
           >
             <div className="grid grid-cols-4 gap-4">
               <input
@@ -279,7 +279,7 @@ export default function ProxyAuditPage() {
                 onChange={(e) =>
                   setFilters({ ...filters, courseId: e.target.value })
                 }
-                className="px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white text-sm"
+                className="px-3 py-2 bg-background border border-input rounded text-foreground text-sm"
               />
               <input
                 type="text"
@@ -288,7 +288,7 @@ export default function ProxyAuditPage() {
                 onChange={(e) =>
                   setFilters({ ...filters, studentId: e.target.value })
                 }
-                className="px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white text-sm"
+                className="px-3 py-2 bg-background border border-input rounded text-foreground text-sm"
               />
               <input
                 type="date"
@@ -296,13 +296,13 @@ export default function ProxyAuditPage() {
                 onChange={(e) =>
                   setFilters({ ...filters, from: e.target.value })
                 }
-                className="px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white text-sm"
+                className="px-3 py-2 bg-background border border-input rounded text-foreground text-sm"
               />
               <input
                 type="date"
                 value={filters.to}
                 onChange={(e) => setFilters({ ...filters, to: e.target.value })}
-                className="px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white text-sm"
+                className="px-3 py-2 bg-background border border-input rounded text-foreground text-sm"
               />
             </div>
           </motion.div>
@@ -390,13 +390,13 @@ export default function ProxyAuditPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
           >
-            <Card className="bg-slate-900 border-slate-700">
+            <Card className="bg-card border-border">
               <CardHeader>
-                <CardTitle className="text-white flex items-center gap-2">
+                <CardTitle className="text-foreground flex items-center gap-2">
                   <TrendingUp className="w-5 h-5 text-blue-500" />
                   Daily Trend Analysis
                 </CardTitle>
-                <CardDescription className="text-slate-400">
+                <CardDescription className="text-muted-foreground">
                   Last 30 days flagged events
                 </CardDescription>
               </CardHeader>
@@ -423,17 +423,17 @@ export default function ProxyAuditPage() {
                         />
                       </linearGradient>
                     </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                     <XAxis
                       dataKey="date"
-                      stroke="#94a3b8"
+                      stroke="#64748b"
                       style={{ fontSize: "12px" }}
                     />
-                    <YAxis stroke="#94a3b8" style={{ fontSize: "12px" }} />
+                    <YAxis stroke="#64748b" style={{ fontSize: "12px" }} />
                     <Tooltip
                       contentStyle={{
-                        backgroundColor: "#1e293b",
-                        border: "1px solid #475569",
+                        backgroundColor: "#ffffff",
+                        border: "1px solid #e2e8f0",
                       }}
                     />
                     <Area
@@ -458,30 +458,30 @@ export default function ProxyAuditPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
           >
-            <Card className="bg-slate-900 border-slate-700">
+            <Card className="bg-card border-border">
               <CardHeader>
-                <CardTitle className="text-white flex items-center gap-2">
+                <CardTitle className="text-foreground flex items-center gap-2">
                   <Clock className="w-5 h-5 text-purple-500" />
                   Hourly Risk Distribution
                 </CardTitle>
-                <CardDescription className="text-slate-400">
+                <CardDescription className="text-muted-foreground">
                   Flagged events by hour
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <ResponsiveContainer width="100%" height={300}>
                   <ComposedChart data={analytics.hotspotHours}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                     <XAxis
                       dataKey="hour"
-                      stroke="#94a3b8"
+                      stroke="#64748b"
                       style={{ fontSize: "12px" }}
                     />
-                    <YAxis stroke="#94a3b8" style={{ fontSize: "12px" }} />
+                    <YAxis stroke="#64748b" style={{ fontSize: "12px" }} />
                     <Tooltip
                       contentStyle={{
-                        backgroundColor: "#1e293b",
-                        border: "1px solid #475569",
+                        backgroundColor: "#ffffff",
+                        border: "1px solid #e2e8f0",
                       }}
                     />
                     <Legend />
@@ -505,26 +505,26 @@ export default function ProxyAuditPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
             >
-              <Card className="bg-slate-900 border-slate-700">
+              <Card className="bg-card border-border">
                 <CardHeader>
-                  <CardTitle className="text-white flex items-center gap-2">
+                  <CardTitle className="text-foreground flex items-center gap-2">
                     <TrendingUp className="w-5 h-5 text-indigo-500" />
                     Weekly Pattern
                   </CardTitle>
-                  <CardDescription className="text-slate-400">
+                  <CardDescription className="text-muted-foreground">
                     By day of week
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ResponsiveContainer width="100%" height={300}>
                     <ComposedChart data={analytics.dayOfWeekAnalysis}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                      <XAxis dataKey="day" stroke="#94a3b8" />
-                      <YAxis stroke="#94a3b8" />
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                      <XAxis dataKey="day" stroke="#64748b" />
+                      <YAxis stroke="#64748b" />
                       <Tooltip
                         contentStyle={{
-                          backgroundColor: "#1e293b",
-                          border: "1px solid #475569",
+                          backgroundColor: "#ffffff",
+                          border: "1px solid #e2e8f0",
                         }}
                       />
                       <Bar dataKey="flagged" fill="#6366f1" />
@@ -543,32 +543,32 @@ export default function ProxyAuditPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7 }}
           >
-            <Card className="bg-slate-900 border-slate-700">
+            <Card className="bg-card border-border">
               <CardHeader>
-                <CardTitle className="text-white flex items-center gap-2">
+                <CardTitle className="text-foreground flex items-center gap-2">
                   <Network className="w-5 h-5 text-teal-500" />
                   Top IP Addresses
                 </CardTitle>
-                <CardDescription className="text-slate-400">
+                <CardDescription className="text-muted-foreground">
                   By frequency & risk
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <ResponsiveContainer width="100%" height={300}>
                   <BarChart data={analytics.topIpAddresses.slice(0, 8)}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                     <XAxis
                       dataKey="ipAddress"
-                      stroke="#94a3b8"
+                      stroke="#64748b"
                       angle={-45}
                       textAnchor="end"
                       height={100}
                     />
-                    <YAxis stroke="#94a3b8" />
+                    <YAxis stroke="#64748b" />
                     <Tooltip
                       contentStyle={{
-                        backgroundColor: "#1e293b",
-                        border: "1px solid #475569",
+                        backgroundColor: "#ffffff",
+                        border: "1px solid #e2e8f0",
                       }}
                     />
                     <Bar dataKey="totalEvents" fill="#14b8a6" />
@@ -588,32 +588,32 @@ export default function ProxyAuditPage() {
           transition={{ delay: 0.8 }}
           className="mb-8"
         >
-          <Card className="bg-slate-900 border-slate-700">
+          <Card className="bg-card border-border">
             <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
+              <CardTitle className="text-foreground flex items-center gap-2">
                 <Network className="w-5 h-5 text-cyan-500" />
                 IP Cluster Analysis
               </CardTitle>
-              <CardDescription className="text-slate-400">
+              <CardDescription className="text-muted-foreground">
                 Multiple students on same IP
               </CardDescription>
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={analytics.sharedIpClusters.slice(0, 10)}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                   <XAxis
                     dataKey="ipAddress"
-                    stroke="#94a3b8"
+                    stroke="#64748b"
                     angle={-45}
                     textAnchor="end"
                     height={80}
                   />
-                  <YAxis stroke="#94a3b8" />
+                  <YAxis stroke="#64748b" />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: "#1e293b",
-                      border: "1px solid #475569",
+                      backgroundColor: "#ffffff",
+                      border: "1px solid #e2e8f0",
                     }}
                   />
                   <Bar dataKey="uniqueStudents" fill="#06b6d4" />
@@ -633,13 +633,13 @@ export default function ProxyAuditPage() {
             transition={{ delay: 0.9 }}
             className="mb-8"
           >
-            <Card className="bg-slate-900 border-slate-700">
+            <Card className="bg-card border-border">
               <CardHeader>
-                <CardTitle className="text-white flex items-center gap-2">
+                <CardTitle className="text-foreground flex items-center gap-2">
                   <Smartphone className="w-5 h-5 text-green-500" />
                   Device Risk Profile
                 </CardTitle>
-                <CardDescription className="text-slate-400">
+                <CardDescription className="text-muted-foreground">
                   Risk by device type
                 </CardDescription>
               </CardHeader>
@@ -649,18 +649,18 @@ export default function ProxyAuditPage() {
                     data={analytics.deviceRiskAnalysis}
                     layout="vertical"
                   >
-                    <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                    <XAxis type="number" stroke="#94a3b8" />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                    <XAxis type="number" stroke="#64748b" />
                     <YAxis
                       dataKey="device"
                       type="category"
-                      stroke="#94a3b8"
+                      stroke="#64748b"
                       width={120}
                     />
                     <Tooltip
                       contentStyle={{
-                        backgroundColor: "#1e293b",
-                        border: "1px solid #475569",
+                        backgroundColor: "#ffffff",
+                        border: "1px solid #e2e8f0",
                       }}
                     />
                     <Bar dataKey="riskPercentage" fill="#8b5cf6" />
@@ -680,13 +680,13 @@ export default function ProxyAuditPage() {
             transition={{ delay: 1.0 }}
             className="mb-8"
           >
-            <Card className="bg-slate-900 border-slate-700">
+            <Card className="bg-card border-border">
               <CardHeader>
-                <CardTitle className="text-white flex items-center gap-2">
+                <CardTitle className="text-foreground flex items-center gap-2">
                   <Users className="w-5 h-5 text-pink-500" />
                   High-Risk Students
                 </CardTitle>
-                <CardDescription className="text-slate-400">
+                <CardDescription className="text-muted-foreground">
                   Top 10 by anomaly score
                 </CardDescription>
               </CardHeader>
@@ -708,13 +708,13 @@ export default function ProxyAuditPage() {
           transition={{ delay: 1.1 }}
           className="mb-8"
         >
-          <Card className="bg-slate-900 border-slate-700">
+          <Card className="bg-card border-border">
             <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
+              <CardTitle className="text-foreground flex items-center gap-2">
                 <Activity className="w-5 h-5 text-red-500" />
                 Peak Risk Hours
               </CardTitle>
-              <CardDescription className="text-slate-400">
+              <CardDescription className="text-muted-foreground">
                 Highest risk time windows
               </CardDescription>
             </CardHeader>
@@ -726,12 +726,12 @@ export default function ProxyAuditPage() {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 1.1 + idx * 0.1 }}
-                    className="flex items-center gap-4 p-3 bg-slate-800 rounded-lg border border-slate-700"
+                    className="flex items-center gap-4 p-3 bg-muted/40 rounded-lg border border-border"
                   >
-                    <span className="font-bold text-white w-12">
+                    <span className="font-bold text-foreground w-12">
                       {hour.hour}:00
                     </span>
-                    <div className="flex-1 h-3 bg-slate-700 rounded-full overflow-hidden">
+                    <div className="flex-1 h-3 bg-muted rounded-full overflow-hidden">
                       <motion.div
                         className="h-full bg-gradient-to-r from-red-500 to-pink-600"
                         initial={{ width: 0 }}
@@ -761,13 +761,13 @@ export default function ProxyAuditPage() {
           transition={{ delay: 1.2 }}
           className="mb-8"
         >
-          <Card className="bg-slate-900 border-slate-700">
+          <Card className="bg-card border-border">
             <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
+              <CardTitle className="text-foreground flex items-center gap-2">
                 <Users className="w-5 h-5 text-lime-500" />
                 Student Pairs Linked
               </CardTitle>
-              <CardDescription className="text-slate-400">
+              <CardDescription className="text-muted-foreground">
                 Frequently sharing same IP
               </CardDescription>
             </CardHeader>
@@ -781,12 +781,12 @@ export default function ProxyAuditPage() {
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 1.2 + idx * 0.03 }}
-                      className="flex items-center justify-between p-2 bg-slate-800 rounded border border-slate-700 text-sm"
+                      className="flex items-center justify-between p-2 bg-muted/40 rounded border border-border text-sm"
                     >
-                      <span className="text-slate-300">
+                      <span className="text-foreground">
                         Student {pair.studentA} ↔ {pair.studentB}
                       </span>
-                      <Badge className="bg-red-900 text-red-200 text-xs">
+                      <Badge className="bg-red-100 text-red-700 border border-red-200 text-xs">
                         {pair.occurrences}x
                       </Badge>
                     </motion.div>
@@ -805,18 +805,18 @@ export default function ProxyAuditPage() {
           transition={{ delay: 1.3 }}
           className="mb-8"
         >
-          <Card className="bg-slate-900 border-slate-700">
+          <Card className="bg-card border-border">
             <CardHeader>
-              <CardTitle className="text-white flex items-center justify-between">
+              <CardTitle className="text-foreground flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <AlertTriangle className="w-5 h-5 text-orange-500" />
                   Flagged Records
                 </div>
-                <span className="text-sm font-normal text-slate-400">
+                <span className="text-sm font-normal text-muted-foreground">
                   {records.length} total
                 </span>
               </CardTitle>
-              <CardDescription className="text-slate-400">
+              <CardDescription className="text-muted-foreground">
                 Recent proxy-flagged events
               </CardDescription>
             </CardHeader>
@@ -824,20 +824,20 @@ export default function ProxyAuditPage() {
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-slate-700 bg-slate-800">
-                      <th className="text-left px-4 py-2 font-semibold text-slate-300">
+                    <tr className="border-b border-border bg-muted/40">
+                      <th className="text-left px-4 py-2 font-semibold text-foreground">
                         Student
                       </th>
-                      <th className="text-left px-4 py-2 font-semibold text-slate-300">
+                      <th className="text-left px-4 py-2 font-semibold text-foreground">
                         Course
                       </th>
-                      <th className="text-left px-4 py-2 font-semibold text-slate-300">
+                      <th className="text-left px-4 py-2 font-semibold text-foreground">
                         Time
                       </th>
-                      <th className="text-left px-4 py-2 font-semibold text-slate-300">
+                      <th className="text-left px-4 py-2 font-semibold text-foreground">
                         Risk
                       </th>
-                      <th className="text-left px-4 py-2 font-semibold text-slate-300">
+                      <th className="text-left px-4 py-2 font-semibold text-foreground">
                         Score
                       </th>
                     </tr>
@@ -849,16 +849,16 @@ export default function ProxyAuditPage() {
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 1.3 + idx * 0.03 }}
-                        className="border-b border-slate-700 hover:bg-slate-800"
+                        className="border-b border-border hover:bg-muted/40"
                       >
-                        <td className="px-4 py-2 text-slate-300">
+                        <td className="px-4 py-2 text-foreground">
                           {record.student?.studentProfile?.fullName ||
                             record.student?.username}
                         </td>
-                        <td className="px-4 py-2 text-slate-400">
+                        <td className="px-4 py-2 text-muted-foreground">
                           {record.session?.course?.code}
                         </td>
-                        <td className="px-4 py-2 text-slate-400 text-xs">
+                        <td className="px-4 py-2 text-muted-foreground text-xs">
                           {new Date(record.timestamp).toLocaleString()}
                         </td>
                         <td className="px-4 py-2">
@@ -866,7 +866,7 @@ export default function ProxyAuditPage() {
                         </td>
                         <td className="px-4 py-2">
                           <div className="flex items-center gap-2">
-                            <div className="w-16 h-2 bg-slate-700 rounded-full overflow-hidden">
+                            <div className="w-16 h-2 bg-muted rounded-full overflow-hidden">
                               <motion.div
                                 className="h-full bg-gradient-to-r from-yellow-500 to-red-500"
                                 initial={{ width: 0 }}
@@ -897,7 +897,7 @@ export default function ProxyAuditPage() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.5 }}
-        className="mt-8 text-center text-slate-500 text-xs"
+        className="mt-8 text-center text-muted-foreground text-xs"
       >
         Last updated:{" "}
         {analytics.generatedAt

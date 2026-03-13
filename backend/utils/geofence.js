@@ -6,6 +6,7 @@ const DEFAULT_GPS_TOLERANCE_METERS = 20;
 const MAX_GPS_TOLERANCE_METERS = 75;
 const DEFAULT_MAX_ACCEPTABLE_ACCURACY_METERS = 250;
 const MAX_MAX_ACCEPTABLE_ACCURACY_METERS = 400;
+const MAX_LOCATION_AGE_MS = 15000;
 
 function toFiniteNumber(value) {
   if (value === null || value === undefined || value === "") {
@@ -104,13 +105,79 @@ function resolveMaxAcceptableAccuracyMeters() {
   );
 }
 
-function validateStudentGeofence(session, lat, lng, accuracyMetersInput) {
+function resolveLocationAgeMs(capturedAtInput) {
+  if (
+    capturedAtInput === null ||
+    capturedAtInput === undefined ||
+    capturedAtInput === ""
+  ) {
+    return null;
+  }
+
+  const capturedAt =
+    capturedAtInput instanceof Date
+      ? capturedAtInput
+      : new Date(capturedAtInput);
+
+  if (!Number.isFinite(capturedAt.getTime())) {
+    return null;
+  }
+
+  const ageMs = Date.now() - capturedAt.getTime();
+  if (!Number.isFinite(ageMs) || ageMs < 0) {
+    return 0;
+  }
+
+  return Math.round(ageMs);
+}
+
+function resolveRetryBandMeters(accuracyMetersInput) {
+  const parsedAccuracy = toFiniteNumber(accuracyMetersInput);
+  if (parsedAccuracy === null || parsedAccuracy <= 0) {
+    return 10;
+  }
+
+  return Math.min(60, Math.max(10, Math.round(parsedAccuracy * 0.5)));
+}
+
+function validateStudentGeofence(
+  session,
+  lat,
+  lng,
+  accuracyMetersInput,
+  options = {},
+) {
+  const { capturedAt } = options;
   const studentLocation = {
     latitude: normalizeLatitude(lat),
     longitude: normalizeLongitude(lng),
   };
 
   const reportedAccuracyMeters = toFiniteNumber(accuracyMetersInput);
+  const locationAgeMs = resolveLocationAgeMs(capturedAt);
+
+  if (locationAgeMs === null) {
+    const error = new Error(
+      "Location sample timestamp is missing or invalid. Refresh location and try again.",
+    );
+    error.statusCode = 400;
+    error.locationAgeMs = null;
+    error.maxLocationAgeMs = MAX_LOCATION_AGE_MS;
+    error.decisionReason = "stale_location_timestamp_missing";
+    throw error;
+  }
+
+  if (locationAgeMs > MAX_LOCATION_AGE_MS) {
+    const error = new Error(
+      "Location sample is stale. Keep the device steady and retry.",
+    );
+    error.statusCode = 400;
+    error.locationAgeMs = locationAgeMs;
+    error.maxLocationAgeMs = MAX_LOCATION_AGE_MS;
+    error.decisionReason = "stale_location_sample";
+    throw error;
+  }
+
   const maxAcceptableAccuracyMeters = resolveMaxAcceptableAccuracyMeters();
   if (
     reportedAccuracyMeters !== null &&
@@ -122,6 +189,9 @@ function validateStudentGeofence(session, lat, lng, accuracyMetersInput) {
     error.statusCode = 400;
     error.reportedAccuracyMeters = Math.round(reportedAccuracyMeters);
     error.maxAcceptableAccuracyMeters = maxAcceptableAccuracyMeters;
+    error.locationAgeMs = locationAgeMs;
+    error.maxLocationAgeMs = MAX_LOCATION_AGE_MS;
+    error.decisionReason = "gps_accuracy_too_low";
     throw error;
   }
 
@@ -153,8 +223,26 @@ function validateStudentGeofence(session, lat, lng, accuracyMetersInput) {
     reportedAccuracyMeters,
   );
   const distanceMeters = Math.max(0, rawDistanceMeters - toleranceMeters);
+  const retryBandMeters = resolveRetryBandMeters(reportedAccuracyMeters);
 
   if (distanceMeters > radiusMeters) {
+    if (rawDistanceMeters <= radiusMeters + retryBandMeters) {
+      const error = new Error(
+        "Location is borderline due to GPS uncertainty. Hold still for a few seconds and retry.",
+      );
+      error.statusCode = 409;
+      error.distanceMeters = distanceMeters;
+      error.rawDistanceMeters = rawDistanceMeters;
+      error.toleranceMeters = toleranceMeters;
+      error.retryBandMeters = retryBandMeters;
+      error.reportedAccuracyMeters = reportedAccuracyMeters;
+      error.radiusMeters = radiusMeters;
+      error.locationAgeMs = locationAgeMs;
+      error.maxLocationAgeMs = MAX_LOCATION_AGE_MS;
+      error.decisionReason = "borderline_retry";
+      throw error;
+    }
+
     const error = new Error(
       `You are ${distanceMeters}m away from the faculty location. Move within ${radiusMeters}m to mark attendance.`,
     );
@@ -162,16 +250,25 @@ function validateStudentGeofence(session, lat, lng, accuracyMetersInput) {
     error.distanceMeters = distanceMeters;
     error.rawDistanceMeters = rawDistanceMeters;
     error.toleranceMeters = toleranceMeters;
+    error.retryBandMeters = retryBandMeters;
     error.reportedAccuracyMeters = reportedAccuracyMeters;
     error.radiusMeters = radiusMeters;
+    error.locationAgeMs = locationAgeMs;
+    error.maxLocationAgeMs = MAX_LOCATION_AGE_MS;
+    error.decisionReason = "outside_geofence";
     throw error;
   }
 
   return {
+    decisionReason: "accepted",
     distanceMeters,
     rawDistanceMeters,
     toleranceMeters,
+    retryBandMeters,
     radiusMeters,
+    reportedAccuracyMeters,
+    locationAgeMs,
+    maxLocationAgeMs: MAX_LOCATION_AGE_MS,
     studentLocation,
     referenceLocation,
   };
@@ -181,6 +278,7 @@ module.exports = {
   DEFAULT_RADIUS_METERS,
   MAX_RADIUS_METERS,
   MIN_RADIUS_METERS,
+  MAX_LOCATION_AGE_MS,
   haversineDistanceMeters,
   resolveRadiusMeters,
   resolveReferenceLocation,

@@ -66,13 +66,21 @@ const errorHandler = (error, req, res, next) => {
 
   // Send response
   const debug = {};
-  if (error.distanceMeters !== undefined) {
+  if (
+    error.distanceMeters !== undefined ||
+    error.decisionReason !== undefined ||
+    error.locationAgeMs !== undefined
+  ) {
     debug.geofence = {
       distanceMeters: error.distanceMeters,
       rawDistanceMeters: error.rawDistanceMeters,
       toleranceMeters: error.toleranceMeters,
+      retryBandMeters: error.retryBandMeters,
       radiusMeters: error.radiusMeters,
       reportedAccuracyMeters: error.reportedAccuracyMeters,
+      locationAgeMs: error.locationAgeMs,
+      maxLocationAgeMs: error.maxLocationAgeMs,
+      decisionReason: error.decisionReason,
     };
   }
 

@@ -17,7 +17,7 @@ import {
   getGeolocationPermissionState,
   getLocationErrorMessage,
   isGeolocationAvailable,
-  requestCurrentPosition,
+  requestStabilizedPositionWithRetry,
 } from "@/lib/location";
 
 type GeofenceDebug = {
@@ -134,13 +134,7 @@ export default function VerifyAttendance() {
     setErrorMessage("");
     setGeofenceDebug(null);
 
-    const attemptVerification = (highAccuracy: boolean) => {
-      const geoOptions = {
-        enableHighAccuracy: highAccuracy,
-        timeout: 25000,
-        maximumAge: 5000,
-      };
-
+    const attemptVerification = () => {
       getGeolocationPermissionState()
         .then((permissionState) => {
           if (permissionState === "denied") {
@@ -149,10 +143,13 @@ export default function VerifyAttendance() {
             );
           }
 
-          return requestCurrentPosition(geoOptions);
+          return requestStabilizedPositionWithRetry({
+            timeout: 25000,
+            desiredAccuracyMeters: 40,
+          });
         })
-        .then((position) => {
-          const { latitude, longitude, accuracy } = position.coords;
+        .then((location) => {
+          const { latitude, longitude, accuracy } = location;
           console.log(
             `Presence confirmed at: ${latitude}, ${longitude} (±${accuracy}m)`,
           );
@@ -165,21 +162,12 @@ export default function VerifyAttendance() {
           });
         })
         .catch((error: unknown) => {
-          const geolocationError = error as { code?: number };
-          if (highAccuracy && geolocationError.code === 3) {
-            console.warn(
-              "High accuracy timeout, retrying with standard accuracy...",
-            );
-            attemptVerification(false);
-            return;
-          }
-
           setStatus("error");
           setErrorMessage(getLocationErrorMessage(error));
         });
     };
 
-    attemptVerification(true);
+    attemptVerification();
   }, [token, verifyMutation]);
 
   const handleRetry = () => {

@@ -18,7 +18,7 @@ import { subjectsAPI, sessionsAPI } from "@/lib/api";
 import {
   getGeolocationPermissionState,
   getLocationErrorMessage,
-  requestCurrentPosition,
+  requestStabilizedPositionWithRetry,
 } from "@/lib/location";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
@@ -98,15 +98,15 @@ export default function CreateSession() {
           );
         }
 
-        return requestCurrentPosition({
-          enableHighAccuracy: true,
-          timeout: 15000,
-          maximumAge: 0,
+        return requestStabilizedPositionWithRetry({
+          timeout: 20000,
+          desiredAccuracyMeters: 60,
+          maxRetries: 3,
         });
       })
-      .then((position) => {
-        const facultyAccuracy = position.coords.accuracy;
-        if (Number.isFinite(facultyAccuracy) && facultyAccuracy > 35) {
+      .then((location) => {
+        const facultyAccuracy = location.accuracy;
+        if (Number.isFinite(facultyAccuracy) && facultyAccuracy > 80) {
           setLocating(false);
           toast.error(
             `GPS accuracy is too low (±${Math.round(facultyAccuracy)}m). Move to an open area and try again.`,
@@ -125,8 +125,8 @@ export default function CreateSession() {
           startTime,
           endTime,
           geofenceRadius: normalizedRadius,
-          facultyLat: position.coords.latitude,
-          facultyLng: position.coords.longitude,
+          facultyLat: location.latitude,
+          facultyLng: location.longitude,
         });
       })
       .catch((error) => {
