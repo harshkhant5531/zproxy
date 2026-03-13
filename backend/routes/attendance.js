@@ -895,27 +895,50 @@ router.post(
       }
 
       if (clientIp && req.user.role === "student") {
-        const sameIpRecord = await prisma.attendance.findFirst({
+        const sameIpRecords = await prisma.attendance.findMany({
           where: {
             sessionId,
             studentId: { not: studentId },
             ipAddress: clientIp,
           },
-          select: { id: true, studentId: true, notes: true },
+          select: { id: true, studentId: true, notes: true, deviceInfo: true },
         });
 
-        if (sameIpRecord) {
-          finalStatus = "absent";
-          finalNotes = `[PROXY_SUSPECT:sharedWith:${sameIpRecord.studentId}]${notes ? " " + notes : ""}`;
+        if (sameIpRecords.length > 0) {
+          // Check for strong proxy signal: same device identifier
+          const deviceInfo = req.body.deviceInfo || "";
+          const sameDeviceRecord = deviceInfo
+            ? sameIpRecords.find((r) => r.deviceInfo && r.deviceInfo === deviceInfo)
+            : null;
 
-          // Retroactively penalize previous record
-          await prisma.attendance.update({
-            where: { id: sameIpRecord.id },
-            data: {
-              status: "absent",
-              notes: `[PROXY_SUSPECT:sharedWith:${studentId}]${sameIpRecord.notes ? " " + sameIpRecord.notes : ""}`,
-            },
-          });
+          if (sameDeviceRecord) {
+            // Same IP + same device = strong proxy signal
+            finalStatus = "absent";
+            finalNotes = appendNotes(
+              finalNotes,
+              [`[PROXY_DETECTED:sharedWith:${sameDeviceRecord.studentId}:SAME_DEVICE]`],
+            );
+
+            // Retroactively flag the earlier record too
+            const prevNotes = sameDeviceRecord.notes || "";
+            if (!prevNotes.includes("[PROXY_")) {
+              await prisma.attendance.update({
+                where: { id: sameDeviceRecord.id },
+                data: {
+                  status: "absent",
+                  notes: appendNotes(prevNotes, [
+                    `[PROXY_DETECTED:sharedWith:${studentId}:SAME_DEVICE]`,
+                  ]),
+                },
+              });
+            }
+          } else {
+            // Same IP but different device — likely campus WiFi (shared NAT)
+            // Add informational tag but do NOT change status
+            finalNotes = appendNotes(finalNotes, [
+              `[IP_SHARED:count=${sameIpRecords.length}]`,
+            ]);
+          }
         }
       }
 
@@ -1272,26 +1295,49 @@ router.post(
       qrNotes = appendNotes(qrNotes, geoRiskTags);
 
       if (clientIp) {
-        const sameIpRecord = await prisma.attendance.findFirst({
+        const sameIpRecords = await prisma.attendance.findMany({
           where: {
             sessionId: qrCodeData.sessionId,
             studentId: { not: req.user.id },
             ipAddress: clientIp,
           },
+          select: { id: true, studentId: true, notes: true, deviceInfo: true },
         });
 
-        if (sameIpRecord) {
-          // PROXY DETECTED: Mark both as ABSENT
-          status = "absent";
-          qrNotes = `[PROXY_DETECTED:sharedWith:${sameIpRecord.studentId}] Duplicate IP authentication attempt.`;
+        if (sameIpRecords.length > 0) {
+          // Check for strong proxy signal: same device identifier
+          const deviceInfo = req.body.deviceInfo || "";
+          const sameDeviceRecord = deviceInfo
+            ? sameIpRecords.find((r) => r.deviceInfo && r.deviceInfo === deviceInfo)
+            : null;
 
-          await prisma.attendance.update({
-            where: { id: sameIpRecord.id },
-            data: {
-              status: "absent",
-              notes: `[PROXY_DETECTED:sharedWith:${req.user.id}]${sameIpRecord.notes ? " " + sameIpRecord.notes : ""}`,
-            },
-          });
+          if (sameDeviceRecord) {
+            // Same IP + same device = strong proxy signal
+            status = "absent";
+            qrNotes = appendNotes(qrNotes, [
+              `[PROXY_DETECTED:sharedWith:${sameDeviceRecord.studentId}:SAME_DEVICE]`,
+            ]);
+
+            // Retroactively flag the earlier record too
+            const prevNotes = sameDeviceRecord.notes || "";
+            if (!prevNotes.includes("[PROXY_")) {
+              await prisma.attendance.update({
+                where: { id: sameDeviceRecord.id },
+                data: {
+                  status: "absent",
+                  notes: appendNotes(prevNotes, [
+                    `[PROXY_DETECTED:sharedWith:${req.user.id}:SAME_DEVICE]`,
+                  ]),
+                },
+              });
+            }
+          } else {
+            // Same IP but different device — likely campus WiFi (shared NAT)
+            // Add informational tag but do NOT change status
+            qrNotes = appendNotes(qrNotes, [
+              `[IP_SHARED:count=${sameIpRecords.length}]`,
+            ]);
+          }
         }
       }
 

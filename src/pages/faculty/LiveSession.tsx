@@ -187,7 +187,7 @@ export default function LiveSession() {
   );
   const parseProxyFlag = (notes: string | null): number | null => {
     if (!notes) return null;
-    const m = notes.match(/\[PROXY_(?:SUSPECT|DETECTED):sharedWith:(\d+)\]/);
+    const m = notes.match(/\[PROXY_(?:SUSPECT|DETECTED):sharedWith:(\d+)[^\]]*\]/);
     return m ? parseInt(m[1]) : null;
   };
 
