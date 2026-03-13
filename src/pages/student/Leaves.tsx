@@ -109,7 +109,7 @@ export default function LeaveManagement() {
         </div>
 
         {showForm && (
-          <Card className="bg-card/80 border-primary/30 border backdrop-blur-md shadow-2xl animate-in fade-in slide-in-from-top-4 duration-300">
+          <Card className="bg-card border-primary/20 border shadow-md motion-slide-up">
             <CardHeader className="pb-3 px-6">
               <CardTitle className="text-sm font-bold text-primary uppercase tracking-widest">
                 Request Authorization
@@ -122,7 +122,7 @@ export default function LeaveManagement() {
                     Classification
                   </label>
                   <Select value={leaveType} onValueChange={setLeaveType}>
-                    <SelectTrigger className="bg-background/80 border-border/70 text-foreground">
+                    <SelectTrigger className="bg-background border-border text-foreground">
                       <SelectValue placeholder="Select type" />
                     </SelectTrigger>
                     <SelectContent className="bg-popover border-border text-popover-foreground">
@@ -163,7 +163,7 @@ export default function LeaveManagement() {
                   <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">
                     Evidence Payload
                   </label>
-                  <div className="border border-dashed border-border/70 rounded-lg p-3 text-center cursor-pointer hover:bg-muted/50 transition-colors group">
+                  <div className="border border-dashed border-border rounded-lg p-3 text-center cursor-pointer hover:bg-muted/50 transition-colors group">
                     <Upload className="h-4 w-4 mx-auto mb-1 text-muted-foreground group-hover:text-primary transition-colors" />
                     <p className="text-[10px] font-bold text-muted-foreground group-hover:text-foreground">
                       UPLOAD DOCS (PDF/JPEG)
@@ -177,7 +177,7 @@ export default function LeaveManagement() {
                 </label>
                 <Textarea
                   placeholder="Briefly explain the reason for your leave request..."
-                  className="resize-none bg-background/80 border-border/70 text-foreground placeholder:text-muted-foreground/80"
+                  className="resize-none bg-background border-border text-foreground placeholder:text-muted-foreground/80"
                   rows={3}
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
@@ -200,43 +200,44 @@ export default function LeaveManagement() {
           </Card>
         )}
 
-        <Card className="bg-card/75 border-border/60 backdrop-blur-sm overflow-hidden shadow-xl">
+        <Card className="bg-card border-border overflow-hidden shadow-sm motion-slide-up">
           <CardHeader className="pb-3 px-6">
             <CardTitle className="text-sm font-bold text-foreground/90 flex items-center gap-2 uppercase tracking-widest">
               <FileText className="h-4 w-4 text-primary" /> Historical Ledger
             </CardTitle>
           </CardHeader>
           <CardContent className="p-0">
-            <Table>
-              <TableHeader className="bg-muted/35 dark:bg-muted/20">
-                <TableRow className="border-border/60 hover:bg-transparent">
-                  <TableHead className="text-muted-foreground font-mono text-[10px] uppercase tracking-wider h-11">
+            <Table className="motion-table-stagger">
+              <TableHeader className="bg-muted/40">
+                <TableRow className="border-border hover:bg-transparent">
+                  <TableHead className="text-muted-foreground font-bold text-[10px] uppercase tracking-widest h-11">
                     Class
                   </TableHead>
-                  <TableHead className="text-muted-foreground font-mono text-[10px] uppercase tracking-wider h-11">
+                  <TableHead className="text-muted-foreground font-bold text-[10px] uppercase tracking-widest h-11">
                     Duration
                   </TableHead>
-                  <TableHead className="text-muted-foreground font-mono text-[10px] uppercase tracking-wider h-11">
+                  <TableHead className="text-muted-foreground font-bold text-[10px] uppercase tracking-widest h-11">
                     Rationale
                   </TableHead>
-                  <TableHead className="text-muted-foreground font-mono text-[10px] uppercase tracking-wider h-11">
+                  <TableHead className="text-muted-foreground font-bold text-[10px] uppercase tracking-widest h-11">
                     Approver
                   </TableHead>
-                  <TableHead className="text-muted-foreground font-mono text-[10px] uppercase tracking-wider h-11 text-right pr-6">
+                  <TableHead className="text-muted-foreground font-bold text-[10px] uppercase tracking-widest h-11 text-right pr-6">
                     Status
                   </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {studentLeaves.map((leave: any) => (
+                {studentLeaves.map((leave: any, idx: number) => (
                   <TableRow
                     key={leave.id}
-                    className="border-border/55 hover:bg-accent/45 transition-colors group"
+                    className="border-border hover:bg-muted/30 transition-colors group"
+                    style={{ "--row-index": idx } as any}
                   >
-                    <TableCell className="font-bold text-sm text-foreground uppercase tracking-tighter">
+                    <TableCell className="font-bold text-sm text-foreground uppercase tracking-tight">
                       {leave.leaveType}
                     </TableCell>
-                    <TableCell className="text-[10px] text-muted-foreground font-mono">
+                    <TableCell className="text-[10px] text-muted-foreground font-medium">
                       {format(new Date(leave.startDate), "MMM dd")} —{" "}
                       {format(new Date(leave.endDate), "MMM dd")}
                     </TableCell>
@@ -245,7 +246,7 @@ export default function LeaveManagement() {
                     </TableCell>
                     <TableCell className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">
                       {leave.approver?.facultyProfile?.fullName ||
-                        "PENDING SYSTEM"}
+                        "PENDING"}
                     </TableCell>
                     <TableCell className="text-right pr-6">
                       <StatusBadge status={leave.status} />
@@ -256,7 +257,7 @@ export default function LeaveManagement() {
                   <TableRow>
                     <TableCell
                       colSpan={5}
-                      className="h-32 text-center text-muted-foreground italic font-mono uppercase tracking-widest text-[10px]"
+                      className="h-32 text-center text-muted-foreground font-bold uppercase tracking-widest text-[10px]"
                     >
                       No leave requests found
                     </TableCell>

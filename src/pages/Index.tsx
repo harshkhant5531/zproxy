@@ -165,43 +165,31 @@ const Index = () => {
       />
 
       <div className="flex min-h-screen relative overflow-hidden bg-background text-foreground">
-        {/* Background grid + orbs */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div
-            className="absolute inset-0 opacity-[0.03]"
-            style={{
-              backgroundImage:
-                "linear-gradient(hsl(var(--primary)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary)) 1px, transparent 1px)",
-              backgroundSize: "40px 40px",
-            }}
-          />
-          <div className="absolute top-[-15%] left-[-5%] w-[45%] h-[45%] bg-primary/10 rounded-full blur-[140px]" />
-          <div className="absolute bottom-[-10%] right-[-5%] w-[40%] h-[40%] bg-primary/8 rounded-full blur-[120px]" />
-          <div className="absolute top-[40%] left-[30%] w-[25%] h-[25%] bg-primary/5 rounded-full blur-[100px]" />
-        </div>
+        {/* Subtle top accent line */}
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
 
         {/* Left Section - Hero */}
         <div className="hidden lg:flex flex-1 flex-col justify-center px-16 z-10 relative">
           <div className="max-w-lg">
-            <div className="flex items-center gap-3 mb-10 animate-in fade-in slide-in-from-left-4 duration-700">
-              <div className="p-2.5 bg-primary/10 rounded-xl border border-primary/20 animate-aura-pulse">
+            <div className="flex items-center gap-3 mb-10 motion-slide-left" style={{ animationDelay: '0ms' }}>
+              <div className="p-2.5 bg-primary/10 rounded-xl border border-primary/20 motion-breathe">
                 <ShieldCheck className="w-7 h-7 text-primary" />
               </div>
-              <span className="text-xl font-black tracking-tighter text-foreground uppercase">
+              <span className="text-xl font-bold tracking-tight text-foreground">
                 Aura Integrity
               </span>
             </div>
-            <h1 className="text-5xl font-bold tracking-tight text-foreground mb-6 leading-[1.1] animate-in fade-in slide-in-from-left-4 duration-700 delay-100">
+            <h1 className="text-5xl font-bold tracking-tight text-foreground mb-6 leading-[1.1] motion-slide-left" style={{ animationDelay: '80ms' }}>
               Attendance Management
               <br />
               Platform
             </h1>
-            <p className="text-base text-muted-foreground mb-10 leading-relaxed animate-in fade-in slide-in-from-left-4 duration-700 delay-200">
+            <p className="text-base text-muted-foreground mb-10 leading-relaxed motion-slide-left" style={{ animationDelay: '160ms' }}>
               Secure, transparent, and seamless attendance management. Monitor
               academic integrity with real-time analytics and verified proof of
               presence.
             </p>
-            <div className="grid grid-cols-3 gap-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
+            <div className="grid grid-cols-3 gap-4 motion-stagger">
               {[
                 { label: "Real-time", sub: "Live tracking", icon: Zap },
                 { label: "Secure", sub: "End-to-end", icon: Shield },
@@ -209,13 +197,13 @@ const Index = () => {
               ].map((item) => (
                 <div
                   key={item.label}
-                  className="rounded-xl border border-border/50 bg-card/40 backdrop-blur-sm p-4 group hover:border-primary/30 hover:bg-card/60 transition-all duration-200"
+                  className="rounded-xl border border-border bg-card p-4 group motion-surface"
                 >
                   <item.icon className="h-4 w-4 text-primary mb-2 group-hover:scale-110 transition-transform" />
-                  <p className="text-sm font-black text-foreground uppercase tracking-tight">
+                  <p className="text-sm font-semibold text-foreground">
                     {item.label}
                   </p>
-                  <p className="text-[11px] text-muted-foreground mt-0.5">
+                  <p className="text-xs text-muted-foreground mt-0.5">
                     {item.sub}
                   </p>
                 </div>
@@ -226,14 +214,14 @@ const Index = () => {
 
         {/* Right Section - Login Form */}
         <div className="flex-1 flex items-center justify-center p-6 z-10 relative">
-          <Card className="w-full max-w-md bg-card/80 backdrop-blur-xl border border-border/60 shadow-2xl animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <Card className="w-full max-w-md bg-card border border-border shadow-lg motion-fade-scale" style={{ animationDelay: '200ms' }}>
             <CardHeader className="space-y-3 pb-4">
               <div className="flex justify-center mb-2 lg:hidden">
-                <div className="p-3 bg-primary/10 rounded-2xl border border-primary/20 animate-aura-pulse">
+                <div className="p-3 bg-primary/10 rounded-2xl border border-primary/20 motion-breathe">
                   <ShieldCheck className="w-10 h-10 text-primary" />
                 </div>
               </div>
-              <CardTitle className="text-2xl font-black text-center tracking-tighter uppercase">
+              <CardTitle className="text-2xl font-bold text-center tracking-tight">
                 Sign In
               </CardTitle>
               <div className="flex justify-center items-center gap-2">
@@ -267,7 +255,7 @@ const Index = () => {
                 <div className="grid gap-2">
                   <Label
                     htmlFor="email"
-                    className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground"
+                    className="text-xs font-medium text-muted-foreground"
                   >
                     Email
                   </Label>
@@ -288,7 +276,7 @@ const Index = () => {
                   <div className="flex items-center justify-between">
                     <Label
                       htmlFor="password"
-                      className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground"
+                      className="text-xs font-medium text-muted-foreground"
                     >
                       Password
                     </Label>
@@ -315,7 +303,7 @@ const Index = () => {
               <CardFooter className="flex flex-col gap-4 pt-2">
                 <Button
                   type="submit"
-                  className="w-full font-black h-12 rounded-xl uppercase tracking-[0.15em] text-sm shadow-lg shadow-primary/25 hover:shadow-primary/40 hover:shadow-xl transition-all"
+                  className="w-full font-semibold h-11 rounded-xl text-sm shadow-sm hover:shadow-md transition-shadow motion-press"
                   disabled={isSubmitting}
                 >
                   <ArrowRight className="mr-2 h-4 w-4" /> Sign In

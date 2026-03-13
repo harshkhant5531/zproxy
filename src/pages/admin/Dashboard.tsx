@@ -123,7 +123,7 @@ export default function AdminDashboard() {
               title="Total Students"
               value={studentsData?.length.toString() || "0"}
               icon={Users}
-              className="glass-card aura-glow border-none"
+              className="bg-card border border-border shadow-sm motion-surface"
             />
           </div>
           <div
@@ -134,7 +134,7 @@ export default function AdminDashboard() {
               title="Staff Faculty"
               value={facultyData?.length.toString() || "0"}
               icon={ShieldAlert}
-              className="glass-card aura-glow border-none"
+              className="bg-card border border-border shadow-sm motion-surface"
             />
           </div>
           <div
@@ -146,7 +146,7 @@ export default function AdminDashboard() {
               value={coursesData?.length.toString() || "0"}
               subtitle={`${deptData?.length || 0} SECTORS`}
               icon={BookOpen}
-              className="glass-card aura-glow border-none"
+              className="bg-card border border-border shadow-sm motion-surface"
             />
           </div>
           <div
@@ -157,13 +157,13 @@ export default function AdminDashboard() {
               title="Avg Attendance"
               value={`${avgAttendance}%`}
               icon={TrendingUp}
-              className="glass-card aura-glow border-none"
+              className="bg-card border border-border shadow-sm motion-surface"
             />
           </div>
         </div>
 
         <div className="grid gap-8 lg:grid-cols-2">
-          <Card className="glass-card aura-glow border-none overflow-hidden group">
+          <Card className="bg-card border border-border shadow-sm motion-surface overflow-hidden group">
             <CardHeader className="card-header-muted px-6 py-4">
               <CardTitle className="text-sm font-semibold text-foreground">
                 Department Attendance
@@ -212,7 +212,7 @@ export default function AdminDashboard() {
             </CardContent>
           </Card>
 
-          <Card className="glass-card aura-glow border-none overflow-hidden group">
+          <Card className="bg-card border border-border shadow-sm motion-surface overflow-hidden group">
             <CardHeader className="card-header-muted px-6 py-4">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-sm font-semibold text-foreground flex items-center gap-2">
@@ -291,7 +291,7 @@ export default function AdminDashboard() {
           {deptData?.map((dept: any, i: number) => (
             <Card
               key={dept.department}
-              className="glass-card aura-glow border-none hover:scale-[1.01] transition-all duration-300 group overflow-hidden motion-page-enter motion-surface"
+              className="bg-card border border-border shadow-sm motion-surface hover:scale-[1.01] transition-all duration-300 group overflow-hidden motion-page-enter motion-surface"
               style={{ animationDelay: `${60 + i * 45}ms` }}
             >
               <CardContent className="p-5 relative">

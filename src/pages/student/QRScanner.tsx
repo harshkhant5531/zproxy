@@ -272,7 +272,7 @@ export default function QRScanner() {
         locationMeta: {
           sampleCount: stabilized.sampleCount,
           sampleSpreadMeters: stabilized.sampleSpreadMeters,
-          source: "stabilized-median",
+          source: stabilized.method || "weighted",
         },
       };
 
@@ -344,7 +344,7 @@ export default function QRScanner() {
           locationMeta: {
             sampleCount: stabilized.sampleCount,
             sampleSpreadMeters: stabilized.sampleSpreadMeters,
-            source: "stabilized-median",
+            source: stabilized.method || "weighted",
           },
         });
       }
@@ -454,15 +454,14 @@ export default function QRScanner() {
         <div className="absolute -bottom-20 -left-10 h-40 w-40 rounded-full bg-primary/10 blur-3xl" />
 
         <div className="relative mx-auto w-20 h-20 flex items-center justify-center">
-          <div className="absolute inset-0 rounded-full bg-success/20 animate-success-ripple" />
-          <div className="absolute inset-0 rounded-full bg-success/15 animate-success-ripple-late" />
-          <div className="relative w-20 h-20 rounded-full bg-success/20 border-2 border-success/40 flex items-center justify-center shadow-lg shadow-success/20">
+          <div className="absolute inset-0 rounded-full bg-success/10 animate-ping opacity-20" />
+          <div className="relative w-20 h-20 rounded-full bg-success/10 border-2 border-success/30 flex items-center justify-center">
             <CheckCircle2 className="h-10 w-10 text-success" />
           </div>
         </div>
 
         <div>
-          <p className="text-success font-semibold text-xs tracking-[0.2em] uppercase">
+          <p className="text-success font-bold text-[10px] tracking-widest uppercase">
             Attendance Recorded
           </p>
           <p className="text-foreground font-bold text-lg mt-2">
@@ -503,7 +502,7 @@ export default function QRScanner() {
   }) => {
     const [title, ...rest] = message.split("—").map((s) => s.trim());
     return (
-      <Card className="border-destructive/30 bg-destructive/10 rounded-2xl shadow-lg animate-in fade-in slide-in-from-bottom-2 duration-300">
+      <Card className="border-destructive/30 bg-destructive/10 rounded-2xl shadow-sm motion-slide-up">
         <CardContent className="p-5 space-y-3">
           <div className="flex items-start gap-3">
             <div className="w-8 h-8 rounded-lg bg-destructive/15 border border-destructive/20 flex items-center justify-center shrink-0 mt-0.5">
@@ -519,8 +518,8 @@ export default function QRScanner() {
             </div>
           </div>
           {geofenceDebug && (
-            <div className="rounded-xl border border-border/70 bg-background/80 p-3 space-y-1.5">
-              <p className="text-[10px] font-black uppercase tracking-[0.18em] text-muted-foreground">
+            <div className="rounded-xl border border-border bg-muted/30 p-3 space-y-1.5">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                 Geofence Telemetry
               </p>
               <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-[11px] text-muted-foreground">
@@ -569,16 +568,13 @@ export default function QRScanner() {
         withSidebarOffset={true}
       />
 
-      <div className="app-page max-w-5xl mx-auto relative">
-        <div className="absolute -top-12 -right-12 h-64 w-64 rounded-full bg-primary/10 blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-24 -left-16 h-72 w-72 rounded-full bg-info/10 blur-3xl pointer-events-none" />
-
+      <div className="app-page max-w-5xl mx-auto relative motion-page-enter">
         {/* ─── Header ─────────────────────────────────────────────────────── */}
-        <Card className="overflow-hidden border-border/70 bg-card/95 backdrop-blur-xl shadow-xl">
+        <Card className="overflow-hidden border-border bg-card shadow-sm">
           <CardContent className="p-5 sm:p-6">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center animate-aura-pulse shrink-0">
+                <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
                   <ShieldCheck className="h-6 w-6 text-primary" />
                 </div>
                 <div>
@@ -592,8 +588,8 @@ export default function QRScanner() {
               </div>
 
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 self-start sm:self-auto">
-                <Radio className="h-3.5 w-3.5 text-primary animate-live-blink" />
-                <span className="text-[10px] font-black uppercase tracking-[0.18em] text-primary">
+                <Radio className="h-3.5 w-3.5 text-primary animate-pulse" />
+                <span className="text-[10px] font-bold uppercase tracking-widest text-primary">
                   Integrity Engine
                 </span>
               </div>
@@ -661,19 +657,19 @@ export default function QRScanner() {
             )}
 
             {/* Scanner card */}
-            <Card className="bg-card border-border overflow-hidden shadow-2xl rounded-2xl">
+            <Card className="bg-card border-border overflow-hidden shadow-md rounded-2xl motion-slide-up">
               {/* Card header strip */}
-              <div className="flex items-center justify-between px-5 py-3 border-b border-border bg-muted/30">
+              <div className="flex items-center justify-between px-5 py-3 border-b border-border bg-muted/40">
                 <div className="flex items-center gap-2">
                   <Camera className="h-3.5 w-3.5 text-muted-foreground" />
-                  <span className="text-[11px] font-medium tracking-wide text-muted-foreground">
-                    Camera Viewfinder
+                  <span className="text-[11px] font-bold tracking-widest text-muted-foreground uppercase">
+                    Viewfinder
                   </span>
                 </div>
                 {scanning && (
                   <div className="flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-success animate-live-blink" />
-                    <span className="text-[10px] font-medium text-success tracking-wide">
+                    <span className="w-2 h-2 rounded-full bg-success animate-pulse" />
+                    <span className="text-[10px] font-bold text-success tracking-widest uppercase">
                       Live
                     </span>
                   </div>
@@ -689,7 +685,7 @@ export default function QRScanner() {
                     !scannedData &&
                     !markQRMutation.isPending &&
                     window.isSecureContext && (
-                      <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/90 backdrop-blur-sm z-30">
+                      <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/90 z-30">
                         {permissionStatus === "denied" ? (
                           <div className="text-center p-6 space-y-4">
                             <div className="w-16 h-16 rounded-2xl bg-destructive/10 border border-destructive/20 flex items-center justify-center mx-auto">
@@ -743,12 +739,7 @@ export default function QRScanner() {
 
                   {/* Scan beam */}
                   {scanning && !markQRMutation.isPending && (
-                    <div
-                      className="animate-scan-beam bg-gradient-to-r from-transparent via-primary to-transparent z-20"
-                      style={{
-                        boxShadow: "0 0 14px 6px hsl(var(--primary) / 0.4)",
-                      }}
-                    />
+                    <div className="animate-scan-beam bg-gradient-to-r from-transparent via-primary/50 to-transparent z-20" />
                   )}
 
                   {/* Corner brackets — pulsing when scanning */}
@@ -765,10 +756,10 @@ export default function QRScanner() {
                     <div className="absolute bottom-0 right-0 w-9 h-9 border-b-2 border-r-2 border-primary rounded-br-xl" />
                     {scanning && (
                       <>
-                        <div className="absolute top-0 left-0 w-2 h-2 bg-primary rounded-full shadow-[0_0_6px_2px_hsl(var(--primary)/0.8)]" />
-                        <div className="absolute top-0 right-0 w-2 h-2 bg-primary rounded-full shadow-[0_0_6px_2px_hsl(var(--primary)/0.8)]" />
-                        <div className="absolute bottom-0 left-0 w-2 h-2 bg-primary rounded-full shadow-[0_0_6px_2px_hsl(var(--primary)/0.8)]" />
-                        <div className="absolute bottom-0 right-0 w-2 h-2 bg-primary rounded-full shadow-[0_0_6px_2px_hsl(var(--primary)/0.8)]" />
+                        <div className="absolute top-0 left-0 w-2 h-2 bg-primary rounded-full shadow-sm" />
+                        <div className="absolute top-0 right-0 w-2 h-2 bg-primary rounded-full shadow-sm" />
+                        <div className="absolute bottom-0 left-0 w-2 h-2 bg-primary rounded-full shadow-sm" />
+                        <div className="absolute bottom-0 right-0 w-2 h-2 bg-primary rounded-full shadow-sm" />
                       </>
                     )}
                     <div className="absolute inset-0 flex items-center justify-center">
@@ -802,10 +793,10 @@ export default function QRScanner() {
                   disabled={markQRMutation.isPending || !window.isSecureContext}
                   size="lg"
                   variant={scanning ? "outline" : "default"}
-                  className={`w-full sm:w-auto px-6 sm:px-12 h-14 text-sm font-medium tracking-wide rounded-xl transition-all duration-200 shadow-lg ${
+                  className={`w-full sm:w-auto px-6 sm:px-12 h-14 text-sm font-bold tracking-widest uppercase rounded-xl transition-all duration-200 shadow-sm motion-press ${
                     scanning
-                      ? "border-destructive/50 text-destructive hover:bg-destructive/10 hover:border-destructive"
-                      : "shadow-primary/25 hover:shadow-primary/40 hover:shadow-xl"
+                      ? "border-destructive/30 text-destructive hover:bg-destructive/5"
+                      : "bg-primary text-primary-foreground hover:brightness-110"
                   }`}
                 >
                   {scanning ? (
@@ -950,11 +941,12 @@ export default function QRScanner() {
                         return (
                           <Card
                             key={sess.id}
-                            className="bg-card border-border rounded-2xl hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5 transition-all duration-200 animate-in slide-in-from-bottom-2 overflow-hidden"
-                            style={{
-                              animationDelay: `${i * 80}ms`,
-                              animationFillMode: "both",
-                            }}
+                            className="bg-card border-border rounded-xl motion-slide-up overflow-hidden"
+                            style={
+                              {
+                                "--row-index": i,
+                              } as any
+                            }
                           >
                             <div className="flex">
                               {/* Colored accent bar */}
@@ -972,8 +964,8 @@ export default function QRScanner() {
                                         {sess.course?.code}
                                       </span>
                                     )}
-                                    <Badge className="bg-success/10 text-success border-success/20 text-[9px] font-semibold uppercase px-2 shrink-0 gap-1">
-                                      <span className="w-1.5 h-1.5 rounded-full bg-success animate-live-blink inline-block" />
+                                    <Badge className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 text-[9px] font-bold uppercase px-2 shrink-0 gap-1.5 shadow-none">
+                                      <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse inline-block" />
                                       Live
                                     </Badge>
                                   </div>
@@ -994,7 +986,7 @@ export default function QRScanner() {
                                       {sess.batches.map((b: string) => (
                                         <span
                                           key={b}
-                                          className="text-[9px] px-1.5 py-0.5 bg-primary/10 text-primary border border-primary/20 rounded-md font-medium"
+                                          className="text-[9px] px-1.5 py-0.5 bg-primary/10 text-primary border border-primary/20 rounded-md font-bold uppercase tracking-tight"
                                         >
                                           Batch {b}
                                         </span>
@@ -1011,7 +1003,7 @@ export default function QRScanner() {
                                   disabled={
                                     markManualMutation.isPending || locating
                                   }
-                                  className="w-full sm:w-auto font-medium tracking-wide text-[11px] shrink-0 h-10 px-4 rounded-xl shadow-md shadow-primary/20 hover:shadow-primary/35 transition-all hover:scale-[1.03] active:scale-[0.97]"
+                                  className="w-full sm:w-auto font-bold tracking-widest uppercase text-[11px] shrink-0 h-10 px-6 rounded-xl shadow-sm motion-press"
                                 >
                                   {isPending ? (
                                     <span className="flex items-center gap-1">
@@ -1048,9 +1040,9 @@ export default function QRScanner() {
         )}
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          <Card className="lg:col-span-2 border-border/70 bg-card/90 shadow-lg">
+          <Card className="lg:col-span-2 border-border bg-card shadow-sm motion-slide-up">
             <CardContent className="p-4 sm:p-5">
-              <p className="text-[10px] font-black uppercase tracking-[0.18em] text-muted-foreground mb-3">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-3">
                 Security Channels
               </p>
               <div className="grid gap-3 sm:grid-cols-3">
@@ -1082,7 +1074,7 @@ export default function QRScanner() {
                 ].map((item, i) => (
                   <div
                     key={i}
-                    className="bg-background/80 border border-border rounded-xl p-3.5 flex items-center gap-3"
+                    className="bg-muted/30 border border-border rounded-xl p-3.5 flex items-center gap-3"
                   >
                     <div className={`rounded-xl ${item.iconBg} border p-2.5`}>
                       <item.icon className={`h-4 w-4 ${item.color}`} />
@@ -1106,9 +1098,9 @@ export default function QRScanner() {
             </CardContent>
           </Card>
 
-          <Card className="border-border/70 bg-card/90 shadow-lg">
+          <Card className="border-border bg-card shadow-sm motion-slide-up">
             <CardContent className="p-4 sm:p-5 h-full">
-              <p className="text-[10px] font-black uppercase tracking-[0.18em] text-muted-foreground mb-3">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-3">
                 Session Note
               </p>
               <div className="rounded-xl border border-border bg-muted/25 p-4 flex items-start gap-3 text-muted-foreground">

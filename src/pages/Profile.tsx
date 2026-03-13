@@ -210,30 +210,29 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="app-page">
-      <section className="relative overflow-hidden rounded-[2rem] border border-border/50 bg-[linear-gradient(135deg,rgba(255,255,255,0.92),rgba(240,249,255,0.88))] p-6 shadow-[0_24px_80px_-40px_rgba(14,165,233,0.45)] dark:bg-[linear-gradient(135deg,rgba(15,23,42,0.95),rgba(8,47,73,0.7))]">
-        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_top_left,rgba(14,165,233,0.14),transparent_32%),radial-gradient(circle_at_bottom_right,rgba(34,197,94,0.1),transparent_28%)]" />
+    <div className="app-page space-y-6">
+      <section className="relative overflow-hidden rounded-2xl border border-border bg-card p-6 shadow-sm motion-page-enter">
         <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-          <div className="flex items-start gap-4">
-            <div className="flex h-20 w-20 items-center justify-center rounded-[1.75rem] border border-primary/20 bg-white/70 text-2xl font-black text-primary shadow-lg shadow-primary/10 dark:bg-background/40">
+          <div className="flex items-start gap-5">
+            <div className="flex h-24 w-24 items-center justify-center rounded-2xl border border-primary/20 bg-primary/5 text-3xl font-bold text-primary shadow-inner">
               {user.avatar ? (
                 <img
                   src={user.avatar}
                   alt={user.profile?.fullName || user.username}
-                  className="h-full w-full rounded-[1.65rem] object-cover"
+                  className="h-full w-full rounded-2xl object-cover"
                 />
               ) : (
                 getInitials(user.profile?.fullName || user.username)
               )}
             </div>
-            <div className="space-y-3">
+            <div className="space-y-4">
               <div className="flex flex-wrap items-center gap-2">
-                <Badge className="rounded-full bg-primary/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-primary shadow-none hover:bg-primary/10">
+                <Badge className="rounded-md bg-primary/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-primary shadow-none border border-primary/20 hover:bg-primary/15">
                   <Sparkles className="mr-1.5 h-3 w-3" /> {roleMeta.label}
                 </Badge>
                 <Badge
                   variant="outline"
-                  className="rounded-full border-success/20 bg-success/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.16em] text-emerald-600 dark:text-emerald-400"
+                  className="rounded-md border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400"
                 >
                   <BadgeCheck className="mr-1.5 h-3 w-3" />{" "}
                   {user.status || "active"}
@@ -241,26 +240,26 @@ export default function ProfilePage() {
                 {user.requiresPasswordChange && (
                   <Badge
                     variant="outline"
-                    className="rounded-full border-warning/20 bg-warning/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.16em] text-warning dark:text-warning"
+                    className="rounded-md border-amber-500/20 bg-amber-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400"
                   >
                     <AlertTriangle className="mr-1.5 h-3 w-3" /> Action Required
                   </Badge>
                 )}
               </div>
               <div>
-                <h1 className="text-3xl font-black tracking-[-0.04em] text-slate-950 dark:text-foreground">
+                <h1 className="text-3xl font-bold tracking-tight text-foreground">
                   {user.profile?.fullName || user.username}
                 </h1>
-                <p className={`mt-1 text-sm font-semibold ${roleMeta.accent}`}>
+                <p className={`mt-1 text-sm font-medium ${roleMeta.accent}`}>
                   {roleMeta.subtitle}
                 </p>
               </div>
-              <div className="flex flex-wrap gap-3 text-sm text-slate-600 dark:text-muted-foreground">
-                <span className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-white/80 px-3 py-1.5 dark:bg-background/40">
+              <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
+                <span className="inline-flex items-center gap-2 rounded-lg border border-border bg-muted/30 px-3 py-1.5">
                   <Mail className="h-3.5 w-3.5 text-primary" /> {user.email}
                 </span>
                 {user.profile?.department && (
-                  <span className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-white/80 px-3 py-1.5 dark:bg-background/40">
+                  <span className="inline-flex items-center gap-2 rounded-lg border border-border bg-muted/30 px-3 py-1.5">
                     <Building2 className="h-3.5 w-3.5 text-primary" />{" "}
                     {user.profile.department}
                   </span>
@@ -269,38 +268,38 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-3 lg:w-[28rem]">
-            <Card className="border-white/60 bg-white/75 shadow-lg shadow-sky-100 dark:border-white/10 dark:bg-background/40">
+          <div className="grid gap-3 sm:grid-cols-3 lg:w-[28rem] motion-stagger">
+            <Card className="border-border bg-muted/20 shadow-none motion-surface">
               <CardContent className="p-4">
-                <p className="text-[10px] font-black uppercase tracking-[0.18em] text-muted-foreground">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                   Username
                 </p>
-                <p className="mt-2 text-sm font-bold text-foreground">
+                <p className="mt-2 text-sm font-semibold text-foreground">
                   {user.username}
                 </p>
               </CardContent>
             </Card>
-            <Card className="border-white/60 bg-white/75 shadow-lg shadow-sky-100 dark:border-white/10 dark:bg-background/40">
+            <Card className="border-border bg-muted/20 shadow-none motion-surface">
               <CardContent className="p-4">
-                <p className="text-[10px] font-black uppercase tracking-[0.18em] text-muted-foreground">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                   Identifier
                 </p>
-                <p className="mt-2 text-sm font-bold text-foreground">
+                <p className="mt-2 text-sm font-semibold text-foreground">
                   {user.profile?.enrollmentNumber ||
                     user.profile?.employeeId ||
                     `ID-${user.id}`}
                 </p>
               </CardContent>
             </Card>
-            <Card className="border-white/60 bg-white/75 shadow-lg shadow-sky-100 dark:border-white/10 dark:bg-background/40">
+            <Card className="border-border bg-muted/20 shadow-none motion-surface">
               <CardContent className="p-4">
-                <p className="text-[10px] font-black uppercase tracking-[0.18em] text-muted-foreground">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                   Security
                 </p>
-                <p className="mt-2 text-sm font-bold text-foreground">
+                <p className="mt-2 text-sm font-semibold text-foreground">
                   {user.requiresPasswordChange
-                    ? "Default password in use"
-                    : "Password healthy"}
+                    ? "Action Needed"
+                    : "Secure"}
                 </p>
               </CardContent>
             </Card>
@@ -333,10 +332,10 @@ export default function ProfilePage() {
       )}
 
       <div className="grid gap-6 xl:grid-cols-[1.3fr_0.9fr]">
-        <Card className="overflow-hidden border-border/60 bg-card/90 shadow-xl shadow-sky-100/40 dark:shadow-none">
-          <CardHeader className="border-b border-border/50 bg-[linear-gradient(180deg,rgba(14,165,233,0.06),transparent)]">
-            <CardTitle className="flex items-center gap-3 text-xl font-black tracking-[-0.03em]">
-              <UserCircle2 className="h-5 w-5 text-primary" /> Profile Center
+        <Card className="overflow-hidden border-border bg-card shadow-sm motion-slide-up" style={{ animationDelay: '150ms' }}>
+          <CardHeader className="border-b border-border bg-muted/30">
+            <CardTitle className="flex items-center gap-3 text-lg font-bold tracking-tight">
+              <UserCircle2 className="h-5 w-5 text-primary" /> Profile Details
             </CardTitle>
           </CardHeader>
           <CardContent className="p-6">
@@ -487,7 +486,7 @@ export default function ProfilePage() {
                   />
                 </div>
                 <div className="space-y-2 md:col-span-2">
-                  <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">
+                  <Label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                     Bio
                   </Label>
                   <Textarea
@@ -495,14 +494,14 @@ export default function ProfilePage() {
                     onChange={(event) =>
                       handleProfileField("bio", event.target.value)
                     }
-                    className="min-h-[130px] rounded-[1.5rem] border-border/70 bg-background/80 px-4 py-3"
+                    className="min-h-[120px] rounded-xl border-border bg-muted/10 px-4 py-3 focus:bg-background transition-colors"
                   />
                 </div>
               </div>
               <Button
                 type="submit"
                 disabled={isSavingProfile}
-                className="h-12 rounded-2xl px-6 text-sm font-black uppercase tracking-[0.16em] shadow-lg shadow-primary/20"
+                className="h-11 rounded-lg px-6 text-sm font-bold shadow-sm motion-press"
               >
                 <Save className="mr-2 h-4 w-4" />
                 {isSavingProfile ? "Saving..." : "Save Profile"}
@@ -512,11 +511,11 @@ export default function ProfilePage() {
         </Card>
 
         <div className="space-y-6">
-          <Card className="overflow-hidden border-border/60 bg-card/90 shadow-xl shadow-sky-100/40 dark:shadow-none">
-            <CardHeader className="border-b border-border/50 bg-[linear-gradient(180deg,rgba(34,197,94,0.06),transparent)]">
-              <CardTitle className="flex items-center gap-3 text-xl font-black tracking-[-0.03em]">
-                <KeyRound className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />{" "}
-                Password & Security
+          <Card className="overflow-hidden border-border bg-card shadow-sm motion-slide-up" style={{ animationDelay: '200ms' }}>
+            <CardHeader className="border-b border-border bg-muted/30">
+              <CardTitle className="flex items-center gap-3 text-lg font-bold tracking-tight">
+                <KeyRound className="h-5 w-5 text-amber-500" />{" "}
+                Security Settings
               </CardTitle>
             </CardHeader>
             <CardContent className="p-6">
@@ -591,42 +590,41 @@ export default function ProfilePage() {
             </CardContent>
           </Card>
 
-          <Card className="border-border/60 bg-card/90 shadow-xl shadow-sky-100/40 dark:shadow-none">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-3 text-lg font-black tracking-[-0.03em]">
+          <Card className="border-border bg-card shadow-sm motion-slide-up" style={{ animationDelay: '250ms' }}>
+            <CardHeader className="pb-3 px-6 pt-6">
+              <CardTitle className="flex items-center gap-3 text-lg font-bold tracking-tight">
                 <IdCard className="h-5 w-5 text-primary" /> Identity Snapshot
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4 text-sm">
-              <div className="space-y-3">
-                <div className="flex items-center justify-between gap-3 rounded-2xl border border-border/60 bg-background/70 px-4 py-3">
-                  <span className="text-muted-foreground">Role</span>
-                  <span className="font-semibold capitalize text-foreground">
+            <CardContent className="space-y-4 text-sm px-6 pb-6">
+              <div className="space-y-2">
+                <div className="flex items-center justify-between gap-3 rounded-lg border border-border bg-muted/20 px-4 py-2.5">
+                  <span className="text-muted-foreground font-medium">Role</span>
+                  <span className="font-bold capitalize text-primary">
                     {user.role}
                   </span>
                 </div>
-                <div className="flex items-center justify-between gap-3 rounded-2xl border border-border/60 bg-background/70 px-4 py-3">
-                  <span className="text-muted-foreground">Department</span>
-                  <span className="font-semibold text-foreground">
+                <div className="flex items-center justify-between gap-3 rounded-lg border border-border bg-muted/20 px-4 py-2.5">
+                  <span className="text-muted-foreground font-medium">Department</span>
+                  <span className="font-bold text-foreground">
                     {user.profile?.department || "Not set"}
                   </span>
                 </div>
-                <div className="flex items-center justify-between gap-3 rounded-2xl border border-border/60 bg-background/70 px-4 py-3">
-                  <span className="text-muted-foreground">Phone</span>
-                  <span className="font-semibold text-foreground">
+                <div className="flex items-center justify-between gap-3 rounded-lg border border-border bg-muted/20 px-4 py-2.5">
+                  <span className="text-muted-foreground font-medium">Phone</span>
+                  <span className="font-bold text-foreground">
                     {user.profile?.phone || "Not set"}
                   </span>
                 </div>
               </div>
-              <Separator className="bg-border/60" />
-              <div className="rounded-[1.5rem] border border-sky-500/20 bg-sky-500/8 p-4">
-                <p className="text-[10px] font-black uppercase tracking-[0.16em] text-sky-700 dark:text-sky-300">
-                  Light Theme Note
+              <Separator className="bg-border" />
+              <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 motion-surface">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-primary">
+                  Redesign Note
                 </p>
-                <p className="mt-2 text-sm leading-6 text-slate-700 dark:text-muted-foreground">
-                  This profile UI is tuned for the light palette first: cleaner
-                  contrast, softer cards, and stronger information grouping
-                  without flattening the hierarchy.
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                  The profile interface has been updated to a clean, flat design with no glassmorphism, 
+                  prioritizing accessibility and fast performance.
                 </p>
               </div>
             </CardContent>

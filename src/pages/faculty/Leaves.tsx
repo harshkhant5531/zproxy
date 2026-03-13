@@ -145,7 +145,7 @@ export default function FacultyLeaves() {
         </div>
 
         {leaves.length === 0 ? (
-          <Card className="glass-card border-none">
+          <Card className="bg-card border border-border shadow-sm">
             <CardContent className="py-16 text-center">
               <div className="flex flex-col items-center gap-3">
                 <div className="h-14 w-14 rounded-2xl bg-success/10 border border-success/20 flex items-center justify-center">
@@ -161,7 +161,7 @@ export default function FacultyLeaves() {
             </CardContent>
           </Card>
         ) : (
-          <Card className="glass-card aura-glow border-none overflow-hidden">
+          <Card className="bg-card border border-border shadow-sm motion-surface overflow-hidden">
             <CardHeader className="card-header-muted py-4">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-sm font-semibold text-foreground flex items-center gap-2">

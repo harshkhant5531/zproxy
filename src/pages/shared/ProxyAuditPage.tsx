@@ -60,40 +60,34 @@ const AnimatedStatCard = ({
   color: string;
   delay?: number;
 }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ delay, duration: 0.5, ease: "easeOut" }}
+  <Card
+    className={cn(
+      "overflow-hidden border border-border bg-card motion-slide-up group transition-all duration-300",
+      "hover:border-primary/30"
+    )}
+    style={{ animationDelay: `${delay}s` }}
   >
-    <Card
-      className={`overflow-hidden border-l-4 ${color} bg-card hover:shadow-lg transition-all duration-300`}
-    >
-      <CardContent className="p-4 sm:p-6">
-        <div className="flex items-center justify-between">
-          <div className="flex-1">
-            <p className="text-sm font-medium text-muted-foreground">{title}</p>
-            <motion.h3
-              className="text-3xl font-bold text-foreground mt-2"
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ type: "spring", delay: delay + 0.2 }}
-            >
-              {value}
-            </motion.h3>
-            <p className="text-xs text-muted-foreground mt-1">{subtitle}</p>
-          </div>
-          <motion.div
-            className={`p-3 rounded-lg ${color} opacity-20`}
-            initial={{ rotate: -20, scale: 0 }}
-            animate={{ rotate: 0, scale: 1 }}
-            transition={{ type: "spring", delay: delay + 0.3 }}
-          >
-            <Icon className="w-6 h-6 text-white" />
-          </motion.div>
+    <CardContent className="p-4 sm:p-6">
+      <div className="flex items-center justify-between">
+        <div className="flex-1 space-y-1">
+          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{title}</p>
+          <h3 className="text-3xl font-bold tracking-tight text-foreground motion-stat">
+            {value}
+          </h3>
+          <p className="text-[10px] text-muted-foreground font-medium">{subtitle}</p>
         </div>
-      </CardContent>
-    </Card>
-  </motion.div>
+        <div
+          className={cn(
+            "p-3 rounded-xl border border-border bg-muted/20 transition-all duration-300",
+            "group-hover:bg-primary/10 group-hover:scale-110",
+            color.includes("destructive") ? "group-hover:bg-destructive/10" : ""
+          )}
+        >
+          <Icon className={cn("w-6 h-6", color.includes("destructive") ? "text-destructive" : "text-primary")} />
+        </div>
+      </div>
+    </CardContent>
+  </Card>
 );
 
 const RiskLevelBadge = ({ level }: { level: string }) => {
@@ -117,13 +111,11 @@ const AnimatedTable = ({
   data: any[];
   delay?: number;
 }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ delay, duration: 0.5 }}
-    className="overflow-x-auto"
+  <div
+    className="overflow-x-auto motion-slide-up"
+    style={{ animationDelay: `${delay}s` }}
   >
-    <table className="w-full min-w-[680px] text-sm">
+    <table className="w-full min-w-[680px] text-sm motion-table-stagger">
       <thead>
         <tr className="border-b border-border bg-muted/40">
           <th className="text-left px-4 py-3 font-semibold text-foreground">
@@ -148,45 +140,33 @@ const AnimatedTable = ({
       </thead>
       <tbody>
         {data.map((row, idx) => (
-          <motion.tr
+          <tr
             key={idx}
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: delay + idx * 0.05 }}
             className="border-b border-border hover:bg-muted/40 transition-colors"
+            style={{ "--row-index": idx } as any}
           >
-            <td className="px-4 py-3 text-foreground">[#{row.studentId}]</td>
-            <td className="px-4 py-3 font-medium text-warning">
+            <td className="px-4 py-4 text-foreground font-mono">[#{row.studentId}]</td>
+            <td className="px-4 py-4 font-bold text-amber-500">
               {row.flaggedCount}
             </td>
-            <td className="px-4 py-3 text-foreground">{row.flagRate}%</td>
-            <td className="px-4 py-3 text-foreground">{row.uniqueIps}</td>
-            <td className="px-4 py-3">
-              <motion.div
-                className="w-full bg-muted rounded-full h-2 overflow-hidden max-w-20"
-                initial={{ width: 0 }}
-                animate={{ width: "100%" }}
-                transition={{ delay: delay + idx * 0.05 + 0.2 }}
-              >
-                <motion.div
-                  className="h-full bg-gradient-to-r from-warning to-destructive"
-                  initial={{ width: 0 }}
-                  animate={{ width: `${row.anomalyScore}%` }}
-                  transition={{
-                    delay: delay + idx * 0.05 + 0.3,
-                    duration: 0.8,
-                  }}
+            <td className="px-4 py-4 text-foreground font-medium">{row.flagRate}%</td>
+            <td className="px-4 py-4 text-muted-foreground font-mono text-xs">{row.uniqueIps}</td>
+            <td className="px-4 py-4">
+              <div className="w-full bg-muted/30 rounded-full h-1.5 overflow-hidden max-w-20">
+                <div
+                  className="h-full bg-primary motion-progress"
+                  style={{ width: `${row.anomalyScore}%` }}
                 />
-              </motion.div>
+              </div>
             </td>
-            <td className="px-4 py-3">
+            <td className="px-4 py-4">
               <RiskLevelBadge level={row.riskLevel} />
             </td>
-          </motion.tr>
+          </tr>
         ))}
       </tbody>
     </table>
-  </motion.div>
+  </div>
 );
 
 export default function ProxyAuditPage() {
@@ -310,7 +290,7 @@ export default function ProxyAuditPage() {
       </motion.div>
 
       {/* Summary Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4 motion-stagger">
         <AnimatedStatCard
           title="Total Flagged"
           value={analytics.summary?.totalFlagged || 0}
@@ -325,7 +305,7 @@ export default function ProxyAuditPage() {
           subtitle="Of all attendance"
           icon={TrendingUp}
           color="border-warning bg-warning"
-          delay={0.1}
+          delay={0.07}
         />
         <AnimatedStatCard
           title="Students at Risk"
@@ -333,7 +313,7 @@ export default function ProxyAuditPage() {
           subtitle="With flag history"
           icon={Users}
           color="border-warning bg-warning"
-          delay={0.2}
+          delay={0.14}
         />
         <AnimatedStatCard
           title="Critical Cases"
@@ -341,19 +321,19 @@ export default function ProxyAuditPage() {
           subtitle="Immediate attention"
           icon={Activity}
           color="border-destructive bg-destructive"
-          delay={0.3}
+          delay={0.21}
         />
       </div>
 
       {/* Extended Stats Row */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 motion-stagger">
         <AnimatedStatCard
           title="High Risk"
           value={analytics.summary?.highRiskCount || 0}
           subtitle="Requires review"
           icon={AlertTriangle}
           color="border-warning bg-warning"
-          delay={0.4}
+          delay={0.28}
         />
         <AnimatedStatCard
           title="Moderate Risk"
@@ -361,7 +341,7 @@ export default function ProxyAuditPage() {
           subtitle="Monitor closely"
           icon={TrendingUp}
           color="border-warning bg-warning"
-          delay={0.5}
+          delay={0.35}
         />
         <AnimatedStatCard
           title="Unique IPs"
@@ -369,7 +349,7 @@ export default function ProxyAuditPage() {
           subtitle="Tracked addresses"
           icon={Network}
           color="border-info bg-info"
-          delay={0.6}
+          delay={0.42}
         />
         <AnimatedStatCard
           title="Device Types"
@@ -377,7 +357,7 @@ export default function ProxyAuditPage() {
           subtitle="Active devices"
           icon={Smartphone}
           color="border-info bg-info"
-          delay={0.7}
+          delay={0.49}
         />
       </div>
 

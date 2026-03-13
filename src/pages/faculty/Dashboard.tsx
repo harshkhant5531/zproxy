@@ -93,8 +93,8 @@ export default function FacultyDashboard() {
       <div className="app-page-header">
         <div>
           <h1 className="page-header-title">Faculty Dashboard</h1>
-          <p className="page-header-sub flex items-center gap-2 mt-1.5">
-            <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse shadow-[0_0_8px_rgba(var(--primary),0.5)]" />
+          <p className="page-header-sub flex items-center gap-2 mt-1.5 font-medium">
+            <span className="h-2 w-2 rounded-full bg-primary" />
             Signed in as {user?.profile?.fullName || user?.username}
           </p>
         </div>
@@ -102,7 +102,7 @@ export default function FacultyDashboard() {
           variant="ghost"
           size="sm"
           onClick={() => navigate("/faculty/records")}
-          className="glass-card border-none text-muted-foreground hover:text-primary font-black uppercase text-[10px] tracking-widest px-4 h-9"
+          className="bg-card border border-border shadow-sm text-muted-foreground hover:text-primary font-bold uppercase text-[10px] tracking-widest px-4 h-9 transition-colors"
         >
           Audit History <ChevronRight className="ml-2 h-3.5 w-3.5" />
         </Button>
@@ -158,7 +158,7 @@ export default function FacultyDashboard() {
       </div>
 
       {/* Today's Sessions */}
-      <Card className="glass-card aura-glow border-none overflow-hidden">
+      <Card className="bg-card border border-border shadow-sm motion-surface overflow-hidden">
         <CardHeader className="card-header-muted">
           <CardTitle className="text-sm font-semibold text-foreground flex items-center gap-2">
             <Clock className="h-4 w-4 text-primary" /> Today's Schedule
@@ -180,14 +180,14 @@ export default function FacultyDashboard() {
                     {session.topic}
                   </p>
                   <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 text-[10px] text-muted-foreground font-mono">
-                    <span className="flex items-center gap-2 bg-black/20 px-2 py-0.5 rounded border border-white/5">
+                    <span className="flex items-center gap-2 bg-muted/20 px-2 py-0.5 rounded border border-border">
                       <Clock className="h-3.5 w-3.5 text-primary/70" />
                       {session.startTime} - {session.endTime}
                     </span>
-                    <span className="bg-black/20 px-2 py-0.5 rounded border border-white/5 text-[9px] font-bold">
+                    <span className="bg-muted/20 px-2 py-0.5 rounded border border-border text-[9px] font-bold">
                       {session.roomNumber || "OFF-SITE"}
                     </span>
-                    <span className="text-primary font-black aura-text-glow">
+                    <span className="text-primary font-bold tracking-tight">
                       {session.attendanceCount || 0} VERIFIED SIGNALS
                     </span>
                   </div>
@@ -199,8 +199,8 @@ export default function FacultyDashboard() {
                   }
                   className={
                     session.status === "scheduled"
-                      ? "bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase tracking-widest text-[10px] px-6 h-9 shadow-[0_0_20px_rgba(var(--primary),0.3)] relative z-10"
-                      : "glass-card border-none text-muted-foreground hover:text-foreground font-black uppercase tracking-widest text-[10px] px-6 h-9 relative z-10"
+                      ? "bg-primary hover:bg-primary/90 text-primary-foreground font-bold uppercase tracking-widest text-[10px] px-6 h-9 shadow-sm relative z-10 motion-press"
+                      : "bg-card border border-border shadow-sm text-muted-foreground hover:text-foreground font-bold uppercase tracking-widest text-[10px] px-6 h-9 relative z-10 motion-press"
                   }
                   onClick={() => navigate(`/faculty/session/${session.id}`)}
                 >
@@ -292,7 +292,7 @@ export default function FacultyDashboard() {
                   className="flex items-start gap-4 p-4 rounded-xl border border-transparent hover:border-border hover:bg-muted/20 transition-all cursor-default group motion-page-enter"
                   style={{ animationDelay: `${70 + i * 70}ms` }}
                 >
-                  <div className="mt-1 h-2 w-2 rounded-full bg-primary shadow-[0_0_8px_rgba(var(--primary),0.5)] shrink-0 group-hover:scale-125 transition-transform" />
+                <div className="mt-1.5 h-2 w-2 rounded-full bg-primary shrink-0 group-hover:scale-125 transition-transform" />
                   <div className="space-y-1">
                     <p className="text-sm text-foreground font-black uppercase tracking-tight leading-none group-hover:text-primary transition-colors">
                       {item.text}

@@ -12,7 +12,7 @@ export function ModeToggle() {
     }, []);
 
     if (!mounted) {
-        return <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full glass-card opacity-50" disabled />;
+        return <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full bg-card border border-border shadow-sm opacity-50" disabled />;
     }
 
     const toggleTheme = () => {
@@ -24,7 +24,7 @@ export function ModeToggle() {
             variant="ghost"
             size="icon"
             onClick={toggleTheme}
-            className="relative h-10 w-10 rounded-full glass-card aura-glow hover:bg-primary/10 transition-all duration-500 group overflow-hidden border-none"
+            className="relative h-10 w-10 rounded-full bg-card border border-border shadow-sm aura-glow hover:bg-primary/10 transition-all duration-500 group overflow-hidden border-none"
         >
             <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
 

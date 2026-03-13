@@ -90,41 +90,42 @@ export default function AttendanceRecords() {
           variant="outline"
           size="sm"
           onClick={handleCopyExport}
-          className="border-primary/20 text-primary"
+          className="border-primary/20 text-primary motion-press"
         >
           Copy Export
         </Button>
       </div>
 
-      <Card className="bg-card border-border backdrop-blur-sm shadow-xl overflow-hidden">
+      <Card className="bg-card border-border shadow-sm overflow-hidden motion-fade-scale">
         <CardContent className="p-0">
           <div className="overflow-x-auto">
-            <Table>
-              <TableHeader className="bg-muted/30">
-                <TableRow className="border-border hover:bg-transparent">
-                  <TableHead className="text-muted-foreground font-black text-[10px] uppercase tracking-[0.2em] h-12 pl-6">
+            <Table className="motion-table-stagger">
+              <TableHeader className="bg-muted/40 border-b border-border">
+                <TableRow className="border-none hover:bg-transparent">
+                  <TableHead className="text-muted-foreground font-bold text-[10px] uppercase tracking-widest h-12 pl-6">
                     Temporal Data
                   </TableHead>
-                  <TableHead className="text-muted-foreground font-black text-[10px] uppercase tracking-[0.2em] h-12">
+                  <TableHead className="text-muted-foreground font-bold text-[10px] uppercase tracking-widest h-12">
                     Subject Module
                   </TableHead>
-                  <TableHead className="text-muted-foreground font-black text-[10px] uppercase tracking-[0.2em] h-12">
+                  <TableHead className="text-muted-foreground font-bold text-[10px] uppercase tracking-widest h-12">
                     Session Details
                   </TableHead>
-                  <TableHead className="text-muted-foreground font-black text-[10px] uppercase tracking-[0.2em] h-12 text-center">
+                  <TableHead className="text-muted-foreground font-bold text-[10px] uppercase tracking-widest h-12 text-center">
                     Metrics
                   </TableHead>
-                  <TableHead className="text-muted-foreground font-black text-[10px] uppercase tracking-[0.2em] h-12">
+                  <TableHead className="text-muted-foreground font-bold text-[10px] uppercase tracking-widest h-12">
                     Status
                   </TableHead>
                   <TableHead className="w-[80px] pr-6"></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filtered.map((s: any) => (
+                {filtered.map((s: any, idx: number) => (
                   <TableRow
                     key={s.id}
-                    className="border-border hover:bg-muted/40 transition-colors group"
+                    className="border-border hover:bg-muted/30 transition-colors group"
+                    style={{ "--row-index": idx } as any}
                   >
                     <TableCell className="pl-6 py-4">
                       <div className="flex flex-col">
@@ -138,7 +139,7 @@ export default function AttendanceRecords() {
                     </TableCell>
                     <TableCell>
                       <div className="flex flex-col">
-                        <span className="text-sm font-black text-foreground uppercase tracking-tight group-hover:text-primary transition-colors">
+                        <span className="text-sm font-bold text-foreground uppercase tracking-tight group-hover:text-primary transition-colors">
                           {s.subject?.name || s.course?.name}
                         </span>
                         <span className="text-[10px] text-muted-foreground font-mono flex items-center gap-1 mt-0.5">
@@ -147,15 +148,15 @@ export default function AttendanceRecords() {
                       </div>
                     </TableCell>
                     <TableCell className="max-w-[200px]">
-                      <span className="text-sm text-foreground font-medium block truncate italic">
-                        "{s.topic}"
+                      <span className="text-sm text-foreground font-medium block truncate">
+                        {s.topic}
                       </span>
                       {s.batches && s.batches.length > 0 && (
                         <div className="flex flex-wrap gap-1 mt-1.5">
                           {s.batches.map((b: string) => (
                             <span
                               key={b}
-                              className="px-1.5 py-0.5 bg-primary/10 text-primary border border-primary/20 rounded text-[9px] font-black uppercase tracking-tighter"
+                              className="px-1.5 py-0.5 bg-primary/10 text-primary border border-primary/20 rounded text-[9px] font-bold uppercase tracking-widest"
                             >
                               {b}
                             </span>
@@ -164,18 +165,18 @@ export default function AttendanceRecords() {
                       )}
                     </TableCell>
                     <TableCell className="text-center">
-                      <div className="inline-flex flex-col items-center justify-center bg-muted/50 border border-border rounded-lg px-3 py-1.5">
-                        <span className="text-xs font-black text-primary font-mono tracking-tighter">
+                      <div className="inline-flex flex-col items-center justify-center bg-muted/30 border border-border rounded-lg px-3 py-1.5">
+                        <span className="text-xs font-bold text-primary font-mono tracking-tight">
                           {s.attendance?.length || 0} / {s.totalStudents || "—"}
                         </span>
-                        <span className="text-[8px] text-muted-foreground uppercase font-black tracking-widest leading-none mt-0.5">
+                        <span className="text-[8px] text-muted-foreground uppercase font-bold tracking-widest leading-none mt-0.5">
                           Verified
                         </span>
                       </div>
                     </TableCell>
                     <TableCell>
                       <span
-                        className={`text-[9px] px-2 py-0.5 rounded-full font-black uppercase tracking-widest ${s.status === "completed" ? "bg-success/10 text-success" : "bg-primary/10 text-primary animate-pulse"}`}
+                        className={`text-[9px] px-2 py-0.5 rounded-md font-bold uppercase tracking-widest ${s.status === "completed" ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20" : "bg-primary/10 text-primary border border-primary/20"}`}
                       >
                         {s.status || "Live"}
                       </span>
@@ -195,9 +196,9 @@ export default function AttendanceRecords() {
                 {filtered.length === 0 && (
                   <TableRow>
                     <TableCell colSpan={6} className="h-40 text-center">
-                      <div className="flex flex-col items-center justify-center space-y-2 opacity-30">
+                      <div className="flex flex-col items-center justify-center space-y-2 opacity-50">
                         <Search className="h-8 w-8 text-muted-foreground" />
-                        <p className="text-[10px] font-black uppercase tracking-[0.3em]">
+                        <p className="text-[10px] font-bold uppercase tracking-widest">
                           No matching records found
                         </p>
                       </div>

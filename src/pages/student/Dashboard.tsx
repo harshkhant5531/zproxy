@@ -135,11 +135,8 @@ export default function StudentDashboard() {
         </div>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div
-          className="motion-page-enter motion-surface"
-          style={{ animationDelay: "30ms" }}
-        >
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 motion-stagger">
+        <div>
           <StatCard
             title="Overall Attendance"
             value={`${attendanceStats?.attendanceRate || 0}%`}
@@ -147,10 +144,7 @@ export default function StudentDashboard() {
             trend={{ value: 0, label: "real-time" }}
           />
         </div>
-        <div
-          className="motion-page-enter motion-surface"
-          style={{ animationDelay: "90ms" }}
-        >
+        <div>
           <StatCard
             title="This Week"
             value={weeklyData.reduce((a, d) => a + d.present, 0).toString()}
@@ -158,10 +152,7 @@ export default function StudentDashboard() {
             icon={CalendarCheck}
           />
         </div>
-        <div
-          className="motion-page-enter motion-surface"
-          style={{ animationDelay: "150ms" }}
-        >
+        <div>
           <StatCard
             title="Total Present"
             value={attendanceStats?.presentCount?.toString() || "0"}
@@ -169,10 +160,7 @@ export default function StudentDashboard() {
             icon={Clock}
           />
         </div>
-        <div
-          className="motion-page-enter motion-surface"
-          style={{ animationDelay: "210ms" }}
-        >
+        <div>
           <StatCard
             title="Flagged Courses"
             value={flaggedCourses.length.toString()}
@@ -188,7 +176,7 @@ export default function StudentDashboard() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card className="glass-card aura-glow border-none">
+        <Card className="bg-card border border-border shadow-sm motion-slide-up" style={{ animationDelay: '280ms' }}>
           <CardHeader className="card-header-muted py-4 px-6">
             <CardTitle className="text-sm font-semibold text-foreground">
               This Week's Attendance
@@ -242,18 +230,18 @@ export default function StudentDashboard() {
           </CardContent>
         </Card>
 
-        <Card className="glass-card aura-glow border-none">
+        <Card className="bg-card border border-border shadow-sm motion-slide-up" style={{ animationDelay: '280ms' }}>
           <CardHeader className="card-header-muted py-4 px-6">
             <CardTitle className="text-sm font-semibold text-foreground">
               Attendance by Course
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4 px-6 pb-6 pt-4 max-h-[260px] overflow-y-auto">
-            {courseAttendanceData.map((course: any, i: number) => (
+          <CardContent className="space-y-3 px-6 pb-6 pt-4 max-h-[260px] overflow-y-auto">
+          {courseAttendanceData.map((course: any, i: number) => (
               <div
                 key={course.id}
-                className="space-y-1.5 motion-page-enter"
-                style={{ animationDelay: `${50 + i * 45}ms` }}
+                className="space-y-1.5 motion-slide-up"
+                style={{ animationDelay: `${300 + i * 50}ms` }}
               >
                 <div className="flex items-center justify-between text-xs">
                   <span className="font-medium text-foreground font-mono tracking-tight">
@@ -277,7 +265,7 @@ export default function StudentDashboard() {
         </Card>
       </div>
 
-      <Card className="glass-card aura-glow border-none">
+      <Card className="bg-card border border-border shadow-sm motion-surface">
         <CardHeader className="card-header-muted py-4 px-6">
           <CardTitle className="text-sm font-semibold text-foreground">
             Recent Attendance Log
@@ -285,7 +273,7 @@ export default function StudentDashboard() {
         </CardHeader>
         <CardContent className="p-0">
           <div className="overflow-hidden">
-            <Table>
+            <Table className="motion-table-stagger">
               <TableHeader>
                 <TableRow className="border-border/40 hover:bg-transparent">
                   <TableHead className="text-muted-foreground/60 font-semibold text-[10px] uppercase tracking-widest h-11 pl-6">

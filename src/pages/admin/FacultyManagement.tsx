@@ -339,7 +339,7 @@ export default function FacultyManagement() {
         </div>
 
         <div className="grid gap-6">
-          <Card className="bg-slate-900/40 border-slate-800 backdrop-blur-sm">
+          <Card className="bg-slate-900/40 border-slate-800">
             <CardHeader>
               <CardTitle className="text-sm font-medium text-slate-400 uppercase tracking-wider">
                 Active Faculty Members

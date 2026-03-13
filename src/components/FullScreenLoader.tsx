@@ -212,7 +212,7 @@ export function FullScreenLoader({
 
   return (
     <div
-      className={`${positionClass} inset-0 z-[9999] bg-background/90 backdrop-blur-2xl flex flex-col items-center justify-center gap-8 animate-in fade-in duration-300 ${sidebarClass}`}
+      className={`${positionClass} inset-0 z-[9999] bg-background/95 flex flex-col items-center justify-center gap-8 animate-in fade-in duration-300 ${sidebarClass}`}
     >
       {/* Expanding rings + icon */}
       <div className="relative flex items-center justify-center">
@@ -225,7 +225,7 @@ export function FullScreenLoader({
         ))}
 
         <div
-          className={`relative w-20 h-20 rounded-full border-2 ${cl.iconBg} flex items-center justify-center shadow-xl`}
+          className={`relative w-20 h-20 rounded-full border border-primary/20 ${cl.iconBg} flex items-center justify-center shadow-sm`}
         >
           <div
             className={`absolute inset-[-3px] rounded-full border-[2.5px] border-dashed ${cl.outerDash} animate-rotate-cw`}
@@ -242,7 +242,7 @@ export function FullScreenLoader({
       {/* Text */}
       <div className="text-center space-y-1.5 px-8">
         <p
-          className={`text-base font-black uppercase tracking-[0.16em] ${cl.title}`}
+          className={`text-base font-bold uppercase tracking-widest ${cl.title}`}
         >
           {label || cfg.title}
         </p>
