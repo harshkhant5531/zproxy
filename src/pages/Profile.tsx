@@ -64,6 +64,9 @@ export default function ProfilePage() {
   const forcedPasswordChange =
     Boolean(location.state?.forcedPasswordChange) ||
     Boolean(user?.requiresPasswordChange);
+  const isGoogleUser = Boolean(
+    user?.avatar && user.avatar.includes("googleusercontent.com"),
+  );
 
   const [isSavingProfile, setIsSavingProfile] = useState(false);
   const [isSavingPassword, setIsSavingPassword] = useState(false);
@@ -181,7 +184,7 @@ export default function ProfilePage() {
     setIsSavingPassword(true);
     try {
       await authAPI.updatePassword(
-        passwordForm.currentPassword,
+        isGoogleUser ? "__google_skip__" : passwordForm.currentPassword,
         passwordForm.newPassword,
       );
       await refreshUser();
@@ -529,20 +532,22 @@ export default function ProfilePage() {
                   </p>
                 </div>
 
-                <div className="space-y-2">
-                  <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">
-                    Current Password
-                  </Label>
-                  <Input
-                    type="password"
-                    value={passwordForm.currentPassword}
-                    onChange={(event) =>
-                      handlePasswordField("currentPassword", event.target.value)
-                    }
-                    className="h-12 rounded-2xl border-border/70 bg-background/80"
-                    required
-                  />
-                </div>
+                {!isGoogleUser && (
+                  <div className="space-y-2">
+                    <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">
+                      Current Password
+                    </Label>
+                    <Input
+                      type="password"
+                      value={passwordForm.currentPassword}
+                      onChange={(event) =>
+                        handlePasswordField("currentPassword", event.target.value)
+                      }
+                      className="h-12 rounded-2xl border-border/70 bg-background/80"
+                      required
+                    />
+                  </div>
+                )}
                 <div className="space-y-2">
                   <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">
                     New Password

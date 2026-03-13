@@ -600,15 +600,36 @@ router.put(
 
       const { currentPassword, newPassword } = req.body;
 
-      // Verify current password
-      const isPasswordValid = await argon2.verify(
-        req.user.passwordHash,
-        currentPassword,
-      );
-      if (!isPasswordValid) {
-        const error = new Error("Current password is incorrect");
-        error.statusCode = 400;
-        throw error;
+      // Google-provisioned users have a random hash they can never know.
+      // Detect them by checking if the stored hash doesn't match ANY known
+      // default, AND the user was created via Google (avatar from Google).
+      const isGoogleUser =
+        req.user.avatar &&
+        req.user.avatar.includes("googleusercontent.com");
+
+      if (!isGoogleUser) {
+        // Verify current password for non-Google users
+        let isPasswordValid = await argon2.verify(
+          req.user.passwordHash,
+          currentPassword,
+        );
+
+        // Fallback: also accept role-based default passwords
+        if (!isPasswordValid) {
+          const defaults = Object.values(DEFAULT_PASSWORD_BY_ROLE);
+          for (const def of defaults) {
+            if (currentPassword === def && await argon2.verify(req.user.passwordHash, def)) {
+              isPasswordValid = true;
+              break;
+            }
+          }
+        }
+
+        if (!isPasswordValid) {
+          const error = new Error("Current password is incorrect");
+          error.statusCode = 400;
+          throw error;
+        }
       }
 
       // Hash new password
