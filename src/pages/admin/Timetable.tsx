@@ -333,7 +333,7 @@ export default function Timetable() {
                         {session ? (
                           <div className="h-full rounded-xl bg-card/95 dark:bg-card/85 border border-border/65 p-3.5 text-sm space-y-2 group/card relative overflow-hidden flex flex-col justify-between shadow-lg transition-all hover:border-primary/30">
                             <button
-                              className="absolute top-1 right-1 p-1 opacity-0 group-hover/card:opacity-100 transition-opacity bg-red-500/10 hover:bg-red-500/20 rounded-md text-red-500 border border-red-500/20"
+                              className="absolute top-1 right-1 p-1 opacity-0 group-hover/card:opacity-100 transition-opacity bg-destructive/10 hover:bg-destructive/20 rounded-md text-destructive border border-destructive/20"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 if (confirm("Delete this timetable entry?"))

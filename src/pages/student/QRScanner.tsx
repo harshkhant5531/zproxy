@@ -356,19 +356,19 @@ export default function QRScanner() {
   // ─── Success card with ripple ───────────────────────────────────────────
   const SuccessCard = ({ record }: { record: any }) => (
     <div className="space-y-4 animate-in slide-in-from-bottom-4 duration-500">
-      <div className="relative bg-emerald-500/10 border border-emerald-500/25 rounded-2xl p-8 text-center space-y-4 overflow-hidden">
+      <div className="relative bg-success/10 border border-success/25 rounded-2xl p-8 text-center space-y-4 overflow-hidden">
         {/* Ripple rings behind icon */}
         <div className="relative mx-auto w-20 h-20 flex items-center justify-center">
-          <div className="absolute inset-0 rounded-full bg-emerald-500/15 animate-success-ripple" />
-          <div className="absolute inset-0 rounded-full bg-emerald-500/10 animate-success-ripple-late" />
-          <div className="relative w-20 h-20 rounded-full bg-emerald-500/20 border-2 border-emerald-500/40 flex items-center justify-center shadow-lg shadow-emerald-500/20">
-            <CheckCircle2 className="h-9 w-9 text-emerald-500 animate-in zoom-in-50 duration-500" />
+          <div className="absolute inset-0 rounded-full bg-success/15 animate-success-ripple" />
+          <div className="absolute inset-0 rounded-full bg-success/10 animate-success-ripple-late" />
+          <div className="relative w-20 h-20 rounded-full bg-success/20 border-2 border-success/40 flex items-center justify-center shadow-lg shadow-success/20">
+            <CheckCircle2 className="h-9 w-9 text-success animate-in zoom-in-50 duration-500" />
           </div>
         </div>
 
         {/* Title */}
         <div className="space-y-1">
-          <p className="text-emerald-500 font-semibold text-xs tracking-wide">
+          <p className="text-success font-semibold text-xs tracking-wide">
             Attendance Recorded
           </p>
           {record?.attendance?.session && (
@@ -423,7 +423,7 @@ export default function QRScanner() {
   }) => {
     const [title, ...rest] = message.split("—").map((s) => s.trim());
     return (
-      <div className="bg-destructive/8 border border-destructive/20 rounded-2xl p-5 space-y-3 animate-in fade-in slide-in-from-bottom-2 duration-300">
+      <div className="bg-destructive/10 border border-destructive/20 rounded-2xl p-5 space-y-3 animate-in fade-in slide-in-from-bottom-2 duration-300">
         <div className="flex items-start gap-3">
           <div className="w-8 h-8 rounded-lg bg-destructive/15 border border-destructive/20 flex items-center justify-center shrink-0 mt-0.5">
             <XCircle className="h-4 w-4 text-destructive" />
@@ -541,12 +541,12 @@ export default function QRScanner() {
           <>
             {/* Insecure context warning */}
             {!window.isSecureContext && (
-              <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 flex items-start gap-3">
-                <div className="w-8 h-8 rounded-lg bg-amber-500/15 border border-amber-500/20 flex items-center justify-center shrink-0">
-                  <AlertTriangle className="h-4 w-4 text-amber-500" />
+              <div className="bg-warning/10 border border-warning/20 rounded-xl p-4 flex items-start gap-3">
+                <div className="w-8 h-8 rounded-lg bg-warning/15 border border-warning/20 flex items-center justify-center shrink-0">
+                  <AlertTriangle className="h-4 w-4 text-warning" />
                 </div>
                 <div className="space-y-1">
-                  <p className="text-sm font-semibold text-amber-500">
+                  <p className="text-sm font-semibold text-warning">
                     Camera Unavailable on HTTP
                   </p>
                   <p className="text-[11px] text-muted-foreground leading-relaxed">
@@ -574,8 +574,8 @@ export default function QRScanner() {
                 </div>
                 {scanning && (
                   <div className="flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-live-blink" />
-                    <span className="text-[10px] font-medium text-emerald-500 tracking-wide">
+                    <span className="w-2 h-2 rounded-full bg-success animate-live-blink" />
+                    <span className="text-[10px] font-medium text-success tracking-wide">
                       Live
                     </span>
                   </div>
@@ -675,8 +675,8 @@ export default function QRScanner() {
                     )}
                     <div className="absolute inset-0 flex items-center justify-center">
                       {scannedData && (
-                        <div className="h-16 w-16 bg-emerald-500/20 rounded-full flex items-center justify-center border-2 border-emerald-500 shadow-xl shadow-emerald-500/20 animate-in zoom-in-50 duration-400">
-                          <CheckCircle2 className="h-8 w-8 text-emerald-500" />
+                        <div className="h-16 w-16 bg-success/20 rounded-full flex items-center justify-center border-2 border-success shadow-xl shadow-success/20 animate-in zoom-in-50 duration-400">
+                          <CheckCircle2 className="h-8 w-8 text-success" />
                         </div>
                       )}
                     </div>
@@ -874,8 +874,8 @@ export default function QRScanner() {
                                         {sess.course?.code}
                                       </span>
                                     )}
-                                    <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[9px] font-semibold uppercase px-2 shrink-0 gap-1">
-                                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-live-blink inline-block" />
+                                    <Badge className="bg-success/10 text-success border-success/20 text-[9px] font-semibold uppercase px-2 shrink-0 gap-1">
+                                      <span className="w-1.5 h-1.5 rounded-full bg-success animate-live-blink inline-block" />
                                       Live
                                     </Badge>
                                   </div>
@@ -956,25 +956,25 @@ export default function QRScanner() {
               label: "Location",
               status: "Geofenced",
               icon: MapPin,
-              color: "text-blue-500",
-              iconBg: "bg-blue-500/10 border-blue-500/20",
-              dot: "bg-blue-500",
+              color: "text-info",
+              iconBg: "bg-info/10 border-info/20",
+              dot: "bg-info",
             },
             {
               label: "Network",
               status: "Encrypted",
               icon: Wifi,
-              color: "text-violet-500",
-              iconBg: "bg-violet-500/10 border-violet-500/20",
-              dot: "bg-violet-500",
+              color: "text-info",
+              iconBg: "bg-info/10 border-info/20",
+              dot: "bg-info",
             },
             {
               label: "Identity",
               status: "Validated",
               icon: Fingerprint,
-              color: "text-emerald-500",
-              iconBg: "bg-emerald-500/10 border-emerald-500/20",
-              dot: "bg-emerald-500",
+              color: "text-success",
+              iconBg: "bg-success/10 border-success/20",
+              dot: "bg-success",
             },
           ].map((item, i) => (
             <Card

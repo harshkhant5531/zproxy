@@ -98,10 +98,10 @@ const AnimatedStatCard = ({
 
 const RiskLevelBadge = ({ level }: { level: string }) => {
   const colorMap = {
-    critical: "bg-red-100 text-red-700 border-red-200",
-    high: "bg-orange-100 text-orange-700 border-orange-200",
-    moderate: "bg-yellow-100 text-yellow-700 border-yellow-200",
-    low: "bg-green-100 text-green-700 border-green-200",
+    critical: "bg-destructive/10 text-destructive border-destructive/20",
+    high: "bg-warning/10 text-warning border-warning/20",
+    moderate: "bg-warning/10 text-warning border-warning/20",
+    low: "bg-success/10 text-success border-success/20",
   };
   return (
     <Badge className={`${colorMap[level as keyof typeof colorMap]} border`}>
@@ -156,7 +156,7 @@ const AnimatedTable = ({
             className="border-b border-border hover:bg-muted/40 transition-colors"
           >
             <td className="px-4 py-3 text-foreground">[#{row.studentId}]</td>
-            <td className="px-4 py-3 font-medium text-orange-600">
+            <td className="px-4 py-3 font-medium text-warning">
               {row.flaggedCount}
             </td>
             <td className="px-4 py-3 text-foreground">{row.flagRate}%</td>
@@ -169,7 +169,7 @@ const AnimatedTable = ({
                 transition={{ delay: delay + idx * 0.05 + 0.2 }}
               >
                 <motion.div
-                  className="h-full bg-gradient-to-r from-yellow-500 to-red-500"
+                  className="h-full bg-gradient-to-r from-warning to-destructive"
                   initial={{ width: 0 }}
                   animate={{ width: `${row.anomalyScore}%` }}
                   transition={{
@@ -216,9 +216,9 @@ export default function ProxyAuditPage() {
   if (error)
     return (
       <div className="app-page flex items-center justify-center">
-        <Card className="bg-red-50 border-red-200 w-full max-w-md">
+        <Card className="bg-destructive/10 border-destructive/20 w-full max-w-md">
           <CardContent className="p-5 sm:p-6">
-            <p className="text-red-700">Error loading proxy audit data</p>
+            <p className="text-destructive">Error loading proxy audit data</p>
           </CardContent>
         </Card>
       </div>
@@ -238,7 +238,7 @@ export default function ProxyAuditPage() {
         <div className="app-page-header mb-5">
           <div>
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground flex items-center gap-2">
-              <AlertTriangle className="w-6 h-6 sm:w-7 sm:h-7 text-orange-500" />
+              <AlertTriangle className="w-6 h-6 sm:w-7 sm:h-7 text-warning" />
               Proxy Activity Audit
             </h1>
             <p className="text-muted-foreground mt-2 text-sm sm:text-base">
@@ -316,7 +316,7 @@ export default function ProxyAuditPage() {
           value={analytics.summary?.totalFlagged || 0}
           subtitle="Proxy-suspected events"
           icon={AlertTriangle}
-          color="border-red-500 bg-red-500"
+          color="border-destructive bg-destructive"
           delay={0}
         />
         <AnimatedStatCard
@@ -324,7 +324,7 @@ export default function ProxyAuditPage() {
           value={`${analytics.summary?.detectionAccuracy || 0}%`}
           subtitle="Of all attendance"
           icon={TrendingUp}
-          color="border-orange-500 bg-orange-500"
+          color="border-warning bg-warning"
           delay={0.1}
         />
         <AnimatedStatCard
@@ -332,7 +332,7 @@ export default function ProxyAuditPage() {
           value={analytics.summary?.uniqueStudentsAtRisk || 0}
           subtitle="With flag history"
           icon={Users}
-          color="border-yellow-500 bg-yellow-500"
+          color="border-warning bg-warning"
           delay={0.2}
         />
         <AnimatedStatCard
@@ -340,7 +340,7 @@ export default function ProxyAuditPage() {
           value={analytics.summary?.criticalRiskCount || 0}
           subtitle="Immediate attention"
           icon={Activity}
-          color="border-red-600 bg-red-600"
+          color="border-destructive bg-destructive"
           delay={0.3}
         />
       </div>
@@ -352,7 +352,7 @@ export default function ProxyAuditPage() {
           value={analytics.summary?.highRiskCount || 0}
           subtitle="Requires review"
           icon={AlertTriangle}
-          color="border-orange-600 bg-orange-600"
+          color="border-warning bg-warning"
           delay={0.4}
         />
         <AnimatedStatCard
@@ -360,7 +360,7 @@ export default function ProxyAuditPage() {
           value={analytics.summary?.moderateRiskCount || 0}
           subtitle="Monitor closely"
           icon={TrendingUp}
-          color="border-yellow-600 bg-yellow-600"
+          color="border-warning bg-warning"
           delay={0.5}
         />
         <AnimatedStatCard
@@ -368,7 +368,7 @@ export default function ProxyAuditPage() {
           value={analytics.topIpAddresses?.length || 0}
           subtitle="Tracked addresses"
           icon={Network}
-          color="border-cyan-600 bg-cyan-600"
+          color="border-info bg-info"
           delay={0.6}
         />
         <AnimatedStatCard
@@ -376,7 +376,7 @@ export default function ProxyAuditPage() {
           value={analytics.deviceRiskAnalysis?.length || 0}
           subtitle="Active devices"
           icon={Smartphone}
-          color="border-purple-600 bg-purple-600"
+          color="border-info bg-info"
           delay={0.7}
         />
       </div>
@@ -393,7 +393,7 @@ export default function ProxyAuditPage() {
             <Card className="bg-card border-border">
               <CardHeader>
                 <CardTitle className="text-foreground flex items-center gap-2">
-                  <TrendingUp className="w-5 h-5 text-blue-500" />
+                  <TrendingUp className="w-5 h-5 text-info" />
                   Daily Trend Analysis
                 </CardTitle>
                 <CardDescription className="text-muted-foreground">
@@ -461,7 +461,7 @@ export default function ProxyAuditPage() {
             <Card className="bg-card border-border">
               <CardHeader>
                 <CardTitle className="text-foreground flex items-center gap-2">
-                  <Clock className="w-5 h-5 text-purple-500" />
+                  <Clock className="w-5 h-5 text-info" />
                   Hourly Risk Distribution
                 </CardTitle>
                 <CardDescription className="text-muted-foreground">
@@ -508,7 +508,7 @@ export default function ProxyAuditPage() {
               <Card className="bg-card border-border">
                 <CardHeader>
                   <CardTitle className="text-foreground flex items-center gap-2">
-                    <TrendingUp className="w-5 h-5 text-indigo-500" />
+                    <TrendingUp className="w-5 h-5 text-info" />
                     Weekly Pattern
                   </CardTitle>
                   <CardDescription className="text-muted-foreground">
@@ -546,7 +546,7 @@ export default function ProxyAuditPage() {
             <Card className="bg-card border-border">
               <CardHeader>
                 <CardTitle className="text-foreground flex items-center gap-2">
-                  <Network className="w-5 h-5 text-teal-500" />
+                  <Network className="w-5 h-5 text-info" />
                   Top IP Addresses
                 </CardTitle>
                 <CardDescription className="text-muted-foreground">
@@ -591,7 +591,7 @@ export default function ProxyAuditPage() {
           <Card className="bg-card border-border">
             <CardHeader>
               <CardTitle className="text-foreground flex items-center gap-2">
-                <Network className="w-5 h-5 text-cyan-500" />
+                <Network className="w-5 h-5 text-info" />
                 IP Cluster Analysis
               </CardTitle>
               <CardDescription className="text-muted-foreground">
@@ -636,7 +636,7 @@ export default function ProxyAuditPage() {
             <Card className="bg-card border-border">
               <CardHeader>
                 <CardTitle className="text-foreground flex items-center gap-2">
-                  <Smartphone className="w-5 h-5 text-green-500" />
+                  <Smartphone className="w-5 h-5 text-success" />
                   Device Risk Profile
                 </CardTitle>
                 <CardDescription className="text-muted-foreground">
@@ -683,7 +683,7 @@ export default function ProxyAuditPage() {
             <Card className="bg-card border-border">
               <CardHeader>
                 <CardTitle className="text-foreground flex items-center gap-2">
-                  <Users className="w-5 h-5 text-pink-500" />
+                  <Users className="w-5 h-5 text-info" />
                   High-Risk Students
                 </CardTitle>
                 <CardDescription className="text-muted-foreground">
@@ -711,7 +711,7 @@ export default function ProxyAuditPage() {
           <Card className="bg-card border-border">
             <CardHeader>
               <CardTitle className="text-foreground flex items-center gap-2">
-                <Activity className="w-5 h-5 text-red-500" />
+                <Activity className="w-5 h-5 text-destructive" />
                 Peak Risk Hours
               </CardTitle>
               <CardDescription className="text-muted-foreground">
@@ -733,7 +733,7 @@ export default function ProxyAuditPage() {
                     </span>
                     <div className="flex-1 h-3 bg-muted rounded-full overflow-hidden">
                       <motion.div
-                        className="h-full bg-gradient-to-r from-red-500 to-pink-600"
+                        className="h-full bg-gradient-to-r from-destructive to-info"
                         initial={{ width: 0 }}
                         animate={{ width: `${hour.riskPercentage}%` }}
                         transition={{
@@ -742,7 +742,7 @@ export default function ProxyAuditPage() {
                         }}
                       />
                     </div>
-                    <span className="font-semibold text-red-400">
+                    <span className="font-semibold text-destructive/90">
                       {hour.riskPercentage}%
                     </span>
                   </motion.div>
@@ -764,7 +764,7 @@ export default function ProxyAuditPage() {
           <Card className="bg-card border-border">
             <CardHeader>
               <CardTitle className="text-foreground flex items-center gap-2">
-                <Users className="w-5 h-5 text-lime-500" />
+                <Users className="w-5 h-5 text-info" />
                 Student Pairs Linked
               </CardTitle>
               <CardDescription className="text-muted-foreground">
@@ -786,7 +786,7 @@ export default function ProxyAuditPage() {
                       <span className="text-foreground">
                         Student {pair.studentA} ↔ {pair.studentB}
                       </span>
-                      <Badge className="bg-red-100 text-red-700 border border-red-200 text-xs">
+                      <Badge className="bg-destructive/10 text-destructive border border-destructive/20 text-xs">
                         {pair.occurrences}x
                       </Badge>
                     </motion.div>
@@ -809,7 +809,7 @@ export default function ProxyAuditPage() {
             <CardHeader>
               <CardTitle className="text-foreground flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <AlertTriangle className="w-5 h-5 text-orange-500" />
+                  <AlertTriangle className="w-5 h-5 text-warning" />
                   Flagged Records
                 </div>
                 <span className="text-sm font-normal text-muted-foreground">
@@ -868,7 +868,7 @@ export default function ProxyAuditPage() {
                           <div className="flex items-center gap-2">
                             <div className="w-16 h-2 bg-muted rounded-full overflow-hidden">
                               <motion.div
-                                className="h-full bg-gradient-to-r from-yellow-500 to-red-500"
+                                className="h-full bg-gradient-to-r from-warning to-destructive"
                                 initial={{ width: 0 }}
                                 animate={{ width: `${record.riskScore}%` }}
                                 transition={{
@@ -877,7 +877,7 @@ export default function ProxyAuditPage() {
                                 }}
                               />
                             </div>
-                            <span className="text-xs font-semibold text-orange-400 w-6">
+                            <span className="text-xs font-semibold text-warning/90 w-6">
                               {record.riskScore}
                             </span>
                           </div>

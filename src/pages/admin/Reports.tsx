@@ -225,7 +225,7 @@ export default function Reports() {
                     Scope: {r.scope} · Status: {r.status}
                   </p>
                   <div className="mt-2 flex items-center gap-2 text-[11px] text-muted-foreground/50">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-success" />
                     Generated: {new Date(r.createdAt).toLocaleDateString()}
                   </div>
                 </div>

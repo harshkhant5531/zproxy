@@ -148,8 +148,8 @@ export default function FacultyLeaves() {
           <Card className="glass-card border-none">
             <CardContent className="py-16 text-center">
               <div className="flex flex-col items-center gap-3">
-                <div className="h-14 w-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
-                  <FileText className="h-6 w-6 text-emerald-500" />
+                <div className="h-14 w-14 rounded-2xl bg-success/10 border border-success/20 flex items-center justify-center">
+                  <FileText className="h-6 w-6 text-success" />
                 </div>
                 <p className="text-base font-semibold text-foreground">
                   All caught up
@@ -167,7 +167,7 @@ export default function FacultyLeaves() {
                 <CardTitle className="text-sm font-semibold text-foreground flex items-center gap-2">
                   <FileText className="h-4 w-4 text-primary" />
                   Pending Approvals
-                  <span className="ml-1 px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 text-[11px] font-bold">
+                  <span className="ml-1 px-2 py-0.5 rounded-full bg-warning/10 text-warning dark:text-warning border border-warning/20 text-[11px] font-bold">
                     {leaves.length}
                   </span>
                 </CardTitle>
@@ -266,7 +266,7 @@ export default function FacultyLeaves() {
                           <div className="flex justify-end gap-2">
                             <Button
                               size="sm"
-                              className="h-8 px-3 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 hover:border-emerald-500/40 transition-all shadow-none"
+                              className="h-8 px-3 bg-success/10 hover:bg-success/20 text-emerald-600 dark:text-emerald-400 border border-success/20 hover:border-success/40 transition-all shadow-none"
                               onClick={() => approveMutation.mutate(leave.id)}
                               disabled={processingLeaveId !== null}
                               title="Approve"
@@ -281,7 +281,7 @@ export default function FacultyLeaves() {
                             </Button>
                             <Button
                               size="sm"
-                              className="h-8 px-3 bg-red-500/10 hover:bg-red-500/20 text-red-600 dark:text-red-400 border border-red-500/20 hover:border-red-500/40 transition-all shadow-none"
+                              className="h-8 px-3 bg-destructive/10 hover:bg-destructive/20 text-destructive dark:text-destructive/90 border border-destructive/20 hover:border-destructive/40 transition-all shadow-none"
                               onClick={() => rejectMutation.mutate(leave.id)}
                               disabled={processingLeaveId !== null}
                               title="Reject"

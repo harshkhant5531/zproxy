@@ -153,7 +153,7 @@ export default function FacultyTimetable() {
                                 {session.roomNumber || "LECTURE HALL"}
                               </div>
                               <div className="flex items-center gap-1.5 text-xs text-foreground/70 font-mono">
-                                <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 pulsate" />
+                                <div className="h-1.5 w-1.5 rounded-full bg-success pulsate" />
                                 REAL-TIME SYNC
                               </div>
                             </div>

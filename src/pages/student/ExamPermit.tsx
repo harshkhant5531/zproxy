@@ -97,13 +97,13 @@ export default function ExamPermit() {
 
         <div className="relative group motion-float-delayed">
           {/* Holographic Decorations */}
-          <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 to-purple-600/30 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000" />
+          <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 to-info/30 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000" />
 
           <Card
-            className={`relative glass-card border-2 backdrop-blur-xl shadow-2xl overflow-hidden motion-surface motion-sheen ${overallEligible ? "border-primary/20" : "border-rose-500/20"}`}
+            className={`relative glass-card border-2 backdrop-blur-xl shadow-2xl overflow-hidden motion-surface motion-sheen ${overallEligible ? "border-primary/20" : "border-destructive/20"}`}
           >
             {/* Chip/HID visual element */}
-            <div className="absolute top-8 right-8 h-10 w-14 bg-gradient-to-br from-yellow-500/40 to-yellow-600/20 rounded-md border border-yellow-500/30 opacity-60 motion-float" />
+            <div className="absolute top-8 right-8 h-10 w-14 bg-gradient-to-br from-warning/40 to-warning/20 rounded-md border border-warning/30 opacity-60 motion-float" />
 
             <CardContent className="p-10 space-y-8">
               <div className="flex justify-between items-start border-b border-border pb-6">
@@ -116,7 +116,7 @@ export default function ExamPermit() {
                   </h2>
                   <div className="flex items-center gap-2 mt-2">
                     <div
-                      className={`h-1.5 w-10 rounded-full ${overallEligible ? "bg-primary shadow-[0_0_8px_rgba(34,211,238,0.5)]" : "bg-rose-500"}`}
+                      className={`h-1.5 w-10 rounded-full ${overallEligible ? "bg-primary shadow-[0_0_8px_rgba(34,211,238,0.5)]" : "bg-destructive"}`}
                     />
                     <span className="text-xs font-mono text-muted-foreground uppercase tracking-wide">
                       {overallEligible
@@ -175,7 +175,7 @@ export default function ExamPermit() {
                     >
                       <div className="flex items-center gap-3">
                         <div
-                          className={`h-1.5 w-1.5 rounded-full ${course.eligible ? "bg-primary animate-pulse" : "bg-rose-500"}`}
+                          className={`h-1.5 w-1.5 rounded-full ${course.eligible ? "bg-primary animate-pulse" : "bg-destructive"}`}
                         />
                         <div>
                           <p className="text-sm font-semibold text-foreground tracking-tight">
@@ -189,7 +189,7 @@ export default function ExamPermit() {
                       {course.eligible ? (
                         <ShieldCheck className="h-4 w-4 text-primary" />
                       ) : (
-                        <Lock className="h-4 w-4 text-rose-500" />
+                        <Lock className="h-4 w-4 text-destructive" />
                       )}
                     </div>
                   ))}
@@ -217,11 +217,11 @@ export default function ExamPermit() {
                       size="lg"
                       variant="destructive"
                       disabled
-                      className="w-full h-14 text-base font-semibold bg-muted/50 border border-rose-500/40 text-rose-500 opacity-60"
+                      className="w-full h-14 text-base font-semibold bg-muted/50 border border-destructive/40 text-destructive opacity-60"
                     >
                       <Lock className="mr-3 h-5 w-5" /> Hall Ticket Inhibited
                     </Button>
-                    <p className="text-xs text-rose-400 font-mono tracking-[0.03em]">
+                    <p className="text-xs text-destructive/90 font-mono tracking-[0.03em]">
                       Minimum 75% attendance required across all sectors for
                       authorization.
                     </p>

@@ -237,11 +237,11 @@ export default function VerifyAttendance() {
         <CardContent className="p-5 sm:p-8 lg:p-10 space-y-6 sm:space-y-8 text-center">
           {status === "success" ? (
             <div className="space-y-6 animate-in zoom-in-95 duration-500">
-              <div className="mx-auto h-28 w-28 bg-emerald-500/10 border-2 border-emerald-500 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(16,185,129,0.2)]">
-                <CheckCircle2 className="h-14 w-14 text-emerald-500" />
+              <div className="mx-auto h-28 w-28 bg-success/10 border-2 border-success rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(16,185,129,0.2)]">
+                <CheckCircle2 className="h-14 w-14 text-success" />
               </div>
               <div className="space-y-2">
-                <h2 className="text-emerald-500 font-medium tracking-tight text-2xl">
+                <h2 className="text-success font-medium tracking-tight text-2xl">
                   Verification Complete
                 </h2>
                 <p className="text-muted-foreground text-sm sm:text-base">
@@ -250,18 +250,18 @@ export default function VerifyAttendance() {
               </div>
               <Button
                 onClick={() => navigate("/student/dashboard")}
-                className="w-full h-12 bg-emerald-500 hover:bg-emerald-600 text-black font-medium text-base"
+                className="w-full h-12 bg-success hover:bg-emerald-600 text-black font-medium text-base"
               >
                 Return to Dashboard
               </Button>
             </div>
           ) : (
             <div className="space-y-6 animate-in fade-in duration-500">
-              <div className="mx-auto h-28 w-28 bg-red-500/10 border-2 border-red-500 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(239,68,68,0.2)]">
-                <AlertTriangle className="h-14 w-14 text-red-500" />
+              <div className="mx-auto h-28 w-28 bg-destructive/10 border-2 border-destructive rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(239,68,68,0.2)]">
+                <AlertTriangle className="h-14 w-14 text-destructive" />
               </div>
               <div className="space-y-2">
-                <h2 className="text-red-500 font-medium tracking-tight text-2xl">
+                <h2 className="text-destructive font-medium tracking-tight text-2xl">
                   Verification Failed
                 </h2>
                 <p className="text-muted-foreground text-sm sm:text-base font-medium">

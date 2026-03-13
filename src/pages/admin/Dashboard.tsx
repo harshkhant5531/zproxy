@@ -240,10 +240,10 @@ export default function AdminDashboard() {
                         : "MODERATE";
                   const colorClass =
                     severity === "CRITICAL"
-                      ? "text-rose-500 bg-rose-500/10 border-rose-500/30"
+                      ? "text-destructive bg-destructive/10 border-destructive/30"
                       : severity === "HIGH"
-                        ? "text-orange-500 bg-orange-500/10 border-orange-500/30"
-                        : "text-yellow-500 bg-yellow-500/10 border-yellow-500/30";
+                        ? "text-warning bg-warning/10 border-warning/30"
+                        : "text-warning bg-warning/10 border-warning/30";
                   return (
                     <div
                       key={s.id}
@@ -274,7 +274,7 @@ export default function AdminDashboard() {
                 })
               ) : (
                 <div className="flex flex-col items-center justify-center h-full gap-2">
-                  <ShieldAlert className="h-8 w-8 opacity-30 text-emerald-500" />
+                  <ShieldAlert className="h-8 w-8 opacity-30 text-success" />
                   <p className="text-sm font-medium text-emerald-600 dark:text-emerald-400">
                     All clear
                   </p>

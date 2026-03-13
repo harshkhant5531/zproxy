@@ -191,8 +191,8 @@ export default function AdminLeaves() {
           <Card className="glass-card border-none">
             <CardContent className="py-16 text-center">
               <div className="flex flex-col items-center gap-3">
-                <div className="h-14 w-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
-                  <FileText className="h-6 w-6 text-emerald-500" />
+                <div className="h-14 w-14 rounded-2xl bg-success/10 border border-success/20 flex items-center justify-center">
+                  <FileText className="h-6 w-6 text-success" />
                 </div>
                 <p className="text-base font-semibold text-foreground">
                   All caught up
@@ -213,7 +213,7 @@ export default function AdminLeaves() {
                   {statusFilter === "pending"
                     ? "Pending Approvals"
                     : `${statusFilter.charAt(0).toUpperCase() + statusFilter.slice(1)} Applications`}
-                  <span className="ml-1 px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 text-[11px] font-bold">
+                  <span className="ml-1 px-2 py-0.5 rounded-full bg-warning/10 text-warning dark:text-warning border border-warning/20 text-[11px] font-bold">
                     {leaves.length}
                   </span>
                 </CardTitle>
@@ -321,7 +321,7 @@ export default function AdminLeaves() {
                               <Button
                                 size="sm"
                                 variant="outline"
-                                className="h-8 px-3 text-xs font-semibold border-emerald-500/30 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/10 gap-1.5"
+                                className="h-8 px-3 text-xs font-semibold border-success/30 text-emerald-600 dark:text-emerald-400 hover:bg-success/10 gap-1.5"
                                 onClick={() => approveMutation.mutate(leave.id)}
                                 disabled={isProcessing}
                               >
