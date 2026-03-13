@@ -565,7 +565,6 @@ export default function QRScanner() {
       <FullScreenLoader
         show={overlayType !== null}
         operation={overlayType ?? "loading"}
-        withSidebarOffset={true}
       />
 
       <div className="app-page max-w-5xl mx-auto relative motion-page-enter">

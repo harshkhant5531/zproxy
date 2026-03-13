@@ -33,11 +33,6 @@ import { useParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { sessionsAPI, attendanceAPI } from "@/lib/api";
 import { buildAttendanceVerifyUrl } from "@/lib/runtime";
-import {
-  getGeolocationPermissionState,
-  getLocationErrorMessage,
-  requestStabilizedPositionWithRetry,
-} from "@/lib/location";
 import { format } from "date-fns";
 import { toast } from "sonner";
 
@@ -48,7 +43,6 @@ export default function LiveSession() {
   const [showOverride, setShowOverride] = useState(false);
   const [overrideStudentId, setOverrideStudentId] = useState("");
   const [overrideReason, setOverrideReason] = useState("");
-  const [isCalibratingAnchor, setIsCalibratingAnchor] = useState(false);
 
   const { data: sessionData, isLoading: isSessionLoading } = useQuery({
     queryKey: ["session", id],
@@ -128,18 +122,6 @@ export default function LiveSession() {
     },
   });
 
-  const calibrateAnchorMutation = useMutation({
-    mutationFn: (payload: { facultyLat: number; facultyLng: number }) =>
-      sessionsAPI.updateSession(id!, payload),
-    onSuccess: () => {
-      toast.success("Session anchor updated to current faculty location.");
-      queryClient.invalidateQueries({ queryKey: ["session", id] });
-    },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message || "Failed to calibrate anchor");
-    },
-  });
-
   useEffect(() => {
     if (
       sessionData &&
@@ -178,8 +160,8 @@ export default function LiveSession() {
   const eligibleStudents =
     session?.batches?.length > 0
       ? allEnrolledStudents.filter((s: any) =>
-          session.batches.includes(s.studentProfile?.batch),
-        )
+        session.batches.includes(s.studentProfile?.batch),
+      )
       : allEnrolledStudents;
   const presentStudentIds = new Set(
     presentRecords.map((a: any) => a.studentId),
@@ -191,10 +173,10 @@ export default function LiveSession() {
   // For completed view: map absent records to student-shape objects
   const absenteeRoster: any[] = isCompleted
     ? absentRecords.map((r: any) => ({
-        id: r.studentId,
-        username: r.student?.username || "Unknown",
-        studentProfile: r.student?.studentProfile || null,
-      }))
+      id: r.studentId,
+      username: r.student?.username || "Unknown",
+      studentProfile: r.student?.studentProfile || null,
+    }))
     : absentees;
 
   // Proxy suspects: attendance records whose notes contain [PROXY_SUSPECT…] or [PROXY_DETECTED…]
@@ -205,9 +187,7 @@ export default function LiveSession() {
   );
   const parseProxyFlag = (notes: string | null): number | null => {
     if (!notes) return null;
-    const m = notes.match(
-      /\[PROXY_(?:SUSPECT|DETECTED):sharedWith:(\d+)[^\]]*\]/,
-    );
+    const m = notes.match(/\[PROXY_(?:SUSPECT|DETECTED):sharedWith:(\d+)[^\]]*\]/);
     return m ? parseInt(m[1]) : null;
   };
 
@@ -288,11 +268,9 @@ export default function LiveSession() {
       }
 
       const location = await requestStabilizedPositionWithRetry({
-        timeout: 30000,
+        timeout: 20000,
         desiredAccuracyMeters: 55,
-        maxRetries: 4,
-        sampleCount: 8,
-        intervalMs: 800,
+        maxRetries: 3,
       });
 
       if (Number.isFinite(location.accuracy) && location.accuracy > 90) {
@@ -337,7 +315,7 @@ export default function LiveSession() {
             : "Saving Anchor..."
         }
       />
-      <div className="app-page motion-page-enter">
+      <div className="app-page">
         <div className="app-page-header">
           <div>
             <h1 className="page-header-title">
@@ -353,12 +331,12 @@ export default function LiveSession() {
             {session?.batches && session.batches.length > 0 && (
               <div className="flex flex-wrap gap-1 mt-2">
                 {session.batches.map((b: string) => (
-                <span
-                  key={b}
-                  className="px-2 py-0.5 bg-primary/10 text-primary border border-primary/20 rounded text-[10px] font-bold uppercase tracking-widest"
-                >
-                  Batch {b}
-                </span>
+                  <span
+                    key={b}
+                    className="px-2 py-0.5 bg-primary/10 text-primary border border-primary/20 rounded text-[10px] font-bold uppercase tracking-widest"
+                  >
+                    Batch {b}
+                  </span>
                 ))}
                 {session?.geofenceRadius && (
                   <span className="px-2 py-0.5 bg-warning/10 text-warning border border-warning/20 rounded text-[10px] font-black uppercase tracking-wider flex items-center gap-1">
@@ -379,17 +357,6 @@ export default function LiveSession() {
                   className="border-border text-foreground hover:bg-accent"
                 >
                   <UserPlus className="mr-2 h-4 w-4" /> Manual Override
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleCalibrateAnchor}
-                  disabled={
-                    isCalibratingAnchor || calibrateAnchorMutation.isPending
-                  }
-                  className="border-primary/30 text-primary hover:bg-primary/10"
-                >
-                  <MapPin className="mr-2 h-4 w-4" /> Calibrate Anchor
                 </Button>
                 <Button
                   variant="destructive"
@@ -843,8 +810,8 @@ export default function LiveSession() {
                     const proxySharedWithId = parseProxyFlag(log.notes);
                     const proxyPartner = proxySharedWithId
                       ? attendanceData.find(
-                          (a: any) => a.studentId === proxySharedWithId,
-                        )
+                        (a: any) => a.studentId === proxySharedWithId,
+                      )
                       : null;
                     return (
                       <TableRow

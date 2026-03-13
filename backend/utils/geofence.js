@@ -4,8 +4,6 @@ const MIN_RADIUS_METERS = 10;
 const MAX_RADIUS_METERS = 200;
 const DEFAULT_GPS_TOLERANCE_METERS = 20;
 const MAX_GPS_TOLERANCE_METERS = 75;
-const DEFAULT_MOBILE_DRIFT_BUFFER_METERS = 40;
-const MAX_MOBILE_DRIFT_BUFFER_METERS = 90;
 const DEFAULT_MAX_ACCEPTABLE_ACCURACY_METERS = 250;
 const MAX_MAX_ACCEPTABLE_ACCURACY_METERS = 400;
 const MAX_LOCATION_AGE_MS = 15000;
@@ -168,27 +166,6 @@ function resolveRetryBandMeters(accuracyMetersInput) {
   return Math.min(60, Math.max(10, Math.round(parsedAccuracy * 0.5)));
 }
 
-function resolveMobileDriftBufferMeters(accuracyMetersInput) {
-  const configured = toFiniteNumber(process.env.MOBILE_GPS_DRIFT_BUFFER);
-  if (configured !== null && configured >= 0) {
-    return Math.min(
-      MAX_MOBILE_DRIFT_BUFFER_METERS,
-      Math.max(0, Math.round(configured)),
-    );
-  }
-
-  const accuracy = toFiniteNumber(accuracyMetersInput);
-  if (accuracy === null || accuracy <= 0) {
-    return 0;
-  }
-
-  // Compensate common handset drift while keeping strict radius intent.
-  if (accuracy <= 25) return DEFAULT_MOBILE_DRIFT_BUFFER_METERS;
-  if (accuracy <= 40) return 25;
-  if (accuracy <= 60) return 12;
-  return 0;
-}
-
 function validateStudentGeofence(
   session,
   lat,
@@ -265,13 +242,7 @@ function validateStudentGeofence(
   const toleranceMeters = resolveAccuracyToleranceMeters(
     reportedAccuracyMeters,
   );
-  const driftBufferMeters = resolveMobileDriftBufferMeters(
-    reportedAccuracyMeters,
-  );
-  const distanceMeters = Math.max(
-    0,
-    rawDistanceMeters - toleranceMeters - driftBufferMeters,
-  );
+  const distanceMeters = Math.max(0, rawDistanceMeters - toleranceMeters);
   const retryBandMeters = resolveRetryBandMeters(reportedAccuracyMeters);
 
   if (distanceMeters > radiusMeters) {
@@ -284,7 +255,6 @@ function validateStudentGeofence(
       error.rawDistanceMeters = rawDistanceMeters;
       error.toleranceMeters = toleranceMeters;
       error.retryBandMeters = retryBandMeters;
-      error.driftBufferMeters = driftBufferMeters;
       error.reportedAccuracyMeters = reportedAccuracyMeters;
       error.radiusMeters = radiusMeters;
       error.locationAgeMs = locationAgeMs;
@@ -301,7 +271,6 @@ function validateStudentGeofence(
     error.rawDistanceMeters = rawDistanceMeters;
     error.toleranceMeters = toleranceMeters;
     error.retryBandMeters = retryBandMeters;
-    error.driftBufferMeters = driftBufferMeters;
     error.reportedAccuracyMeters = reportedAccuracyMeters;
     error.radiusMeters = radiusMeters;
     error.locationAgeMs = locationAgeMs;
@@ -316,7 +285,6 @@ function validateStudentGeofence(
     rawDistanceMeters,
     toleranceMeters,
     retryBandMeters,
-    driftBufferMeters,
     radiusMeters,
     reportedAccuracyMeters,
     locationAgeMs,
