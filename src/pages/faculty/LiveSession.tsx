@@ -271,15 +271,15 @@ export default function LiveSession() {
         operation="saving"
         label="Applying Override..."
       />
-      <div className="space-y-6 px-4 sm:px-0 scroll-mt-20">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="app-page">
+        <div className="app-page-header">
           <div>
-            <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+            <h1 className="page-header-title">
               {session?.subject?.name || session?.course?.code} —{" "}
               {session?.topic}
             </h1>
-            <p className="text-sm text-muted-foreground font-medium flex items-center gap-2 mt-1">
-              <Clock className="h-4 w-4 text-primary/70" />
+            <p className="page-header-sub flex items-center gap-2">
+              <Clock className="h-3 w-3 text-primary/70" />
               {session?.date &&
                 format(new Date(session.date), "MMMM dd, yyyy")}{" "}
               • {session?.startTime} - {session?.endTime}
@@ -295,7 +295,7 @@ export default function LiveSession() {
                   </span>
                 ))}
                 {session?.geofenceRadius && (
-                  <span className="px-2 py-0.5 bg-amber-500/10 text-amber-500 border border-amber-500/20 rounded text-[10px] font-black uppercase tracking-wider flex items-center gap-1">
+                  <span className="px-2 py-0.5 bg-warning/10 text-warning border border-warning/20 rounded text-[10px] font-black uppercase tracking-wider flex items-center gap-1">
                     <MapPin className="h-3 w-3" /> Grid:{" "}
                     {session.geofenceRadius}m
                   </span>
@@ -330,7 +330,7 @@ export default function LiveSession() {
                 variant="outline"
                 size="sm"
                 onClick={copyAbsenteeReport}
-                className="border-emerald-500/50 text-emerald-500 hover:bg-emerald-500/10 font-bold uppercase tracking-wider"
+                className="border-success/50 text-success hover:bg-success/10 font-bold uppercase tracking-wider"
               >
                 <RefreshCw className="mr-2 h-4 w-4" /> Copy Export
               </Button>
@@ -346,7 +346,7 @@ export default function LiveSession() {
                   {isCompleted ? "Session Statistics" : "Secure Attendance QR"}
                 </span>
                 <span
-                  className={`px-2 py-0.5 rounded-full text-[9px] ${isCompleted ? "bg-emerald-500/10 text-emerald-500" : "bg-primary/10 text-primary animate-pulse"}`}
+                  className={`px-2 py-0.5 rounded-full text-[9px] ${isCompleted ? "bg-success/10 text-success" : "bg-primary/10 text-primary animate-pulse"}`}
                 >
                   {isCompleted ? "Concluded" : "Live Feed"}
                 </span>
@@ -423,7 +423,7 @@ export default function LiveSession() {
                       <p className="text-[10px] uppercase text-muted-foreground font-black tracking-widest mb-1">
                         Present
                       </p>
-                      <p className="text-4xl font-black text-emerald-500">
+                      <p className="text-4xl font-black text-success">
                         {presentCount}
                       </p>
                     </div>
@@ -456,7 +456,7 @@ export default function LiveSession() {
                       ))}
                       {absenteeRoster.length === 0 && (
                         <div className="text-center py-8">
-                          <CheckCircle2 className="h-8 w-8 text-emerald-500 mx-auto mb-2 opacity-20" />
+                          <CheckCircle2 className="h-8 w-8 text-success mx-auto mb-2 opacity-20" />
                           <p className="text-xs text-muted-foreground italic">
                             No absentees detected
                           </p>
@@ -516,11 +516,11 @@ export default function LiveSession() {
             <CardContent className="p-6">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="bg-background p-4 rounded-xl text-center border border-border group hover:border-primary/30 transition-colors shadow-sm">
-                  <Shield className="h-6 w-6 text-emerald-500 mx-auto mb-2 group-hover:scale-110 transition-transform" />
+                  <Shield className="h-6 w-6 text-success mx-auto mb-2 group-hover:scale-110 transition-transform" />
                   <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">
                     Encryption
                   </p>
-                  <p className="text-xs text-emerald-500 font-black mt-1">
+                  <p className="text-xs text-success font-black mt-1">
                     AES-256 ACTIVE
                   </p>
                 </div>
@@ -534,11 +534,11 @@ export default function LiveSession() {
                   </p>
                 </div>
                 <div className="bg-background p-4 rounded-xl text-center border border-border group hover:border-primary/30 transition-colors shadow-sm">
-                  <AlertTriangle className="h-6 w-6 text-emerald-500 mx-auto mb-2 group-hover:scale-110 transition-transform" />
+                  <AlertTriangle className="h-6 w-6 text-success mx-auto mb-2 group-hover:scale-110 transition-transform" />
                   <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">
                     Adversary
                   </p>
-                  <p className="text-xs text-emerald-500 font-black mt-1">
+                  <p className="text-xs text-success font-black mt-1">
                     ZERO THREAT
                   </p>
                 </div>
@@ -549,9 +549,9 @@ export default function LiveSession() {
 
         {/* ─── Proxy Suspects Alert ─────────────────────────────────────────── */}
         {proxyRecords.length > 0 && (
-          <Card className="bg-amber-500/5 border-amber-500/30 shadow-lg animate-in fade-in">
+          <Card className="bg-warning/5 border-warning/30 shadow-lg animate-in fade-in">
             <CardHeader className="pb-2 px-6 pt-4">
-              <CardTitle className="text-[10px] font-black text-amber-500 uppercase tracking-[0.2em] flex items-center gap-2">
+              <CardTitle className="text-[10px] font-black text-warning uppercase tracking-[0.2em] flex items-center gap-2">
                 <AlertTriangle className="h-4 w-4" />
                 {proxyRecords.length} Proxy Detected
                 {proxyRecords.length > 1 ? "s" : ""}
@@ -571,9 +571,9 @@ export default function LiveSession() {
                   return (
                     <div
                       key={log.id}
-                      className="flex items-center gap-3 bg-background border border-amber-500/20 rounded-lg px-4 py-2.5"
+                      className="flex items-center gap-3 bg-background border border-warning/20 rounded-lg px-4 py-2.5"
                     >
-                      <AlertTriangle className="h-4 w-4 text-amber-500 shrink-0" />
+                      <AlertTriangle className="h-4 w-4 text-warning shrink-0" />
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-bold text-foreground">
                           {log.student?.studentProfile?.fullName ||
@@ -581,14 +581,14 @@ export default function LiveSession() {
                         </p>
                         <p className="text-[10px] text-muted-foreground font-mono">
                           Shared device with{" "}
-                          <span className="text-amber-500 font-bold">
+                          <span className="text-warning font-bold">
                             {sharedRecord?.student?.studentProfile?.fullName ||
                               sharedRecord?.student?.username ||
                               `Student #${sharedWithId}`}
                           </span>
                         </p>
                       </div>
-                      <span className="text-[9px] font-black text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded uppercase tracking-wider shrink-0">
+                      <span className="text-[9px] font-black text-warning bg-warning/10 px-2 py-0.5 rounded uppercase tracking-wider shrink-0">
                         Violation
                       </span>
                     </div>
@@ -671,7 +671,7 @@ export default function LiveSession() {
               </Button>
             </CardTitle>
             <div className="flex flex-wrap gap-2 items-center mt-2 px-6">
-              <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest border border-emerald-500/30 px-2 py-0.5 rounded">
+              <span className="text-[10px] font-black text-success uppercase tracking-widest border border-success/30 px-2 py-0.5 rounded">
                 Grid Status: Active ({sessionData?.geofenceRadius}m)
               </span>
               {sessionData?.facultyLat ? (
@@ -679,7 +679,7 @@ export default function LiveSession() {
                   <MapPin className="h-3 w-3" /> Anchor Locked
                 </span>
               ) : (
-                <span className="text-[10px] font-black text-amber-500 uppercase tracking-widest border border-amber-500/30 px-2 py-0.5 rounded flex items-center gap-1">
+                <span className="text-[10px] font-black text-warning uppercase tracking-widest border border-warning/30 px-2 py-0.5 rounded flex items-center gap-1">
                   <AlertTriangle className="h-3 w-3" /> Campus Fallback
                 </span>
               )}
@@ -715,7 +715,7 @@ export default function LiveSession() {
                     return (
                       <TableRow
                         key={log.id}
-                        className={`border-border group hover:bg-muted/20 transition-colors ${proxySharedWithId ? "bg-amber-500/5 hover:bg-amber-500/10" : ""}`}
+                        className={`border-border group hover:bg-muted/20 transition-colors ${proxySharedWithId ? "bg-warning/5 hover:bg-warning/10" : ""}`}
                       >
                         <TableCell className="pl-6">
                           <div className="py-1">
@@ -728,8 +728,8 @@ export default function LiveSession() {
                             </p>
                             {proxySharedWithId && (
                               <div className="flex items-center gap-1 mt-1">
-                                <AlertTriangle className="h-3 w-3 text-amber-500" />
-                                <span className="text-[9px] font-black text-amber-500 uppercase tracking-wider">
+                                <AlertTriangle className="h-3 w-3 text-warning" />
+                                <span className="text-[9px] font-black text-warning uppercase tracking-wider">
                                   Proxy Violation — shared with{" "}
                                   {proxyPartner?.student?.studentProfile
                                     ?.fullName ||

@@ -194,14 +194,12 @@ export default function FacultyManagement() {
         show={assignSubjectMutation.isPending}
         operation="saving"
       />
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
+      <div className="app-page">
+        <div className="app-page-header">
           <div>
-            <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-              Faculty Management
-            </h1>
-            <p className="text-sm text-muted-foreground mt-1">
-              Manage faculty profiles and subject assignments.
+            <h1 className="page-header-title">Faculty Management</h1>
+            <p className="page-header-sub">
+              Manage faculty profiles and subject assignments
             </p>
           </div>
           <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
@@ -432,7 +430,7 @@ export default function FacultyManagement() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="text-red-400 hover:text-red-500 hover:bg-red-500/10"
+                            className="text-destructive/90 hover:text-destructive hover:bg-destructive/10"
                             onClick={() => handleDelete(member.id)}
                           >
                             <Trash2 className="h-4 w-4" />

@@ -65,13 +65,13 @@ export default function FacultyTimetable() {
   return (
     <>
       <FullScreenLoader show={isLoading} operation="loading" />
-      <div className="space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="app-page">
+        <div className="app-page-header">
           <div>
-            <h1 className="text-2xl font-semibold tracking-tight text-foreground flex items-center gap-3">
-              <Calendar className="h-7 w-7 text-primary" /> Academic Schedule
+            <h1 className="page-header-title flex items-center gap-2">
+              <Calendar className="h-5 w-5 text-primary" /> Academic Schedule
             </h1>
-            <p className="text-sm text-muted-foreground mt-1">
+            <p className="page-header-sub">
               {user?.profile?.fullName || user?.username}
             </p>
           </div>
@@ -153,7 +153,7 @@ export default function FacultyTimetable() {
                                 {session.roomNumber || "LECTURE HALL"}
                               </div>
                               <div className="flex items-center gap-1.5 text-xs text-foreground/70 font-mono">
-                                <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 pulsate" />
+                                <div className="h-1.5 w-1.5 rounded-full bg-success pulsate" />
                                 REAL-TIME SYNC
                               </div>
                             </div>

@@ -57,6 +57,30 @@ type GeofenceDebug = {
 
 function errorLabel(err: any): string {
   const msg: string = err?.response?.data?.message || err?.message || "";
+  const decisionReason =
+    err?.response?.data?.debug?.geofence?.decisionReason || err?.decisionReason;
+
+  if (decisionReason === "outside_geofence") {
+    const distance = err?.response?.data?.debug?.geofence?.distanceMeters;
+    const radius = err?.response?.data?.debug?.geofence?.radiusMeters;
+    if (typeof distance === "number" && typeof radius === "number") {
+      return `Outside Geofence — You are ${Math.round(distance)}m away. Move within ${Math.round(radius)}m of faculty and retry.`;
+    }
+    return "Outside Geofence — Move closer to faculty and retry.";
+  }
+
+  if (decisionReason === "borderline_retry") {
+    return "GPS Unstable — Hold still for a few seconds and retry. We will auto-retry shortly.";
+  }
+
+  if (decisionReason === "gps_accuracy_too_low") {
+    return "Weak GPS Signal — Move to an open area (balcony/window) and retry.";
+  }
+
+  if (decisionReason === "stale_location_sample") {
+    return "Stale Location Sample — Refresh location and scan again.";
+  }
+
   if (msg.toLowerCase().includes("batch"))
     return "Wrong Batch — This session is restricted to a different batch.";
   if (msg.toLowerCase().includes("already") || err?.response?.status === 409)
@@ -211,6 +235,78 @@ export default function QRScanner() {
     reason === "gps_accuracy_too_low" ||
     reason === "stale_location_sample";
 
+  const shouldRetryOutsideGeofence = (geofenceDebug?: GeofenceDebug | null) => {
+    if (!geofenceDebug) return false;
+    const rawDistance = geofenceDebug.rawDistanceMeters;
+    const radius = geofenceDebug.radiusMeters;
+    const retryBand = geofenceDebug.retryBandMeters ?? 0;
+
+    if (typeof rawDistance !== "number" || typeof radius !== "number") {
+      return false;
+    }
+
+    // Allow one recovery pass when the device is just outside practical GPS drift.
+    return rawDistance <= radius + retryBand + 80;
+  };
+
+  const markQrWithAdaptiveRetry = async (qrCode: string) => {
+    const maxAttempts = 3;
+    let lastErr: any = null;
+
+    for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+      const stabilized = await requestStabilizedPositionWithRetry({
+        sampleCount: 4 + attempt,
+        maxRetries: 3,
+        desiredAccuracyMeters: 45,
+        enableHighAccuracy: true,
+        timeout: 15000,
+        maximumAge: 0,
+      });
+
+      const payload = {
+        qrCode,
+        lat: stabilized.latitude,
+        lng: stabilized.longitude,
+        accuracy: stabilized.accuracy,
+        locationCapturedAt: stabilized.capturedAt,
+        locationMeta: {
+          sampleCount: stabilized.sampleCount,
+          sampleSpreadMeters: stabilized.sampleSpreadMeters,
+          source: "stabilized-median",
+        },
+      };
+
+      try {
+        await markQRMutation.mutateAsync(payload);
+        return;
+      } catch (err: any) {
+        lastErr = err;
+
+        const reason =
+          err?.response?.data?.debug?.geofence?.decisionReason ||
+          err?.decisionReason;
+        const debug = err?.response?.data?.debug?.geofence || null;
+        const canAutoRetry =
+          shouldAutoRetryGeofence(reason) ||
+          (reason === "outside_geofence" && shouldRetryOutsideGeofence(debug));
+
+        if (attempt < maxAttempts && canAutoRetry) {
+          setLastError(
+            "Improving GPS fix... keep your phone steady for a moment.",
+          );
+          await new Promise((resolve) => setTimeout(resolve, 900));
+          continue;
+        }
+
+        throw err;
+      }
+    }
+
+    if (lastErr) {
+      throw lastErr;
+    }
+  };
+
   const handleMarkWithLocation = async (
     type: "qr" | "manual",
     id: string | number,
@@ -227,42 +323,36 @@ export default function QRScanner() {
         );
       }
 
-      const stabilized = await requestStabilizedPositionWithRetry({
-        sampleCount: 4,
-        maxRetries: 3,
-        desiredAccuracyMeters: 50,
-        enableHighAccuracy: true,
-        timeout: 15000,
-        maximumAge: 0,
-      });
-
-      const payload = {
-        lat: stabilized.latitude,
-        lng: stabilized.longitude,
-        accuracy: stabilized.accuracy,
-        locationCapturedAt: stabilized.capturedAt,
-        locationMeta: {
-          sampleCount: stabilized.sampleCount,
-          sampleSpreadMeters: stabilized.sampleSpreadMeters,
-          source: "stabilized-median",
-        },
-      };
-
       if (type === "qr") {
-        await markQRMutation.mutateAsync({
-          qrCode: id as string,
-          ...payload,
-        });
+        await markQrWithAdaptiveRetry(id as string);
       } else {
+        const stabilized = await requestStabilizedPositionWithRetry({
+          sampleCount: 4,
+          maxRetries: 3,
+          desiredAccuracyMeters: 50,
+          enableHighAccuracy: true,
+          timeout: 15000,
+          maximumAge: 0,
+        });
+
         await markManualMutation.mutateAsync({
           sessionId: id as number,
-          ...payload,
+          lat: stabilized.latitude,
+          lng: stabilized.longitude,
+          accuracy: stabilized.accuracy,
+          locationCapturedAt: stabilized.capturedAt,
+          locationMeta: {
+            sampleCount: stabilized.sampleCount,
+            sampleSpreadMeters: stabilized.sampleSpreadMeters,
+            source: "stabilized-median",
+          },
         });
       }
       setLocating(false);
     } catch (err: any) {
       setLocating(false);
-      const msg = getLocationErrorMessage(err);
+      const isApiError = Boolean(err?.response?.status);
+      const msg = isApiError ? errorLabel(err) : getLocationErrorMessage(err);
       setLastError(msg);
       setLastGeofenceDebug(err?.response?.data?.debug?.geofence || null);
       toast.error(msg);
@@ -288,7 +378,10 @@ export default function QRScanner() {
           try {
             if (decodedText.startsWith("http")) {
               const url = new URL(decodedText);
-              const urlToken = url.searchParams.get("token");
+              const urlToken =
+                url.searchParams.get("token") ||
+                url.searchParams.get("qrCode") ||
+                url.searchParams.get("code");
               if (urlToken) token = urlToken;
             }
           } catch {
@@ -356,19 +449,19 @@ export default function QRScanner() {
   // ─── Success card with ripple ───────────────────────────────────────────
   const SuccessCard = ({ record }: { record: any }) => (
     <div className="space-y-4 animate-in slide-in-from-bottom-4 duration-500">
-      <div className="relative bg-emerald-500/10 border border-emerald-500/25 rounded-2xl p-8 text-center space-y-4 overflow-hidden">
+      <div className="relative bg-success/10 border border-success/25 rounded-2xl p-8 text-center space-y-4 overflow-hidden">
         {/* Ripple rings behind icon */}
         <div className="relative mx-auto w-20 h-20 flex items-center justify-center">
-          <div className="absolute inset-0 rounded-full bg-emerald-500/15 animate-success-ripple" />
-          <div className="absolute inset-0 rounded-full bg-emerald-500/10 animate-success-ripple-late" />
-          <div className="relative w-20 h-20 rounded-full bg-emerald-500/20 border-2 border-emerald-500/40 flex items-center justify-center shadow-lg shadow-emerald-500/20">
-            <CheckCircle2 className="h-9 w-9 text-emerald-500 animate-in zoom-in-50 duration-500" />
+          <div className="absolute inset-0 rounded-full bg-success/15 animate-success-ripple" />
+          <div className="absolute inset-0 rounded-full bg-success/10 animate-success-ripple-late" />
+          <div className="relative w-20 h-20 rounded-full bg-success/20 border-2 border-success/40 flex items-center justify-center shadow-lg shadow-success/20">
+            <CheckCircle2 className="h-9 w-9 text-success animate-in zoom-in-50 duration-500" />
           </div>
         </div>
 
         {/* Title */}
         <div className="space-y-1">
-          <p className="text-emerald-500 font-semibold text-xs tracking-wide">
+          <p className="text-success font-semibold text-xs tracking-wide">
             Attendance Recorded
           </p>
           {record?.attendance?.session && (
@@ -423,7 +516,7 @@ export default function QRScanner() {
   }) => {
     const [title, ...rest] = message.split("—").map((s) => s.trim());
     return (
-      <div className="bg-destructive/8 border border-destructive/20 rounded-2xl p-5 space-y-3 animate-in fade-in slide-in-from-bottom-2 duration-300">
+      <div className="bg-destructive/10 border border-destructive/20 rounded-2xl p-5 space-y-3 animate-in fade-in slide-in-from-bottom-2 duration-300">
         <div className="flex items-start gap-3">
           <div className="w-8 h-8 rounded-lg bg-destructive/15 border border-destructive/20 flex items-center justify-center shrink-0 mt-0.5">
             <XCircle className="h-4 w-4 text-destructive" />
@@ -486,7 +579,7 @@ export default function QRScanner() {
         operation={overlayType ?? "loading"}
       />
 
-      <div className="space-y-6 max-w-2xl mx-auto">
+      <div className="app-page max-w-3xl mx-auto">
         {/* ─── Header ─────────────────────────────────────────────────────── */}
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center animate-aura-pulse shrink-0">
@@ -503,30 +596,33 @@ export default function QRScanner() {
         </div>
 
         {/* ─── Mode toggle with sliding indicator ─────────────────────────── */}
-        <div className="relative flex p-1 bg-muted/50 rounded-xl border border-border w-[270px]">
+        <div className="relative flex p-1 bg-muted/50 rounded-xl border border-border w-full max-w-[270px]">
           {/* Sliding pill */}
           <div
-            className={`absolute top-1 bottom-1 w-[calc(50%-6px)] rounded-lg bg-background shadow border border-border transition-transform duration-300 ease-in-out pointer-events-none ${mode === "manual"
+            className={`absolute top-1 bottom-1 w-[calc(50%-6px)] rounded-lg bg-background shadow border border-border transition-transform duration-300 ease-in-out pointer-events-none ${
+              mode === "manual"
                 ? "translate-x-[calc(100%+4px)]"
                 : "translate-x-0"
-              }`}
+            }`}
           />
           <button
             onClick={() => switchMode("qr")}
-            className={`relative z-10 flex items-center justify-center gap-2 flex-1 py-2 text-xs font-medium tracking-wide transition-colors duration-200 ${mode === "qr"
+            className={`relative z-10 flex items-center justify-center gap-2 flex-1 py-2 text-xs font-medium tracking-wide transition-colors duration-200 ${
+              mode === "qr"
                 ? "text-foreground"
                 : "text-muted-foreground hover:text-foreground"
-              }`}
+            }`}
           >
             <QrCode className="h-3.5 w-3.5" />
             QR Camera
           </button>
           <button
             onClick={() => switchMode("manual")}
-            className={`relative z-10 flex items-center justify-center gap-2 flex-1 py-2 text-xs font-medium tracking-wide transition-colors duration-200 ${mode === "manual"
+            className={`relative z-10 flex items-center justify-center gap-2 flex-1 py-2 text-xs font-medium tracking-wide transition-colors duration-200 ${
+              mode === "manual"
                 ? "text-foreground"
                 : "text-muted-foreground hover:text-foreground"
-              }`}
+            }`}
           >
             <Hand className="h-3.5 w-3.5" />
             Manual
@@ -538,12 +634,12 @@ export default function QRScanner() {
           <>
             {/* Insecure context warning */}
             {!window.isSecureContext && (
-              <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 flex items-start gap-3">
-                <div className="w-8 h-8 rounded-lg bg-amber-500/15 border border-amber-500/20 flex items-center justify-center shrink-0">
-                  <AlertTriangle className="h-4 w-4 text-amber-500" />
+              <div className="bg-warning/10 border border-warning/20 rounded-xl p-4 flex items-start gap-3">
+                <div className="w-8 h-8 rounded-lg bg-warning/15 border border-warning/20 flex items-center justify-center shrink-0">
+                  <AlertTriangle className="h-4 w-4 text-warning" />
                 </div>
                 <div className="space-y-1">
-                  <p className="text-sm font-semibold text-amber-500">
+                  <p className="text-sm font-semibold text-warning">
                     Camera Unavailable on HTTP
                   </p>
                   <p className="text-[11px] text-muted-foreground leading-relaxed">
@@ -571,8 +667,8 @@ export default function QRScanner() {
                 </div>
                 {scanning && (
                   <div className="flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-live-blink" />
-                    <span className="text-[10px] font-medium text-emerald-500 tracking-wide">
+                    <span className="w-2 h-2 rounded-full bg-success animate-live-blink" />
+                    <span className="text-[10px] font-medium text-success tracking-wide">
                       Live
                     </span>
                   </div>
@@ -580,7 +676,7 @@ export default function QRScanner() {
               </div>
 
               <CardContent className="p-0">
-                <div className="relative bg-black aspect-square max-h-80 flex items-center justify-center overflow-hidden">
+                <div className="relative bg-black aspect-square max-h-[20rem] sm:max-h-80 flex items-center justify-center overflow-hidden">
                   <div id={SCANNER_ID} className="w-full h-full object-cover" />
 
                   {/* Idle overlay */}
@@ -652,10 +748,11 @@ export default function QRScanner() {
 
                   {/* Corner brackets — pulsing when scanning */}
                   <div
-                    className={`absolute w-60 h-60 z-10 pointer-events-none transition-opacity duration-500 ${scanning
+                    className={`absolute w-52 h-52 sm:w-60 sm:h-60 z-10 pointer-events-none transition-opacity duration-500 ${
+                      scanning
                         ? "opacity-100 animate-bracket-pulse"
                         : "opacity-20"
-                      }`}
+                    }`}
                   >
                     <div className="absolute top-0 left-0 w-9 h-9 border-t-2 border-l-2 border-primary rounded-tl-xl" />
                     <div className="absolute top-0 right-0 w-9 h-9 border-t-2 border-r-2 border-primary rounded-tr-xl" />
@@ -671,8 +768,8 @@ export default function QRScanner() {
                     )}
                     <div className="absolute inset-0 flex items-center justify-center">
                       {scannedData && (
-                        <div className="h-16 w-16 bg-emerald-500/20 rounded-full flex items-center justify-center border-2 border-emerald-500 shadow-xl shadow-emerald-500/20 animate-in zoom-in-50 duration-400">
-                          <CheckCircle2 className="h-8 w-8 text-emerald-500" />
+                        <div className="h-16 w-16 bg-success/20 rounded-full flex items-center justify-center border-2 border-success shadow-xl shadow-success/20 animate-in zoom-in-50 duration-400">
+                          <CheckCircle2 className="h-8 w-8 text-success" />
                         </div>
                       )}
                     </div>
@@ -700,10 +797,11 @@ export default function QRScanner() {
                   disabled={markQRMutation.isPending || !window.isSecureContext}
                   size="lg"
                   variant={scanning ? "outline" : "default"}
-                  className={`px-12 h-14 text-sm font-medium tracking-wide rounded-xl transition-all duration-200 shadow-lg ${scanning
+                  className={`w-full sm:w-auto px-6 sm:px-12 h-14 text-sm font-medium tracking-wide rounded-xl transition-all duration-200 shadow-lg ${
+                    scanning
                       ? "border-destructive/50 text-destructive hover:bg-destructive/10 hover:border-destructive"
                       : "shadow-primary/25 hover:shadow-primary/40 hover:shadow-xl"
-                    }`}
+                  }`}
                 >
                   {scanning ? (
                     <>
@@ -856,7 +954,7 @@ export default function QRScanner() {
                             <div className="flex">
                               {/* Colored accent bar */}
                               <div className="w-1 bg-gradient-to-b from-primary/80 to-primary/20 shrink-0" />
-                              <CardContent className="p-4 flex items-center justify-between gap-4 flex-1">
+                              <CardContent className="p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 flex-1">
                                 <div className="flex-1 min-w-0 space-y-1.5">
                                   <div className="flex items-center gap-2 flex-wrap">
                                     <p className="font-semibold text-foreground text-sm truncate">
@@ -869,8 +967,8 @@ export default function QRScanner() {
                                         {sess.course?.code}
                                       </span>
                                     )}
-                                    <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[9px] font-semibold uppercase px-2 shrink-0 gap-1">
-                                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-live-blink inline-block" />
+                                    <Badge className="bg-success/10 text-success border-success/20 text-[9px] font-semibold uppercase px-2 shrink-0 gap-1">
+                                      <span className="w-1.5 h-1.5 rounded-full bg-success animate-live-blink inline-block" />
                                       Live
                                     </Badge>
                                   </div>
@@ -908,7 +1006,7 @@ export default function QRScanner() {
                                   disabled={
                                     markManualMutation.isPending || locating
                                   }
-                                  className="font-medium tracking-wide text-[11px] shrink-0 h-10 px-4 rounded-xl shadow-md shadow-primary/20 hover:shadow-primary/35 transition-all hover:scale-[1.03] active:scale-[0.97]"
+                                  className="w-full sm:w-auto font-medium tracking-wide text-[11px] shrink-0 h-10 px-4 rounded-xl shadow-md shadow-primary/20 hover:shadow-primary/35 transition-all hover:scale-[1.03] active:scale-[0.97]"
                                 >
                                   {isPending ? (
                                     <span className="flex items-center gap-1">
@@ -951,25 +1049,25 @@ export default function QRScanner() {
               label: "Location",
               status: "Geofenced",
               icon: MapPin,
-              color: "text-blue-500",
-              iconBg: "bg-blue-500/10 border-blue-500/20",
-              dot: "bg-blue-500",
+              color: "text-info",
+              iconBg: "bg-info/10 border-info/20",
+              dot: "bg-info",
             },
             {
               label: "Network",
               status: "Encrypted",
               icon: Wifi,
-              color: "text-violet-500",
-              iconBg: "bg-violet-500/10 border-violet-500/20",
-              dot: "bg-violet-500",
+              color: "text-info",
+              iconBg: "bg-info/10 border-info/20",
+              dot: "bg-info",
             },
             {
               label: "Identity",
               status: "Validated",
               icon: Fingerprint,
-              color: "text-emerald-500",
-              iconBg: "bg-emerald-500/10 border-emerald-500/20",
-              dot: "bg-emerald-500",
+              color: "text-success",
+              iconBg: "bg-success/10 border-success/20",
+              dot: "bg-success",
             },
           ].map((item, i) => (
             <Card

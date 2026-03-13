@@ -39,10 +39,10 @@ const timeSlots = [
 ];
 
 const typeColors: Record<string, string> = {
-  Practical: "bg-violet-500/10 border-violet-500/30 text-violet-400",
-  Lab: "bg-violet-500/10 border-violet-500/30 text-violet-400",
+  Practical: "bg-info/10 border-info/30 text-info",
+  Lab: "bg-info/10 border-info/30 text-info",
   Theory: "bg-primary/10 border-primary/30 text-primary",
-  Tutorial: "bg-amber-500/10 border-amber-500/30 text-amber-400",
+  Tutorial: "bg-warning/10 border-warning/30 text-warning",
 };
 
 export default function StudentTimetable() {

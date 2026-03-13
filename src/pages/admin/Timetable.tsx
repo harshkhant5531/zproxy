@@ -233,14 +233,14 @@ export default function Timetable() {
       <FullScreenLoader show={isLoading} operation="loading" />
       <FullScreenLoader show={createMutation.isPending} operation="creating" />
       <FullScreenLoader show={deleteMutation.isPending} operation="deleting" />
-      <div className="space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="app-page">
+        <div className="app-page-header">
           <div>
-            <h1 className="text-2xl font-semibold tracking-tight text-foreground flex items-center gap-3">
-              <Calendar className="h-7 w-7 text-primary" /> Timetable Management
+            <h1 className="page-header-title flex items-center gap-2">
+              <Calendar className="h-5 w-5 text-primary" /> Timetable Management
             </h1>
-            <p className="text-sm text-muted-foreground mt-1">
-              Create and manage class schedules.
+            <p className="page-header-sub">
+              Create and manage class schedules
             </p>
           </div>
         </div>
@@ -333,7 +333,7 @@ export default function Timetable() {
                         {session ? (
                           <div className="h-full rounded-xl bg-card/95 dark:bg-card/85 border border-border/65 p-3.5 text-sm space-y-2 group/card relative overflow-hidden flex flex-col justify-between shadow-lg transition-all hover:border-primary/30">
                             <button
-                              className="absolute top-1 right-1 p-1 opacity-0 group-hover/card:opacity-100 transition-opacity bg-red-500/10 hover:bg-red-500/20 rounded-md text-red-500 border border-red-500/20"
+                              className="absolute top-1 right-1 p-1 opacity-0 group-hover/card:opacity-100 transition-opacity bg-destructive/10 hover:bg-destructive/20 rounded-md text-destructive border border-destructive/20"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 if (confirm("Delete this timetable entry?"))

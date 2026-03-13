@@ -193,7 +193,7 @@ export default function VerifyAttendance() {
 
   if (authLoading || (user && status === "verifying")) {
     return (
-      <div className="flex h-screen items-center justify-center bg-[#0B0E14] text-white px-4">
+      <div className="flex h-screen items-center justify-center bg-background text-foreground px-4">
         <div className="flex flex-col items-center gap-6">
           <div className="relative h-24 w-24">
             <div className="absolute inset-0 rounded-full border-4 border-primary/20" />
@@ -221,12 +221,12 @@ export default function VerifyAttendance() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0B0E14] flex items-center justify-center p-5 sm:p-8">
-      <Card className="w-full max-w-xl bg-slate-900/65 border-slate-800 backdrop-blur-md shadow-2xl relative overflow-hidden">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4 sm:p-6">
+      <Card className="app-surface w-full max-w-xl relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none" />
 
-        <CardHeader className="text-center pb-3 pt-7">
-          <CardTitle className="text-3xl font-medium tracking-tight text-foreground">
+        <CardHeader className="text-center pb-2 pt-6 sm:pt-7">
+          <CardTitle className="text-2xl sm:text-3xl font-medium tracking-tight text-foreground">
             Session Authentication
           </CardTitle>
           <p className="text-sm text-muted-foreground mt-1">
@@ -234,45 +234,45 @@ export default function VerifyAttendance() {
           </p>
         </CardHeader>
 
-        <CardContent className="p-10 space-y-8 text-center">
+        <CardContent className="p-5 sm:p-8 lg:p-10 space-y-6 sm:space-y-8 text-center">
           {status === "success" ? (
             <div className="space-y-6 animate-in zoom-in-95 duration-500">
-              <div className="mx-auto h-28 w-28 bg-emerald-500/10 border-2 border-emerald-500 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(16,185,129,0.2)]">
-                <CheckCircle2 className="h-14 w-14 text-emerald-500" />
+              <div className="mx-auto h-28 w-28 bg-success/10 border-2 border-success rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(16,185,129,0.2)]">
+                <CheckCircle2 className="h-14 w-14 text-success" />
               </div>
               <div className="space-y-2">
-                <h2 className="text-emerald-500 font-medium tracking-tight text-2xl">
+                <h2 className="text-success font-medium tracking-tight text-2xl">
                   Verification Complete
                 </h2>
-                <p className="text-slate-300 text-base">
+                <p className="text-muted-foreground text-sm sm:text-base">
                   Your attendance has been recorded for this session.
                 </p>
               </div>
               <Button
                 onClick={() => navigate("/student/dashboard")}
-                className="w-full h-12 bg-emerald-500 hover:bg-emerald-600 text-black font-medium text-base"
+                className="w-full h-12 bg-success hover:bg-emerald-600 text-black font-medium text-base"
               >
                 Return to Dashboard
               </Button>
             </div>
           ) : (
             <div className="space-y-6 animate-in fade-in duration-500">
-              <div className="mx-auto h-28 w-28 bg-red-500/10 border-2 border-red-500 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(239,68,68,0.2)]">
-                <AlertTriangle className="h-14 w-14 text-red-500" />
+              <div className="mx-auto h-28 w-28 bg-destructive/10 border-2 border-destructive rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(239,68,68,0.2)]">
+                <AlertTriangle className="h-14 w-14 text-destructive" />
               </div>
               <div className="space-y-2">
-                <h2 className="text-red-500 font-medium tracking-tight text-2xl">
+                <h2 className="text-destructive font-medium tracking-tight text-2xl">
                   Verification Failed
                 </h2>
-                <p className="text-slate-300 text-base font-medium">
+                <p className="text-muted-foreground text-sm sm:text-base font-medium">
                   {errorMessage}
                 </p>
                 {geofenceDebug && (
-                  <div className="mt-3 rounded-xl border border-slate-700 bg-slate-950/70 p-3 text-left space-y-2">
-                    <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400 font-black">
+                  <div className="mt-3 rounded-xl border border-border/70 bg-background/70 p-3 text-left space-y-2">
+                    <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-black">
                       Geofence Telemetry
                     </p>
-                    <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-[11px] text-slate-300">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-1 text-[11px] text-muted-foreground">
                       {geofenceDebug.rawDistanceMeters !== undefined && (
                         <p>Raw: {geofenceDebug.rawDistanceMeters}m</p>
                       )}
@@ -313,14 +313,14 @@ export default function VerifyAttendance() {
               <Button
                 onClick={() => navigate("/student/scan")}
                 variant="outline"
-                className="w-full h-12 border-slate-800 text-slate-300 font-medium text-base transition-all hover:bg-slate-800"
+                className="w-full h-12 border-border text-muted-foreground font-medium text-base transition-all hover:bg-muted"
               >
                 Manual QR Scan
               </Button>
               <Button
                 onClick={() => navigate("/student/dashboard")}
                 variant="ghost"
-                className="w-full h-11 text-slate-400 hover:text-white text-base flex items-center justify-center gap-2"
+                className="w-full h-11 text-muted-foreground hover:text-foreground text-base flex items-center justify-center gap-2"
               >
                 <ArrowLeft className="h-4 w-4" /> Go Back
               </Button>
@@ -328,8 +328,8 @@ export default function VerifyAttendance() {
           )}
         </CardContent>
 
-        <div className="bg-slate-950/80 p-4 border-t border-slate-800 text-center">
-          <p className="text-[9px] text-slate-600 font-mono uppercase tracking-[0.4em]">
+        <div className="bg-muted/35 p-3 sm:p-4 border-t border-border/60 text-center">
+          <p className="text-[9px] text-muted-foreground/70 font-mono uppercase tracking-[0.32em]">
             Shielded by Aura-Integrity v4.0
           </p>
         </div>
