@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { attendanceAPI } from "@/lib/api";
@@ -9,8 +9,10 @@ import {
   Shield,
   CheckCircle2,
   AlertTriangle,
-  Loader2,
   ArrowLeft,
+  Radar,
+  MapPinned,
+  Timer,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import {
@@ -42,6 +44,7 @@ export default function VerifyAttendance() {
   const [geofenceDebug, setGeofenceDebug] = useState<GeofenceDebug | null>(
     null,
   );
+  const autoVerifyStartedRef = useRef(false);
 
   const token = searchParams.get("token");
 
@@ -108,29 +111,9 @@ export default function VerifyAttendance() {
         data.locationCapturedAt,
         data.locationMeta,
       ),
-    onSuccess: () => {
-      setStatus("success");
-      setGeofenceDebug(null);
-      toast.success("Attendance verified successfully");
-      queryClient.invalidateQueries({
-        queryKey: ["student", "recent-attendance"],
-      });
-    },
-    onError: (err: unknown) => {
-      setStatus("error");
-      setGeofenceDebug(extractGeofenceDebug(err));
-      const detail = extractErrorMessage(err);
-      setErrorMessage(
-        detail.includes("Spatial")
-          ? detail
-          : `${detail}. Please ensure your device is on the campus network.`,
-      );
-      console.error("Verification error details:", err);
-      toast.error("Verification failed");
-    },
   });
 
-  const handleVerify = useCallback(() => {
+  const handleVerify = async () => {
     if (!token) return;
 
     if (!isGeolocationAvailable()) {
@@ -143,57 +126,70 @@ export default function VerifyAttendance() {
     setErrorMessage("");
     setGeofenceDebug(null);
 
-    const attemptVerification = () => {
-      getGeolocationPermissionState()
-        .then((permissionState) => {
-          if (permissionState === "denied") {
-            throw new Error(
-              "Location permission is blocked. Enable location access to verify attendance.",
-            );
-          }
+    try {
+      const permissionState = await getGeolocationPermissionState();
+      if (permissionState === "denied") {
+        throw new Error(
+          "Location permission is blocked. Enable location access to verify attendance.",
+        );
+      }
 
-          return requestStabilizedPositionWithRetry({
-            timeout: 25000,
-            desiredAccuracyMeters: 40,
-          });
-        })
-        .then((location) => {
-          const { latitude, longitude, accuracy } = location;
-          console.log(
-            `Presence confirmed at: ${latitude}, ${longitude} (±${accuracy}m)`,
-          );
+      const location = await requestStabilizedPositionWithRetry({
+        timeout: 25000,
+        desiredAccuracyMeters: 40,
+      });
 
-          verifyMutation.mutate({
-            token,
-            lat: latitude,
-            lng: longitude,
-            accuracy,
-            locationCapturedAt: location.capturedAt,
-            locationMeta: {
-              sampleCount: location.sampleCount,
-              sampleSpreadMeters: location.sampleSpreadMeters,
-              source: "stabilized-median",
-            },
-          });
-        })
-        .catch((error: unknown) => {
-          setStatus("error");
-          setErrorMessage(getLocationErrorMessage(error));
-        });
-    };
+      await verifyMutation.mutateAsync({
+        token,
+        lat: location.latitude,
+        lng: location.longitude,
+        accuracy: location.accuracy,
+        locationCapturedAt: location.capturedAt,
+        locationMeta: {
+          sampleCount: location.sampleCount,
+          sampleSpreadMeters: location.sampleSpreadMeters,
+          source: "stabilized-median",
+        },
+      });
 
-    attemptVerification();
-  }, [token, verifyMutation]);
+      setStatus("success");
+      setGeofenceDebug(null);
+      toast.success("Attendance verified successfully");
+      queryClient.invalidateQueries({
+        queryKey: ["student", "recent-attendance"],
+      });
+    } catch (error: unknown) {
+      setStatus("error");
+      setGeofenceDebug(extractGeofenceDebug(error));
+
+      const hasApiResponse =
+        typeof error === "object" && error !== null && "response" in error;
+      const detail = hasApiResponse
+        ? extractErrorMessage(error)
+        : getLocationErrorMessage(error);
+
+      setErrorMessage(detail);
+      toast.error("Verification failed");
+    }
+  };
 
   const handleRetry = () => {
+    autoVerifyStartedRef.current = true;
     handleVerify();
   };
 
   useEffect(() => {
-    if (!authLoading && user && token && status === "verifying") {
+    if (
+      !authLoading &&
+      user &&
+      token &&
+      status === "verifying" &&
+      !autoVerifyStartedRef.current
+    ) {
+      autoVerifyStartedRef.current = true;
       handleVerify();
     }
-  }, [authLoading, handleVerify, status, token, user]);
+  }, [authLoading, status, token, user]);
 
   // Handle case where user isn't logged in
   useEffect(() => {
@@ -208,146 +204,204 @@ export default function VerifyAttendance() {
 
   if (authLoading || (user && status === "verifying")) {
     return (
-      <div className="flex h-screen items-center justify-center bg-background text-foreground px-4">
-        <div className="flex flex-col items-center gap-6">
-          <div className="relative h-24 w-24">
-            <div className="absolute inset-0 rounded-full border-4 border-primary/20" />
-            <div className="absolute inset-0 rounded-full border-4 border-primary border-t-transparent animate-spin" />
-            <Shield className="absolute inset-0 m-auto h-10 w-10 text-primary animate-pulse" />
+      <div className="min-h-screen bg-background text-foreground px-4 flex items-center justify-center relative overflow-hidden">
+        <div className="absolute -top-20 -left-16 h-72 w-72 bg-primary/10 rounded-full blur-3xl" />
+        <div className="absolute -bottom-24 -right-20 h-80 w-80 bg-info/10 rounded-full blur-3xl" />
+
+        <div className="w-full max-w-md rounded-3xl border border-border/70 bg-card/90 backdrop-blur-xl p-8 text-center shadow-xl relative">
+          <div className="mx-auto relative h-24 w-24 mb-6">
+            <div className="absolute inset-0 rounded-full border-[3px] border-primary/20" />
+            <div className="absolute inset-0 rounded-full border-[3px] border-primary border-t-transparent animate-spin" />
+            <Shield className="absolute inset-0 m-auto h-10 w-10 text-primary" />
           </div>
-          <div className="text-center space-y-2">
-            <p className="text-2xl font-medium tracking-tight text-foreground">
-              {authLoading ? "Identity Check" : "Spatial Verification"}
-            </p>
-            <p className="text-sm text-muted-foreground animate-pulse">
-              {authLoading
-                ? "Authenticating neural link..."
-                : "Triangulating presence in faculty grid..."}
-            </p>
-            {!authLoading && (
-              <p className="text-[10px] text-muted-foreground/50 font-mono italic">
-                Keep device stable. Searching for high-accuracy telemetry...
-              </p>
-            )}
-          </div>
+
+          <p className="text-2xl font-bold tracking-tight text-foreground">
+            {authLoading ? "Validating Identity" : "Verifying Presence"}
+          </p>
+          <p className="text-sm text-muted-foreground mt-2">
+            {authLoading
+              ? "Checking student session and authorization"
+              : "Capturing GPS telemetry and confirming geofence"}
+          </p>
+
+          {!authLoading && (
+            <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1">
+              <Radar className="h-3.5 w-3.5 text-primary" />
+              <span className="app-caption text-primary font-semibold uppercase">
+                High Accuracy Scan
+              </span>
+            </div>
+          )}
         </div>
       </div>
     );
   }
 
-  return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4 sm:p-6">
-      <Card className="app-surface w-full max-w-xl relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none" />
+  const renderTelemetry = () => {
+    if (!geofenceDebug) return null;
 
-        <CardHeader className="text-center pb-2 pt-6 sm:pt-7">
-          <CardTitle className="text-2xl sm:text-3xl font-medium tracking-tight text-foreground">
+    const chips = [
+      {
+        icon: MapPinned,
+        label: "Raw Distance",
+        value:
+          geofenceDebug.rawDistanceMeters !== undefined
+            ? `${geofenceDebug.rawDistanceMeters}m`
+            : null,
+      },
+      {
+        icon: MapPinned,
+        label: "Effective",
+        value:
+          geofenceDebug.distanceMeters !== undefined
+            ? `${geofenceDebug.distanceMeters}m`
+            : null,
+      },
+      {
+        icon: Timer,
+        label: "Tolerance",
+        value:
+          geofenceDebug.toleranceMeters !== undefined
+            ? `${geofenceDebug.toleranceMeters}m`
+            : null,
+      },
+      {
+        icon: Timer,
+        label: "Drift Buffer",
+        value:
+          geofenceDebug.driftBufferMeters !== undefined
+            ? `${geofenceDebug.driftBufferMeters}m`
+            : null,
+      },
+      {
+        icon: Radar,
+        label: "Radius",
+        value:
+          geofenceDebug.radiusMeters !== undefined
+            ? `${geofenceDebug.radiusMeters}m`
+            : null,
+      },
+      {
+        icon: Radar,
+        label: "Accuracy",
+        value:
+          geofenceDebug.reportedAccuracyMeters !== undefined
+            ? `±${geofenceDebug.reportedAccuracyMeters}m`
+            : null,
+      },
+    ].filter((chip) => chip.value !== null);
+
+    if (chips.length === 0) return null;
+
+    return (
+      <div className="mt-5 rounded-2xl border border-border/80 bg-background/80 p-4">
+        <p className="app-kicker text-left mb-3">
+          Geofence Telemetry
+        </p>
+        <div className="grid grid-cols-2 gap-2">
+          {chips.map((chip) => (
+            <div
+              key={chip.label}
+              className="rounded-lg border border-border/70 bg-muted/20 px-2.5 py-2 text-left"
+            >
+              <div className="flex items-center gap-1.5 mb-1">
+                <chip.icon className="h-3 w-3 text-primary" />
+                <span className="app-kicker normal-case tracking-wide font-semibold">
+                  {chip.label}
+                </span>
+              </div>
+              <p className="text-sm font-bold text-foreground">{chip.value}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="min-h-screen bg-background flex items-center justify-center p-4 relative overflow-hidden">
+      <div className="absolute top-0 left-0 h-80 w-80 bg-primary/10 blur-3xl rounded-full -translate-x-1/3 -translate-y-1/4" />
+      <div className="absolute bottom-0 right-0 h-96 w-96 bg-info/10 blur-3xl rounded-full translate-x-1/4 translate-y-1/4" />
+
+      <Card className="w-full max-w-xl border-border/70 bg-card/95 backdrop-blur-xl shadow-2xl overflow-hidden">
+        <CardHeader className="text-center pt-8 pb-4 px-6 border-b border-border/60 bg-gradient-to-b from-primary/5 to-transparent">
+          <CardTitle className="text-3xl font-bold tracking-tight text-foreground">
             Session Authentication
           </CardTitle>
           <p className="text-sm text-muted-foreground mt-1">
-            Secure Attendance Gateway
+            Secure attendance gateway
           </p>
         </CardHeader>
 
-        <CardContent className="p-5 sm:p-8 lg:p-10 space-y-6 sm:space-y-8 text-center">
+        <CardContent className="px-6 sm:px-8 py-7 text-center">
           {status === "success" ? (
             <div className="space-y-6 animate-in zoom-in-95 duration-500">
-              <div className="mx-auto h-28 w-28 bg-success/10 border-2 border-success rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(16,185,129,0.2)]">
+              <div className="mx-auto h-28 w-28 rounded-full border-2 border-success/40 bg-success/10 flex items-center justify-center shadow-[0_0_36px_hsl(var(--success)/0.22)]">
                 <CheckCircle2 className="h-14 w-14 text-success" />
               </div>
-              <div className="space-y-2">
-                <h2 className="text-success font-medium tracking-tight text-2xl">
-                  Verification Complete
+              <div>
+                <h2 className="text-2xl font-extrabold text-success tracking-tight">
+                  Attendance Confirmed
                 </h2>
-                <p className="text-muted-foreground text-sm sm:text-base">
-                  Your attendance has been recorded for this session.
+                <p className="text-muted-foreground mt-2">
+                  Verification completed successfully for this session.
                 </p>
               </div>
               <Button
                 onClick={() => navigate("/student/dashboard")}
-                className="w-full h-12 bg-success hover:bg-emerald-600 text-black font-medium text-base"
+                className="w-full h-12 bg-success hover:bg-success/90 text-success-foreground font-semibold"
               >
-                Return to Dashboard
+                Continue to Dashboard
               </Button>
             </div>
           ) : (
-            <div className="space-y-6 animate-in fade-in duration-500">
-              <div className="mx-auto h-28 w-28 bg-destructive/10 border-2 border-destructive rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(239,68,68,0.2)]">
+            <div className="space-y-5 animate-in fade-in duration-500">
+              <div className="mx-auto h-28 w-28 rounded-full border-2 border-destructive/40 bg-destructive/10 flex items-center justify-center shadow-[0_0_36px_hsl(var(--destructive)/0.18)]">
                 <AlertTriangle className="h-14 w-14 text-destructive" />
               </div>
-              <div className="space-y-2">
-                <h2 className="text-destructive font-medium tracking-tight text-2xl">
+
+              <div>
+                <h2 className="text-2xl font-extrabold text-destructive tracking-tight">
                   Verification Failed
                 </h2>
-                <p className="text-muted-foreground text-sm sm:text-base font-medium">
+                <p className="app-body-copy mt-2">
                   {errorMessage}
                 </p>
-                {geofenceDebug && (
-                  <div className="mt-3 rounded-xl border border-border/70 bg-background/70 p-3 text-left space-y-2">
-                    <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-black">
-                      Geofence Telemetry
-                    </p>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-1 text-[11px] text-muted-foreground">
-                      {geofenceDebug.rawDistanceMeters !== undefined && (
-                        <p>Raw: {geofenceDebug.rawDistanceMeters}m</p>
-                      )}
-                      {geofenceDebug.toleranceMeters !== undefined && (
-                        <p>Tolerance: {geofenceDebug.toleranceMeters}m</p>
-                      )}
-                      {geofenceDebug.driftBufferMeters !== undefined && (
-                        <p>Drift Buffer: {geofenceDebug.driftBufferMeters}m</p>
-                      )}
-                      {geofenceDebug.distanceMeters !== undefined && (
-                        <p>Effective: {geofenceDebug.distanceMeters}m</p>
-                      )}
-                      {geofenceDebug.radiusMeters !== undefined && (
-                        <p>Radius: {geofenceDebug.radiusMeters}m</p>
-                      )}
-                      {geofenceDebug.reportedAccuracyMeters !== undefined && (
-                        <p>
-                          Accuracy: ±{geofenceDebug.reportedAccuracyMeters}m
-                        </p>
-                      )}
-                      {geofenceDebug.maxAcceptableAccuracyMeters !==
-                        undefined && (
-                        <p>
-                          Max Allowed: ±
-                          {geofenceDebug.maxAcceptableAccuracyMeters}m
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                )}
               </div>
-              <Button
-                onClick={handleRetry}
-                disabled={verifyMutation.isPending}
-                className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-medium text-base"
-              >
-                {verifyMutation.isPending
-                  ? "Re-verifying..."
-                  : "Retry Verification"}
-              </Button>
-              <Button
-                onClick={() => navigate("/student/scan")}
-                variant="outline"
-                className="w-full h-12 border-border text-muted-foreground font-medium text-base transition-all hover:bg-muted"
-              >
-                Manual QR Scan
-              </Button>
-              <Button
-                onClick={() => navigate("/student/dashboard")}
-                variant="ghost"
-                className="w-full h-11 text-muted-foreground hover:text-foreground text-base flex items-center justify-center gap-2"
-              >
-                <ArrowLeft className="h-4 w-4" /> Go Back
-              </Button>
+
+              {renderTelemetry()}
+
+              <div className="space-y-3 pt-1">
+                <Button
+                  onClick={handleRetry}
+                  disabled={verifyMutation.isPending}
+                  className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold"
+                >
+                  {verifyMutation.isPending
+                    ? "Re-verifying..."
+                    : "Retry Verification"}
+                </Button>
+                <Button
+                  onClick={() => navigate("/student/scan")}
+                  variant="outline"
+                  className="w-full h-12 border-border text-foreground"
+                >
+                  Open Manual Scanner
+                </Button>
+                <Button
+                  onClick={() => navigate("/student/dashboard")}
+                  variant="ghost"
+                  className="w-full h-11 text-muted-foreground hover:text-foreground"
+                >
+                  <ArrowLeft className="h-4 w-4 mr-2" /> Back to Dashboard
+                </Button>
+              </div>
             </div>
           )}
         </CardContent>
 
-        <div className="bg-muted/35 p-3 sm:p-4 border-t border-border/60 text-center">
-          <p className="text-[9px] text-muted-foreground/70 font-mono uppercase tracking-[0.32em]">
+        <div className="bg-muted/30 px-4 py-3 border-t border-border/60 text-center">
+          <p className="text-[9px] text-muted-foreground/70 font-mono uppercase tracking-[0.3em]">
             Shielded by Aura-Integrity v4.0
           </p>
         </div>

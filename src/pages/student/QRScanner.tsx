@@ -448,60 +448,47 @@ export default function QRScanner() {
 
   // ─── Success card with ripple ───────────────────────────────────────────
   const SuccessCard = ({ record }: { record: any }) => (
-    <div className="space-y-4 animate-in slide-in-from-bottom-4 duration-500">
-      <div className="relative bg-success/10 border border-success/25 rounded-2xl p-8 text-center space-y-4 overflow-hidden">
-        {/* Ripple rings behind icon */}
+    <Card className="overflow-hidden border-success/30 bg-gradient-to-br from-success/12 to-card shadow-xl animate-in slide-in-from-bottom-4 duration-500">
+      <CardContent className="p-6 sm:p-7 text-center space-y-5 relative">
+        <div className="absolute -top-20 -right-10 h-44 w-44 rounded-full bg-success/15 blur-3xl" />
+        <div className="absolute -bottom-20 -left-10 h-40 w-40 rounded-full bg-primary/10 blur-3xl" />
+
         <div className="relative mx-auto w-20 h-20 flex items-center justify-center">
-          <div className="absolute inset-0 rounded-full bg-success/15 animate-success-ripple" />
-          <div className="absolute inset-0 rounded-full bg-success/10 animate-success-ripple-late" />
+          <div className="absolute inset-0 rounded-full bg-success/20 animate-success-ripple" />
+          <div className="absolute inset-0 rounded-full bg-success/15 animate-success-ripple-late" />
           <div className="relative w-20 h-20 rounded-full bg-success/20 border-2 border-success/40 flex items-center justify-center shadow-lg shadow-success/20">
-            <CheckCircle2 className="h-9 w-9 text-success animate-in zoom-in-50 duration-500" />
+            <CheckCircle2 className="h-10 w-10 text-success" />
           </div>
         </div>
 
-        {/* Title */}
-        <div className="space-y-1">
-          <p className="text-success font-semibold text-xs tracking-wide">
+        <div>
+          <p className="text-success font-semibold text-xs tracking-[0.2em] uppercase">
             Attendance Recorded
           </p>
-          {record?.attendance?.session && (
-            <div className="space-y-1 pt-1">
-              <p className="text-foreground font-semibold text-base">
-                {record.attendance.session.subject?.name ||
-                  record.attendance.session.course?.name ||
-                  "Session Authenticated"}
-              </p>
-              <p className="text-[10px] text-muted-foreground font-medium tracking-wide">
-                {format(
-                  new Date(record.attendance.session.date || Date.now()),
-                  "MMM dd, yyyy",
-                )}{" "}
-                · {new Date().toLocaleTimeString()}
-              </p>
-            </div>
-          )}
+          <p className="text-foreground font-bold text-lg mt-2">
+            {record?.attendance?.session?.subject?.name ||
+              record?.attendance?.session?.course?.name ||
+              "Session Authenticated"}
+          </p>
+          <p className="text-xs text-muted-foreground mt-1">
+            {format(
+              new Date(record?.attendance?.session?.date || Date.now()),
+              "MMM dd, yyyy",
+            )}{" "}
+            · {new Date().toLocaleTimeString()}
+          </p>
         </div>
 
-        {/* Subtle background grid */}
-        <div
-          className="absolute inset-0 opacity-[0.04] pointer-events-none"
-          style={{
-            backgroundImage:
-              "linear-gradient(hsl(var(--primary)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary)) 1px, transparent 1px)",
-            backgroundSize: "20px 20px",
-          }}
-        />
-      </div>
-
-      <Button
-        variant="outline"
-        size="sm"
-        className="w-full border-border text-muted-foreground hover:text-foreground text-[11px] font-medium tracking-wide h-10 rounded-xl transition-all hover:border-primary/40"
-        onClick={reset}
-      >
-        <RefreshCw className="mr-2 h-3 w-3" /> Mark Another Session
-      </Button>
-    </div>
+        <Button
+          variant="outline"
+          size="sm"
+          className="w-full border-border text-muted-foreground hover:text-foreground text-[11px] font-medium tracking-wide h-10 rounded-xl"
+          onClick={reset}
+        >
+          <RefreshCw className="mr-2 h-3.5 w-3.5" /> Mark Another Session
+        </Button>
+      </CardContent>
+    </Card>
   );
 
   // ─── Error banner ───────────────────────────────────────────────────────
@@ -516,58 +503,60 @@ export default function QRScanner() {
   }) => {
     const [title, ...rest] = message.split("—").map((s) => s.trim());
     return (
-      <div className="bg-destructive/10 border border-destructive/20 rounded-2xl p-5 space-y-3 animate-in fade-in slide-in-from-bottom-2 duration-300">
-        <div className="flex items-start gap-3">
-          <div className="w-8 h-8 rounded-lg bg-destructive/15 border border-destructive/20 flex items-center justify-center shrink-0 mt-0.5">
-            <XCircle className="h-4 w-4 text-destructive" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-destructive">{title}</p>
-            {rest.length > 0 && (
-              <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed">
-                {rest.join(" — ")}
-              </p>
-            )}
-          </div>
-        </div>
-        {geofenceDebug && (
-          <div className="rounded-xl border border-border/70 bg-background/70 p-3 space-y-1.5">
-            <p className="text-[10px] font-black uppercase tracking-[0.18em] text-muted-foreground">
-              Geofence Telemetry
-            </p>
-            <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-[11px] text-muted-foreground">
-              {geofenceDebug.rawDistanceMeters !== undefined && (
-                <p>Raw: {geofenceDebug.rawDistanceMeters}m</p>
-              )}
-              {geofenceDebug.toleranceMeters !== undefined && (
-                <p>Tolerance: {geofenceDebug.toleranceMeters}m</p>
-              )}
-              {geofenceDebug.distanceMeters !== undefined && (
-                <p>Effective: {geofenceDebug.distanceMeters}m</p>
-              )}
-              {geofenceDebug.radiusMeters !== undefined && (
-                <p>Radius: {geofenceDebug.radiusMeters}m</p>
-              )}
-              {geofenceDebug.reportedAccuracyMeters !== undefined && (
-                <p>Accuracy: ±{geofenceDebug.reportedAccuracyMeters}m</p>
-              )}
-              {geofenceDebug.maxAcceptableAccuracyMeters !== undefined && (
-                <p>
-                  Max Allowed: ±{geofenceDebug.maxAcceptableAccuracyMeters}m
+      <Card className="border-destructive/30 bg-destructive/10 rounded-2xl shadow-lg animate-in fade-in slide-in-from-bottom-2 duration-300">
+        <CardContent className="p-5 space-y-3">
+          <div className="flex items-start gap-3">
+            <div className="w-8 h-8 rounded-lg bg-destructive/15 border border-destructive/20 flex items-center justify-center shrink-0 mt-0.5">
+              <XCircle className="h-4 w-4 text-destructive" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold text-destructive">{title}</p>
+              {rest.length > 0 && (
+                <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed">
+                  {rest.join(" — ")}
                 </p>
               )}
             </div>
           </div>
-        )}
-        <Button
-          variant="outline"
-          size="sm"
-          className="w-full border-destructive/30 text-destructive hover:bg-destructive/10 hover:border-destructive/50 text-[11px] font-medium tracking-wide h-9 rounded-xl"
-          onClick={onRetry}
-        >
-          Try Again
-        </Button>
-      </div>
+          {geofenceDebug && (
+            <div className="rounded-xl border border-border/70 bg-background/80 p-3 space-y-1.5">
+              <p className="text-[10px] font-black uppercase tracking-[0.18em] text-muted-foreground">
+                Geofence Telemetry
+              </p>
+              <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-[11px] text-muted-foreground">
+                {geofenceDebug.rawDistanceMeters !== undefined && (
+                  <p>Raw: {geofenceDebug.rawDistanceMeters}m</p>
+                )}
+                {geofenceDebug.toleranceMeters !== undefined && (
+                  <p>Tolerance: {geofenceDebug.toleranceMeters}m</p>
+                )}
+                {geofenceDebug.distanceMeters !== undefined && (
+                  <p>Effective: {geofenceDebug.distanceMeters}m</p>
+                )}
+                {geofenceDebug.radiusMeters !== undefined && (
+                  <p>Radius: {geofenceDebug.radiusMeters}m</p>
+                )}
+                {geofenceDebug.reportedAccuracyMeters !== undefined && (
+                  <p>Accuracy: ±{geofenceDebug.reportedAccuracyMeters}m</p>
+                )}
+                {geofenceDebug.maxAcceptableAccuracyMeters !== undefined && (
+                  <p>
+                    Max Allowed: ±{geofenceDebug.maxAcceptableAccuracyMeters}m
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+          <Button
+            variant="outline"
+            size="sm"
+            className="w-full border-destructive/30 text-destructive hover:bg-destructive/10 hover:border-destructive/50 text-[11px] font-medium tracking-wide h-9 rounded-xl"
+            onClick={onRetry}
+          >
+            Try Again
+          </Button>
+        </CardContent>
+      </Card>
     );
   };
 
@@ -580,55 +569,70 @@ export default function QRScanner() {
         withSidebarOffset={true}
       />
 
-      <div className="app-page max-w-3xl mx-auto">
-        {/* ─── Header ─────────────────────────────────────────────────────── */}
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center animate-aura-pulse shrink-0">
-            <ShieldCheck className="h-6 w-6 text-primary" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-              Attendance Verification
-            </h1>
-            <p className="text-sm text-muted-foreground">
-              Secure attendance verification.
-            </p>
-          </div>
-        </div>
+      <div className="app-page max-w-5xl mx-auto relative">
+        <div className="absolute -top-12 -right-12 h-64 w-64 rounded-full bg-primary/10 blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-24 -left-16 h-72 w-72 rounded-full bg-info/10 blur-3xl pointer-events-none" />
 
-        {/* ─── Mode toggle with sliding indicator ─────────────────────────── */}
-        <div className="relative flex p-1 bg-muted/50 rounded-xl border border-border w-full max-w-[270px]">
-          {/* Sliding pill */}
-          <div
-            className={`absolute top-1 bottom-1 w-[calc(50%-6px)] rounded-lg bg-background shadow border border-border transition-transform duration-300 ease-in-out pointer-events-none ${
-              mode === "manual"
-                ? "translate-x-[calc(100%+4px)]"
-                : "translate-x-0"
-            }`}
-          />
-          <button
-            onClick={() => switchMode("qr")}
-            className={`relative z-10 flex items-center justify-center gap-2 flex-1 py-2 text-xs font-medium tracking-wide transition-colors duration-200 ${
-              mode === "qr"
-                ? "text-foreground"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            <QrCode className="h-3.5 w-3.5" />
-            QR Camera
-          </button>
-          <button
-            onClick={() => switchMode("manual")}
-            className={`relative z-10 flex items-center justify-center gap-2 flex-1 py-2 text-xs font-medium tracking-wide transition-colors duration-200 ${
-              mode === "manual"
-                ? "text-foreground"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            <Hand className="h-3.5 w-3.5" />
-            Manual
-          </button>
-        </div>
+        {/* ─── Header ─────────────────────────────────────────────────────── */}
+        <Card className="overflow-hidden border-border/70 bg-card/95 backdrop-blur-xl shadow-xl">
+          <CardContent className="p-5 sm:p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center animate-aura-pulse shrink-0">
+                  <ShieldCheck className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                  <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+                    Attendance Verification
+                  </h1>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Secure, location-aware attendance gateway
+                  </p>
+                </div>
+              </div>
+
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 self-start sm:self-auto">
+                <Radio className="h-3.5 w-3.5 text-primary animate-live-blink" />
+                <span className="text-[10px] font-black uppercase tracking-[0.18em] text-primary">
+                  Integrity Engine
+                </span>
+              </div>
+            </div>
+
+            {/* ─── Mode toggle with sliding indicator ─────────────────────────── */}
+            <div className="relative flex p-1 mt-5 bg-muted/50 rounded-xl border border-border w-full max-w-[300px]">
+              <div
+                className={`absolute top-1 bottom-1 w-[calc(50%-6px)] rounded-lg bg-background shadow border border-border transition-transform duration-300 ease-in-out pointer-events-none ${
+                  mode === "manual"
+                    ? "translate-x-[calc(100%+4px)]"
+                    : "translate-x-0"
+                }`}
+              />
+              <button
+                onClick={() => switchMode("qr")}
+                className={`relative z-10 flex items-center justify-center gap-2 flex-1 py-2 text-xs font-semibold tracking-wide transition-colors duration-200 ${
+                  mode === "qr"
+                    ? "text-foreground"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <QrCode className="h-3.5 w-3.5" />
+                QR Camera
+              </button>
+              <button
+                onClick={() => switchMode("manual")}
+                className={`relative z-10 flex items-center justify-center gap-2 flex-1 py-2 text-xs font-semibold tracking-wide transition-colors duration-200 ${
+                  mode === "manual"
+                    ? "text-foreground"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <Hand className="h-3.5 w-3.5" />
+                Manual
+              </button>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* ─── QR MODE ─────────────────────────────────────────────────────── */}
         {mode === "qr" && (
@@ -1043,74 +1047,80 @@ export default function QRScanner() {
           </div>
         )}
 
-        {/* ─── Security indicators ─────────────────────────────────────────── */}
-        <div className="grid gap-3 sm:grid-cols-3">
-          {[
-            {
-              label: "Location",
-              status: "Geofenced",
-              icon: MapPin,
-              color: "text-info",
-              iconBg: "bg-info/10 border-info/20",
-              dot: "bg-info",
-            },
-            {
-              label: "Network",
-              status: "Encrypted",
-              icon: Wifi,
-              color: "text-info",
-              iconBg: "bg-info/10 border-info/20",
-              dot: "bg-info",
-            },
-            {
-              label: "Identity",
-              status: "Validated",
-              icon: Fingerprint,
-              color: "text-success",
-              iconBg: "bg-success/10 border-success/20",
-              dot: "bg-success",
-            },
-          ].map((item, i) => (
-            <Card
-              key={i}
-              className="bg-card border-border rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 animate-in fade-in slide-in-from-bottom-2"
-              style={{
-                animationDelay: `${i * 60}ms`,
-                animationFillMode: "both",
-              }}
-            >
-              <CardContent className="p-4 flex items-center gap-3">
-                <div className={`rounded-xl ${item.iconBg} border p-2.5`}>
-                  <item.icon className={`h-4 w-4 ${item.color}`} />
-                </div>
-                <div className="space-y-0.5 flex-1">
-                  <p className="text-[10px] font-medium text-muted-foreground tracking-wide leading-none">
-                    {item.label}
-                  </p>
-                  <p
-                    className={`text-[11px] font-medium tracking-wide ${item.color}`}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <Card className="lg:col-span-2 border-border/70 bg-card/90 shadow-lg">
+            <CardContent className="p-4 sm:p-5">
+              <p className="text-[10px] font-black uppercase tracking-[0.18em] text-muted-foreground mb-3">
+                Security Channels
+              </p>
+              <div className="grid gap-3 sm:grid-cols-3">
+                {[
+                  {
+                    label: "Location",
+                    status: "Geofenced",
+                    icon: MapPin,
+                    color: "text-info",
+                    iconBg: "bg-info/10 border-info/20",
+                    dot: "bg-info",
+                  },
+                  {
+                    label: "Network",
+                    status: "Encrypted",
+                    icon: Wifi,
+                    color: "text-info",
+                    iconBg: "bg-info/10 border-info/20",
+                    dot: "bg-info",
+                  },
+                  {
+                    label: "Identity",
+                    status: "Validated",
+                    icon: Fingerprint,
+                    color: "text-success",
+                    iconBg: "bg-success/10 border-success/20",
+                    dot: "bg-success",
+                  },
+                ].map((item, i) => (
+                  <div
+                    key={i}
+                    className="bg-background/80 border border-border rounded-xl p-3.5 flex items-center gap-3"
                   >
-                    {item.status}
-                  </p>
-                </div>
-                <span
-                  className={`block w-1.5 h-1.5 rounded-full ${item.dot} animate-live-blink shrink-0`}
-                />
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                    <div className={`rounded-xl ${item.iconBg} border p-2.5`}>
+                      <item.icon className={`h-4 w-4 ${item.color}`} />
+                    </div>
+                    <div className="space-y-0.5 flex-1">
+                      <p className="text-[10px] font-medium text-muted-foreground tracking-wide leading-none">
+                        {item.label}
+                      </p>
+                      <p
+                        className={`text-[11px] font-semibold tracking-wide ${item.color}`}
+                      >
+                        {item.status}
+                      </p>
+                    </div>
+                    <span
+                      className={`block w-1.5 h-1.5 rounded-full ${item.dot} animate-live-blink shrink-0`}
+                    />
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
 
-        {/* ─── Info notice ─────────────────────────────────────────────────── */}
-        <Card className="bg-muted/30 border-border/50 rounded-xl">
-          <CardContent className="p-4 flex items-center gap-4 text-muted-foreground">
-            <Clock className="h-4 w-4 opacity-40 shrink-0" />
-            <p className="text-[11px] font-medium leading-relaxed tracking-wide">
-              Attendance window is active. Mark within the first 10 minutes for
-              full credit.
-            </p>
-          </CardContent>
-        </Card>
+          <Card className="border-border/70 bg-card/90 shadow-lg">
+            <CardContent className="p-4 sm:p-5 h-full">
+              <p className="text-[10px] font-black uppercase tracking-[0.18em] text-muted-foreground mb-3">
+                Session Note
+              </p>
+              <div className="rounded-xl border border-border bg-muted/25 p-4 flex items-start gap-3 text-muted-foreground">
+                <Clock className="h-4 w-4 opacity-60 shrink-0 mt-0.5" />
+                <p className="text-[11px] font-medium leading-relaxed tracking-wide">
+                  Attendance window is active. Mark within the first 10 minutes
+                  for full credit.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </>
   );
