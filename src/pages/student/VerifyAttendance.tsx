@@ -24,6 +24,7 @@ type GeofenceDebug = {
   distanceMeters?: number;
   rawDistanceMeters?: number;
   toleranceMeters?: number;
+  driftBufferMeters?: number;
   radiusMeters?: number;
   reportedAccuracyMeters?: number;
   maxAcceptableAccuracyMeters?: number;
@@ -91,6 +92,12 @@ export default function VerifyAttendance() {
       lat: number;
       lng: number;
       accuracy?: number;
+      locationCapturedAt?: string;
+      locationMeta?: {
+        sampleCount?: number;
+        sampleSpreadMeters?: number;
+        source?: string;
+      };
     }) =>
       attendanceAPI.markAttendanceQR(
         data.token,
@@ -98,6 +105,8 @@ export default function VerifyAttendance() {
         data.lng,
         `AuraSecure-${user?.id}`,
         data.accuracy,
+        data.locationCapturedAt,
+        data.locationMeta,
       ),
     onSuccess: () => {
       setStatus("success");
@@ -159,6 +168,12 @@ export default function VerifyAttendance() {
             lat: latitude,
             lng: longitude,
             accuracy,
+            locationCapturedAt: location.capturedAt,
+            locationMeta: {
+              sampleCount: location.sampleCount,
+              sampleSpreadMeters: location.sampleSpreadMeters,
+              source: "stabilized-median",
+            },
           });
         })
         .catch((error: unknown) => {
@@ -278,6 +293,9 @@ export default function VerifyAttendance() {
                       )}
                       {geofenceDebug.toleranceMeters !== undefined && (
                         <p>Tolerance: {geofenceDebug.toleranceMeters}m</p>
+                      )}
+                      {geofenceDebug.driftBufferMeters !== undefined && (
+                        <p>Drift Buffer: {geofenceDebug.driftBufferMeters}m</p>
                       )}
                       {geofenceDebug.distanceMeters !== undefined && (
                         <p>Effective: {geofenceDebug.distanceMeters}m</p>
