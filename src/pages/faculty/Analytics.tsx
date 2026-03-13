@@ -136,15 +136,12 @@ export default function Analytics() {
         show={isPerfLoading || isSessionsLoading}
         operation="loading"
       />
-      <div className="space-y-8 animate-in fade-in duration-700">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pb-2">
+      <div className="app-page">
+        <div className="app-page-header">
           <div>
-            <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-              Analytics Overview
-            </h1>
-            <p className="text-sm text-muted-foreground mt-1.5 flex items-center gap-2">
-              <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-              Live analytics for course outcomes and engagement.
+            <h1 className="page-header-title">Analytics Overview</h1>
+            <p className="page-header-sub">
+              Live analytics for course outcomes and engagement
             </p>
           </div>
           <div className="glass-card aura-glow border-none px-6 py-3 rounded-2xl flex flex-col items-end">

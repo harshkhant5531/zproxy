@@ -210,7 +210,7 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="app-page">
       <section className="relative overflow-hidden rounded-[2rem] border border-border/50 bg-[linear-gradient(135deg,rgba(255,255,255,0.92),rgba(240,249,255,0.88))] p-6 shadow-[0_24px_80px_-40px_rgba(14,165,233,0.45)] dark:bg-[linear-gradient(135deg,rgba(15,23,42,0.95),rgba(8,47,73,0.7))]">
         <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_top_left,rgba(14,165,233,0.14),transparent_32%),radial-gradient(circle_at_bottom_right,rgba(34,197,94,0.1),transparent_28%)]" />
         <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
@@ -541,7 +541,10 @@ export default function ProfilePage() {
                       type="password"
                       value={passwordForm.currentPassword}
                       onChange={(event) =>
-                        handlePasswordField("currentPassword", event.target.value)
+                        handlePasswordField(
+                          "currentPassword",
+                          event.target.value,
+                        )
                       }
                       className="h-12 rounded-2xl border-border/70 bg-background/80"
                       required

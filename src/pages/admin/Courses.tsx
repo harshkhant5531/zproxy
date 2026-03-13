@@ -187,15 +187,15 @@ export default function CourseManagement() {
       <FullScreenLoader show={updateMutation.isPending} operation="saving" />
       <FullScreenLoader show={deleteMutation.isPending} operation="deleting" />
       <FullScreenLoader show={subjectMutation.isPending} operation="creating" />
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
+      <div className="app-page">
+        <div className="app-page-header">
           <div>
-            <h1 className="text-2xl font-semibold tracking-tight text-foreground flex items-center gap-3">
-              <BookOpen className="h-8 w-8 text-primary" />
+            <h1 className="page-header-title flex items-center gap-2">
+              <BookOpen className="h-5 w-5 text-primary" />
               Course Management
             </h1>
-            <p className="text-sm text-muted-foreground mt-1">
-              Manage courses and subject assignments.
+            <p className="page-header-sub">
+              Manage courses and subject assignments
             </p>
           </div>
           <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>

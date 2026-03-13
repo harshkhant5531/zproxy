@@ -235,14 +235,14 @@ export default function StudentManagement() {
         show={enrollmentMutation.isPending}
         operation="enrolling"
       />
-      <div className="space-y-6">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="app-page">
+        <div className="app-page-header">
           <div>
-            <h1 className="text-2xl font-semibold tracking-tight text-foreground flex items-center gap-3">
-              <Shield className="h-8 w-8 text-primary" />
+            <h1 className="page-header-title flex items-center gap-2">
+              <Shield className="h-6 w-6 text-primary" />
               Student Registry
             </h1>
-            <p className="text-sm text-muted-foreground mt-1">
+            <p className="page-header-sub">
               {isLoading
                 ? "Loading student records..."
                 : `${students.length} student records`}

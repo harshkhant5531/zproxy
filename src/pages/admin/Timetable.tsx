@@ -233,14 +233,14 @@ export default function Timetable() {
       <FullScreenLoader show={isLoading} operation="loading" />
       <FullScreenLoader show={createMutation.isPending} operation="creating" />
       <FullScreenLoader show={deleteMutation.isPending} operation="deleting" />
-      <div className="space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="app-page">
+        <div className="app-page-header">
           <div>
-            <h1 className="text-2xl font-semibold tracking-tight text-foreground flex items-center gap-3">
-              <Calendar className="h-7 w-7 text-primary" /> Timetable Management
+            <h1 className="page-header-title flex items-center gap-2">
+              <Calendar className="h-5 w-5 text-primary" /> Timetable Management
             </h1>
-            <p className="text-sm text-muted-foreground mt-1">
-              Create and manage class schedules.
+            <p className="page-header-sub">
+              Create and manage class schedules
             </p>
           </div>
         </div>

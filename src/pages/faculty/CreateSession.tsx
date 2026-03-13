@@ -142,14 +142,12 @@ export default function CreateSession() {
         show={createSessionMutation.isPending || locating}
         operation={locating ? "locating" : "creating"}
       />
-      <div className="space-y-6 max-w-2xl mx-auto py-8">
-        <div className="text-center space-y-2">
-          <h1 className="text-2xl font-semibold tracking-tight text-foreground px-4">
-            Create Session
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            Set up a live attendance session.
-          </p>
+      <div className="app-page max-w-2xl mx-auto">
+        <div className="app-page-header text-center sm:text-left">
+          <div>
+            <h1 className="page-header-title">Create Session</h1>
+            <p className="page-header-sub">Set up a live attendance session</p>
+          </div>
         </div>
 
         {/* Steps Progress */}
