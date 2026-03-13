@@ -57,6 +57,30 @@ type GeofenceDebug = {
 
 function errorLabel(err: any): string {
   const msg: string = err?.response?.data?.message || err?.message || "";
+  const decisionReason =
+    err?.response?.data?.debug?.geofence?.decisionReason || err?.decisionReason;
+
+  if (decisionReason === "outside_geofence") {
+    const distance = err?.response?.data?.debug?.geofence?.distanceMeters;
+    const radius = err?.response?.data?.debug?.geofence?.radiusMeters;
+    if (typeof distance === "number" && typeof radius === "number") {
+      return `Outside Geofence — You are ${Math.round(distance)}m away. Move within ${Math.round(radius)}m of faculty and retry.`;
+    }
+    return "Outside Geofence — Move closer to faculty and retry.";
+  }
+
+  if (decisionReason === "borderline_retry") {
+    return "GPS Unstable — Hold still for a few seconds and retry. We will auto-retry shortly.";
+  }
+
+  if (decisionReason === "gps_accuracy_too_low") {
+    return "Weak GPS Signal — Move to an open area (balcony/window) and retry.";
+  }
+
+  if (decisionReason === "stale_location_sample") {
+    return "Stale Location Sample — Refresh location and scan again.";
+  }
+
   if (msg.toLowerCase().includes("batch"))
     return "Wrong Batch — This session is restricted to a different batch.";
   if (msg.toLowerCase().includes("already") || err?.response?.status === 409)
@@ -211,6 +235,78 @@ export default function QRScanner() {
     reason === "gps_accuracy_too_low" ||
     reason === "stale_location_sample";
 
+  const shouldRetryOutsideGeofence = (geofenceDebug?: GeofenceDebug | null) => {
+    if (!geofenceDebug) return false;
+    const rawDistance = geofenceDebug.rawDistanceMeters;
+    const radius = geofenceDebug.radiusMeters;
+    const retryBand = geofenceDebug.retryBandMeters ?? 0;
+
+    if (typeof rawDistance !== "number" || typeof radius !== "number") {
+      return false;
+    }
+
+    // Allow one recovery pass when the device is just outside practical GPS drift.
+    return rawDistance <= radius + retryBand + 80;
+  };
+
+  const markQrWithAdaptiveRetry = async (qrCode: string) => {
+    const maxAttempts = 3;
+    let lastErr: any = null;
+
+    for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+      const stabilized = await requestStabilizedPositionWithRetry({
+        sampleCount: 4 + attempt,
+        maxRetries: 3,
+        desiredAccuracyMeters: 45,
+        enableHighAccuracy: true,
+        timeout: 15000,
+        maximumAge: 0,
+      });
+
+      const payload = {
+        qrCode,
+        lat: stabilized.latitude,
+        lng: stabilized.longitude,
+        accuracy: stabilized.accuracy,
+        locationCapturedAt: stabilized.capturedAt,
+        locationMeta: {
+          sampleCount: stabilized.sampleCount,
+          sampleSpreadMeters: stabilized.sampleSpreadMeters,
+          source: "stabilized-median",
+        },
+      };
+
+      try {
+        await markQRMutation.mutateAsync(payload);
+        return;
+      } catch (err: any) {
+        lastErr = err;
+
+        const reason =
+          err?.response?.data?.debug?.geofence?.decisionReason ||
+          err?.decisionReason;
+        const debug = err?.response?.data?.debug?.geofence || null;
+        const canAutoRetry =
+          shouldAutoRetryGeofence(reason) ||
+          (reason === "outside_geofence" && shouldRetryOutsideGeofence(debug));
+
+        if (attempt < maxAttempts && canAutoRetry) {
+          setLastError(
+            "Improving GPS fix... keep your phone steady for a moment.",
+          );
+          await new Promise((resolve) => setTimeout(resolve, 900));
+          continue;
+        }
+
+        throw err;
+      }
+    }
+
+    if (lastErr) {
+      throw lastErr;
+    }
+  };
+
   const handleMarkWithLocation = async (
     type: "qr" | "manual",
     id: string | number,
@@ -227,42 +323,36 @@ export default function QRScanner() {
         );
       }
 
-      const stabilized = await requestStabilizedPositionWithRetry({
-        sampleCount: 4,
-        maxRetries: 3,
-        desiredAccuracyMeters: 50,
-        enableHighAccuracy: true,
-        timeout: 15000,
-        maximumAge: 0,
-      });
-
-      const payload = {
-        lat: stabilized.latitude,
-        lng: stabilized.longitude,
-        accuracy: stabilized.accuracy,
-        locationCapturedAt: stabilized.capturedAt,
-        locationMeta: {
-          sampleCount: stabilized.sampleCount,
-          sampleSpreadMeters: stabilized.sampleSpreadMeters,
-          source: "stabilized-median",
-        },
-      };
-
       if (type === "qr") {
-        await markQRMutation.mutateAsync({
-          qrCode: id as string,
-          ...payload,
-        });
+        await markQrWithAdaptiveRetry(id as string);
       } else {
+        const stabilized = await requestStabilizedPositionWithRetry({
+          sampleCount: 4,
+          maxRetries: 3,
+          desiredAccuracyMeters: 50,
+          enableHighAccuracy: true,
+          timeout: 15000,
+          maximumAge: 0,
+        });
+
         await markManualMutation.mutateAsync({
           sessionId: id as number,
-          ...payload,
+          lat: stabilized.latitude,
+          lng: stabilized.longitude,
+          accuracy: stabilized.accuracy,
+          locationCapturedAt: stabilized.capturedAt,
+          locationMeta: {
+            sampleCount: stabilized.sampleCount,
+            sampleSpreadMeters: stabilized.sampleSpreadMeters,
+            source: "stabilized-median",
+          },
         });
       }
       setLocating(false);
     } catch (err: any) {
       setLocating(false);
-      const msg = getLocationErrorMessage(err);
+      const isApiError = Boolean(err?.response?.status);
+      const msg = isApiError ? errorLabel(err) : getLocationErrorMessage(err);
       setLastError(msg);
       setLastGeofenceDebug(err?.response?.data?.debug?.geofence || null);
       toast.error(msg);
@@ -288,7 +378,10 @@ export default function QRScanner() {
           try {
             if (decodedText.startsWith("http")) {
               const url = new URL(decodedText);
-              const urlToken = url.searchParams.get("token");
+              const urlToken =
+                url.searchParams.get("token") ||
+                url.searchParams.get("qrCode") ||
+                url.searchParams.get("code");
               if (urlToken) token = urlToken;
             }
           } catch {
