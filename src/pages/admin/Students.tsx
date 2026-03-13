@@ -265,7 +265,7 @@ export default function StudentManagement() {
           </div>
         </div>
 
-        <Card className="glass-card aura-glow border-none overflow-hidden">
+        <Card className="bg-card border border-border shadow-sm motion-surface overflow-hidden">
           <CardHeader className="card-header-muted pb-4">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="relative w-full md:max-w-md group">

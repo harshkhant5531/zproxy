@@ -25,6 +25,7 @@ const tooltipStyle = {
   border: "1px solid hsl(var(--border))",
   borderRadius: 8,
   color: "hsl(var(--foreground))",
+  boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
 };
 const tickStyle = { fill: "hsl(215 20% 55%)", fontSize: 12 };
 
@@ -144,11 +145,11 @@ export default function Analytics() {
               Live analytics for course outcomes and engagement
             </p>
           </div>
-          <div className="glass-card aura-glow border-none px-6 py-3 rounded-2xl flex flex-col items-end">
-            <p className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-1">
+          <div className="bg-card border border-border shadow-sm motion-surface px-6 py-3 rounded-xl flex flex-col items-end">
+            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">
               Performance Index
             </p>
-            <p className="text-3xl font-black text-primary tracking-tighter aura-text-glow">
+            <p className="text-3xl font-bold text-primary tracking-tighter">
               {performanceData?.statistics?.classAverage || 0}
               <span className="text-sm ml-1 opacity-50">%</span>
             </p>
@@ -156,9 +157,9 @@ export default function Analytics() {
         </div>
 
         <div className="grid gap-8 lg:grid-cols-2">
-          <Card className="glass-card aura-glow border-none overflow-hidden group">
-            <CardHeader className="bg-primary/5 border-b border-border/10 px-6 py-4">
-              <CardTitle className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em] italic">
+          <Card className="bg-card border border-border shadow-sm motion-surface overflow-hidden group">
+            <CardHeader className="bg-muted/30 border-b border-border px-6 py-4">
+              <CardTitle className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
                 Top Performance Distribution
               </CardTitle>
             </CardHeader>
@@ -180,23 +181,17 @@ export default function Analytics() {
                       domain={[0, 100]}
                     />
                     <Tooltip
-                      contentStyle={{
-                        backdropFilter: "blur(12px)",
-                        backgroundColor: "rgba(0,0,0,0.8)",
-                        border: "1px solid rgba(255,255,255,0.1)",
-                        borderRadius: "12px",
-                      }}
+                      contentStyle={tooltipStyle}
                       itemStyle={{
                         color: "hsl(var(--primary))",
-                        fontWeight: "bold",
+                        fontWeight: "600",
                       }}
                     />
                     <Bar
                       dataKey="attainment"
                       fill="hsl(var(--primary))"
-                      radius={[8, 8, 2, 2]}
-                      barSize={35}
-                      className="filter drop-shadow-[0_0_8px_rgba(var(--primary),0.4)]"
+                      radius={[4, 4, 0, 0]}
+                      barSize={32}
                     />
                   </BarChart>
                 </ResponsiveContainer>
@@ -208,16 +203,16 @@ export default function Analytics() {
             </CardContent>
           </Card>
 
-          <Card className="glass-card aura-glow border-none overflow-hidden group">
-            <CardHeader className="bg-primary/5 border-b border-border/10 px-6 py-4">
-              <CardTitle className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em] italic">
+          <Card className="bg-card border border-border shadow-sm motion-surface overflow-hidden group">
+            <CardHeader className="bg-muted/30 border-b border-border px-6 py-4">
+              <CardTitle className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
                 Engagement Vector Map
               </CardTitle>
             </CardHeader>
             <CardContent className="p-6">
               <ResponsiveContainer width="100%" height={280}>
                 <RadarChart data={radarData}>
-                  <PolarGrid stroke="rgba(255,255,255,0.05)" />
+                  <PolarGrid stroke="hsl(var(--border))" />
                   <PolarAngleAxis
                     dataKey="subject"
                     tick={{
@@ -245,12 +240,12 @@ export default function Analytics() {
             </CardContent>
           </Card>
 
-          <Card className="glass-card aura-glow border-none lg:col-span-2 overflow-hidden">
-            <CardHeader className="bg-primary/5 border-b border-border/10 px-8 py-5 flex flex-row items-center justify-between">
-              <CardTitle className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em] italic">
+          <Card className="bg-card border border-border shadow-sm motion-surface lg:col-span-2 overflow-hidden">
+            <CardHeader className="bg-muted/30 border-b border-border px-8 py-5 flex flex-row items-center justify-between">
+              <CardTitle className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
                 Attendance Telemetry Trend
               </CardTitle>
-              <div className="text-[9px] text-primary font-black uppercase tracking-[0.2em] bg-primary/10 px-3 py-1 rounded-full border border-primary/20 aura-glow">
+              <div className="text-[9px] text-primary font-bold uppercase tracking-widest bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
                 {totalCompleted} Verified Cycles
               </div>
             </CardHeader>
@@ -270,12 +265,7 @@ export default function Analytics() {
                     domain={[0, 100]}
                   />
                   <Tooltip
-                    contentStyle={{
-                      backdropFilter: "blur(12px)",
-                      backgroundColor: "rgba(0,0,0,0.8)",
-                      border: "1px solid rgba(255,255,255,0.1)",
-                      borderRadius: "12px",
-                    }}
+                    contentStyle={tooltipStyle}
                   />
                   <Line
                     type="monotone"

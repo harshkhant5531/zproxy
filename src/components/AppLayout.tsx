@@ -40,7 +40,7 @@ export function AppLayout() {
       <div className="min-h-screen flex w-full">
         <AppSidebar />
         <div className="flex-1 flex flex-col min-w-0">
-          <header className="h-12 sm:h-14 flex items-center border-b border-border/40 bg-background/90 backdrop-blur-md sticky top-0 z-20 px-3 sm:px-4 gap-2 sm:gap-3">
+          <header className="h-12 sm:h-14 flex items-center border-b border-border/40 bg-background/90 sticky top-0 z-20 px-3 sm:px-4 gap-2 sm:gap-3">
             <SidebarTrigger className="text-muted-foreground hover:text-foreground transition-colors" />
             <Separator orientation="vertical" className="h-5 bg-border/60" />
             <div className="flex-1 flex items-center gap-2 sm:gap-3 min-w-0">

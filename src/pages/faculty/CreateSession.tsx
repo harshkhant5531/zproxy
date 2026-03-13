@@ -99,9 +99,11 @@ export default function CreateSession() {
         }
 
         return requestStabilizedPositionWithRetry({
-          timeout: 20000,
+          timeout: 30000,
           desiredAccuracyMeters: 60,
-          maxRetries: 3,
+          maxRetries: 4,
+          sampleCount: 8,
+          intervalMs: 800,
         });
       })
       .then((location) => {
@@ -173,11 +175,13 @@ export default function CreateSession() {
           ))}
         </div>
 
-        <Card className="bg-card border-border backdrop-blur-md shadow-2xl relative overflow-hidden group">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none" />
+        <Card
+          className="bg-card border border-border shadow-sm relative overflow-hidden motion-fade-scale"
+          style={{ animationDelay: "100ms" }}
+        >
           <CardContent className="p-8 space-y-8 relative">
             {step >= 1 && (
-              <div className="space-y-3 animate-in fade-in slide-in-from-left-4 duration-500">
+              <div className="space-y-3 motion-slide-up">
                 <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em] ml-1">
                   Subject Module
                 </label>
@@ -215,7 +219,10 @@ export default function CreateSession() {
             )}
 
             {step >= 2 && subjectId && (
-              <div className="space-y-5 animate-in fade-in slide-in-from-left-4 duration-500">
+              <div
+                className="space-y-5 motion-slide-up"
+                style={{ animationDelay: "40ms" }}
+              >
                 <div className="space-y-4">
                   <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em] ml-1">
                     Target Batches
@@ -260,8 +267,8 @@ export default function CreateSession() {
                         }}
                         className={`cursor-pointer h-10 flex items-center justify-center rounded-lg border font-black text-xs transition-colors duration-300 ${
                           selectedBatches.includes(batch)
-                            ? "bg-primary/10 border-primary text-primary shadow-[0_0_10px_rgba(34,211,238,0.1)]"
-                            : "bg-background border-border text-muted-foreground hover:border-primary/50"
+                            ? "bg-primary/10 border-primary text-primary"
+                            : "bg-muted/30 border-border text-muted-foreground hover:border-primary/50 hover:text-foreground"
                         }`}
                       >
                         {batch}
@@ -339,7 +346,7 @@ export default function CreateSession() {
             )}
 
             {step === 3 && topic && (
-              <div className="space-y-4 animate-in fade-in zoom-in duration-500 text-center pt-4">
+              <div className="space-y-4 motion-fade-scale text-center pt-4">
                 <div className="p-4 bg-primary/5 border border-primary/20 rounded-xl text-left space-y-1 mb-4">
                   <p className="text-[10px] font-black text-primary uppercase tracking-[0.25em] text-center mb-3">
                     Ready for Deployment
@@ -390,7 +397,7 @@ export default function CreateSession() {
                 </div>
                 <Button
                   size="lg"
-                  className="w-full h-14 font-black uppercase tracking-[0.2em] italic bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_20px_rgba(34,211,238,0.3)] transition-all"
+                  className="w-full h-14 font-semibold bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm hover:shadow-md transition-shadow motion-press"
                   onClick={handleGenerate}
                   disabled={createSessionMutation.isPending}
                 >

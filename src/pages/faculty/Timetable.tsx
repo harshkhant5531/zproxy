@@ -88,7 +88,7 @@ export default function FacultyTimetable() {
           </div>
         </div>
 
-        <Card className="bg-card/75 border-border/60 backdrop-blur-md overflow-x-auto shadow-2xl">
+        <Card className="bg-card/75 border-border/60 overflow-x-auto shadow-2xl">
           <CardContent className="p-0">
             <div className="min-w-[800px]">
               {/* Header */}

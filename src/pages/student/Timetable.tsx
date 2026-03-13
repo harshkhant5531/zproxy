@@ -85,25 +85,22 @@ export default function StudentTimetable() {
         </div>
 
         {/* Timetable grid */}
-        <Card className="glass-card aura-glow border-none overflow-hidden">
+        <Card className="bg-card border border-border shadow-sm motion-surface overflow-hidden">
           <CardContent className="p-0 overflow-x-auto">
             <div className="min-w-[860px]">
               {/* Column headers */}
-              <div className="grid grid-cols-[130px_repeat(5,1fr)] bg-muted/20 border-b border-border/40">
-                <div className="p-3.5 flex items-center gap-1.5 text-xs font-semibold text-foreground/75 uppercase tracking-wide">
+              <div className="grid grid-cols-[130px_repeat(5,1fr)] bg-muted/30 border-b border-border">
+                <div className="p-3.5 flex items-center gap-1.5 text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
                   <Clock className="h-3 w-3" /> Time
                 </div>
                 {days.map((day, i) => (
                   <div
                     key={day}
-                    className={`p-3.5 text-center text-sm font-semibold uppercase tracking-wide border-l border-border/30 transition-colors ${
-                      i === todayIdx ? "text-primary" : "text-muted-foreground"
+                    className={`p-3.5 text-center text-[10px] font-bold uppercase tracking-widest border-l border-border transition-colors ${
+                      i === todayIdx ? "text-primary bg-primary/5" : "text-muted-foreground"
                     }`}
                   >
                     {dayShort[i]}
-                    {i === todayIdx && (
-                      <span className="block h-0.5 w-4 bg-primary rounded-full mx-auto mt-1" />
-                    )}
                   </div>
                 ))}
               </div>
@@ -140,35 +137,35 @@ export default function StudentTimetable() {
                     return (
                       <div
                         key={day}
-                        className={`p-2.5 border-l border-border/20 min-h-[132px] transition-colors ${
-                          isToday ? "bg-primary/[0.03]" : "hover:bg-muted/10"
+                        className={`p-2 border-l border-border min-h-[132px] transition-colors ${
+                          isToday ? "bg-primary/[0.02]" : "hover:bg-muted/5"
                         }`}
                       >
                         {session ? (
                           <div
-                            className={`h-full rounded-xl border p-3.5 text-sm flex flex-col gap-2.5 ${colorClass}`}
+                            className={`h-full rounded-lg border p-3 text-sm flex flex-col gap-2.5 motion-surface ${colorClass}`}
                           >
                             <div className="flex items-start justify-between gap-1">
-                              <p className="font-semibold text-sm leading-snug line-clamp-2 text-foreground">
+                              <p className="font-bold text-xs leading-snug line-clamp-2 text-foreground">
                                 {session.subject?.name ||
                                   session.course?.name ||
                                   "—"}
                               </p>
                               <Badge
                                 variant="outline"
-                                className="text-[10px] px-1.5 py-0 shrink-0 border-current"
+                                className="text-[9px] px-1.5 py-0 shrink-0 border-current bg-background shadow-none"
                               >
                                 {session.type || "Theory"}
                               </Badge>
                             </div>
 
                             <div className="mt-auto space-y-1">
-                              <div className="flex items-center gap-1.5 text-xs text-foreground/80">
+                              <div className="flex items-center gap-1.5 text-[10px] text-foreground opacity-80 font-medium">
                                 <MapPin className="h-3 w-3 shrink-0" />
                                 {session.roomNumber || "TBA"}
                               </div>
                               {session.faculty && (
-                                <div className="flex items-center gap-1.5 text-xs text-foreground/70">
+                                <div className="flex items-center gap-1.5 text-[10px] text-foreground opacity-70">
                                   <BookOpen className="h-3 w-3 shrink-0" />
                                   {session.faculty.profile?.fullName ||
                                     session.faculty.username ||

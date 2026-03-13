@@ -91,7 +91,7 @@ export default function ShortageAlerts() {
           </div>
         </div>
 
-        <Card className="bg-card/75 border-destructive/25 backdrop-blur-md shadow-2xl overflow-hidden relative">
+        <Card className="bg-card/75 border-destructive/25 shadow-2xl overflow-hidden relative">
           <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-rose-600 to-transparent" />
           <CardContent className="p-0">
             <Table>

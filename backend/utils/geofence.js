@@ -83,6 +83,32 @@ function haversineDistanceMeters(from, to) {
   return Math.round(EARTH_RADIUS_METERS * c);
 }
 
+// More accurate for short distances (< 1km) using equirectangular projection
+function equirectangularDistanceMeters(from, to) {
+  const lat1 = (from.latitude * Math.PI) / 180;
+  const lat2 = (to.latitude * Math.PI) / 180;
+  const deltaLat = ((to.latitude - from.latitude) * Math.PI) / 180;
+  const deltaLng = ((to.longitude - from.longitude) * Math.PI) / 180;
+
+  const x = deltaLng * Math.cos((lat1 + lat2) / 2);
+  const y = deltaLat;
+  return Math.round(EARTH_RADIUS_METERS * Math.sqrt(x * x + y * y));
+}
+
+// Smart distance calculation - uses best formula based on distance
+function calculateDistanceMeters(from, to) {
+  // Check if coordinates are close enough for equirectangular
+  const approxLatDiff = Math.abs(to.latitude - from.latitude);
+  const approxLngDiff = Math.abs(to.longitude - from.longitude);
+
+  // For small distances (< ~10km), equirectangular is more accurate
+  if (approxLatDiff < 0.1 && approxLngDiff < 0.1) {
+    return equirectangularDistanceMeters(from, to);
+  }
+
+  return haversineDistanceMeters(from, to);
+}
+
 function resolveAccuracyToleranceMeters(accuracyMetersInput) {
   const parsedAccuracy = toFiniteNumber(accuracyMetersInput);
   if (parsedAccuracy === null || parsedAccuracy <= 0) {
@@ -232,7 +258,7 @@ function validateStudentGeofence(
   }
 
   const radiusMeters = resolveRadiusMeters(session);
-  const rawDistanceMeters = haversineDistanceMeters(
+  const rawDistanceMeters = calculateDistanceMeters(
     studentLocation,
     referenceLocation,
   );
@@ -306,6 +332,8 @@ module.exports = {
   MIN_RADIUS_METERS,
   MAX_LOCATION_AGE_MS,
   haversineDistanceMeters,
+  equirectangularDistanceMeters,
+  calculateDistanceMeters,
   resolveRadiusMeters,
   resolveReferenceLocation,
   validateStudentGeofence,

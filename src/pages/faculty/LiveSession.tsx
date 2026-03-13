@@ -288,9 +288,11 @@ export default function LiveSession() {
       }
 
       const location = await requestStabilizedPositionWithRetry({
-        timeout: 20000,
+        timeout: 30000,
         desiredAccuracyMeters: 55,
-        maxRetries: 3,
+        maxRetries: 4,
+        sampleCount: 8,
+        intervalMs: 800,
       });
 
       if (Number.isFinite(location.accuracy) && location.accuracy > 90) {
@@ -335,7 +337,7 @@ export default function LiveSession() {
             : "Saving Anchor..."
         }
       />
-      <div className="app-page">
+      <div className="app-page motion-page-enter">
         <div className="app-page-header">
           <div>
             <h1 className="page-header-title">
@@ -351,12 +353,12 @@ export default function LiveSession() {
             {session?.batches && session.batches.length > 0 && (
               <div className="flex flex-wrap gap-1 mt-2">
                 {session.batches.map((b: string) => (
-                  <span
-                    key={b}
-                    className="px-2 py-0.5 bg-primary/10 text-primary border border-primary/20 rounded text-[10px] font-black uppercase tracking-wider"
-                  >
-                    Batch {b}
-                  </span>
+                <span
+                  key={b}
+                  className="px-2 py-0.5 bg-primary/10 text-primary border border-primary/20 rounded text-[10px] font-bold uppercase tracking-widest"
+                >
+                  Batch {b}
+                </span>
                 ))}
                 {session?.geofenceRadius && (
                   <span className="px-2 py-0.5 bg-warning/10 text-warning border border-warning/20 rounded text-[10px] font-black uppercase tracking-wider flex items-center gap-1">
@@ -394,7 +396,7 @@ export default function LiveSession() {
                   size="sm"
                   onClick={() => endSessionMutation.mutate()}
                   disabled={endSessionMutation.isPending}
-                  className="font-bold uppercase tracking-wider shadow-lg shadow-destructive/20"
+                  className="font-bold uppercase tracking-widest shadow-sm motion-press"
                 >
                   End Session
                 </Button>
@@ -405,7 +407,7 @@ export default function LiveSession() {
                 variant="outline"
                 size="sm"
                 onClick={copyAbsenteeReport}
-                className="border-success/50 text-success hover:bg-success/10 font-bold uppercase tracking-wider"
+                className="border-emerald-500/50 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/10 font-bold uppercase tracking-widest motion-press"
               >
                 <RefreshCw className="mr-2 h-4 w-4" /> Copy Export
               </Button>
@@ -414,19 +416,17 @@ export default function LiveSession() {
         </div>
 
         <div className="grid gap-6 lg:grid-cols-3">
-          <Card className="lg:row-span-2 overflow-hidden border-border/70 bg-card/95 backdrop-blur-xl shadow-2xl relative">
-            <div className="absolute -top-16 -right-12 h-52 w-52 rounded-full bg-primary/10 blur-3xl pointer-events-none" />
-            <div className="absolute -bottom-20 -left-16 h-56 w-56 rounded-full bg-info/10 blur-3xl pointer-events-none" />
+          <Card className="lg:row-span-2 overflow-hidden border-border bg-card shadow-sm relative motion-slide-up">
             <CardHeader className="pb-3 px-6 border-b border-border/40 bg-gradient-to-b from-primary/5 to-transparent">
-              <CardTitle className="app-kicker flex items-center justify-between">
+              <CardTitle className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest flex items-center justify-between">
                 <span>
-                  {isCompleted ? "Session Statistics" : "Secure Attendance QR"}
+                  {isCompleted ? "Session Statistics" : "Attendance QR"}
                 </span>
                 <div className="flex items-center gap-2">
                   <span
-                    className={`px-2 py-0.5 rounded-full text-[9px] ${isCompleted ? "bg-success/10 text-success" : "bg-primary/10 text-primary animate-pulse"}`}
+                    className={`px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-widest ${isCompleted ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" : "bg-primary/10 text-primary animate-pulse"}`}
                   >
-                    {isCompleted ? "Concluded" : "Live Feed"}
+                    {isCompleted ? "Concluded" : "Live"}
                   </span>
                   {!isCompleted && session?.geofenceRadius && (
                     <span className="px-2 py-0.5 rounded-full text-[9px] bg-info/10 text-info border border-info/20">
@@ -439,8 +439,8 @@ export default function LiveSession() {
             <CardContent className="p-4 sm:p-6 text-center relative h-full">
               {!isCompleted ? (
                 <div className="space-y-5">
-                  <div className="rounded-2xl border border-border bg-background/85 p-4">
-                    <div className="aspect-square bg-white rounded-xl flex items-center justify-center border-4 border-background shadow-inner relative overflow-hidden mx-auto max-w-[300px]">
+                  <div className="rounded-2xl border border-border bg-muted/30 p-4">
+                    <div className="aspect-square bg-white rounded-xl flex items-center justify-center border-4 border-background shadow-sm relative overflow-hidden mx-auto max-w-[300px]">
                       {session?.qrCode?.codeValue ? (
                         <>
                           <QRCodeSVG
@@ -458,7 +458,7 @@ export default function LiveSession() {
                             }
                           />
                           {generateQRMutation.isPending && (
-                            <div className="absolute inset-0 flex items-center justify-center bg-background/70 backdrop-blur-sm">
+                            <div className="absolute inset-0 flex items-center justify-center bg-background/70">
                               <Loader2 className="h-9 w-9 text-foreground/70 animate-spin" />
                             </div>
                           )}
@@ -469,15 +469,15 @@ export default function LiveSession() {
                             <Loader2 className="h-9 w-9 text-primary animate-spin" />
                           </div>
                           <div className="space-y-2">
-                            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground animate-pulse">
-                              Syncing Spatial Link...
+                            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground animate-pulse">
+                              Syncing...
                             </p>
                             <Button
                               variant="outline"
                               size="sm"
                               onClick={() => generateQRMutation.mutate()}
                               disabled={generateQRMutation.isPending}
-                              className="h-8 text-[10px] uppercase font-black tracking-wider border-primary/20 text-primary"
+                              className="h-8 text-[10px] uppercase font-bold tracking-widest border-primary/20 text-primary motion-press"
                             >
                               <RefreshCw
                                 className={`mr-2 h-3 w-3 ${generateQRMutation.isPending ? "animate-spin" : ""}`}
@@ -491,9 +491,9 @@ export default function LiveSession() {
                   </div>
 
                   <div className="grid gap-3 sm:grid-cols-2">
-                    <div className="p-4 bg-background border border-border rounded-xl shadow-sm text-left">
-                      <p className="app-kicker mb-1">Rotation Sync</p>
-                      <p className="text-4xl font-black text-primary aura-text-glow font-mono">
+                    <div className="p-4 bg-muted/20 border border-border rounded-xl shadow-sm text-left">
+                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Rotation Sync</p>
+                      <p className="text-4xl font-bold text-primary font-mono">
                         {qrTimer}s
                       </p>
                       <Progress
@@ -501,18 +501,17 @@ export default function LiveSession() {
                         className="h-1.5 mt-3 bg-muted"
                       />
                     </div>
-                    <div className="p-4 bg-background border border-border rounded-xl shadow-sm text-left">
-                      <p className="app-kicker mb-2">Scanner Guidance</p>
-                      <p className="app-caption leading-relaxed">
-                        Ask students to scan from the Verify link view, keep GPS
-                        enabled, and stay within the geofence radius.
+                    <div className="p-4 bg-muted/20 border border-border rounded-xl shadow-sm text-left">
+                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2">Guidance</p>
+                      <p className="text-xs text-muted-foreground leading-relaxed">
+                        Stay within the geofence radius.
                       </p>
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={() => generateQRMutation.mutate()}
                         disabled={generateQRMutation.isPending}
-                        className="mt-3 h-8 text-[10px] uppercase font-black tracking-wider border-primary/20 text-primary"
+                        className="mt-3 h-8 text-[10px] uppercase font-bold tracking-widest border-primary/20 text-primary motion-press"
                       >
                         <RefreshCw
                           className={`mr-2 h-3 w-3 ${generateQRMutation.isPending ? "animate-spin" : ""}`}
@@ -525,19 +524,19 @@ export default function LiveSession() {
               ) : (
                 <div className="space-y-6 py-4">
                   <div className="grid grid-cols-2 gap-4">
-                    <div className="text-center p-4 bg-background border border-border rounded-xl shadow-sm">
-                      <p className="text-[10px] uppercase text-muted-foreground font-black tracking-widest mb-1">
+                    <div className="text-center p-4 bg-muted/20 border border-border rounded-xl shadow-sm">
+                      <p className="text-[10px] uppercase text-muted-foreground font-bold tracking-widest mb-1">
                         Present
                       </p>
-                      <p className="text-4xl font-black text-success">
+                      <p className="text-4xl font-bold text-emerald-600 dark:text-emerald-400">
                         {presentCount}
                       </p>
                     </div>
-                    <div className="text-center p-4 bg-background border border-border rounded-xl shadow-sm">
-                      <p className="text-[10px] uppercase text-muted-foreground font-black tracking-widest mb-1">
+                    <div className="text-center p-4 bg-muted/20 border border-border rounded-xl shadow-sm">
+                      <p className="text-[10px] uppercase text-muted-foreground font-bold tracking-widest mb-1">
                         Absent
                       </p>
-                      <p className="text-4xl font-black text-destructive">
+                      <p className="text-4xl font-bold text-destructive">
                         {absenteeRoster.length}
                       </p>
                     </div>
@@ -575,22 +574,22 @@ export default function LiveSession() {
             </CardContent>
           </Card>
 
-          <Card className="col-span-1 lg:col-span-2 border-border/70 bg-card/95 backdrop-blur-xl shadow-xl overflow-hidden">
-            <CardHeader className="pb-3 px-6 border-b border-border/40 bg-gradient-to-b from-primary/5 to-transparent">
-              <CardTitle className="app-kicker">
+          <Card className="col-span-1 lg:col-span-2 border-border bg-card shadow-sm overflow-hidden motion-slide-up">
+            <CardHeader className="pb-3 px-6 border-b border-border bg-muted/30">
+              <CardTitle className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">
                 Participation Insight
               </CardTitle>
             </CardHeader>
             <CardContent className="p-5 sm:p-6">
               <div className="grid gap-4 sm:grid-cols-3 items-stretch">
-                <div className="rounded-xl border border-border bg-background/80 p-4 text-center">
-                  <p className="app-kicker">Attendance Rate</p>
-                  <p className="text-5xl font-black text-foreground tracking-tighter mt-2">
+                <div className="rounded-xl border border-border bg-muted/20 p-4 text-center">
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Rate</p>
+                  <p className="text-5xl font-bold text-foreground tracking-tighter mt-2">
                     {pct}%
                   </p>
                   <div className="mt-3 h-1.5 rounded-full bg-muted overflow-hidden">
                     <div
-                      className="h-full bg-gradient-to-r from-primary to-info rounded-full"
+                      className="h-full bg-primary rounded-full motion-progress"
                       style={{ width: `${pct}%` }}
                     />
                   </div>
@@ -622,23 +621,23 @@ export default function LiveSession() {
                   </div>
                 </div>
 
-                <div className="rounded-xl border border-border bg-background/80 p-4 text-center flex flex-col justify-center">
-                  <p className="app-kicker">Verified Assets</p>
-                  <p className="text-3xl font-black text-foreground mt-2">
+                <div className="rounded-xl border border-border bg-muted/20 p-4 text-center flex flex-col justify-center">
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Assets</p>
+                  <p className="text-3xl font-bold text-foreground mt-2">
                     {presentCount}
-                    <span className="text-muted-foreground text-base">
+                    <span className="text-muted-foreground text-sm font-medium">
                       /{totalCount}
                     </span>
                   </p>
-                  <p className="app-caption mt-2">
-                    students authenticated in current session
+                  <p className="text-[10px] text-muted-foreground mt-2">
+                    Verified participants
                   </p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="col-span-1 lg:col-span-2 border-border/70 bg-card/95 backdrop-blur-xl shadow-xl overflow-hidden">
+          <Card className="col-span-1 lg:col-span-2 border-border/70 bg-card/95 shadow-xl overflow-hidden">
             <CardHeader className="pb-3 px-6 border-b border-border/40 bg-gradient-to-b from-primary/5 to-transparent">
               <CardTitle className="app-kicker">
                 Integrity Protocol Status
@@ -682,11 +681,11 @@ export default function LiveSession() {
 
         {/* ─── Proxy Suspects Alert ─────────────────────────────────────────── */}
         {proxyRecords.length > 0 && (
-          <Card className="border-warning/30 bg-warning/5 shadow-xl overflow-hidden animate-in fade-in">
-            <CardHeader className="pb-2 px-6 pt-4 border-b border-warning/20 bg-gradient-to-b from-warning/10 to-transparent">
-              <CardTitle className="app-kicker text-warning flex items-center gap-2">
+          <Card className="border-destructive/30 bg-destructive/5 shadow-sm overflow-hidden motion-slide-up">
+            <CardHeader className="pb-2 px-6 pt-4 border-b border-destructive/20 bg-destructive/10">
+              <CardTitle className="text-[11px] font-bold text-destructive uppercase tracking-widest flex items-center gap-2">
                 <AlertTriangle className="h-4 w-4" />
-                {proxyRecords.length} Proxy Detected
+                {proxyRecords.length} Violation Detected
                 {proxyRecords.length > 1 ? "s" : ""}
               </CardTitle>
             </CardHeader>
@@ -735,7 +734,7 @@ export default function LiveSession() {
         )}
 
         {showOverride && !isCompleted && (
-          <Card className="bg-card border-primary/30 border-2 backdrop-blur-md shadow-2xl animate-in fade-in zoom-in duration-300">
+          <Card className="bg-card border-primary/20 border shadow-md motion-slide-up">
             <CardHeader>
               <CardTitle className="text-sm font-black text-foreground uppercase tracking-widest">
                 Manual Presence Authentication
@@ -777,22 +776,22 @@ export default function LiveSession() {
                 <Button
                   onClick={handleManualOverride}
                   disabled={overrideMutation.isPending}
-                  className="bg-primary text-primary-foreground font-black uppercase tracking-widest px-8 h-12"
+                  className="bg-primary text-primary-foreground font-bold uppercase tracking-widest px-8 h-12 rounded-xl motion-press"
                 >
-                  Authenticate Asset
+                  Authenticate
                 </Button>
               </div>
             </CardContent>
           </Card>
         )}
 
-        <Card className="border-border/70 bg-card/95 backdrop-blur-xl shadow-xl overflow-hidden">
-          <CardHeader className="border-b border-border/40 px-6 py-4 bg-gradient-to-b from-primary/5 to-transparent">
-            <CardTitle className="app-kicker flex items-center gap-2">
+        <Card className="border-border bg-card shadow-sm overflow-hidden motion-slide-up">
+          <CardHeader className="border-b border-border px-6 py-4 bg-muted/30">
+            <CardTitle className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
               <Users className="h-4 w-4" />
               {isCompleted
-                ? "Final Attendance Record"
-                : "Live Authentication Stream"}
+                ? "Attendance Record"
+                : "Authentication Stream"}
               {!isCompleted && (
                 <span className="ml-auto h-2 w-2 rounded-full bg-primary animate-pulse shadow-[0_0_8px_rgba(var(--primary),0.5)]" />
               )}

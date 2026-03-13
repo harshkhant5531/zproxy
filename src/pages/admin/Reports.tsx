@@ -125,7 +125,7 @@ export default function Reports() {
         </div>
       </div>
 
-      <Card className="glass-card aura-glow border-none">
+      <Card className="bg-card border border-border shadow-sm motion-surface">
         <CardHeader className="card-header-muted py-4 px-6">
           <CardTitle className="text-sm font-semibold text-foreground">
             Configuration Engine
@@ -214,7 +214,7 @@ export default function Reports() {
           {reportsData?.map((r: any) => (
             <Card
               key={r.id}
-              className="glass-card border-none group hover:border-primary/20 transition-all duration-200"
+              className="bg-card border border-border shadow-sm group hover:border-primary/20 transition-all duration-200"
             >
               <CardContent className="p-5 flex items-start justify-between">
                 <div className="space-y-1.5 min-w-0 flex-1 pr-3">

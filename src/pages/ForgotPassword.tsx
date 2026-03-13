@@ -53,7 +53,7 @@ export default function ForgotPassword() {
 
       <div className="relative z-10 mx-auto flex min-h-screen max-w-6xl items-center justify-center px-6 py-10">
         <div className="grid w-full gap-8 lg:grid-cols-[1.2fr_0.9fr]">
-          <div className="hidden rounded-[2rem] border border-border/50 bg-white/60 p-10 shadow-2xl backdrop-blur-xl lg:block">
+          <div className="hidden rounded-[2rem] border border-border/50 bg-white/60 p-10 shadow-2xl lg:block">
             <div className="mb-10 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-4 py-2 text-[11px] font-black uppercase tracking-[0.18em] text-primary">
               <Sparkles className="h-3.5 w-3.5" /> Account Recovery
             </div>
@@ -80,7 +80,7 @@ export default function ForgotPassword() {
             </div>
           </div>
 
-          <Card className="border border-border/60 bg-card/85 shadow-2xl backdrop-blur-xl">
+          <Card className="border border-border/60 bg-card/85 shadow-2xl">
             <CardHeader className="space-y-3 pb-3">
               <Link
                 to="/login"

@@ -95,15 +95,12 @@ export default function ExamPermit() {
           </div>
         </div>
 
-        <div className="relative group motion-float-delayed">
-          {/* Holographic Decorations */}
-          <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 to-info/30 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000" />
-
+        <div className="relative group motion-slide-up">
           <Card
-            className={`relative glass-card border-2 backdrop-blur-xl shadow-2xl overflow-hidden motion-surface motion-sheen ${overallEligible ? "border-primary/20" : "border-destructive/20"}`}
+            className={`relative bg-card border border-border shadow-sm overflow-hidden motion-surface ${overallEligible ? "border-primary/40" : "border-destructive/40"}`}
           >
-            {/* Chip/HID visual element */}
-            <div className="absolute top-8 right-8 h-10 w-14 bg-gradient-to-br from-warning/40 to-warning/20 rounded-md border border-warning/30 opacity-60 motion-float" />
+            {/* HID-like visual element */}
+            <div className="absolute top-8 right-8 h-10 w-14 bg-muted/50 rounded-md border border-border pointer-events-none" />
 
             <CardContent className="p-10 space-y-8">
               <div className="flex justify-between items-start border-b border-border pb-6">
@@ -116,9 +113,9 @@ export default function ExamPermit() {
                   </h2>
                   <div className="flex items-center gap-2 mt-2">
                     <div
-                      className={`h-1.5 w-10 rounded-full ${overallEligible ? "bg-primary shadow-[0_0_8px_rgba(34,211,238,0.5)]" : "bg-destructive"}`}
+                      className={`h-1.5 w-10 rounded-full ${overallEligible ? "bg-primary" : "bg-destructive"}`}
                     />
-                    <span className="text-xs font-mono text-muted-foreground uppercase tracking-wide">
+                    <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
                       {overallEligible
                         ? "Status: Authorized"
                         : "Status: Inhibited"}
@@ -171,7 +168,7 @@ export default function ExamPermit() {
                   {courseEligibility.map((course) => (
                     <div
                       key={course.id}
-                      className="flex items-center justify-between rounded-lg bg-muted/30 border border-border/50 p-4 hover:border-border transition-colors"
+                      className="flex items-center justify-between rounded-lg bg-muted/20 border border-border p-4 hover:bg-muted/30 transition-colors"
                     >
                       <div className="flex items-center gap-3">
                         <div
@@ -194,7 +191,7 @@ export default function ExamPermit() {
                     </div>
                   ))}
                   {courseEligibility.length === 0 && (
-                    <p className="text-center py-4 text-xs text-muted-foreground/40 italic">
+                    <p className="text-center py-4 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/40">
                       No course data indexed
                     </p>
                   )}
@@ -203,21 +200,20 @@ export default function ExamPermit() {
 
               <div className="text-center pt-8">
                 {overallEligible ? (
-                  <Button
-                    onClick={handleDownload}
-                    size="lg"
-                    className="w-full h-14 text-base font-semibold bg-primary text-black hover:bg-primary/90 shadow-[0_0_25px_rgba(34,211,238,0.4)] relative overflow-hidden group/btn"
-                  >
-                    <div className="absolute inset-x-0 bottom-0 h-[2px] bg-white/30 transform translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300" />
-                    <Download className="mr-3 h-5 w-5" /> Download Hall Ticket
-                  </Button>
+                    <Button
+                      onClick={handleDownload}
+                      size="lg"
+                      className="w-full h-14 text-sm font-bold tracking-widest uppercase bg-primary text-black hover:brightness-110 shadow-sm relative overflow-hidden group/btn motion-press"
+                    >
+                      <Download className="mr-3 h-5 w-5" /> Download Hall Ticket
+                    </Button>
                 ) : (
                   <div className="space-y-4">
                     <Button
                       size="lg"
-                      variant="destructive"
+                      variant="outline"
                       disabled
-                      className="w-full h-14 text-base font-semibold bg-muted/50 border border-destructive/40 text-destructive opacity-60"
+                      className="w-full h-14 text-sm font-bold tracking-widest uppercase bg-muted/30 border border-border text-muted-foreground"
                     >
                       <Lock className="mr-3 h-5 w-5" /> Hall Ticket Inhibited
                     </Button>

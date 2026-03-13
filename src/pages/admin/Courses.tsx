@@ -341,7 +341,7 @@ export default function CourseManagement() {
           />
         </div>
 
-        <Card className="bg-card/75 border-border/60 backdrop-blur-sm shadow-2xl overflow-hidden">
+        <Card className="bg-card/75 border-border/60 shadow-2xl overflow-hidden">
           <CardContent className="p-0">
             <Table>
               <TableHeader className="bg-muted/35 dark:bg-muted/20">

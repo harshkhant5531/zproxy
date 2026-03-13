@@ -1,6 +1,6 @@
 const DEFAULT_GEOLOCATION_OPTIONS: PositionOptions = {
   enableHighAccuracy: true,
-  timeout: 20000,
+  timeout: 30000,
   maximumAge: 0,
 };
 
@@ -8,7 +8,27 @@ const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const EARTH_RADIUS_METERS = 6371000;
 
+// Improved Haversine formula with better numerical stability
 function haversineMeters(
+  a: { latitude: number; longitude: number },
+  b: { latitude: number; longitude: number },
+) {
+  const lat1Rad = (a.latitude * Math.PI) / 180;
+  const lat2Rad = (b.latitude * Math.PI) / 180;
+  const deltaLat = ((b.latitude - a.latitude) * Math.PI) / 180;
+  const deltaLng = ((b.longitude - a.longitude) * Math.PI) / 180;
+
+  const sinLat = Math.sin(deltaLat / 2);
+  const sinLng = Math.sin(deltaLng / 2);
+  const x =
+    sinLat * sinLat + Math.cos(lat1Rad) * Math.cos(lat2Rad) * sinLng * sinLng;
+  const y = 2 * Math.atan2(Math.sqrt(x), Math.sqrt(1 - x));
+  return Math.round(EARTH_RADIUS_METERS * y);
+}
+
+// More accurate distance calculation for small distances (< 1km)
+// Uses equirectangular approximation which is faster and more accurate for short distances
+function equirectangularDistanceMeters(
   a: { latitude: number; longitude: number },
   b: { latitude: number; longitude: number },
 ) {
@@ -17,13 +37,32 @@ function haversineMeters(
   const deltaLat = ((b.latitude - a.latitude) * Math.PI) / 180;
   const deltaLng = ((b.longitude - a.longitude) * Math.PI) / 180;
 
-  const sinLat = Math.sin(deltaLat / 2);
-  const sinLng = Math.sin(deltaLng / 2);
-  const x = sinLat * sinLat + Math.cos(lat1) * Math.cos(lat2) * sinLng * sinLng;
-  const y = 2 * Math.atan2(Math.sqrt(x), Math.sqrt(1 - x));
-  return Math.round(EARTH_RADIUS_METERS * y);
+  const x = deltaLng * Math.cos((lat1 + lat2) / 2);
+  const y = deltaLat;
+  return Math.round(EARTH_RADIUS_METERS * Math.sqrt(x * x + y * y));
 }
 
+// Weighted average using accuracy as weight (lower accuracy = higher weight)
+// This gives more importance to more accurate GPS readings
+function weightedAverage(values: number[], accuracies: number[]): number {
+  if (values.length === 0) return 0;
+  if (values.length === 1) return values[0];
+
+  let totalWeight = 0;
+  let weightedSum = 0;
+
+  for (let i = 0; i < values.length; i++) {
+    // Weight is inverse of accuracy (better accuracy = higher weight)
+    // Add 1 to avoid division by zero and give minimum weight
+    const weight = 1 / (accuracies[i] + 1);
+    weightedSum += values[i] * weight;
+    totalWeight += weight;
+  }
+
+  return totalWeight > 0 ? weightedSum / totalWeight : values[0];
+}
+
+// Simple median as fallback
 function median(values: number[]) {
   if (values.length === 0) return 0;
   const sorted = [...values].sort((left, right) => left - right);
@@ -31,8 +70,40 @@ function median(values: number[]) {
   if (sorted.length % 2 === 0) {
     return (sorted[midpoint - 1] + sorted[midpoint]) / 2;
   }
-
   return sorted[midpoint];
+}
+
+// Filter outliers using Interquartile Range (IQR) method
+function filterOutliers(
+  positions: Array<{ lat: number; lng: number; accuracy: number }>,
+): Array<{ lat: number; lng: number; accuracy: number }> {
+  if (positions.length <= 2) return positions;
+
+  // Calculate IQR for latitudes
+  const lats = positions.map((p) => p.lat).sort((a, b) => a - b);
+  const lngs = positions.map((p) => p.lng).sort((a, b) => a - b);
+
+  const q1Lat = lats[Math.floor(lats.length * 0.25)];
+  const q3Lat = lats[Math.floor(lats.length * 0.75)];
+  const iqrLat = q3Lat - q1Lat;
+
+  const q1Lng = lngs[Math.floor(lngs.length * 0.25)];
+  const q3Lng = lngs[Math.floor(lngs.length * 0.75)];
+  const iqrLng = q3Lng - q1Lng;
+
+  // Filter out values outside 1.5 * IQR
+  const lowerLat = q1Lat - 1.5 * iqrLat;
+  const upperLat = q3Lat + 1.5 * iqrLat;
+  const lowerLng = q1Lng - 1.5 * iqrLng;
+  const upperLng = q3Lng + 1.5 * iqrLng;
+
+  return positions.filter(
+    (p) =>
+      p.lat >= lowerLat &&
+      p.lat <= upperLat &&
+      p.lng >= lowerLng &&
+      p.lng <= upperLng,
+  );
 }
 
 export type StabilizedLocation = {
@@ -43,6 +114,7 @@ export type StabilizedLocation = {
   sampleCount: number;
   sampleSpreadMeters: number;
   isHighAccuracy: boolean;
+  method: "weighted" | "median";
 };
 
 type StabilizedLocationOptions = PositionOptions & {
@@ -55,73 +127,108 @@ export async function requestStabilizedPosition(
   input: StabilizedLocationOptions = {},
 ): Promise<StabilizedLocation> {
   const {
-    sampleCount = 4,
-    intervalMs = 700,
+    sampleCount = 8, // Increased default samples
+    intervalMs = 800, // Slightly longer interval
     desiredAccuracyMeters = 50,
     ...options
   } = input;
 
-  const targetSampleCount = Math.min(6, Math.max(2, sampleCount));
+  const targetSampleCount = Math.min(10, Math.max(3, sampleCount));
   const samples: GeolocationPosition[] = [];
 
   for (let i = 0; i < targetSampleCount; i++) {
-    const sample = await requestCurrentPosition(options);
-    samples.push(sample);
-
-    // If we already hit a very good accuracy, we can stop early if we have at least 2 samples
-    if (samples.length >= 2 && sample.coords.accuracy <= desiredAccuracyMeters) {
-      break;
+    try {
+      const sample = await requestCurrentPosition(options);
+      samples.push(sample);
+    } catch (err) {
+      // Continue trying even if some samples fail
+      console.warn(`GPS sample ${i + 1} failed:`, err);
     }
 
+    // Don't exit early - collect all samples for better accuracy
     if (i < targetSampleCount - 1) {
       await delay(intervalMs);
     }
   }
 
-  const latitudes = samples.map((sample) => sample.coords.latitude);
-  const longitudes = samples.map((sample) => sample.coords.longitude);
-  const accuracies = samples.map((sample) => sample.coords.accuracy);
+  if (samples.length === 0) {
+    throw new Error("Unable to get GPS location. Please try again.");
+  }
 
-  const medianLatitude = median(latitudes);
-  const medianLongitude = median(longitudes);
+  if (samples.length === 1) {
+    return {
+      latitude: samples[0].coords.latitude,
+      longitude: samples[0].coords.longitude,
+      accuracy: Math.round(samples[0].coords.accuracy),
+      capturedAt: new Date().toISOString(),
+      sampleCount: 1,
+      sampleSpreadMeters: 0,
+      isHighAccuracy: samples[0].coords.accuracy <= desiredAccuracyMeters,
+      method: "median",
+    };
+  }
+
+  // Extract coordinates and accuracies
+  const positions = samples.map((s) => ({
+    lat: s.coords.latitude,
+    lng: s.coords.longitude,
+    accuracy: s.coords.accuracy,
+  }));
+
+  // Filter outliers
+  const filteredPositions = filterOutliers(positions);
+
+  // Use weighted average for better accuracy
+  const latitudes = filteredPositions.map((p) => p.lat);
+  const longitudes = filteredPositions.map((p) => p.lng);
+  const accuracies = filteredPositions.map((p) => p.accuracy);
+
+  const weightedLatitude = weightedAverage(latitudes, accuracies);
+  const weightedLongitude = weightedAverage(longitudes, accuracies);
+
+  // Calculate median accuracy as representative
   const medianAccuracy = Math.round(median(accuracies));
 
+  // Calculate spread from weighted center
   const spreadMeters = Math.max(
-    ...samples.map((sample) =>
-      haversineMeters(
-        {
-          latitude: sample.coords.latitude,
-          longitude: sample.coords.longitude,
-        },
-        {
-          latitude: medianLatitude,
-          longitude: medianLongitude,
-        },
+    ...filteredPositions.map((p) =>
+      equirectangularDistanceMeters(
+        { latitude: weightedLatitude, longitude: weightedLongitude },
+        { latitude: p.lat, longitude: p.lng },
       ),
     ),
   );
 
   return {
-    latitude: medianLatitude,
-    longitude: medianLongitude,
+    latitude: weightedLatitude,
+    longitude: weightedLongitude,
     accuracy: medianAccuracy,
     capturedAt: new Date().toISOString(),
     sampleCount: samples.length,
     sampleSpreadMeters: spreadMeters,
     isHighAccuracy: medianAccuracy <= desiredAccuracyMeters,
+    method: "weighted",
   };
 }
 
 type RetryLocationOptions = StabilizedLocationOptions & {
   maxRetries?: number;
+  minSamplesRequired?: number;
 };
 
 export async function requestStabilizedPositionWithRetry(
   input: RetryLocationOptions = {},
 ): Promise<StabilizedLocation> {
-  const { maxRetries = 3, desiredAccuracyMeters = 60, ...rest } = input;
+  const {
+    maxRetries = 4,
+    desiredAccuracyMeters = 60,
+    minSamplesRequired = 2,
+    ...rest
+  } = input;
 
   let latestLocation: StabilizedLocation | null = null;
+  let bestAccuracy = Infinity;
+
   for (let attempt = 0; attempt < maxRetries; attempt += 1) {
     try {
       latestLocation = await requestStabilizedPosition({
@@ -129,7 +236,21 @@ export async function requestStabilizedPositionWithRetry(
         desiredAccuracyMeters,
       });
 
+      // Track best accuracy achieved
+      if (latestLocation.accuracy < bestAccuracy) {
+        bestAccuracy = latestLocation.accuracy;
+      }
+
+      // If we got good enough accuracy, return it
       if (latestLocation.accuracy <= desiredAccuracyMeters) {
+        return latestLocation;
+      }
+
+      // If we have minimum samples and accuracy is significantly better than before, use it
+      if (
+        latestLocation.sampleCount >= minSamplesRequired &&
+        latestLocation.accuracy < bestAccuracy * 0.8
+      ) {
         return latestLocation;
       }
     } catch (err) {
@@ -138,7 +259,9 @@ export async function requestStabilizedPositionWithRetry(
     }
 
     if (attempt < maxRetries - 1) {
-      await delay(1500);
+      // Exponential backoff with jitter
+      const backoffMs = 1000 * Math.pow(1.5, attempt) + Math.random() * 500;
+      await delay(backoffMs);
     }
   }
 

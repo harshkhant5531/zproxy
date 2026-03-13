@@ -129,7 +129,7 @@ export function AppSidebar() {
   return (
     <Sidebar
       collapsible="icon"
-      className="border-r border-border/40 glass-panel shadow-2xl"
+      className="border-r border-border bg-sidebar"
     >
       <SidebarHeader className="p-4 pb-3">
         {!collapsed ? (
@@ -152,8 +152,8 @@ export function AppSidebar() {
           </div>
         )}
         {!collapsed && (
-          <div className="px-3 py-2 rounded-lg bg-primary/8 border border-primary/15 mb-1 motion-surface">
-            <p className="text-xs font-semibold text-primary tracking-wide flex items-center gap-1.5">
+          <div className="px-3 py-2 rounded-lg bg-primary/10 border border-primary/20 mb-1 motion-slide-up" style={{ animationDelay: '80ms' }}>
+            <p className="text-xs font-semibold text-primary flex items-center gap-1.5">
               <config.icon className="h-3 w-3" /> {config.label} Portal
             </p>
           </div>
@@ -170,21 +170,21 @@ export function AppSidebar() {
             </SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {section.items.map((item) => {
+                {section.items.map((item, idx) => {
                   return (
-                    <SidebarMenuItem key={item.url}>
+                    <SidebarMenuItem key={item.url} style={{ animationDelay: `${idx * 40}ms` }} className="motion-slide-up">
                       <SidebarMenuButton asChild tooltip={item.title}>
                         <NavLink
                           to={item.url}
                           end
-                          className="group/sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-muted-foreground/85 hover:text-foreground hover:bg-accent/65 transition-all duration-200 text-sm font-medium motion-press"
-                          activeClassName="bg-primary/12 text-primary hover:bg-primary/15 font-semibold border border-primary/25 shadow-[0_8px_22px_-18px_hsl(var(--primary)/0.6)]"
+                          className="group/sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent transition-colors duration-160 text-sm font-medium motion-press"
+                          activeClassName="bg-primary/10 text-primary hover:bg-primary/15 font-semibold border border-primary/20"
                         >
-                          <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/15 flex-shrink-0 motion-icon-hover group-hover/sidebar-link:bg-primary/15">
+                          <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-transparent text-muted-foreground group-hover/sidebar-link:text-primary group-hover/sidebar-link:bg-primary/10 transition-all duration-160 flex-shrink-0">
                             <item.icon className="h-4 w-4" />
                           </span>
                           {!collapsed && (
-                            <span className="truncate group-hover/sidebar-link:translate-x-[1px] transition-transform duration-200">
+                            <span className="truncate">
                               {item.title}
                             </span>
                           )}
@@ -199,9 +199,9 @@ export function AppSidebar() {
         ))}
       </SidebarContent>
 
-      <SidebarFooter className="p-3 border-t border-border/30">
+      <SidebarFooter className="p-3 border-t border-border">
         {!collapsed && user ? (
-          <div className="rounded-xl bg-muted/40 dark:bg-white/[0.03] border border-border/50 p-3 motion-surface">
+          <div className="rounded-lg bg-muted/40 border border-border p-3 motion-surface">
             <div className="flex items-center gap-3">
               <div className="h-9 w-9 rounded-full bg-primary/15 flex items-center justify-center text-[11px] font-semibold text-primary border border-primary/20 flex-shrink-0">
                 {(user.profile?.fullName || user.username)
