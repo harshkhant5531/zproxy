@@ -866,6 +866,7 @@ router.post(
           rawDistanceMeters: geofenceResult.rawDistanceMeters,
           toleranceMeters: geofenceResult.toleranceMeters,
           retryBandMeters: geofenceResult.retryBandMeters,
+          driftBufferMeters: geofenceResult.driftBufferMeters,
           radiusMeters: geofenceResult.radiusMeters,
           reportedAccuracyMeters: geofenceResult.reportedAccuracyMeters,
           locationAgeMs: geofenceResult.locationAgeMs,
@@ -908,16 +909,17 @@ router.post(
           // Check for strong proxy signal: same device identifier
           const deviceInfo = req.body.deviceInfo || "";
           const sameDeviceRecord = deviceInfo
-            ? sameIpRecords.find((r) => r.deviceInfo && r.deviceInfo === deviceInfo)
+            ? sameIpRecords.find(
+                (r) => r.deviceInfo && r.deviceInfo === deviceInfo,
+              )
             : null;
 
           if (sameDeviceRecord) {
             // Same IP + same device = strong proxy signal
             finalStatus = "absent";
-            finalNotes = appendNotes(
-              finalNotes,
-              [`[PROXY_DETECTED:sharedWith:${sameDeviceRecord.studentId}:SAME_DEVICE]`],
-            );
+            finalNotes = appendNotes(finalNotes, [
+              `[PROXY_DETECTED:sharedWith:${sameDeviceRecord.studentId}:SAME_DEVICE]`,
+            ]);
 
             // Retroactively flag the earlier record too
             const prevNotes = sameDeviceRecord.notes || "";
@@ -1000,6 +1002,7 @@ router.post(
         rawDistanceMeters: error.rawDistanceMeters,
         toleranceMeters: error.toleranceMeters,
         retryBandMeters: error.retryBandMeters,
+        driftBufferMeters: error.driftBufferMeters,
         radiusMeters: error.radiusMeters,
         reportedAccuracyMeters: error.reportedAccuracyMeters,
         maxAcceptableAccuracyMeters: error.maxAcceptableAccuracyMeters,
@@ -1256,6 +1259,7 @@ router.post(
         rawDistanceMeters: geofenceResult.rawDistanceMeters,
         toleranceMeters: geofenceResult.toleranceMeters,
         retryBandMeters: geofenceResult.retryBandMeters,
+        driftBufferMeters: geofenceResult.driftBufferMeters,
         radiusMeters: geofenceResult.radiusMeters,
         reportedAccuracyMeters: geofenceResult.reportedAccuracyMeters,
         locationAgeMs: geofenceResult.locationAgeMs,
@@ -1308,7 +1312,9 @@ router.post(
           // Check for strong proxy signal: same device identifier
           const deviceInfo = req.body.deviceInfo || "";
           const sameDeviceRecord = deviceInfo
-            ? sameIpRecords.find((r) => r.deviceInfo && r.deviceInfo === deviceInfo)
+            ? sameIpRecords.find(
+                (r) => r.deviceInfo && r.deviceInfo === deviceInfo,
+              )
             : null;
 
           if (sameDeviceRecord) {
@@ -1403,6 +1409,7 @@ router.post(
         rawDistanceMeters: error.rawDistanceMeters,
         toleranceMeters: error.toleranceMeters,
         retryBandMeters: error.retryBandMeters,
+        driftBufferMeters: error.driftBufferMeters,
         radiusMeters: error.radiusMeters,
         reportedAccuracyMeters: error.reportedAccuracyMeters,
         maxAcceptableAccuracyMeters: error.maxAcceptableAccuracyMeters,

@@ -33,6 +33,11 @@ import { useParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { sessionsAPI, attendanceAPI } from "@/lib/api";
 import { buildAttendanceVerifyUrl } from "@/lib/runtime";
+import {
+  getGeolocationPermissionState,
+  getLocationErrorMessage,
+  requestStabilizedPositionWithRetry,
+} from "@/lib/location";
 import { format } from "date-fns";
 import { toast } from "sonner";
 
@@ -43,6 +48,7 @@ export default function LiveSession() {
   const [showOverride, setShowOverride] = useState(false);
   const [overrideStudentId, setOverrideStudentId] = useState("");
   const [overrideReason, setOverrideReason] = useState("");
+  const [isCalibratingAnchor, setIsCalibratingAnchor] = useState(false);
 
   const { data: sessionData, isLoading: isSessionLoading } = useQuery({
     queryKey: ["session", id],
@@ -122,6 +128,18 @@ export default function LiveSession() {
     },
   });
 
+  const calibrateAnchorMutation = useMutation({
+    mutationFn: (payload: { facultyLat: number; facultyLng: number }) =>
+      sessionsAPI.updateSession(id!, payload),
+    onSuccess: () => {
+      toast.success("Session anchor updated to current faculty location.");
+      queryClient.invalidateQueries({ queryKey: ["session", id] });
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message || "Failed to calibrate anchor");
+    },
+  });
+
   useEffect(() => {
     if (
       sessionData &&
@@ -187,7 +205,9 @@ export default function LiveSession() {
   );
   const parseProxyFlag = (notes: string | null): number | null => {
     if (!notes) return null;
-    const m = notes.match(/\[PROXY_(?:SUSPECT|DETECTED):sharedWith:(\d+)[^\]]*\]/);
+    const m = notes.match(
+      /\[PROXY_(?:SUSPECT|DETECTED):sharedWith:(\d+)[^\]]*\]/,
+    );
     return m ? parseInt(m[1]) : null;
   };
 
@@ -255,6 +275,41 @@ export default function LiveSession() {
     });
   };
 
+  const handleCalibrateAnchor = async () => {
+    if (!id) return;
+
+    setIsCalibratingAnchor(true);
+    try {
+      const permissionState = await getGeolocationPermissionState();
+      if (permissionState === "denied") {
+        throw new Error(
+          "Location permission is blocked. Enable browser location access and retry.",
+        );
+      }
+
+      const location = await requestStabilizedPositionWithRetry({
+        timeout: 20000,
+        desiredAccuracyMeters: 55,
+        maxRetries: 3,
+      });
+
+      if (Number.isFinite(location.accuracy) && location.accuracy > 90) {
+        throw new Error(
+          `GPS accuracy is too low (±${Math.round(location.accuracy)}m). Move to an open area and retry calibration.`,
+        );
+      }
+
+      await calibrateAnchorMutation.mutateAsync({
+        facultyLat: location.latitude,
+        facultyLng: location.longitude,
+      });
+    } catch (error: any) {
+      toast.error(getLocationErrorMessage(error));
+    } finally {
+      setIsCalibratingAnchor(false);
+    }
+  };
+
   if (isSessionLoading || !session) {
     return <FullScreenLoader show operation="loading" />;
   }
@@ -270,6 +325,15 @@ export default function LiveSession() {
         show={overrideMutation.isPending}
         operation="saving"
         label="Applying Override..."
+      />
+      <FullScreenLoader
+        show={isCalibratingAnchor || calibrateAnchorMutation.isPending}
+        operation={isCalibratingAnchor ? "locating" : "saving"}
+        label={
+          isCalibratingAnchor
+            ? "Calibrating Session Anchor..."
+            : "Saving Anchor..."
+        }
       />
       <div className="app-page">
         <div className="app-page-header">
@@ -313,6 +377,17 @@ export default function LiveSession() {
                   className="border-border text-foreground hover:bg-accent"
                 >
                   <UserPlus className="mr-2 h-4 w-4" /> Manual Override
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleCalibrateAnchor}
+                  disabled={
+                    isCalibratingAnchor || calibrateAnchorMutation.isPending
+                  }
+                  className="border-primary/30 text-primary hover:bg-primary/10"
+                >
+                  <MapPin className="mr-2 h-4 w-4" /> Calibrate Anchor
                 </Button>
                 <Button
                   variant="destructive"
