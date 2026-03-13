@@ -486,7 +486,7 @@ export default function QRScanner() {
         operation={overlayType ?? "loading"}
       />
 
-      <div className="space-y-6 max-w-2xl mx-auto">
+      <div className="app-page max-w-3xl mx-auto">
         {/* ─── Header ─────────────────────────────────────────────────────── */}
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center animate-aura-pulse shrink-0">
@@ -503,30 +503,33 @@ export default function QRScanner() {
         </div>
 
         {/* ─── Mode toggle with sliding indicator ─────────────────────────── */}
-        <div className="relative flex p-1 bg-muted/50 rounded-xl border border-border w-[270px]">
+        <div className="relative flex p-1 bg-muted/50 rounded-xl border border-border w-full max-w-[270px]">
           {/* Sliding pill */}
           <div
-            className={`absolute top-1 bottom-1 w-[calc(50%-6px)] rounded-lg bg-background shadow border border-border transition-transform duration-300 ease-in-out pointer-events-none ${mode === "manual"
+            className={`absolute top-1 bottom-1 w-[calc(50%-6px)] rounded-lg bg-background shadow border border-border transition-transform duration-300 ease-in-out pointer-events-none ${
+              mode === "manual"
                 ? "translate-x-[calc(100%+4px)]"
                 : "translate-x-0"
-              }`}
+            }`}
           />
           <button
             onClick={() => switchMode("qr")}
-            className={`relative z-10 flex items-center justify-center gap-2 flex-1 py-2 text-xs font-medium tracking-wide transition-colors duration-200 ${mode === "qr"
+            className={`relative z-10 flex items-center justify-center gap-2 flex-1 py-2 text-xs font-medium tracking-wide transition-colors duration-200 ${
+              mode === "qr"
                 ? "text-foreground"
                 : "text-muted-foreground hover:text-foreground"
-              }`}
+            }`}
           >
             <QrCode className="h-3.5 w-3.5" />
             QR Camera
           </button>
           <button
             onClick={() => switchMode("manual")}
-            className={`relative z-10 flex items-center justify-center gap-2 flex-1 py-2 text-xs font-medium tracking-wide transition-colors duration-200 ${mode === "manual"
+            className={`relative z-10 flex items-center justify-center gap-2 flex-1 py-2 text-xs font-medium tracking-wide transition-colors duration-200 ${
+              mode === "manual"
                 ? "text-foreground"
                 : "text-muted-foreground hover:text-foreground"
-              }`}
+            }`}
           >
             <Hand className="h-3.5 w-3.5" />
             Manual
@@ -580,7 +583,7 @@ export default function QRScanner() {
               </div>
 
               <CardContent className="p-0">
-                <div className="relative bg-black aspect-square max-h-80 flex items-center justify-center overflow-hidden">
+                <div className="relative bg-black aspect-square max-h-[20rem] sm:max-h-80 flex items-center justify-center overflow-hidden">
                   <div id={SCANNER_ID} className="w-full h-full object-cover" />
 
                   {/* Idle overlay */}
@@ -652,10 +655,11 @@ export default function QRScanner() {
 
                   {/* Corner brackets — pulsing when scanning */}
                   <div
-                    className={`absolute w-60 h-60 z-10 pointer-events-none transition-opacity duration-500 ${scanning
+                    className={`absolute w-52 h-52 sm:w-60 sm:h-60 z-10 pointer-events-none transition-opacity duration-500 ${
+                      scanning
                         ? "opacity-100 animate-bracket-pulse"
                         : "opacity-20"
-                      }`}
+                    }`}
                   >
                     <div className="absolute top-0 left-0 w-9 h-9 border-t-2 border-l-2 border-primary rounded-tl-xl" />
                     <div className="absolute top-0 right-0 w-9 h-9 border-t-2 border-r-2 border-primary rounded-tr-xl" />
@@ -700,10 +704,11 @@ export default function QRScanner() {
                   disabled={markQRMutation.isPending || !window.isSecureContext}
                   size="lg"
                   variant={scanning ? "outline" : "default"}
-                  className={`px-12 h-14 text-sm font-medium tracking-wide rounded-xl transition-all duration-200 shadow-lg ${scanning
+                  className={`w-full sm:w-auto px-6 sm:px-12 h-14 text-sm font-medium tracking-wide rounded-xl transition-all duration-200 shadow-lg ${
+                    scanning
                       ? "border-destructive/50 text-destructive hover:bg-destructive/10 hover:border-destructive"
                       : "shadow-primary/25 hover:shadow-primary/40 hover:shadow-xl"
-                    }`}
+                  }`}
                 >
                   {scanning ? (
                     <>
@@ -856,7 +861,7 @@ export default function QRScanner() {
                             <div className="flex">
                               {/* Colored accent bar */}
                               <div className="w-1 bg-gradient-to-b from-primary/80 to-primary/20 shrink-0" />
-                              <CardContent className="p-4 flex items-center justify-between gap-4 flex-1">
+                              <CardContent className="p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 flex-1">
                                 <div className="flex-1 min-w-0 space-y-1.5">
                                   <div className="flex items-center gap-2 flex-wrap">
                                     <p className="font-semibold text-foreground text-sm truncate">
@@ -908,7 +913,7 @@ export default function QRScanner() {
                                   disabled={
                                     markManualMutation.isPending || locating
                                   }
-                                  className="font-medium tracking-wide text-[11px] shrink-0 h-10 px-4 rounded-xl shadow-md shadow-primary/20 hover:shadow-primary/35 transition-all hover:scale-[1.03] active:scale-[0.97]"
+                                  className="w-full sm:w-auto font-medium tracking-wide text-[11px] shrink-0 h-10 px-4 rounded-xl shadow-md shadow-primary/20 hover:shadow-primary/35 transition-all hover:scale-[1.03] active:scale-[0.97]"
                                 >
                                   {isPending ? (
                                     <span className="flex items-center gap-1">
