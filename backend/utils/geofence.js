@@ -177,17 +177,11 @@ function validateStudentGeofence(
   };
 
   const reportedAccuracyMeters = toFiniteNumber(accuracyMetersInput);
-  const locationAgeMs = resolveLocationAgeMs(capturedAt);
+  let locationAgeMs = resolveLocationAgeMs(capturedAt);
 
+  // Backward compatibility for older/cached clients that don't send timestamp.
   if (locationAgeMs === null) {
-    const error = new Error(
-      "Location sample timestamp is missing or invalid. Refresh location and try again.",
-    );
-    error.statusCode = 400;
-    error.locationAgeMs = null;
-    error.maxLocationAgeMs = MAX_LOCATION_AGE_MS;
-    error.decisionReason = "stale_location_timestamp_missing";
-    throw error;
+    locationAgeMs = 0;
   }
 
   if (locationAgeMs > MAX_LOCATION_AGE_MS) {

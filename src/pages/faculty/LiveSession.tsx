@@ -414,81 +414,112 @@ export default function LiveSession() {
         </div>
 
         <div className="grid gap-6 lg:grid-cols-3">
-          <Card className="bg-card border-border backdrop-blur-sm lg:row-span-2 overflow-hidden shadow-xl">
-            <CardHeader className="pb-3 px-6 border-b border-border/40">
-              <CardTitle className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] flex items-center justify-between">
+          <Card className="lg:row-span-2 overflow-hidden border-border/70 bg-card/95 backdrop-blur-xl shadow-2xl relative">
+            <div className="absolute -top-16 -right-12 h-52 w-52 rounded-full bg-primary/10 blur-3xl pointer-events-none" />
+            <div className="absolute -bottom-20 -left-16 h-56 w-56 rounded-full bg-info/10 blur-3xl pointer-events-none" />
+            <CardHeader className="pb-3 px-6 border-b border-border/40 bg-gradient-to-b from-primary/5 to-transparent">
+              <CardTitle className="app-kicker flex items-center justify-between">
                 <span>
                   {isCompleted ? "Session Statistics" : "Secure Attendance QR"}
                 </span>
-                <span
-                  className={`px-2 py-0.5 rounded-full text-[9px] ${isCompleted ? "bg-success/10 text-success" : "bg-primary/10 text-primary animate-pulse"}`}
-                >
-                  {isCompleted ? "Concluded" : "Live Feed"}
-                </span>
+                <div className="flex items-center gap-2">
+                  <span
+                    className={`px-2 py-0.5 rounded-full text-[9px] ${isCompleted ? "bg-success/10 text-success" : "bg-primary/10 text-primary animate-pulse"}`}
+                  >
+                    {isCompleted ? "Concluded" : "Live Feed"}
+                  </span>
+                  {!isCompleted && session?.geofenceRadius && (
+                    <span className="px-2 py-0.5 rounded-full text-[9px] bg-info/10 text-info border border-info/20">
+                      {session.geofenceRadius}m Grid
+                    </span>
+                  )}
+                </div>
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-4 sm:p-8 text-center relative h-full bg-gradient-to-b from-transparent to-primary/5">
+            <CardContent className="p-4 sm:p-6 text-center relative h-full">
               {!isCompleted ? (
-                <div className="space-y-6">
-                  <div className="aspect-square bg-white rounded-xl flex items-center justify-center border-4 border-background shadow-inner relative overflow-hidden">
-                    {session?.qrCode?.codeValue ? (
-                      <>
-                        <QRCodeSVG
-                          value={buildAttendanceVerifyUrl(
-                            session.qrCode.codeValue,
-                            session.networkIp || window.location.origin,
+                <div className="space-y-5">
+                  <div className="rounded-2xl border border-border bg-background/85 p-4">
+                    <div className="aspect-square bg-white rounded-xl flex items-center justify-center border-4 border-background shadow-inner relative overflow-hidden mx-auto max-w-[300px]">
+                      {session?.qrCode?.codeValue ? (
+                        <>
+                          <QRCodeSVG
+                            value={buildAttendanceVerifyUrl(
+                              session.qrCode.codeValue,
+                              session.networkIp || window.location.origin,
+                            )}
+                            size={240}
+                            level="H"
+                            includeMargin={true}
+                            className={
+                              generateQRMutation.isPending
+                                ? "opacity-30"
+                                : "opacity-100 transition-opacity duration-300"
+                            }
+                          />
+                          {generateQRMutation.isPending && (
+                            <div className="absolute inset-0 flex items-center justify-center bg-background/70 backdrop-blur-sm">
+                              <Loader2 className="h-9 w-9 text-foreground/70 animate-spin" />
+                            </div>
                           )}
-                          size={240}
-                          level="H"
-                          includeMargin={true}
-                          className={
-                            generateQRMutation.isPending
-                              ? "opacity-30"
-                              : "opacity-100 transition-opacity duration-300"
-                          }
-                        />
-                        {generateQRMutation.isPending && (
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <Loader2 className="h-10 w-10 text-gray-700 animate-spin" />
+                        </>
+                      ) : (
+                        <div className="flex flex-col items-center gap-6">
+                          <div className="h-40 w-40 bg-muted animate-pulse rounded-full flex items-center justify-center border-4 border-dashed border-primary/20">
+                            <Loader2 className="h-9 w-9 text-primary animate-spin" />
                           </div>
-                        )}
-                      </>
-                    ) : (
-                      <div className="flex flex-col items-center gap-6">
-                        <div className="h-48 w-48 bg-muted animate-pulse rounded-full flex items-center justify-center border-4 border-dashed border-primary/20">
-                          <Loader2 className="h-10 w-10 text-primary animate-spin" />
+                          <div className="space-y-2">
+                            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground animate-pulse">
+                              Syncing Spatial Link...
+                            </p>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => generateQRMutation.mutate()}
+                              disabled={generateQRMutation.isPending}
+                              className="h-8 text-[10px] uppercase font-black tracking-wider border-primary/20 text-primary"
+                            >
+                              <RefreshCw
+                                className={`mr-2 h-3 w-3 ${generateQRMutation.isPending ? "animate-spin" : ""}`}
+                              />
+                              Force Pulse Start
+                            </Button>
+                          </div>
                         </div>
-                        <div className="space-y-2">
-                          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground animate-pulse">
-                            Syncing Spatial Link...
-                          </p>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => generateQRMutation.mutate()}
-                            disabled={generateQRMutation.isPending}
-                            className="h-8 text-[10px] uppercase font-black tracking-wider border-primary/20 text-primary"
-                          >
-                            <RefreshCw
-                              className={`mr-2 h-3 w-3 ${generateQRMutation.isPending ? "animate-spin" : ""}`}
-                            />
-                            Force Pulse Start
-                          </Button>
-                        </div>
-                      </div>
-                    )}
+                      )}
+                    </div>
                   </div>
-                  <div className="p-5 bg-background border border-border rounded-xl shadow-lg">
-                    <p className="text-[9px] text-muted-foreground uppercase font-black tracking-widest mb-1">
-                      Rotation Sync
-                    </p>
-                    <p className="text-4xl font-black text-primary aura-text-glow font-mono">
-                      {qrTimer}s
-                    </p>
-                    <Progress
-                      value={(qrTimer / 15) * 100}
-                      className="h-1.5 mt-4 bg-muted"
-                    />
+
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <div className="p-4 bg-background border border-border rounded-xl shadow-sm text-left">
+                      <p className="app-kicker mb-1">Rotation Sync</p>
+                      <p className="text-4xl font-black text-primary aura-text-glow font-mono">
+                        {qrTimer}s
+                      </p>
+                      <Progress
+                        value={(qrTimer / 15) * 100}
+                        className="h-1.5 mt-3 bg-muted"
+                      />
+                    </div>
+                    <div className="p-4 bg-background border border-border rounded-xl shadow-sm text-left">
+                      <p className="app-kicker mb-2">Scanner Guidance</p>
+                      <p className="app-caption leading-relaxed">
+                        Ask students to scan from the Verify link view, keep GPS
+                        enabled, and stay within the geofence radius.
+                      </p>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => generateQRMutation.mutate()}
+                        disabled={generateQRMutation.isPending}
+                        className="mt-3 h-8 text-[10px] uppercase font-black tracking-wider border-primary/20 text-primary"
+                      >
+                        <RefreshCw
+                          className={`mr-2 h-3 w-3 ${generateQRMutation.isPending ? "animate-spin" : ""}`}
+                        />
+                        Refresh QR
+                      </Button>
+                    </div>
                   </div>
                 </div>
               ) : (
@@ -544,77 +575,104 @@ export default function LiveSession() {
             </CardContent>
           </Card>
 
-          <Card className="bg-card border-border backdrop-blur-sm col-span-1 lg:col-span-2 shadow-xl">
-            <CardHeader className="pb-3 px-6">
-              <CardTitle className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">
+          <Card className="col-span-1 lg:col-span-2 border-border/70 bg-card/95 backdrop-blur-xl shadow-xl overflow-hidden">
+            <CardHeader className="pb-3 px-6 border-b border-border/40 bg-gradient-to-b from-primary/5 to-transparent">
+              <CardTitle className="app-kicker">
                 Participation Insight
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-6">
-              <div className="flex items-center gap-10">
-                <div className="text-center">
-                  <p className="text-5xl font-black text-foreground tracking-tighter aura-text-glow">
+            <CardContent className="p-5 sm:p-6">
+              <div className="grid gap-4 sm:grid-cols-3 items-stretch">
+                <div className="rounded-xl border border-border bg-background/80 p-4 text-center">
+                  <p className="app-kicker">Attendance Rate</p>
+                  <p className="text-5xl font-black text-foreground tracking-tighter mt-2">
                     {pct}%
                   </p>
-                  <p className="text-[9px] text-muted-foreground uppercase font-black tracking-widest mt-1">
-                    Attendance rate
-                  </p>
-                </div>
-                <div className="flex-1 space-y-2">
-                  <Progress value={pct} className="h-3 bg-muted" />
-                  <div className="flex justify-between text-[10px] font-bold text-muted-foreground uppercase font-mono tracking-wider">
-                    <span>0% Threshold</span>
-                    <span>100% Target</span>
+                  <div className="mt-3 h-1.5 rounded-full bg-muted overflow-hidden">
+                    <div
+                      className="h-full bg-gradient-to-r from-primary to-info rounded-full"
+                      style={{ width: `${pct}%` }}
+                    />
                   </div>
                 </div>
-                <div className="text-right">
-                  <p className="text-2xl font-black text-foreground">
-                    {presentCount}{" "}
-                    <span className="text-muted-foreground text-sm">
-                      / {totalCount}
+
+                <div className="rounded-xl border border-border bg-background/80 p-4">
+                  <p className="app-kicker mb-3 text-left">Live Distribution</p>
+                  <div className="space-y-3 text-left">
+                    <div>
+                      <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">
+                        <span>Present</span>
+                        <span>{presentCount}</span>
+                      </div>
+                      <Progress
+                        value={(presentCount / totalCount) * 100}
+                        className="h-2 bg-muted"
+                      />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">
+                        <span>Absent</span>
+                        <span>{absenteeRoster.length}</span>
+                      </div>
+                      <Progress
+                        value={(absenteeRoster.length / totalCount) * 100}
+                        className="h-2 bg-muted"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="rounded-xl border border-border bg-background/80 p-4 text-center flex flex-col justify-center">
+                  <p className="app-kicker">Verified Assets</p>
+                  <p className="text-3xl font-black text-foreground mt-2">
+                    {presentCount}
+                    <span className="text-muted-foreground text-base">
+                      /{totalCount}
                     </span>
                   </p>
-                  <p className="text-[9px] text-muted-foreground uppercase font-black tracking-widest">
-                    Verified Assets
+                  <p className="app-caption mt-2">
+                    students authenticated in current session
                   </p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-card border-border backdrop-blur-sm col-span-1 lg:col-span-2 shadow-xl">
-            <CardHeader className="pb-3 px-6">
-              <CardTitle className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">
+          <Card className="col-span-1 lg:col-span-2 border-border/70 bg-card/95 backdrop-blur-xl shadow-xl overflow-hidden">
+            <CardHeader className="pb-3 px-6 border-b border-border/40 bg-gradient-to-b from-primary/5 to-transparent">
+              <CardTitle className="app-kicker">
                 Integrity Protocol Status
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-6">
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="bg-background p-4 rounded-xl text-center border border-border group hover:border-primary/30 transition-colors shadow-sm">
-                  <Shield className="h-6 w-6 text-success mx-auto mb-2 group-hover:scale-110 transition-transform" />
-                  <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">
-                    Encryption
-                  </p>
+            <CardContent className="p-5 sm:p-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="rounded-xl border border-success/30 bg-success/5 p-4 text-center">
+                  <div className="mx-auto h-11 w-11 rounded-xl bg-success/10 border border-success/20 flex items-center justify-center mb-3">
+                    <Shield className="h-5 w-5 text-success" />
+                  </div>
+                  <p className="app-kicker">Encryption</p>
                   <p className="text-xs text-success font-black mt-1">
                     AES-256 ACTIVE
                   </p>
                 </div>
-                <div className="bg-background p-4 rounded-xl text-center border border-border group hover:border-primary/30 transition-colors shadow-sm">
-                  <Wifi className="h-6 w-6 text-primary mx-auto mb-2 group-hover:scale-110 transition-transform" />
-                  <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">
-                    Geo-Fence
-                  </p>
-                  <p className="text-xs text-primary font-black mt-1">
+
+                <div className="rounded-xl border border-info/30 bg-info/5 p-4 text-center">
+                  <div className="mx-auto h-11 w-11 rounded-xl bg-info/10 border border-info/20 flex items-center justify-center mb-3">
+                    <Wifi className="h-5 w-5 text-info" />
+                  </div>
+                  <p className="app-kicker">Geo-Fence</p>
+                  <p className="text-xs text-info font-black mt-1">
                     CAMPUS GRID
                   </p>
                 </div>
-                <div className="bg-background p-4 rounded-xl text-center border border-border group hover:border-primary/30 transition-colors shadow-sm">
-                  <AlertTriangle className="h-6 w-6 text-success mx-auto mb-2 group-hover:scale-110 transition-transform" />
-                  <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">
-                    Adversary
-                  </p>
+
+                <div className="rounded-xl border border-success/30 bg-success/5 p-4 text-center">
+                  <div className="mx-auto h-11 w-11 rounded-xl bg-success/10 border border-success/20 flex items-center justify-center mb-3">
+                    <CheckCircle2 className="h-5 w-5 text-success" />
+                  </div>
+                  <p className="app-kicker">Threat Monitor</p>
                   <p className="text-xs text-success font-black mt-1">
-                    ZERO THREAT
+                    OPERATIONAL
                   </p>
                 </div>
               </div>
@@ -624,20 +682,20 @@ export default function LiveSession() {
 
         {/* ─── Proxy Suspects Alert ─────────────────────────────────────────── */}
         {proxyRecords.length > 0 && (
-          <Card className="bg-warning/5 border-warning/30 shadow-lg animate-in fade-in">
-            <CardHeader className="pb-2 px-6 pt-4">
-              <CardTitle className="text-[10px] font-black text-warning uppercase tracking-[0.2em] flex items-center gap-2">
+          <Card className="border-warning/30 bg-warning/5 shadow-xl overflow-hidden animate-in fade-in">
+            <CardHeader className="pb-2 px-6 pt-4 border-b border-warning/20 bg-gradient-to-b from-warning/10 to-transparent">
+              <CardTitle className="app-kicker text-warning flex items-center gap-2">
                 <AlertTriangle className="h-4 w-4" />
                 {proxyRecords.length} Proxy Detected
                 {proxyRecords.length > 1 ? "s" : ""}
               </CardTitle>
             </CardHeader>
-            <CardContent className="px-6 pb-4">
-              <p className="text-[11px] text-muted-foreground mb-3 leading-relaxed">
-                The following students used the same device/IP as another
-                student during this session. Review manually.
+            <CardContent className="px-6 py-4">
+              <p className="app-caption mb-3 leading-relaxed">
+                Potential proxy activity detected from shared device signatures.
+                Review flagged pairings below.
               </p>
-              <div className="space-y-2">
+              <div className="space-y-2.5">
                 {proxyRecords.map((log: any) => {
                   const sharedWithId = parseProxyFlag(log.notes);
                   const sharedRecord = attendanceData?.find(
@@ -646,16 +704,18 @@ export default function LiveSession() {
                   return (
                     <div
                       key={log.id}
-                      className="flex items-center gap-3 bg-background border border-warning/20 rounded-lg px-4 py-2.5"
+                      className="flex items-center gap-3 rounded-xl border border-warning/25 bg-background/90 px-4 py-3"
                     >
-                      <AlertTriangle className="h-4 w-4 text-warning shrink-0" />
+                      <div className="h-8 w-8 rounded-lg border border-warning/25 bg-warning/10 flex items-center justify-center shrink-0">
+                        <AlertTriangle className="h-4 w-4 text-warning" />
+                      </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-bold text-foreground">
+                        <p className="text-sm font-bold text-foreground truncate">
                           {log.student?.studentProfile?.fullName ||
                             log.student?.username}
                         </p>
-                        <p className="text-[10px] text-muted-foreground font-mono">
-                          Shared device with{" "}
+                        <p className="text-[10px] text-muted-foreground font-mono mt-0.5 truncate">
+                          Shared with{" "}
                           <span className="text-warning font-bold">
                             {sharedRecord?.student?.studentProfile?.fullName ||
                               sharedRecord?.student?.username ||
@@ -663,7 +723,7 @@ export default function LiveSession() {
                           </span>
                         </p>
                       </div>
-                      <span className="text-[9px] font-black text-warning bg-warning/10 px-2 py-0.5 rounded uppercase tracking-wider shrink-0">
+                      <span className="text-[9px] font-black text-warning bg-warning/10 border border-warning/20 px-2 py-0.5 rounded uppercase tracking-wider shrink-0">
                         Violation
                       </span>
                     </div>
@@ -726,9 +786,9 @@ export default function LiveSession() {
           </Card>
         )}
 
-        <Card className="bg-card border-border shadow-xl overflow-hidden">
-          <CardHeader className="bg-muted/30 border-b border-border px-6 py-4">
-            <CardTitle className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] flex items-center gap-2">
+        <Card className="border-border/70 bg-card/95 backdrop-blur-xl shadow-xl overflow-hidden">
+          <CardHeader className="border-b border-border/40 px-6 py-4 bg-gradient-to-b from-primary/5 to-transparent">
+            <CardTitle className="app-kicker flex items-center gap-2">
               <Users className="h-4 w-4" />
               {isCompleted
                 ? "Final Attendance Record"
@@ -740,30 +800,30 @@ export default function LiveSession() {
                 variant="outline"
                 size="sm"
                 onClick={handleCopyExport}
-                className="ml-auto h-7 px-2 text-[9px] font-black uppercase tracking-widest border-primary/20 text-primary hover:bg-primary/5"
+                className="ml-auto h-7 px-2 text-[9px] font-black uppercase tracking-widest border-primary/25 text-primary hover:bg-primary/10"
               >
                 Copy Export
               </Button>
             </CardTitle>
             <div className="flex flex-wrap gap-2 items-center mt-2 px-6">
-              <span className="text-[10px] font-black text-success uppercase tracking-widest border border-success/30 px-2 py-0.5 rounded">
+              <span className="text-[10px] font-black text-success uppercase tracking-widest border border-success/30 bg-success/5 px-2 py-0.5 rounded">
                 Grid Status: Active ({sessionData?.geofenceRadius}m)
               </span>
               {sessionData?.facultyLat ? (
-                <span className="text-[10px] font-black text-primary uppercase tracking-widest border border-primary/30 px-2 py-0.5 rounded flex items-center gap-1">
+                <span className="text-[10px] font-black text-primary uppercase tracking-widest border border-primary/30 bg-primary/5 px-2 py-0.5 rounded flex items-center gap-1">
                   <MapPin className="h-3 w-3" /> Anchor Locked
                 </span>
               ) : (
-                <span className="text-[10px] font-black text-warning uppercase tracking-widest border border-warning/30 px-2 py-0.5 rounded flex items-center gap-1">
+                <span className="text-[10px] font-black text-warning uppercase tracking-widest border border-warning/30 bg-warning/5 px-2 py-0.5 rounded flex items-center gap-1">
                   <AlertTriangle className="h-3 w-3" /> Campus Fallback
                 </span>
               )}
             </div>
           </CardHeader>
           <CardContent className="p-0">
-            <div className="max-h-[400px] overflow-y-auto custom-scrollbar">
+            <div className="max-h-[420px] overflow-y-auto custom-scrollbar">
               <Table>
-                <TableHeader className="bg-muted/10 sticky top-0 z-10">
+                <TableHeader className="bg-background/90 backdrop-blur sticky top-0 z-10">
                   <TableRow className="border-border hover:bg-transparent">
                     <TableHead className="text-[10px] font-black uppercase tracking-widest pl-6">
                       Student Identity
@@ -790,7 +850,7 @@ export default function LiveSession() {
                     return (
                       <TableRow
                         key={log.id}
-                        className={`border-border group hover:bg-muted/20 transition-colors ${proxySharedWithId ? "bg-warning/5 hover:bg-warning/10" : ""}`}
+                        className={`border-border group hover:bg-muted/20 transition-colors ${proxySharedWithId ? "bg-warning/5" : ""}`}
                       >
                         <TableCell className="pl-6">
                           <div className="py-1">
@@ -819,7 +879,7 @@ export default function LiveSession() {
                           {format(new Date(log.timestamp), "HH:mm:ss")}
                         </TableCell>
                         <TableCell>
-                          <span className="text-[9px] font-black text-muted-foreground bg-muted px-2 py-0.5 rounded uppercase tracking-tighter">
+                          <span className="text-[9px] font-black text-muted-foreground bg-muted px-2 py-0.5 rounded uppercase tracking-tighter border border-border/50">
                             {log.method || "QR_SCAN"}
                           </span>
                         </TableCell>
