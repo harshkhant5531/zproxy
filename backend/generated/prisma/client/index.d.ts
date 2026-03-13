@@ -54,11 +54,6 @@ export type Session = $Result.DefaultSelection<Prisma.$SessionPayload>
  */
 export type Attendance = $Result.DefaultSelection<Prisma.$AttendancePayload>
 /**
- * Model QrCode
- * 
- */
-export type QrCode = $Result.DefaultSelection<Prisma.$QrCodePayload>
-/**
  * Model ExamPermit
  * 
  */
@@ -294,16 +289,6 @@ export class PrismaClient<
     * ```
     */
   get attendance(): Prisma.AttendanceDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.qrCode`: Exposes CRUD operations for the **QrCode** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more QrCodes
-    * const qrCodes = await prisma.qrCode.findMany()
-    * ```
-    */
-  get qrCode(): Prisma.QrCodeDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.examPermit`: Exposes CRUD operations for the **ExamPermit** model.
@@ -816,7 +801,6 @@ export namespace Prisma {
     Subject: 'Subject',
     Session: 'Session',
     Attendance: 'Attendance',
-    QrCode: 'QrCode',
     ExamPermit: 'ExamPermit',
     LeaveApplication: 'LeaveApplication',
     Grade: 'Grade',
@@ -839,7 +823,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "users" | "adminProfile" | "facultyProfile" | "studentProfile" | "course" | "subject" | "session" | "attendance" | "qrCode" | "examPermit" | "leaveApplication" | "grade" | "timetable" | "notification" | "report" | "auditLog"
+      modelProps: "users" | "adminProfile" | "facultyProfile" | "studentProfile" | "course" | "subject" | "session" | "attendance" | "examPermit" | "leaveApplication" | "grade" | "timetable" | "notification" | "report" | "auditLog"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1432,80 +1416,6 @@ export namespace Prisma {
           count: {
             args: Prisma.AttendanceCountArgs<ExtArgs>
             result: $Utils.Optional<AttendanceCountAggregateOutputType> | number
-          }
-        }
-      }
-      QrCode: {
-        payload: Prisma.$QrCodePayload<ExtArgs>
-        fields: Prisma.QrCodeFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.QrCodeFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$QrCodePayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.QrCodeFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$QrCodePayload>
-          }
-          findFirst: {
-            args: Prisma.QrCodeFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$QrCodePayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.QrCodeFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$QrCodePayload>
-          }
-          findMany: {
-            args: Prisma.QrCodeFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$QrCodePayload>[]
-          }
-          create: {
-            args: Prisma.QrCodeCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$QrCodePayload>
-          }
-          createMany: {
-            args: Prisma.QrCodeCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.QrCodeCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$QrCodePayload>[]
-          }
-          delete: {
-            args: Prisma.QrCodeDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$QrCodePayload>
-          }
-          update: {
-            args: Prisma.QrCodeUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$QrCodePayload>
-          }
-          deleteMany: {
-            args: Prisma.QrCodeDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.QrCodeUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.QrCodeUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$QrCodePayload>[]
-          }
-          upsert: {
-            args: Prisma.QrCodeUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$QrCodePayload>
-          }
-          aggregate: {
-            args: Prisma.QrCodeAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateQrCode>
-          }
-          groupBy: {
-            args: Prisma.QrCodeGroupByArgs<ExtArgs>
-            result: $Utils.Optional<QrCodeGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.QrCodeCountArgs<ExtArgs>
-            result: $Utils.Optional<QrCodeCountAggregateOutputType> | number
           }
         }
       }
@@ -2143,7 +2053,6 @@ export namespace Prisma {
     subject?: SubjectOmit
     session?: SessionOmit
     attendance?: AttendanceOmit
-    qrCode?: QrCodeOmit
     examPermit?: ExamPermitOmit
     leaveApplication?: LeaveApplicationOmit
     grade?: GradeOmit
@@ -10428,6 +10337,9 @@ export namespace Prisma {
     facultyId: number | null
     subjectId: number | null
     duration: number | null
+    geofenceRadius: number | null
+    facultyLat: number | null
+    facultyLng: number | null
     attendanceCount: number | null
   }
 
@@ -10437,6 +10349,9 @@ export namespace Prisma {
     facultyId: number | null
     subjectId: number | null
     duration: number | null
+    geofenceRadius: number | null
+    facultyLat: number | null
+    facultyLng: number | null
     attendanceCount: number | null
   }
 
@@ -10453,6 +10368,9 @@ export namespace Prisma {
     endTime: string | null
     duration: number | null
     status: string | null
+    geofenceRadius: number | null
+    facultyLat: number | null
+    facultyLng: number | null
     attendanceCount: number | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -10471,6 +10389,9 @@ export namespace Prisma {
     endTime: string | null
     duration: number | null
     status: string | null
+    geofenceRadius: number | null
+    facultyLat: number | null
+    facultyLng: number | null
     attendanceCount: number | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -10490,6 +10411,9 @@ export namespace Prisma {
     duration: number
     status: number
     batches: number
+    geofenceRadius: number
+    facultyLat: number
+    facultyLng: number
     attendanceCount: number
     createdAt: number
     updatedAt: number
@@ -10503,6 +10427,9 @@ export namespace Prisma {
     facultyId?: true
     subjectId?: true
     duration?: true
+    geofenceRadius?: true
+    facultyLat?: true
+    facultyLng?: true
     attendanceCount?: true
   }
 
@@ -10512,6 +10439,9 @@ export namespace Prisma {
     facultyId?: true
     subjectId?: true
     duration?: true
+    geofenceRadius?: true
+    facultyLat?: true
+    facultyLng?: true
     attendanceCount?: true
   }
 
@@ -10528,6 +10458,9 @@ export namespace Prisma {
     endTime?: true
     duration?: true
     status?: true
+    geofenceRadius?: true
+    facultyLat?: true
+    facultyLng?: true
     attendanceCount?: true
     createdAt?: true
     updatedAt?: true
@@ -10546,6 +10479,9 @@ export namespace Prisma {
     endTime?: true
     duration?: true
     status?: true
+    geofenceRadius?: true
+    facultyLat?: true
+    facultyLng?: true
     attendanceCount?: true
     createdAt?: true
     updatedAt?: true
@@ -10565,6 +10501,9 @@ export namespace Prisma {
     duration?: true
     status?: true
     batches?: true
+    geofenceRadius?: true
+    facultyLat?: true
+    facultyLng?: true
     attendanceCount?: true
     createdAt?: true
     updatedAt?: true
@@ -10671,6 +10610,9 @@ export namespace Prisma {
     duration: number
     status: string
     batches: string[]
+    geofenceRadius: number
+    facultyLat: number | null
+    facultyLng: number | null
     attendanceCount: number
     createdAt: Date
     updatedAt: Date
@@ -10709,6 +10651,9 @@ export namespace Prisma {
     duration?: boolean
     status?: boolean
     batches?: boolean
+    geofenceRadius?: boolean
+    facultyLat?: boolean
+    facultyLng?: boolean
     attendanceCount?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -10716,7 +10661,6 @@ export namespace Prisma {
     faculty?: boolean | UsersDefaultArgs<ExtArgs>
     subject?: boolean | Session$subjectArgs<ExtArgs>
     attendanceRecords?: boolean | Session$attendanceRecordsArgs<ExtArgs>
-    qrCode?: boolean | Session$qrCodeArgs<ExtArgs>
     _count?: boolean | SessionCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["session"]>
 
@@ -10734,6 +10678,9 @@ export namespace Prisma {
     duration?: boolean
     status?: boolean
     batches?: boolean
+    geofenceRadius?: boolean
+    facultyLat?: boolean
+    facultyLng?: boolean
     attendanceCount?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -10756,6 +10703,9 @@ export namespace Prisma {
     duration?: boolean
     status?: boolean
     batches?: boolean
+    geofenceRadius?: boolean
+    facultyLat?: boolean
+    facultyLng?: boolean
     attendanceCount?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -10778,18 +10728,20 @@ export namespace Prisma {
     duration?: boolean
     status?: boolean
     batches?: boolean
+    geofenceRadius?: boolean
+    facultyLat?: boolean
+    facultyLng?: boolean
     attendanceCount?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type SessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "courseId" | "facultyId" | "subjectId" | "topic" | "description" | "sessionType" | "date" | "startTime" | "endTime" | "duration" | "status" | "batches" | "attendanceCount" | "createdAt" | "updatedAt", ExtArgs["result"]["session"]>
+  export type SessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "courseId" | "facultyId" | "subjectId" | "topic" | "description" | "sessionType" | "date" | "startTime" | "endTime" | "duration" | "status" | "batches" | "geofenceRadius" | "facultyLat" | "facultyLng" | "attendanceCount" | "createdAt" | "updatedAt", ExtArgs["result"]["session"]>
   export type SessionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     course?: boolean | CourseDefaultArgs<ExtArgs>
     faculty?: boolean | UsersDefaultArgs<ExtArgs>
     subject?: boolean | Session$subjectArgs<ExtArgs>
     attendanceRecords?: boolean | Session$attendanceRecordsArgs<ExtArgs>
-    qrCode?: boolean | Session$qrCodeArgs<ExtArgs>
     _count?: boolean | SessionCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type SessionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -10810,7 +10762,6 @@ export namespace Prisma {
       faculty: Prisma.$UsersPayload<ExtArgs>
       subject: Prisma.$SubjectPayload<ExtArgs> | null
       attendanceRecords: Prisma.$AttendancePayload<ExtArgs>[]
-      qrCode: Prisma.$QrCodePayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -10826,6 +10777,9 @@ export namespace Prisma {
       duration: number
       status: string
       batches: string[]
+      geofenceRadius: number
+      facultyLat: number | null
+      facultyLng: number | null
       attendanceCount: number
       createdAt: Date
       updatedAt: Date
@@ -11227,7 +11181,6 @@ export namespace Prisma {
     faculty<T extends UsersDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UsersDefaultArgs<ExtArgs>>): Prisma__UsersClient<$Result.GetResult<Prisma.$UsersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     subject<T extends Session$subjectArgs<ExtArgs> = {}>(args?: Subset<T, Session$subjectArgs<ExtArgs>>): Prisma__SubjectClient<$Result.GetResult<Prisma.$SubjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     attendanceRecords<T extends Session$attendanceRecordsArgs<ExtArgs> = {}>(args?: Subset<T, Session$attendanceRecordsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    qrCode<T extends Session$qrCodeArgs<ExtArgs> = {}>(args?: Subset<T, Session$qrCodeArgs<ExtArgs>>): Prisma__QrCodeClient<$Result.GetResult<Prisma.$QrCodePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -11270,6 +11223,9 @@ export namespace Prisma {
     readonly duration: FieldRef<"Session", 'Int'>
     readonly status: FieldRef<"Session", 'String'>
     readonly batches: FieldRef<"Session", 'String[]'>
+    readonly geofenceRadius: FieldRef<"Session", 'Int'>
+    readonly facultyLat: FieldRef<"Session", 'Float'>
+    readonly facultyLng: FieldRef<"Session", 'Float'>
     readonly attendanceCount: FieldRef<"Session", 'Int'>
     readonly createdAt: FieldRef<"Session", 'DateTime'>
     readonly updatedAt: FieldRef<"Session", 'DateTime'>
@@ -11709,25 +11665,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: AttendanceScalarFieldEnum | AttendanceScalarFieldEnum[]
-  }
-
-  /**
-   * Session.qrCode
-   */
-  export type Session$qrCodeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the QrCode
-     */
-    select?: QrCodeSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the QrCode
-     */
-    omit?: QrCodeOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: QrCodeInclude<ExtArgs> | null
-    where?: QrCodeWhereInput
   }
 
   /**
@@ -12910,1162 +12847,6 @@ export namespace Prisma {
 
 
   /**
-   * Model QrCode
-   */
-
-  export type AggregateQrCode = {
-    _count: QrCodeCountAggregateOutputType | null
-    _avg: QrCodeAvgAggregateOutputType | null
-    _sum: QrCodeSumAggregateOutputType | null
-    _min: QrCodeMinAggregateOutputType | null
-    _max: QrCodeMaxAggregateOutputType | null
-  }
-
-  export type QrCodeAvgAggregateOutputType = {
-    id: number | null
-    sessionId: number | null
-    scannedCount: number | null
-    maxScans: number | null
-  }
-
-  export type QrCodeSumAggregateOutputType = {
-    id: number | null
-    sessionId: number | null
-    scannedCount: number | null
-    maxScans: number | null
-  }
-
-  export type QrCodeMinAggregateOutputType = {
-    id: number | null
-    sessionId: number | null
-    codeValue: string | null
-    validFrom: Date | null
-    validTo: Date | null
-    scannedCount: number | null
-    maxScans: number | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type QrCodeMaxAggregateOutputType = {
-    id: number | null
-    sessionId: number | null
-    codeValue: string | null
-    validFrom: Date | null
-    validTo: Date | null
-    scannedCount: number | null
-    maxScans: number | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type QrCodeCountAggregateOutputType = {
-    id: number
-    sessionId: number
-    codeValue: number
-    validFrom: number
-    validTo: number
-    scannedCount: number
-    maxScans: number
-    createdAt: number
-    updatedAt: number
-    _all: number
-  }
-
-
-  export type QrCodeAvgAggregateInputType = {
-    id?: true
-    sessionId?: true
-    scannedCount?: true
-    maxScans?: true
-  }
-
-  export type QrCodeSumAggregateInputType = {
-    id?: true
-    sessionId?: true
-    scannedCount?: true
-    maxScans?: true
-  }
-
-  export type QrCodeMinAggregateInputType = {
-    id?: true
-    sessionId?: true
-    codeValue?: true
-    validFrom?: true
-    validTo?: true
-    scannedCount?: true
-    maxScans?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type QrCodeMaxAggregateInputType = {
-    id?: true
-    sessionId?: true
-    codeValue?: true
-    validFrom?: true
-    validTo?: true
-    scannedCount?: true
-    maxScans?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type QrCodeCountAggregateInputType = {
-    id?: true
-    sessionId?: true
-    codeValue?: true
-    validFrom?: true
-    validTo?: true
-    scannedCount?: true
-    maxScans?: true
-    createdAt?: true
-    updatedAt?: true
-    _all?: true
-  }
-
-  export type QrCodeAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which QrCode to aggregate.
-     */
-    where?: QrCodeWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of QrCodes to fetch.
-     */
-    orderBy?: QrCodeOrderByWithRelationInput | QrCodeOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: QrCodeWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` QrCodes from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` QrCodes.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned QrCodes
-    **/
-    _count?: true | QrCodeCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: QrCodeAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: QrCodeSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: QrCodeMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: QrCodeMaxAggregateInputType
-  }
-
-  export type GetQrCodeAggregateType<T extends QrCodeAggregateArgs> = {
-        [P in keyof T & keyof AggregateQrCode]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateQrCode[P]>
-      : GetScalarType<T[P], AggregateQrCode[P]>
-  }
-
-
-
-
-  export type QrCodeGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: QrCodeWhereInput
-    orderBy?: QrCodeOrderByWithAggregationInput | QrCodeOrderByWithAggregationInput[]
-    by: QrCodeScalarFieldEnum[] | QrCodeScalarFieldEnum
-    having?: QrCodeScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: QrCodeCountAggregateInputType | true
-    _avg?: QrCodeAvgAggregateInputType
-    _sum?: QrCodeSumAggregateInputType
-    _min?: QrCodeMinAggregateInputType
-    _max?: QrCodeMaxAggregateInputType
-  }
-
-  export type QrCodeGroupByOutputType = {
-    id: number
-    sessionId: number
-    codeValue: string
-    validFrom: Date
-    validTo: Date
-    scannedCount: number
-    maxScans: number
-    createdAt: Date
-    updatedAt: Date
-    _count: QrCodeCountAggregateOutputType | null
-    _avg: QrCodeAvgAggregateOutputType | null
-    _sum: QrCodeSumAggregateOutputType | null
-    _min: QrCodeMinAggregateOutputType | null
-    _max: QrCodeMaxAggregateOutputType | null
-  }
-
-  type GetQrCodeGroupByPayload<T extends QrCodeGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<QrCodeGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof QrCodeGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], QrCodeGroupByOutputType[P]>
-            : GetScalarType<T[P], QrCodeGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type QrCodeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    sessionId?: boolean
-    codeValue?: boolean
-    validFrom?: boolean
-    validTo?: boolean
-    scannedCount?: boolean
-    maxScans?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    session?: boolean | SessionDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["qrCode"]>
-
-  export type QrCodeSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    sessionId?: boolean
-    codeValue?: boolean
-    validFrom?: boolean
-    validTo?: boolean
-    scannedCount?: boolean
-    maxScans?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    session?: boolean | SessionDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["qrCode"]>
-
-  export type QrCodeSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    sessionId?: boolean
-    codeValue?: boolean
-    validFrom?: boolean
-    validTo?: boolean
-    scannedCount?: boolean
-    maxScans?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    session?: boolean | SessionDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["qrCode"]>
-
-  export type QrCodeSelectScalar = {
-    id?: boolean
-    sessionId?: boolean
-    codeValue?: boolean
-    validFrom?: boolean
-    validTo?: boolean
-    scannedCount?: boolean
-    maxScans?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }
-
-  export type QrCodeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sessionId" | "codeValue" | "validFrom" | "validTo" | "scannedCount" | "maxScans" | "createdAt" | "updatedAt", ExtArgs["result"]["qrCode"]>
-  export type QrCodeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    session?: boolean | SessionDefaultArgs<ExtArgs>
-  }
-  export type QrCodeIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    session?: boolean | SessionDefaultArgs<ExtArgs>
-  }
-  export type QrCodeIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    session?: boolean | SessionDefaultArgs<ExtArgs>
-  }
-
-  export type $QrCodePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "QrCode"
-    objects: {
-      session: Prisma.$SessionPayload<ExtArgs>
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: number
-      sessionId: number
-      codeValue: string
-      validFrom: Date
-      validTo: Date
-      scannedCount: number
-      maxScans: number
-      createdAt: Date
-      updatedAt: Date
-    }, ExtArgs["result"]["qrCode"]>
-    composites: {}
-  }
-
-  type QrCodeGetPayload<S extends boolean | null | undefined | QrCodeDefaultArgs> = $Result.GetResult<Prisma.$QrCodePayload, S>
-
-  type QrCodeCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<QrCodeFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: QrCodeCountAggregateInputType | true
-    }
-
-  export interface QrCodeDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['QrCode'], meta: { name: 'QrCode' } }
-    /**
-     * Find zero or one QrCode that matches the filter.
-     * @param {QrCodeFindUniqueArgs} args - Arguments to find a QrCode
-     * @example
-     * // Get one QrCode
-     * const qrCode = await prisma.qrCode.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends QrCodeFindUniqueArgs>(args: SelectSubset<T, QrCodeFindUniqueArgs<ExtArgs>>): Prisma__QrCodeClient<$Result.GetResult<Prisma.$QrCodePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one QrCode that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {QrCodeFindUniqueOrThrowArgs} args - Arguments to find a QrCode
-     * @example
-     * // Get one QrCode
-     * const qrCode = await prisma.qrCode.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends QrCodeFindUniqueOrThrowArgs>(args: SelectSubset<T, QrCodeFindUniqueOrThrowArgs<ExtArgs>>): Prisma__QrCodeClient<$Result.GetResult<Prisma.$QrCodePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first QrCode that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {QrCodeFindFirstArgs} args - Arguments to find a QrCode
-     * @example
-     * // Get one QrCode
-     * const qrCode = await prisma.qrCode.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends QrCodeFindFirstArgs>(args?: SelectSubset<T, QrCodeFindFirstArgs<ExtArgs>>): Prisma__QrCodeClient<$Result.GetResult<Prisma.$QrCodePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first QrCode that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {QrCodeFindFirstOrThrowArgs} args - Arguments to find a QrCode
-     * @example
-     * // Get one QrCode
-     * const qrCode = await prisma.qrCode.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends QrCodeFindFirstOrThrowArgs>(args?: SelectSubset<T, QrCodeFindFirstOrThrowArgs<ExtArgs>>): Prisma__QrCodeClient<$Result.GetResult<Prisma.$QrCodePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more QrCodes that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {QrCodeFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all QrCodes
-     * const qrCodes = await prisma.qrCode.findMany()
-     * 
-     * // Get first 10 QrCodes
-     * const qrCodes = await prisma.qrCode.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const qrCodeWithIdOnly = await prisma.qrCode.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends QrCodeFindManyArgs>(args?: SelectSubset<T, QrCodeFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QrCodePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a QrCode.
-     * @param {QrCodeCreateArgs} args - Arguments to create a QrCode.
-     * @example
-     * // Create one QrCode
-     * const QrCode = await prisma.qrCode.create({
-     *   data: {
-     *     // ... data to create a QrCode
-     *   }
-     * })
-     * 
-     */
-    create<T extends QrCodeCreateArgs>(args: SelectSubset<T, QrCodeCreateArgs<ExtArgs>>): Prisma__QrCodeClient<$Result.GetResult<Prisma.$QrCodePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many QrCodes.
-     * @param {QrCodeCreateManyArgs} args - Arguments to create many QrCodes.
-     * @example
-     * // Create many QrCodes
-     * const qrCode = await prisma.qrCode.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends QrCodeCreateManyArgs>(args?: SelectSubset<T, QrCodeCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many QrCodes and returns the data saved in the database.
-     * @param {QrCodeCreateManyAndReturnArgs} args - Arguments to create many QrCodes.
-     * @example
-     * // Create many QrCodes
-     * const qrCode = await prisma.qrCode.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many QrCodes and only return the `id`
-     * const qrCodeWithIdOnly = await prisma.qrCode.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends QrCodeCreateManyAndReturnArgs>(args?: SelectSubset<T, QrCodeCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QrCodePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a QrCode.
-     * @param {QrCodeDeleteArgs} args - Arguments to delete one QrCode.
-     * @example
-     * // Delete one QrCode
-     * const QrCode = await prisma.qrCode.delete({
-     *   where: {
-     *     // ... filter to delete one QrCode
-     *   }
-     * })
-     * 
-     */
-    delete<T extends QrCodeDeleteArgs>(args: SelectSubset<T, QrCodeDeleteArgs<ExtArgs>>): Prisma__QrCodeClient<$Result.GetResult<Prisma.$QrCodePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one QrCode.
-     * @param {QrCodeUpdateArgs} args - Arguments to update one QrCode.
-     * @example
-     * // Update one QrCode
-     * const qrCode = await prisma.qrCode.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends QrCodeUpdateArgs>(args: SelectSubset<T, QrCodeUpdateArgs<ExtArgs>>): Prisma__QrCodeClient<$Result.GetResult<Prisma.$QrCodePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more QrCodes.
-     * @param {QrCodeDeleteManyArgs} args - Arguments to filter QrCodes to delete.
-     * @example
-     * // Delete a few QrCodes
-     * const { count } = await prisma.qrCode.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends QrCodeDeleteManyArgs>(args?: SelectSubset<T, QrCodeDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more QrCodes.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {QrCodeUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many QrCodes
-     * const qrCode = await prisma.qrCode.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends QrCodeUpdateManyArgs>(args: SelectSubset<T, QrCodeUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more QrCodes and returns the data updated in the database.
-     * @param {QrCodeUpdateManyAndReturnArgs} args - Arguments to update many QrCodes.
-     * @example
-     * // Update many QrCodes
-     * const qrCode = await prisma.qrCode.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more QrCodes and only return the `id`
-     * const qrCodeWithIdOnly = await prisma.qrCode.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends QrCodeUpdateManyAndReturnArgs>(args: SelectSubset<T, QrCodeUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QrCodePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one QrCode.
-     * @param {QrCodeUpsertArgs} args - Arguments to update or create a QrCode.
-     * @example
-     * // Update or create a QrCode
-     * const qrCode = await prisma.qrCode.upsert({
-     *   create: {
-     *     // ... data to create a QrCode
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the QrCode we want to update
-     *   }
-     * })
-     */
-    upsert<T extends QrCodeUpsertArgs>(args: SelectSubset<T, QrCodeUpsertArgs<ExtArgs>>): Prisma__QrCodeClient<$Result.GetResult<Prisma.$QrCodePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of QrCodes.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {QrCodeCountArgs} args - Arguments to filter QrCodes to count.
-     * @example
-     * // Count the number of QrCodes
-     * const count = await prisma.qrCode.count({
-     *   where: {
-     *     // ... the filter for the QrCodes we want to count
-     *   }
-     * })
-    **/
-    count<T extends QrCodeCountArgs>(
-      args?: Subset<T, QrCodeCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], QrCodeCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a QrCode.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {QrCodeAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends QrCodeAggregateArgs>(args: Subset<T, QrCodeAggregateArgs>): Prisma.PrismaPromise<GetQrCodeAggregateType<T>>
-
-    /**
-     * Group by QrCode.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {QrCodeGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends QrCodeGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: QrCodeGroupByArgs['orderBy'] }
-        : { orderBy?: QrCodeGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, QrCodeGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetQrCodeGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the QrCode model
-   */
-  readonly fields: QrCodeFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for QrCode.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__QrCodeClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    session<T extends SessionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SessionDefaultArgs<ExtArgs>>): Prisma__SessionClient<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the QrCode model
-   */
-  interface QrCodeFieldRefs {
-    readonly id: FieldRef<"QrCode", 'Int'>
-    readonly sessionId: FieldRef<"QrCode", 'Int'>
-    readonly codeValue: FieldRef<"QrCode", 'String'>
-    readonly validFrom: FieldRef<"QrCode", 'DateTime'>
-    readonly validTo: FieldRef<"QrCode", 'DateTime'>
-    readonly scannedCount: FieldRef<"QrCode", 'Int'>
-    readonly maxScans: FieldRef<"QrCode", 'Int'>
-    readonly createdAt: FieldRef<"QrCode", 'DateTime'>
-    readonly updatedAt: FieldRef<"QrCode", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * QrCode findUnique
-   */
-  export type QrCodeFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the QrCode
-     */
-    select?: QrCodeSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the QrCode
-     */
-    omit?: QrCodeOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: QrCodeInclude<ExtArgs> | null
-    /**
-     * Filter, which QrCode to fetch.
-     */
-    where: QrCodeWhereUniqueInput
-  }
-
-  /**
-   * QrCode findUniqueOrThrow
-   */
-  export type QrCodeFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the QrCode
-     */
-    select?: QrCodeSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the QrCode
-     */
-    omit?: QrCodeOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: QrCodeInclude<ExtArgs> | null
-    /**
-     * Filter, which QrCode to fetch.
-     */
-    where: QrCodeWhereUniqueInput
-  }
-
-  /**
-   * QrCode findFirst
-   */
-  export type QrCodeFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the QrCode
-     */
-    select?: QrCodeSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the QrCode
-     */
-    omit?: QrCodeOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: QrCodeInclude<ExtArgs> | null
-    /**
-     * Filter, which QrCode to fetch.
-     */
-    where?: QrCodeWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of QrCodes to fetch.
-     */
-    orderBy?: QrCodeOrderByWithRelationInput | QrCodeOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for QrCodes.
-     */
-    cursor?: QrCodeWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` QrCodes from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` QrCodes.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of QrCodes.
-     */
-    distinct?: QrCodeScalarFieldEnum | QrCodeScalarFieldEnum[]
-  }
-
-  /**
-   * QrCode findFirstOrThrow
-   */
-  export type QrCodeFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the QrCode
-     */
-    select?: QrCodeSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the QrCode
-     */
-    omit?: QrCodeOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: QrCodeInclude<ExtArgs> | null
-    /**
-     * Filter, which QrCode to fetch.
-     */
-    where?: QrCodeWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of QrCodes to fetch.
-     */
-    orderBy?: QrCodeOrderByWithRelationInput | QrCodeOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for QrCodes.
-     */
-    cursor?: QrCodeWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` QrCodes from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` QrCodes.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of QrCodes.
-     */
-    distinct?: QrCodeScalarFieldEnum | QrCodeScalarFieldEnum[]
-  }
-
-  /**
-   * QrCode findMany
-   */
-  export type QrCodeFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the QrCode
-     */
-    select?: QrCodeSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the QrCode
-     */
-    omit?: QrCodeOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: QrCodeInclude<ExtArgs> | null
-    /**
-     * Filter, which QrCodes to fetch.
-     */
-    where?: QrCodeWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of QrCodes to fetch.
-     */
-    orderBy?: QrCodeOrderByWithRelationInput | QrCodeOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing QrCodes.
-     */
-    cursor?: QrCodeWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` QrCodes from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` QrCodes.
-     */
-    skip?: number
-    distinct?: QrCodeScalarFieldEnum | QrCodeScalarFieldEnum[]
-  }
-
-  /**
-   * QrCode create
-   */
-  export type QrCodeCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the QrCode
-     */
-    select?: QrCodeSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the QrCode
-     */
-    omit?: QrCodeOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: QrCodeInclude<ExtArgs> | null
-    /**
-     * The data needed to create a QrCode.
-     */
-    data: XOR<QrCodeCreateInput, QrCodeUncheckedCreateInput>
-  }
-
-  /**
-   * QrCode createMany
-   */
-  export type QrCodeCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many QrCodes.
-     */
-    data: QrCodeCreateManyInput | QrCodeCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * QrCode createManyAndReturn
-   */
-  export type QrCodeCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the QrCode
-     */
-    select?: QrCodeSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the QrCode
-     */
-    omit?: QrCodeOmit<ExtArgs> | null
-    /**
-     * The data used to create many QrCodes.
-     */
-    data: QrCodeCreateManyInput | QrCodeCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: QrCodeIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * QrCode update
-   */
-  export type QrCodeUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the QrCode
-     */
-    select?: QrCodeSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the QrCode
-     */
-    omit?: QrCodeOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: QrCodeInclude<ExtArgs> | null
-    /**
-     * The data needed to update a QrCode.
-     */
-    data: XOR<QrCodeUpdateInput, QrCodeUncheckedUpdateInput>
-    /**
-     * Choose, which QrCode to update.
-     */
-    where: QrCodeWhereUniqueInput
-  }
-
-  /**
-   * QrCode updateMany
-   */
-  export type QrCodeUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update QrCodes.
-     */
-    data: XOR<QrCodeUpdateManyMutationInput, QrCodeUncheckedUpdateManyInput>
-    /**
-     * Filter which QrCodes to update
-     */
-    where?: QrCodeWhereInput
-    /**
-     * Limit how many QrCodes to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * QrCode updateManyAndReturn
-   */
-  export type QrCodeUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the QrCode
-     */
-    select?: QrCodeSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the QrCode
-     */
-    omit?: QrCodeOmit<ExtArgs> | null
-    /**
-     * The data used to update QrCodes.
-     */
-    data: XOR<QrCodeUpdateManyMutationInput, QrCodeUncheckedUpdateManyInput>
-    /**
-     * Filter which QrCodes to update
-     */
-    where?: QrCodeWhereInput
-    /**
-     * Limit how many QrCodes to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: QrCodeIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * QrCode upsert
-   */
-  export type QrCodeUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the QrCode
-     */
-    select?: QrCodeSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the QrCode
-     */
-    omit?: QrCodeOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: QrCodeInclude<ExtArgs> | null
-    /**
-     * The filter to search for the QrCode to update in case it exists.
-     */
-    where: QrCodeWhereUniqueInput
-    /**
-     * In case the QrCode found by the `where` argument doesn't exist, create a new QrCode with this data.
-     */
-    create: XOR<QrCodeCreateInput, QrCodeUncheckedCreateInput>
-    /**
-     * In case the QrCode was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<QrCodeUpdateInput, QrCodeUncheckedUpdateInput>
-  }
-
-  /**
-   * QrCode delete
-   */
-  export type QrCodeDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the QrCode
-     */
-    select?: QrCodeSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the QrCode
-     */
-    omit?: QrCodeOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: QrCodeInclude<ExtArgs> | null
-    /**
-     * Filter which QrCode to delete.
-     */
-    where: QrCodeWhereUniqueInput
-  }
-
-  /**
-   * QrCode deleteMany
-   */
-  export type QrCodeDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which QrCodes to delete
-     */
-    where?: QrCodeWhereInput
-    /**
-     * Limit how many QrCodes to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * QrCode without action
-   */
-  export type QrCodeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the QrCode
-     */
-    select?: QrCodeSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the QrCode
-     */
-    omit?: QrCodeOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: QrCodeInclude<ExtArgs> | null
-  }
-
-
-  /**
    * Model ExamPermit
    */
 
@@ -14100,7 +12881,6 @@ export namespace Prisma {
     status: string | null
     validFrom: Date | null
     validTo: Date | null
-    qrCode: string | null
     scanned: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -14117,7 +12897,6 @@ export namespace Prisma {
     status: string | null
     validFrom: Date | null
     validTo: Date | null
-    qrCode: string | null
     scanned: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -14134,7 +12913,6 @@ export namespace Prisma {
     status: number
     validFrom: number
     validTo: number
-    qrCode: number
     scanned: number
     createdAt: number
     updatedAt: number
@@ -14165,7 +12943,6 @@ export namespace Prisma {
     status?: true
     validFrom?: true
     validTo?: true
-    qrCode?: true
     scanned?: true
     createdAt?: true
     updatedAt?: true
@@ -14182,7 +12959,6 @@ export namespace Prisma {
     status?: true
     validFrom?: true
     validTo?: true
-    qrCode?: true
     scanned?: true
     createdAt?: true
     updatedAt?: true
@@ -14199,7 +12975,6 @@ export namespace Prisma {
     status?: true
     validFrom?: true
     validTo?: true
-    qrCode?: true
     scanned?: true
     createdAt?: true
     updatedAt?: true
@@ -14303,7 +13078,6 @@ export namespace Prisma {
     status: string
     validFrom: Date
     validTo: Date
-    qrCode: string | null
     scanned: boolean
     createdAt: Date
     updatedAt: Date
@@ -14339,7 +13113,6 @@ export namespace Prisma {
     status?: boolean
     validFrom?: boolean
     validTo?: boolean
-    qrCode?: boolean
     scanned?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -14358,7 +13131,6 @@ export namespace Prisma {
     status?: boolean
     validFrom?: boolean
     validTo?: boolean
-    qrCode?: boolean
     scanned?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -14377,7 +13149,6 @@ export namespace Prisma {
     status?: boolean
     validFrom?: boolean
     validTo?: boolean
-    qrCode?: boolean
     scanned?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -14396,13 +13167,12 @@ export namespace Prisma {
     status?: boolean
     validFrom?: boolean
     validTo?: boolean
-    qrCode?: boolean
     scanned?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ExamPermitOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "studentId" | "courseId" | "examType" | "examDate" | "examHall" | "seatNumber" | "status" | "validFrom" | "validTo" | "qrCode" | "scanned" | "createdAt" | "updatedAt", ExtArgs["result"]["examPermit"]>
+  export type ExamPermitOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "studentId" | "courseId" | "examType" | "examDate" | "examHall" | "seatNumber" | "status" | "validFrom" | "validTo" | "scanned" | "createdAt" | "updatedAt", ExtArgs["result"]["examPermit"]>
   export type ExamPermitInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     student?: boolean | UsersDefaultArgs<ExtArgs>
     course?: boolean | CourseDefaultArgs<ExtArgs>
@@ -14433,7 +13203,6 @@ export namespace Prisma {
       status: string
       validFrom: Date
       validTo: Date
-      qrCode: string | null
       scanned: boolean
       createdAt: Date
       updatedAt: Date
@@ -14872,7 +13641,6 @@ export namespace Prisma {
     readonly status: FieldRef<"ExamPermit", 'String'>
     readonly validFrom: FieldRef<"ExamPermit", 'DateTime'>
     readonly validTo: FieldRef<"ExamPermit", 'DateTime'>
-    readonly qrCode: FieldRef<"ExamPermit", 'String'>
     readonly scanned: FieldRef<"ExamPermit", 'Boolean'>
     readonly createdAt: FieldRef<"ExamPermit", 'DateTime'>
     readonly updatedAt: FieldRef<"ExamPermit", 'DateTime'>
@@ -22634,6 +21402,9 @@ export namespace Prisma {
     duration: 'duration',
     status: 'status',
     batches: 'batches',
+    geofenceRadius: 'geofenceRadius',
+    facultyLat: 'facultyLat',
+    facultyLng: 'facultyLng',
     attendanceCount: 'attendanceCount',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -22657,21 +21428,6 @@ export namespace Prisma {
   export type AttendanceScalarFieldEnum = (typeof AttendanceScalarFieldEnum)[keyof typeof AttendanceScalarFieldEnum]
 
 
-  export const QrCodeScalarFieldEnum: {
-    id: 'id',
-    sessionId: 'sessionId',
-    codeValue: 'codeValue',
-    validFrom: 'validFrom',
-    validTo: 'validTo',
-    scannedCount: 'scannedCount',
-    maxScans: 'maxScans',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
-  };
-
-  export type QrCodeScalarFieldEnum = (typeof QrCodeScalarFieldEnum)[keyof typeof QrCodeScalarFieldEnum]
-
-
   export const ExamPermitScalarFieldEnum: {
     id: 'id',
     studentId: 'studentId',
@@ -22683,7 +21439,6 @@ export namespace Prisma {
     status: 'status',
     validFrom: 'validFrom',
     validTo: 'validTo',
-    qrCode: 'qrCode',
     scanned: 'scanned',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -22885,6 +21640,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Float'
+   */
+  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+  /**
+   * Reference to a field of type 'Float[]'
+   */
+  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Boolean'
    */
   export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
@@ -22902,20 +21671,6 @@ export namespace Prisma {
    * Reference to a field of type 'QueryMode'
    */
   export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
-    
-
-
-  /**
-   * Reference to a field of type 'Float'
-   */
-  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
-    
-
-
-  /**
-   * Reference to a field of type 'Float[]'
-   */
-  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
   /**
    * Deep Input Types
@@ -23541,6 +22296,9 @@ export namespace Prisma {
     duration?: IntFilter<"Session"> | number
     status?: StringFilter<"Session"> | string
     batches?: StringNullableListFilter<"Session">
+    geofenceRadius?: IntFilter<"Session"> | number
+    facultyLat?: FloatNullableFilter<"Session"> | number | null
+    facultyLng?: FloatNullableFilter<"Session"> | number | null
     attendanceCount?: IntFilter<"Session"> | number
     createdAt?: DateTimeFilter<"Session"> | Date | string
     updatedAt?: DateTimeFilter<"Session"> | Date | string
@@ -23548,7 +22306,6 @@ export namespace Prisma {
     faculty?: XOR<UsersScalarRelationFilter, UsersWhereInput>
     subject?: XOR<SubjectNullableScalarRelationFilter, SubjectWhereInput> | null
     attendanceRecords?: AttendanceListRelationFilter
-    qrCode?: XOR<QrCodeNullableScalarRelationFilter, QrCodeWhereInput> | null
   }
 
   export type SessionOrderByWithRelationInput = {
@@ -23565,6 +22322,9 @@ export namespace Prisma {
     duration?: SortOrder
     status?: SortOrder
     batches?: SortOrder
+    geofenceRadius?: SortOrder
+    facultyLat?: SortOrderInput | SortOrder
+    facultyLng?: SortOrderInput | SortOrder
     attendanceCount?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -23572,7 +22332,6 @@ export namespace Prisma {
     faculty?: UsersOrderByWithRelationInput
     subject?: SubjectOrderByWithRelationInput
     attendanceRecords?: AttendanceOrderByRelationAggregateInput
-    qrCode?: QrCodeOrderByWithRelationInput
   }
 
   export type SessionWhereUniqueInput = Prisma.AtLeast<{
@@ -23592,6 +22351,9 @@ export namespace Prisma {
     duration?: IntFilter<"Session"> | number
     status?: StringFilter<"Session"> | string
     batches?: StringNullableListFilter<"Session">
+    geofenceRadius?: IntFilter<"Session"> | number
+    facultyLat?: FloatNullableFilter<"Session"> | number | null
+    facultyLng?: FloatNullableFilter<"Session"> | number | null
     attendanceCount?: IntFilter<"Session"> | number
     createdAt?: DateTimeFilter<"Session"> | Date | string
     updatedAt?: DateTimeFilter<"Session"> | Date | string
@@ -23599,7 +22361,6 @@ export namespace Prisma {
     faculty?: XOR<UsersScalarRelationFilter, UsersWhereInput>
     subject?: XOR<SubjectNullableScalarRelationFilter, SubjectWhereInput> | null
     attendanceRecords?: AttendanceListRelationFilter
-    qrCode?: XOR<QrCodeNullableScalarRelationFilter, QrCodeWhereInput> | null
   }, "id">
 
   export type SessionOrderByWithAggregationInput = {
@@ -23616,6 +22377,9 @@ export namespace Prisma {
     duration?: SortOrder
     status?: SortOrder
     batches?: SortOrder
+    geofenceRadius?: SortOrder
+    facultyLat?: SortOrderInput | SortOrder
+    facultyLng?: SortOrderInput | SortOrder
     attendanceCount?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -23643,6 +22407,9 @@ export namespace Prisma {
     duration?: IntWithAggregatesFilter<"Session"> | number
     status?: StringWithAggregatesFilter<"Session"> | string
     batches?: StringNullableListFilter<"Session">
+    geofenceRadius?: IntWithAggregatesFilter<"Session"> | number
+    facultyLat?: FloatNullableWithAggregatesFilter<"Session"> | number | null
+    facultyLng?: FloatNullableWithAggregatesFilter<"Session"> | number | null
     attendanceCount?: IntWithAggregatesFilter<"Session"> | number
     createdAt?: DateTimeWithAggregatesFilter<"Session"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Session"> | Date | string
@@ -23681,6 +22448,7 @@ export namespace Prisma {
 
   export type AttendanceWhereUniqueInput = Prisma.AtLeast<{
     id?: number
+    sessionId_studentId?: AttendanceSessionIdStudentIdCompoundUniqueInput
     AND?: AttendanceWhereInput | AttendanceWhereInput[]
     OR?: AttendanceWhereInput[]
     NOT?: AttendanceWhereInput | AttendanceWhereInput[]
@@ -23694,7 +22462,7 @@ export namespace Prisma {
     notes?: StringNullableFilter<"Attendance"> | string | null
     session?: XOR<SessionScalarRelationFilter, SessionWhereInput>
     student?: XOR<UsersScalarRelationFilter, UsersWhereInput>
-  }, "id">
+  }, "id" | "sessionId_studentId">
 
   export type AttendanceOrderByWithAggregationInput = {
     id?: SortOrder
@@ -23728,83 +22496,6 @@ export namespace Prisma {
     notes?: StringNullableWithAggregatesFilter<"Attendance"> | string | null
   }
 
-  export type QrCodeWhereInput = {
-    AND?: QrCodeWhereInput | QrCodeWhereInput[]
-    OR?: QrCodeWhereInput[]
-    NOT?: QrCodeWhereInput | QrCodeWhereInput[]
-    id?: IntFilter<"QrCode"> | number
-    sessionId?: IntFilter<"QrCode"> | number
-    codeValue?: StringFilter<"QrCode"> | string
-    validFrom?: DateTimeFilter<"QrCode"> | Date | string
-    validTo?: DateTimeFilter<"QrCode"> | Date | string
-    scannedCount?: IntFilter<"QrCode"> | number
-    maxScans?: IntFilter<"QrCode"> | number
-    createdAt?: DateTimeFilter<"QrCode"> | Date | string
-    updatedAt?: DateTimeFilter<"QrCode"> | Date | string
-    session?: XOR<SessionScalarRelationFilter, SessionWhereInput>
-  }
-
-  export type QrCodeOrderByWithRelationInput = {
-    id?: SortOrder
-    sessionId?: SortOrder
-    codeValue?: SortOrder
-    validFrom?: SortOrder
-    validTo?: SortOrder
-    scannedCount?: SortOrder
-    maxScans?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    session?: SessionOrderByWithRelationInput
-  }
-
-  export type QrCodeWhereUniqueInput = Prisma.AtLeast<{
-    id?: number
-    sessionId?: number
-    AND?: QrCodeWhereInput | QrCodeWhereInput[]
-    OR?: QrCodeWhereInput[]
-    NOT?: QrCodeWhereInput | QrCodeWhereInput[]
-    codeValue?: StringFilter<"QrCode"> | string
-    validFrom?: DateTimeFilter<"QrCode"> | Date | string
-    validTo?: DateTimeFilter<"QrCode"> | Date | string
-    scannedCount?: IntFilter<"QrCode"> | number
-    maxScans?: IntFilter<"QrCode"> | number
-    createdAt?: DateTimeFilter<"QrCode"> | Date | string
-    updatedAt?: DateTimeFilter<"QrCode"> | Date | string
-    session?: XOR<SessionScalarRelationFilter, SessionWhereInput>
-  }, "id" | "sessionId">
-
-  export type QrCodeOrderByWithAggregationInput = {
-    id?: SortOrder
-    sessionId?: SortOrder
-    codeValue?: SortOrder
-    validFrom?: SortOrder
-    validTo?: SortOrder
-    scannedCount?: SortOrder
-    maxScans?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    _count?: QrCodeCountOrderByAggregateInput
-    _avg?: QrCodeAvgOrderByAggregateInput
-    _max?: QrCodeMaxOrderByAggregateInput
-    _min?: QrCodeMinOrderByAggregateInput
-    _sum?: QrCodeSumOrderByAggregateInput
-  }
-
-  export type QrCodeScalarWhereWithAggregatesInput = {
-    AND?: QrCodeScalarWhereWithAggregatesInput | QrCodeScalarWhereWithAggregatesInput[]
-    OR?: QrCodeScalarWhereWithAggregatesInput[]
-    NOT?: QrCodeScalarWhereWithAggregatesInput | QrCodeScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"QrCode"> | number
-    sessionId?: IntWithAggregatesFilter<"QrCode"> | number
-    codeValue?: StringWithAggregatesFilter<"QrCode"> | string
-    validFrom?: DateTimeWithAggregatesFilter<"QrCode"> | Date | string
-    validTo?: DateTimeWithAggregatesFilter<"QrCode"> | Date | string
-    scannedCount?: IntWithAggregatesFilter<"QrCode"> | number
-    maxScans?: IntWithAggregatesFilter<"QrCode"> | number
-    createdAt?: DateTimeWithAggregatesFilter<"QrCode"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"QrCode"> | Date | string
-  }
-
   export type ExamPermitWhereInput = {
     AND?: ExamPermitWhereInput | ExamPermitWhereInput[]
     OR?: ExamPermitWhereInput[]
@@ -23819,7 +22510,6 @@ export namespace Prisma {
     status?: StringFilter<"ExamPermit"> | string
     validFrom?: DateTimeFilter<"ExamPermit"> | Date | string
     validTo?: DateTimeFilter<"ExamPermit"> | Date | string
-    qrCode?: StringNullableFilter<"ExamPermit"> | string | null
     scanned?: BoolFilter<"ExamPermit"> | boolean
     createdAt?: DateTimeFilter<"ExamPermit"> | Date | string
     updatedAt?: DateTimeFilter<"ExamPermit"> | Date | string
@@ -23838,7 +22528,6 @@ export namespace Prisma {
     status?: SortOrder
     validFrom?: SortOrder
     validTo?: SortOrder
-    qrCode?: SortOrderInput | SortOrder
     scanned?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -23860,7 +22549,6 @@ export namespace Prisma {
     status?: StringFilter<"ExamPermit"> | string
     validFrom?: DateTimeFilter<"ExamPermit"> | Date | string
     validTo?: DateTimeFilter<"ExamPermit"> | Date | string
-    qrCode?: StringNullableFilter<"ExamPermit"> | string | null
     scanned?: BoolFilter<"ExamPermit"> | boolean
     createdAt?: DateTimeFilter<"ExamPermit"> | Date | string
     updatedAt?: DateTimeFilter<"ExamPermit"> | Date | string
@@ -23879,7 +22567,6 @@ export namespace Prisma {
     status?: SortOrder
     validFrom?: SortOrder
     validTo?: SortOrder
-    qrCode?: SortOrderInput | SortOrder
     scanned?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -23904,7 +22591,6 @@ export namespace Prisma {
     status?: StringWithAggregatesFilter<"ExamPermit"> | string
     validFrom?: DateTimeWithAggregatesFilter<"ExamPermit"> | Date | string
     validTo?: DateTimeWithAggregatesFilter<"ExamPermit"> | Date | string
-    qrCode?: StringNullableWithAggregatesFilter<"ExamPermit"> | string | null
     scanned?: BoolWithAggregatesFilter<"ExamPermit"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"ExamPermit"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"ExamPermit"> | Date | string
@@ -25139,6 +23825,9 @@ export namespace Prisma {
     duration?: number
     status?: string
     batches?: SessionCreatebatchesInput | string[]
+    geofenceRadius?: number
+    facultyLat?: number | null
+    facultyLng?: number | null
     attendanceCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -25146,7 +23835,6 @@ export namespace Prisma {
     faculty: UsersCreateNestedOneWithoutSessionsInput
     subject?: SubjectCreateNestedOneWithoutSessionsInput
     attendanceRecords?: AttendanceCreateNestedManyWithoutSessionInput
-    qrCode?: QrCodeCreateNestedOneWithoutSessionInput
   }
 
   export type SessionUncheckedCreateInput = {
@@ -25163,11 +23851,13 @@ export namespace Prisma {
     duration?: number
     status?: string
     batches?: SessionCreatebatchesInput | string[]
+    geofenceRadius?: number
+    facultyLat?: number | null
+    facultyLng?: number | null
     attendanceCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     attendanceRecords?: AttendanceUncheckedCreateNestedManyWithoutSessionInput
-    qrCode?: QrCodeUncheckedCreateNestedOneWithoutSessionInput
   }
 
   export type SessionUpdateInput = {
@@ -25180,6 +23870,9 @@ export namespace Prisma {
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     batches?: SessionUpdatebatchesInput | string[]
+    geofenceRadius?: IntFieldUpdateOperationsInput | number
+    facultyLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    facultyLng?: NullableFloatFieldUpdateOperationsInput | number | null
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -25187,7 +23880,6 @@ export namespace Prisma {
     faculty?: UsersUpdateOneRequiredWithoutSessionsNestedInput
     subject?: SubjectUpdateOneWithoutSessionsNestedInput
     attendanceRecords?: AttendanceUpdateManyWithoutSessionNestedInput
-    qrCode?: QrCodeUpdateOneWithoutSessionNestedInput
   }
 
   export type SessionUncheckedUpdateInput = {
@@ -25204,11 +23896,13 @@ export namespace Prisma {
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     batches?: SessionUpdatebatchesInput | string[]
+    geofenceRadius?: IntFieldUpdateOperationsInput | number
+    facultyLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    facultyLng?: NullableFloatFieldUpdateOperationsInput | number | null
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     attendanceRecords?: AttendanceUncheckedUpdateManyWithoutSessionNestedInput
-    qrCode?: QrCodeUncheckedUpdateOneWithoutSessionNestedInput
   }
 
   export type SessionCreateManyInput = {
@@ -25225,6 +23919,9 @@ export namespace Prisma {
     duration?: number
     status?: string
     batches?: SessionCreatebatchesInput | string[]
+    geofenceRadius?: number
+    facultyLat?: number | null
+    facultyLng?: number | null
     attendanceCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -25240,6 +23937,9 @@ export namespace Prisma {
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     batches?: SessionUpdatebatchesInput | string[]
+    geofenceRadius?: IntFieldUpdateOperationsInput | number
+    facultyLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    facultyLng?: NullableFloatFieldUpdateOperationsInput | number | null
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -25259,6 +23959,9 @@ export namespace Prisma {
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     batches?: SessionUpdatebatchesInput | string[]
+    geofenceRadius?: IntFieldUpdateOperationsInput | number
+    facultyLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    facultyLng?: NullableFloatFieldUpdateOperationsInput | number | null
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -25343,86 +24046,6 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type QrCodeCreateInput = {
-    codeValue: string
-    validFrom: Date | string
-    validTo: Date | string
-    scannedCount?: number
-    maxScans?: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    session: SessionCreateNestedOneWithoutQrCodeInput
-  }
-
-  export type QrCodeUncheckedCreateInput = {
-    id?: number
-    sessionId: number
-    codeValue: string
-    validFrom: Date | string
-    validTo: Date | string
-    scannedCount?: number
-    maxScans?: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type QrCodeUpdateInput = {
-    codeValue?: StringFieldUpdateOperationsInput | string
-    validFrom?: DateTimeFieldUpdateOperationsInput | Date | string
-    validTo?: DateTimeFieldUpdateOperationsInput | Date | string
-    scannedCount?: IntFieldUpdateOperationsInput | number
-    maxScans?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    session?: SessionUpdateOneRequiredWithoutQrCodeNestedInput
-  }
-
-  export type QrCodeUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    sessionId?: IntFieldUpdateOperationsInput | number
-    codeValue?: StringFieldUpdateOperationsInput | string
-    validFrom?: DateTimeFieldUpdateOperationsInput | Date | string
-    validTo?: DateTimeFieldUpdateOperationsInput | Date | string
-    scannedCount?: IntFieldUpdateOperationsInput | number
-    maxScans?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type QrCodeCreateManyInput = {
-    id?: number
-    sessionId: number
-    codeValue: string
-    validFrom: Date | string
-    validTo: Date | string
-    scannedCount?: number
-    maxScans?: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type QrCodeUpdateManyMutationInput = {
-    codeValue?: StringFieldUpdateOperationsInput | string
-    validFrom?: DateTimeFieldUpdateOperationsInput | Date | string
-    validTo?: DateTimeFieldUpdateOperationsInput | Date | string
-    scannedCount?: IntFieldUpdateOperationsInput | number
-    maxScans?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type QrCodeUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    sessionId?: IntFieldUpdateOperationsInput | number
-    codeValue?: StringFieldUpdateOperationsInput | string
-    validFrom?: DateTimeFieldUpdateOperationsInput | Date | string
-    validTo?: DateTimeFieldUpdateOperationsInput | Date | string
-    scannedCount?: IntFieldUpdateOperationsInput | number
-    maxScans?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
   export type ExamPermitCreateInput = {
     examType?: string
     examDate: Date | string
@@ -25431,7 +24054,6 @@ export namespace Prisma {
     status?: string
     validFrom: Date | string
     validTo: Date | string
-    qrCode?: string | null
     scanned?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -25450,7 +24072,6 @@ export namespace Prisma {
     status?: string
     validFrom: Date | string
     validTo: Date | string
-    qrCode?: string | null
     scanned?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -25464,7 +24085,6 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     validFrom?: DateTimeFieldUpdateOperationsInput | Date | string
     validTo?: DateTimeFieldUpdateOperationsInput | Date | string
-    qrCode?: NullableStringFieldUpdateOperationsInput | string | null
     scanned?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -25483,7 +24103,6 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     validFrom?: DateTimeFieldUpdateOperationsInput | Date | string
     validTo?: DateTimeFieldUpdateOperationsInput | Date | string
-    qrCode?: NullableStringFieldUpdateOperationsInput | string | null
     scanned?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -25500,7 +24119,6 @@ export namespace Prisma {
     status?: string
     validFrom: Date | string
     validTo: Date | string
-    qrCode?: string | null
     scanned?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -25514,7 +24132,6 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     validFrom?: DateTimeFieldUpdateOperationsInput | Date | string
     validTo?: DateTimeFieldUpdateOperationsInput | Date | string
-    qrCode?: NullableStringFieldUpdateOperationsInput | string | null
     scanned?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -25531,7 +24148,6 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     validFrom?: DateTimeFieldUpdateOperationsInput | Date | string
     validTo?: DateTimeFieldUpdateOperationsInput | Date | string
-    qrCode?: NullableStringFieldUpdateOperationsInput | string | null
     scanned?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26768,14 +25384,20 @@ export namespace Prisma {
     isEmpty?: boolean
   }
 
+  export type FloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type SubjectNullableScalarRelationFilter = {
     is?: SubjectWhereInput | null
     isNot?: SubjectWhereInput | null
-  }
-
-  export type QrCodeNullableScalarRelationFilter = {
-    is?: QrCodeWhereInput | null
-    isNot?: QrCodeWhereInput | null
   }
 
   export type SessionCountOrderByAggregateInput = {
@@ -26792,6 +25414,9 @@ export namespace Prisma {
     duration?: SortOrder
     status?: SortOrder
     batches?: SortOrder
+    geofenceRadius?: SortOrder
+    facultyLat?: SortOrder
+    facultyLng?: SortOrder
     attendanceCount?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -26803,6 +25428,9 @@ export namespace Prisma {
     facultyId?: SortOrder
     subjectId?: SortOrder
     duration?: SortOrder
+    geofenceRadius?: SortOrder
+    facultyLat?: SortOrder
+    facultyLng?: SortOrder
     attendanceCount?: SortOrder
   }
 
@@ -26819,6 +25447,9 @@ export namespace Prisma {
     endTime?: SortOrder
     duration?: SortOrder
     status?: SortOrder
+    geofenceRadius?: SortOrder
+    facultyLat?: SortOrder
+    facultyLng?: SortOrder
     attendanceCount?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -26837,6 +25468,9 @@ export namespace Prisma {
     endTime?: SortOrder
     duration?: SortOrder
     status?: SortOrder
+    geofenceRadius?: SortOrder
+    facultyLat?: SortOrder
+    facultyLng?: SortOrder
     attendanceCount?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -26848,12 +25482,36 @@ export namespace Prisma {
     facultyId?: SortOrder
     subjectId?: SortOrder
     duration?: SortOrder
+    geofenceRadius?: SortOrder
+    facultyLat?: SortOrder
+    facultyLng?: SortOrder
     attendanceCount?: SortOrder
+  }
+
+  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type SessionScalarRelationFilter = {
     is?: SessionWhereInput
     isNot?: SessionWhereInput
+  }
+
+  export type AttendanceSessionIdStudentIdCompoundUniqueInput = {
+    sessionId: number
+    studentId: number
   }
 
   export type AttendanceCountOrderByAggregateInput = {
@@ -26904,56 +25562,6 @@ export namespace Prisma {
     studentId?: SortOrder
   }
 
-  export type QrCodeCountOrderByAggregateInput = {
-    id?: SortOrder
-    sessionId?: SortOrder
-    codeValue?: SortOrder
-    validFrom?: SortOrder
-    validTo?: SortOrder
-    scannedCount?: SortOrder
-    maxScans?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type QrCodeAvgOrderByAggregateInput = {
-    id?: SortOrder
-    sessionId?: SortOrder
-    scannedCount?: SortOrder
-    maxScans?: SortOrder
-  }
-
-  export type QrCodeMaxOrderByAggregateInput = {
-    id?: SortOrder
-    sessionId?: SortOrder
-    codeValue?: SortOrder
-    validFrom?: SortOrder
-    validTo?: SortOrder
-    scannedCount?: SortOrder
-    maxScans?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type QrCodeMinOrderByAggregateInput = {
-    id?: SortOrder
-    sessionId?: SortOrder
-    codeValue?: SortOrder
-    validFrom?: SortOrder
-    validTo?: SortOrder
-    scannedCount?: SortOrder
-    maxScans?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type QrCodeSumOrderByAggregateInput = {
-    id?: SortOrder
-    sessionId?: SortOrder
-    scannedCount?: SortOrder
-    maxScans?: SortOrder
-  }
-
   export type BoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
@@ -26970,7 +25578,6 @@ export namespace Prisma {
     status?: SortOrder
     validFrom?: SortOrder
     validTo?: SortOrder
-    qrCode?: SortOrder
     scanned?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -26993,7 +25600,6 @@ export namespace Prisma {
     status?: SortOrder
     validFrom?: SortOrder
     validTo?: SortOrder
-    qrCode?: SortOrder
     scanned?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -27010,7 +25616,6 @@ export namespace Prisma {
     status?: SortOrder
     validFrom?: SortOrder
     validTo?: SortOrder
-    qrCode?: SortOrder
     scanned?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -28706,12 +27311,6 @@ export namespace Prisma {
     connect?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
   }
 
-  export type QrCodeCreateNestedOneWithoutSessionInput = {
-    create?: XOR<QrCodeCreateWithoutSessionInput, QrCodeUncheckedCreateWithoutSessionInput>
-    connectOrCreate?: QrCodeCreateOrConnectWithoutSessionInput
-    connect?: QrCodeWhereUniqueInput
-  }
-
   export type AttendanceUncheckedCreateNestedManyWithoutSessionInput = {
     create?: XOR<AttendanceCreateWithoutSessionInput, AttendanceUncheckedCreateWithoutSessionInput> | AttendanceCreateWithoutSessionInput[] | AttendanceUncheckedCreateWithoutSessionInput[]
     connectOrCreate?: AttendanceCreateOrConnectWithoutSessionInput | AttendanceCreateOrConnectWithoutSessionInput[]
@@ -28719,15 +27318,17 @@ export namespace Prisma {
     connect?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
   }
 
-  export type QrCodeUncheckedCreateNestedOneWithoutSessionInput = {
-    create?: XOR<QrCodeCreateWithoutSessionInput, QrCodeUncheckedCreateWithoutSessionInput>
-    connectOrCreate?: QrCodeCreateOrConnectWithoutSessionInput
-    connect?: QrCodeWhereUniqueInput
-  }
-
   export type SessionUpdatebatchesInput = {
     set?: string[]
     push?: string | string[]
+  }
+
+  export type NullableFloatFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type CourseUpdateOneRequiredWithoutSessionsNestedInput = {
@@ -28770,16 +27371,6 @@ export namespace Prisma {
     deleteMany?: AttendanceScalarWhereInput | AttendanceScalarWhereInput[]
   }
 
-  export type QrCodeUpdateOneWithoutSessionNestedInput = {
-    create?: XOR<QrCodeCreateWithoutSessionInput, QrCodeUncheckedCreateWithoutSessionInput>
-    connectOrCreate?: QrCodeCreateOrConnectWithoutSessionInput
-    upsert?: QrCodeUpsertWithoutSessionInput
-    disconnect?: QrCodeWhereInput | boolean
-    delete?: QrCodeWhereInput | boolean
-    connect?: QrCodeWhereUniqueInput
-    update?: XOR<XOR<QrCodeUpdateToOneWithWhereWithoutSessionInput, QrCodeUpdateWithoutSessionInput>, QrCodeUncheckedUpdateWithoutSessionInput>
-  }
-
   export type AttendanceUncheckedUpdateManyWithoutSessionNestedInput = {
     create?: XOR<AttendanceCreateWithoutSessionInput, AttendanceUncheckedCreateWithoutSessionInput> | AttendanceCreateWithoutSessionInput[] | AttendanceUncheckedCreateWithoutSessionInput[]
     connectOrCreate?: AttendanceCreateOrConnectWithoutSessionInput | AttendanceCreateOrConnectWithoutSessionInput[]
@@ -28792,16 +27383,6 @@ export namespace Prisma {
     update?: AttendanceUpdateWithWhereUniqueWithoutSessionInput | AttendanceUpdateWithWhereUniqueWithoutSessionInput[]
     updateMany?: AttendanceUpdateManyWithWhereWithoutSessionInput | AttendanceUpdateManyWithWhereWithoutSessionInput[]
     deleteMany?: AttendanceScalarWhereInput | AttendanceScalarWhereInput[]
-  }
-
-  export type QrCodeUncheckedUpdateOneWithoutSessionNestedInput = {
-    create?: XOR<QrCodeCreateWithoutSessionInput, QrCodeUncheckedCreateWithoutSessionInput>
-    connectOrCreate?: QrCodeCreateOrConnectWithoutSessionInput
-    upsert?: QrCodeUpsertWithoutSessionInput
-    disconnect?: QrCodeWhereInput | boolean
-    delete?: QrCodeWhereInput | boolean
-    connect?: QrCodeWhereUniqueInput
-    update?: XOR<XOR<QrCodeUpdateToOneWithWhereWithoutSessionInput, QrCodeUpdateWithoutSessionInput>, QrCodeUncheckedUpdateWithoutSessionInput>
   }
 
   export type SessionCreateNestedOneWithoutAttendanceRecordsInput = {
@@ -28830,20 +27411,6 @@ export namespace Prisma {
     upsert?: UsersUpsertWithoutAttendanceRecordsInput
     connect?: UsersWhereUniqueInput
     update?: XOR<XOR<UsersUpdateToOneWithWhereWithoutAttendanceRecordsInput, UsersUpdateWithoutAttendanceRecordsInput>, UsersUncheckedUpdateWithoutAttendanceRecordsInput>
-  }
-
-  export type SessionCreateNestedOneWithoutQrCodeInput = {
-    create?: XOR<SessionCreateWithoutQrCodeInput, SessionUncheckedCreateWithoutQrCodeInput>
-    connectOrCreate?: SessionCreateOrConnectWithoutQrCodeInput
-    connect?: SessionWhereUniqueInput
-  }
-
-  export type SessionUpdateOneRequiredWithoutQrCodeNestedInput = {
-    create?: XOR<SessionCreateWithoutQrCodeInput, SessionUncheckedCreateWithoutQrCodeInput>
-    connectOrCreate?: SessionCreateOrConnectWithoutQrCodeInput
-    upsert?: SessionUpsertWithoutQrCodeInput
-    connect?: SessionWhereUniqueInput
-    update?: XOR<XOR<SessionUpdateToOneWithWhereWithoutQrCodeInput, SessionUpdateWithoutQrCodeInput>, SessionUncheckedUpdateWithoutQrCodeInput>
   }
 
   export type UsersCreateNestedOneWithoutExamPermitsInput = {
@@ -29240,6 +27807,22 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
+  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
   export type NestedBoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
@@ -29450,13 +28033,15 @@ export namespace Prisma {
     duration?: number
     status?: string
     batches?: SessionCreatebatchesInput | string[]
+    geofenceRadius?: number
+    facultyLat?: number | null
+    facultyLng?: number | null
     attendanceCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     course: CourseCreateNestedOneWithoutSessionsInput
     subject?: SubjectCreateNestedOneWithoutSessionsInput
     attendanceRecords?: AttendanceCreateNestedManyWithoutSessionInput
-    qrCode?: QrCodeCreateNestedOneWithoutSessionInput
   }
 
   export type SessionUncheckedCreateWithoutFacultyInput = {
@@ -29472,11 +28057,13 @@ export namespace Prisma {
     duration?: number
     status?: string
     batches?: SessionCreatebatchesInput | string[]
+    geofenceRadius?: number
+    facultyLat?: number | null
+    facultyLng?: number | null
     attendanceCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     attendanceRecords?: AttendanceUncheckedCreateNestedManyWithoutSessionInput
-    qrCode?: QrCodeUncheckedCreateNestedOneWithoutSessionInput
   }
 
   export type SessionCreateOrConnectWithoutFacultyInput = {
@@ -29528,7 +28115,6 @@ export namespace Prisma {
     status?: string
     validFrom: Date | string
     validTo: Date | string
-    qrCode?: string | null
     scanned?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -29545,7 +28131,6 @@ export namespace Prisma {
     status?: string
     validFrom: Date | string
     validTo: Date | string
-    qrCode?: string | null
     scanned?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -30107,6 +28692,9 @@ export namespace Prisma {
     duration?: IntFilter<"Session"> | number
     status?: StringFilter<"Session"> | string
     batches?: StringNullableListFilter<"Session">
+    geofenceRadius?: IntFilter<"Session"> | number
+    facultyLat?: FloatNullableFilter<"Session"> | number | null
+    facultyLng?: FloatNullableFilter<"Session"> | number | null
     attendanceCount?: IntFilter<"Session"> | number
     createdAt?: DateTimeFilter<"Session"> | Date | string
     updatedAt?: DateTimeFilter<"Session"> | Date | string
@@ -30173,7 +28761,6 @@ export namespace Prisma {
     status?: StringFilter<"ExamPermit"> | string
     validFrom?: DateTimeFilter<"ExamPermit"> | Date | string
     validTo?: DateTimeFilter<"ExamPermit"> | Date | string
-    qrCode?: StringNullableFilter<"ExamPermit"> | string | null
     scanned?: BoolFilter<"ExamPermit"> | boolean
     createdAt?: DateTimeFilter<"ExamPermit"> | Date | string
     updatedAt?: DateTimeFilter<"ExamPermit"> | Date | string
@@ -31071,13 +29658,15 @@ export namespace Prisma {
     duration?: number
     status?: string
     batches?: SessionCreatebatchesInput | string[]
+    geofenceRadius?: number
+    facultyLat?: number | null
+    facultyLng?: number | null
     attendanceCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     faculty: UsersCreateNestedOneWithoutSessionsInput
     subject?: SubjectCreateNestedOneWithoutSessionsInput
     attendanceRecords?: AttendanceCreateNestedManyWithoutSessionInput
-    qrCode?: QrCodeCreateNestedOneWithoutSessionInput
   }
 
   export type SessionUncheckedCreateWithoutCourseInput = {
@@ -31093,11 +29682,13 @@ export namespace Prisma {
     duration?: number
     status?: string
     batches?: SessionCreatebatchesInput | string[]
+    geofenceRadius?: number
+    facultyLat?: number | null
+    facultyLng?: number | null
     attendanceCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     attendanceRecords?: AttendanceUncheckedCreateNestedManyWithoutSessionInput
-    qrCode?: QrCodeUncheckedCreateNestedOneWithoutSessionInput
   }
 
   export type SessionCreateOrConnectWithoutCourseInput = {
@@ -31153,7 +29744,6 @@ export namespace Prisma {
     status?: string
     validFrom: Date | string
     validTo: Date | string
-    qrCode?: string | null
     scanned?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -31170,7 +29760,6 @@ export namespace Prisma {
     status?: string
     validFrom: Date | string
     validTo: Date | string
-    qrCode?: string | null
     scanned?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -31495,13 +30084,15 @@ export namespace Prisma {
     duration?: number
     status?: string
     batches?: SessionCreatebatchesInput | string[]
+    geofenceRadius?: number
+    facultyLat?: number | null
+    facultyLng?: number | null
     attendanceCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     course: CourseCreateNestedOneWithoutSessionsInput
     faculty: UsersCreateNestedOneWithoutSessionsInput
     attendanceRecords?: AttendanceCreateNestedManyWithoutSessionInput
-    qrCode?: QrCodeCreateNestedOneWithoutSessionInput
   }
 
   export type SessionUncheckedCreateWithoutSubjectInput = {
@@ -31517,11 +30108,13 @@ export namespace Prisma {
     duration?: number
     status?: string
     batches?: SessionCreatebatchesInput | string[]
+    geofenceRadius?: number
+    facultyLat?: number | null
+    facultyLng?: number | null
     attendanceCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     attendanceRecords?: AttendanceUncheckedCreateNestedManyWithoutSessionInput
-    qrCode?: QrCodeUncheckedCreateNestedOneWithoutSessionInput
   }
 
   export type SessionCreateOrConnectWithoutSubjectInput = {
@@ -32027,32 +30620,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type QrCodeCreateWithoutSessionInput = {
-    codeValue: string
-    validFrom: Date | string
-    validTo: Date | string
-    scannedCount?: number
-    maxScans?: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type QrCodeUncheckedCreateWithoutSessionInput = {
-    id?: number
-    codeValue: string
-    validFrom: Date | string
-    validTo: Date | string
-    scannedCount?: number
-    maxScans?: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type QrCodeCreateOrConnectWithoutSessionInput = {
-    where: QrCodeWhereUniqueInput
-    create: XOR<QrCodeCreateWithoutSessionInput, QrCodeUncheckedCreateWithoutSessionInput>
-  }
-
   export type CourseUpsertWithoutSessionsInput = {
     update: XOR<CourseUpdateWithoutSessionsInput, CourseUncheckedUpdateWithoutSessionsInput>
     create: XOR<CourseCreateWithoutSessionsInput, CourseUncheckedCreateWithoutSessionsInput>
@@ -32231,38 +30798,6 @@ export namespace Prisma {
     data: XOR<AttendanceUpdateManyMutationInput, AttendanceUncheckedUpdateManyWithoutSessionInput>
   }
 
-  export type QrCodeUpsertWithoutSessionInput = {
-    update: XOR<QrCodeUpdateWithoutSessionInput, QrCodeUncheckedUpdateWithoutSessionInput>
-    create: XOR<QrCodeCreateWithoutSessionInput, QrCodeUncheckedCreateWithoutSessionInput>
-    where?: QrCodeWhereInput
-  }
-
-  export type QrCodeUpdateToOneWithWhereWithoutSessionInput = {
-    where?: QrCodeWhereInput
-    data: XOR<QrCodeUpdateWithoutSessionInput, QrCodeUncheckedUpdateWithoutSessionInput>
-  }
-
-  export type QrCodeUpdateWithoutSessionInput = {
-    codeValue?: StringFieldUpdateOperationsInput | string
-    validFrom?: DateTimeFieldUpdateOperationsInput | Date | string
-    validTo?: DateTimeFieldUpdateOperationsInput | Date | string
-    scannedCount?: IntFieldUpdateOperationsInput | number
-    maxScans?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type QrCodeUncheckedUpdateWithoutSessionInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    codeValue?: StringFieldUpdateOperationsInput | string
-    validFrom?: DateTimeFieldUpdateOperationsInput | Date | string
-    validTo?: DateTimeFieldUpdateOperationsInput | Date | string
-    scannedCount?: IntFieldUpdateOperationsInput | number
-    maxScans?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
   export type SessionCreateWithoutAttendanceRecordsInput = {
     topic: string
     description?: string | null
@@ -32273,13 +30808,15 @@ export namespace Prisma {
     duration?: number
     status?: string
     batches?: SessionCreatebatchesInput | string[]
+    geofenceRadius?: number
+    facultyLat?: number | null
+    facultyLng?: number | null
     attendanceCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     course: CourseCreateNestedOneWithoutSessionsInput
     faculty: UsersCreateNestedOneWithoutSessionsInput
     subject?: SubjectCreateNestedOneWithoutSessionsInput
-    qrCode?: QrCodeCreateNestedOneWithoutSessionInput
   }
 
   export type SessionUncheckedCreateWithoutAttendanceRecordsInput = {
@@ -32296,10 +30833,12 @@ export namespace Prisma {
     duration?: number
     status?: string
     batches?: SessionCreatebatchesInput | string[]
+    geofenceRadius?: number
+    facultyLat?: number | null
+    facultyLng?: number | null
     attendanceCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
-    qrCode?: QrCodeUncheckedCreateNestedOneWithoutSessionInput
   }
 
   export type SessionCreateOrConnectWithoutAttendanceRecordsInput = {
@@ -32388,13 +30927,15 @@ export namespace Prisma {
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     batches?: SessionUpdatebatchesInput | string[]
+    geofenceRadius?: IntFieldUpdateOperationsInput | number
+    facultyLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    facultyLng?: NullableFloatFieldUpdateOperationsInput | number | null
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     course?: CourseUpdateOneRequiredWithoutSessionsNestedInput
     faculty?: UsersUpdateOneRequiredWithoutSessionsNestedInput
     subject?: SubjectUpdateOneWithoutSessionsNestedInput
-    qrCode?: QrCodeUpdateOneWithoutSessionNestedInput
   }
 
   export type SessionUncheckedUpdateWithoutAttendanceRecordsInput = {
@@ -32411,10 +30952,12 @@ export namespace Prisma {
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     batches?: SessionUpdatebatchesInput | string[]
+    geofenceRadius?: IntFieldUpdateOperationsInput | number
+    facultyLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    facultyLng?: NullableFloatFieldUpdateOperationsInput | number | null
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    qrCode?: QrCodeUncheckedUpdateOneWithoutSessionNestedInput
   }
 
   export type UsersUpsertWithoutAttendanceRecordsInput = {
@@ -32481,100 +31024,6 @@ export namespace Prisma {
     facultySubjects?: SubjectUncheckedUpdateManyWithoutFacultyNestedInput
     studentCourses?: CourseUncheckedUpdateManyWithoutStudentsNestedInput
     studentSubjects?: SubjectUncheckedUpdateManyWithoutStudentsNestedInput
-  }
-
-  export type SessionCreateWithoutQrCodeInput = {
-    topic: string
-    description?: string | null
-    sessionType?: string
-    date: Date | string
-    startTime: string
-    endTime: string
-    duration?: number
-    status?: string
-    batches?: SessionCreatebatchesInput | string[]
-    attendanceCount?: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    course: CourseCreateNestedOneWithoutSessionsInput
-    faculty: UsersCreateNestedOneWithoutSessionsInput
-    subject?: SubjectCreateNestedOneWithoutSessionsInput
-    attendanceRecords?: AttendanceCreateNestedManyWithoutSessionInput
-  }
-
-  export type SessionUncheckedCreateWithoutQrCodeInput = {
-    id?: number
-    courseId: number
-    facultyId: number
-    subjectId?: number | null
-    topic: string
-    description?: string | null
-    sessionType?: string
-    date: Date | string
-    startTime: string
-    endTime: string
-    duration?: number
-    status?: string
-    batches?: SessionCreatebatchesInput | string[]
-    attendanceCount?: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    attendanceRecords?: AttendanceUncheckedCreateNestedManyWithoutSessionInput
-  }
-
-  export type SessionCreateOrConnectWithoutQrCodeInput = {
-    where: SessionWhereUniqueInput
-    create: XOR<SessionCreateWithoutQrCodeInput, SessionUncheckedCreateWithoutQrCodeInput>
-  }
-
-  export type SessionUpsertWithoutQrCodeInput = {
-    update: XOR<SessionUpdateWithoutQrCodeInput, SessionUncheckedUpdateWithoutQrCodeInput>
-    create: XOR<SessionCreateWithoutQrCodeInput, SessionUncheckedCreateWithoutQrCodeInput>
-    where?: SessionWhereInput
-  }
-
-  export type SessionUpdateToOneWithWhereWithoutQrCodeInput = {
-    where?: SessionWhereInput
-    data: XOR<SessionUpdateWithoutQrCodeInput, SessionUncheckedUpdateWithoutQrCodeInput>
-  }
-
-  export type SessionUpdateWithoutQrCodeInput = {
-    topic?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    sessionType?: StringFieldUpdateOperationsInput | string
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    startTime?: StringFieldUpdateOperationsInput | string
-    endTime?: StringFieldUpdateOperationsInput | string
-    duration?: IntFieldUpdateOperationsInput | number
-    status?: StringFieldUpdateOperationsInput | string
-    batches?: SessionUpdatebatchesInput | string[]
-    attendanceCount?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    course?: CourseUpdateOneRequiredWithoutSessionsNestedInput
-    faculty?: UsersUpdateOneRequiredWithoutSessionsNestedInput
-    subject?: SubjectUpdateOneWithoutSessionsNestedInput
-    attendanceRecords?: AttendanceUpdateManyWithoutSessionNestedInput
-  }
-
-  export type SessionUncheckedUpdateWithoutQrCodeInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    courseId?: IntFieldUpdateOperationsInput | number
-    facultyId?: IntFieldUpdateOperationsInput | number
-    subjectId?: NullableIntFieldUpdateOperationsInput | number | null
-    topic?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    sessionType?: StringFieldUpdateOperationsInput | string
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    startTime?: StringFieldUpdateOperationsInput | string
-    endTime?: StringFieldUpdateOperationsInput | string
-    duration?: IntFieldUpdateOperationsInput | number
-    status?: StringFieldUpdateOperationsInput | string
-    batches?: SessionUpdatebatchesInput | string[]
-    attendanceCount?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    attendanceRecords?: AttendanceUncheckedUpdateManyWithoutSessionNestedInput
   }
 
   export type UsersCreateWithoutExamPermitsInput = {
@@ -34182,6 +32631,9 @@ export namespace Prisma {
     duration?: number
     status?: string
     batches?: SessionCreatebatchesInput | string[]
+    geofenceRadius?: number
+    facultyLat?: number | null
+    facultyLng?: number | null
     attendanceCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -34208,7 +32660,6 @@ export namespace Prisma {
     status?: string
     validFrom: Date | string
     validTo: Date | string
-    qrCode?: string | null
     scanned?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -34399,13 +32850,15 @@ export namespace Prisma {
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     batches?: SessionUpdatebatchesInput | string[]
+    geofenceRadius?: IntFieldUpdateOperationsInput | number
+    facultyLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    facultyLng?: NullableFloatFieldUpdateOperationsInput | number | null
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     course?: CourseUpdateOneRequiredWithoutSessionsNestedInput
     subject?: SubjectUpdateOneWithoutSessionsNestedInput
     attendanceRecords?: AttendanceUpdateManyWithoutSessionNestedInput
-    qrCode?: QrCodeUpdateOneWithoutSessionNestedInput
   }
 
   export type SessionUncheckedUpdateWithoutFacultyInput = {
@@ -34421,11 +32874,13 @@ export namespace Prisma {
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     batches?: SessionUpdatebatchesInput | string[]
+    geofenceRadius?: IntFieldUpdateOperationsInput | number
+    facultyLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    facultyLng?: NullableFloatFieldUpdateOperationsInput | number | null
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     attendanceRecords?: AttendanceUncheckedUpdateManyWithoutSessionNestedInput
-    qrCode?: QrCodeUncheckedUpdateOneWithoutSessionNestedInput
   }
 
   export type SessionUncheckedUpdateManyWithoutFacultyInput = {
@@ -34441,6 +32896,9 @@ export namespace Prisma {
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     batches?: SessionUpdatebatchesInput | string[]
+    geofenceRadius?: IntFieldUpdateOperationsInput | number
+    facultyLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    facultyLng?: NullableFloatFieldUpdateOperationsInput | number | null
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34486,7 +32944,6 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     validFrom?: DateTimeFieldUpdateOperationsInput | Date | string
     validTo?: DateTimeFieldUpdateOperationsInput | Date | string
-    qrCode?: NullableStringFieldUpdateOperationsInput | string | null
     scanned?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34503,7 +32960,6 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     validFrom?: DateTimeFieldUpdateOperationsInput | Date | string
     validTo?: DateTimeFieldUpdateOperationsInput | Date | string
-    qrCode?: NullableStringFieldUpdateOperationsInput | string | null
     scanned?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34519,7 +32975,6 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     validFrom?: DateTimeFieldUpdateOperationsInput | Date | string
     validTo?: DateTimeFieldUpdateOperationsInput | Date | string
-    qrCode?: NullableStringFieldUpdateOperationsInput | string | null
     scanned?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34977,6 +33432,9 @@ export namespace Prisma {
     duration?: number
     status?: string
     batches?: SessionCreatebatchesInput | string[]
+    geofenceRadius?: number
+    facultyLat?: number | null
+    facultyLng?: number | null
     attendanceCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -35005,7 +33463,6 @@ export namespace Prisma {
     status?: string
     validFrom: Date | string
     validTo: Date | string
-    qrCode?: string | null
     scanned?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -35219,13 +33676,15 @@ export namespace Prisma {
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     batches?: SessionUpdatebatchesInput | string[]
+    geofenceRadius?: IntFieldUpdateOperationsInput | number
+    facultyLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    facultyLng?: NullableFloatFieldUpdateOperationsInput | number | null
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     faculty?: UsersUpdateOneRequiredWithoutSessionsNestedInput
     subject?: SubjectUpdateOneWithoutSessionsNestedInput
     attendanceRecords?: AttendanceUpdateManyWithoutSessionNestedInput
-    qrCode?: QrCodeUpdateOneWithoutSessionNestedInput
   }
 
   export type SessionUncheckedUpdateWithoutCourseInput = {
@@ -35241,11 +33700,13 @@ export namespace Prisma {
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     batches?: SessionUpdatebatchesInput | string[]
+    geofenceRadius?: IntFieldUpdateOperationsInput | number
+    facultyLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    facultyLng?: NullableFloatFieldUpdateOperationsInput | number | null
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     attendanceRecords?: AttendanceUncheckedUpdateManyWithoutSessionNestedInput
-    qrCode?: QrCodeUncheckedUpdateOneWithoutSessionNestedInput
   }
 
   export type SessionUncheckedUpdateManyWithoutCourseInput = {
@@ -35261,6 +33722,9 @@ export namespace Prisma {
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     batches?: SessionUpdatebatchesInput | string[]
+    geofenceRadius?: IntFieldUpdateOperationsInput | number
+    facultyLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    facultyLng?: NullableFloatFieldUpdateOperationsInput | number | null
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -35312,7 +33776,6 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     validFrom?: DateTimeFieldUpdateOperationsInput | Date | string
     validTo?: DateTimeFieldUpdateOperationsInput | Date | string
-    qrCode?: NullableStringFieldUpdateOperationsInput | string | null
     scanned?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -35329,7 +33792,6 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     validFrom?: DateTimeFieldUpdateOperationsInput | Date | string
     validTo?: DateTimeFieldUpdateOperationsInput | Date | string
-    qrCode?: NullableStringFieldUpdateOperationsInput | string | null
     scanned?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -35345,7 +33807,6 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     validFrom?: DateTimeFieldUpdateOperationsInput | Date | string
     validTo?: DateTimeFieldUpdateOperationsInput | Date | string
-    qrCode?: NullableStringFieldUpdateOperationsInput | string | null
     scanned?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -35364,6 +33825,9 @@ export namespace Prisma {
     duration?: number
     status?: string
     batches?: SessionCreatebatchesInput | string[]
+    geofenceRadius?: number
+    facultyLat?: number | null
+    facultyLng?: number | null
     attendanceCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -35408,13 +33872,15 @@ export namespace Prisma {
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     batches?: SessionUpdatebatchesInput | string[]
+    geofenceRadius?: IntFieldUpdateOperationsInput | number
+    facultyLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    facultyLng?: NullableFloatFieldUpdateOperationsInput | number | null
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     course?: CourseUpdateOneRequiredWithoutSessionsNestedInput
     faculty?: UsersUpdateOneRequiredWithoutSessionsNestedInput
     attendanceRecords?: AttendanceUpdateManyWithoutSessionNestedInput
-    qrCode?: QrCodeUpdateOneWithoutSessionNestedInput
   }
 
   export type SessionUncheckedUpdateWithoutSubjectInput = {
@@ -35430,11 +33896,13 @@ export namespace Prisma {
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     batches?: SessionUpdatebatchesInput | string[]
+    geofenceRadius?: IntFieldUpdateOperationsInput | number
+    facultyLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    facultyLng?: NullableFloatFieldUpdateOperationsInput | number | null
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     attendanceRecords?: AttendanceUncheckedUpdateManyWithoutSessionNestedInput
-    qrCode?: QrCodeUncheckedUpdateOneWithoutSessionNestedInput
   }
 
   export type SessionUncheckedUpdateManyWithoutSubjectInput = {
@@ -35450,6 +33918,9 @@ export namespace Prisma {
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     batches?: SessionUpdatebatchesInput | string[]
+    geofenceRadius?: IntFieldUpdateOperationsInput | number
+    facultyLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    facultyLng?: NullableFloatFieldUpdateOperationsInput | number | null
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

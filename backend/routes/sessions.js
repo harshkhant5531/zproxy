@@ -82,10 +82,6 @@ router.get("/", authMiddleware, async (req, res, next) => {
           subject: {
             select: { id: true, name: true },
           },
-          qrCodes: {
-            orderBy: { createdAt: "desc" },
-            take: 1,
-          },
           // attendanceRecords removed from list for performance
         },
         orderBy: { date: "desc" },
@@ -96,10 +92,7 @@ router.get("/", authMiddleware, async (req, res, next) => {
     res.json({
       success: true,
       data: {
-        sessions: sessions.map((s) => ({
-          ...s,
-          qrCode: s.qrCodes?.[0] || null,
-        })),
+        sessions: sessions.map((s) => s),
         pagination: {
           page: parseInt(page),
           limit: parseInt(limit),
@@ -130,10 +123,6 @@ router.get("/:id", authMiddleware, async (req, res, next) => {
         },
         faculty: true,
         subject: true,
-        qrCodes: {
-          orderBy: { createdAt: "desc" },
-          take: 1,
-        },
         attendanceRecords: true,
       },
     });
@@ -184,7 +173,6 @@ router.get("/:id", authMiddleware, async (req, res, next) => {
       data: {
         session: {
           ...session,
-          qrCode: session.qrCodes?.[0] || null,
         },
         networkIp: getLocalIp(),
       },
@@ -300,8 +288,6 @@ router.post(
               facultyProfile: { select: { fullName: true } },
             },
           },
-          subject: { select: { id: true, name: true } },
-          qrCodes: true,
           // New session has 0 records, no need to include
         },
       });
@@ -416,7 +402,6 @@ router.put(
           course: true,
           faculty: true,
           subject: true,
-          qrCode: true,
           attendanceRecords: true,
         },
       });
@@ -477,77 +462,6 @@ router.delete("/:id", authMiddleware, async (req, res, next) => {
     next(error);
   }
 });
-
-// @route   POST /api/sessions/:id/qr
-// @desc    Generate QR code for session
-// @access  Admin, Faculty
-router.post(
-  "/:id/qr",
-  authMiddleware,
-  requireRole(["admin", "faculty"]),
-  async (req, res, next) => {
-    try {
-      const session = await prisma.session.findUnique({
-        where: { id: parseInt(req.params.id) },
-      });
-
-      if (!session) {
-        const error = new Error("Session not found");
-        error.statusCode = 404;
-        throw error;
-      }
-
-      // Check if user has access (Creator or Course Lead)
-      if (req.user.role === "faculty") {
-        const isCreator = session.facultyId === req.user.id;
-        const course = await prisma.course.findUnique({
-          where: { id: session.courseId },
-          select: { facultyId: true },
-        });
-        const isCourseLead = course?.facultyId === req.user.id;
-
-        if (!isCreator && !isCourseLead) {
-          const error = new Error(
-            "Forbidden: You are not authorized to generate QR for this session",
-          );
-          error.statusCode = 403;
-          throw error;
-        }
-      }
-
-      // Generate a new QR code (Keep history for grace period)
-      const qrCode = await prisma.qrCode.create({
-        data: {
-          sessionId: session.id,
-          codeValue: `session_${session.id}_${Date.now()}_${Math.random().toString(36).substring(7)}`,
-          validFrom: new Date(Date.now() - 5000), // 5s back-dated to handle clock skew
-          validTo: new Date(Date.now() + 30 * 60 * 1000), // 30 minutes life
-          scannedCount: 0,
-          maxScans: 100, // Increased for larger classes
-        },
-      });
-
-      // Optional: Cleanup old codes for this session that are older than 5 minutes
-      const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
-      await prisma.qrCode
-        .deleteMany({
-          where: {
-            sessionId: session.id,
-            createdAt: { lt: fiveMinutesAgo },
-          },
-        })
-        .catch((e) => console.error("QR Cleanup Error:", e));
-
-      res.json({
-        success: true,
-        message: "QR code generated successfully",
-        data: { qrCode },
-      });
-    } catch (error) {
-      next(error);
-    }
-  },
-);
 
 // @route   POST /api/sessions/:id/finalize
 // @desc    Mark session as completed and auto-mark absentees (with leave check)

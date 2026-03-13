@@ -1,6 +1,5 @@
 import {
   GraduationCap,
-  ScanLine,
   FileText,
   Ticket,
   LayoutDashboard,
@@ -56,7 +55,6 @@ const studentSections: MenuSection[] = [
     items: [
       { title: "Dashboard", url: "/student/dashboard", icon: LayoutDashboard },
       { title: "Timetable", url: "/student/timetable", icon: Calendar },
-      { title: "Attendance Scan", url: "/student/scan", icon: ScanLine },
       { title: "Leave Requests", url: "/student/leaves", icon: FileText },
       { title: "Exam Permit", url: "/student/permit", icon: Ticket },
     ],
@@ -127,10 +125,7 @@ export function AppSidebar() {
   const config = roleConfig[role];
 
   return (
-    <Sidebar
-      collapsible="icon"
-      className="border-r border-border bg-sidebar"
-    >
+    <Sidebar collapsible="icon" className="border-r border-border bg-sidebar">
       <SidebarHeader className="p-4 pb-3">
         {!collapsed ? (
           <div className="flex items-center gap-3 mb-4">
@@ -152,7 +147,10 @@ export function AppSidebar() {
           </div>
         )}
         {!collapsed && (
-          <div className="px-3 py-2 rounded-lg bg-primary/10 border border-primary/20 mb-1 motion-slide-up" style={{ animationDelay: '80ms' }}>
+          <div
+            className="px-3 py-2 rounded-lg bg-primary/10 border border-primary/20 mb-1 motion-slide-up"
+            style={{ animationDelay: "80ms" }}
+          >
             <p className="text-xs font-semibold text-primary flex items-center gap-1.5">
               <config.icon className="h-3 w-3" /> {config.label} Portal
             </p>
@@ -172,7 +170,11 @@ export function AppSidebar() {
               <SidebarMenu>
                 {section.items.map((item, idx) => {
                   return (
-                    <SidebarMenuItem key={item.url} style={{ animationDelay: `${idx * 40}ms` }} className="motion-slide-up">
+                    <SidebarMenuItem
+                      key={item.url}
+                      style={{ animationDelay: `${idx * 40}ms` }}
+                      className="motion-slide-up"
+                    >
                       <SidebarMenuButton asChild tooltip={item.title}>
                         <NavLink
                           to={item.url}
@@ -184,9 +186,7 @@ export function AppSidebar() {
                             <item.icon className="h-4 w-4" />
                           </span>
                           {!collapsed && (
-                            <span className="truncate">
-                              {item.title}
-                            </span>
+                            <span className="truncate">{item.title}</span>
                           )}
                         </NavLink>
                       </SidebarMenuButton>

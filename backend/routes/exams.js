@@ -199,9 +199,6 @@ router.post(
         throw error;
       }
 
-      // Generate QR code
-      const qrCode = `exam_${studentId}_${courseId}_${examType}_${Date.now()}`;
-
       const examPermit = await prisma.examPermit.create({
         data: {
           studentId,
@@ -212,7 +209,6 @@ router.post(
           seatNumber,
           validFrom: new Date(validFrom),
           validTo: new Date(validTo),
-          qrCode,
         },
         include: {
           student: { include: { studentProfile: true } },
@@ -351,71 +347,6 @@ router.delete("/permit/:id", authMiddleware, async (req, res, next) => {
   }
 });
 
-// @route   POST /api/exams/permit/:id/scan
-// @desc    Scan exam permit QR code
-// @access  Admin, Faculty
-router.post("/permit/:id/scan", authMiddleware, async (req, res, next) => {
-  try {
-    if (req.user.role !== "admin" && req.user.role !== "faculty") {
-      const error = new Error("Forbidden");
-      error.statusCode = 403;
-      throw error;
-    }
-
-    const examPermit = await prisma.examPermit.findUnique({
-      where: { id: parseInt(req.params.id) },
-      include: {
-        student: { include: { studentProfile: true } },
-        course: true,
-      },
-    });
-
-    if (!examPermit) {
-      const error = new Error("Exam permit not found");
-      error.statusCode = 404;
-      throw error;
-    }
-
-    // Check if permit is valid and active
-    if (examPermit.status !== "approved") {
-      const error = new Error("Exam permit is not approved");
-      error.statusCode = 400;
-      throw error;
-    }
-
-    const now = new Date();
-    if (now < examPermit.validFrom || now > examPermit.validTo) {
-      const error = new Error("Exam permit has expired or is not yet valid");
-      error.statusCode = 400;
-      throw error;
-    }
-
-    if (examPermit.scanned) {
-      const error = new Error("Exam permit has already been scanned");
-      error.statusCode = 400;
-      throw error;
-    }
-
-    // Mark as scanned
-    const updatedPermit = await prisma.examPermit.update({
-      where: { id: parseInt(req.params.id) },
-      data: { scanned: true },
-      include: {
-        student: { include: { studentProfile: true } },
-        course: true,
-      },
-    });
-
-    res.json({
-      success: true,
-      message: "Exam permit scanned successfully",
-      data: { examPermit: updatedPermit },
-    });
-  } catch (error) {
-    next(error);
-  }
-});
-
 // @route   GET /api/exams/permit/:id/download
 // @desc    Download exam permit (hall ticket)
 // @access  Admin, Faculty, Student
@@ -453,7 +384,6 @@ EXAM TYPE: ${permit.examType.toUpperCase()}
 DATE: ${permit.examDate.toDateString()}
 HALL: ${permit.examHall}
 SEAT: ${permit.seatNumber}
-QR CODE: ${permit.qrCode}
 =========================================
     VALID FROM: ${permit.validFrom.toDateString()}
     VALID TO:   ${permit.validTo.toDateString()}

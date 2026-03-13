@@ -1,6 +1,5 @@
 import {
   Fingerprint,
-  QrCode,
   Radio,
   Save,
   Trash2,
@@ -29,7 +28,6 @@ export type LoaderOperation =
   | "enrolling"
   | "refreshing"
   | "locating"
-  | "qr-verify"
   | "manual-mark"
   | "load-sessions";
 
@@ -112,12 +110,6 @@ const CONFIGS: Record<LoaderOperation, Config> = {
     title: "Acquiring Location",
     subtitle: "Requesting GPS permission and locking your current position…",
     color: "amber",
-  },
-  "qr-verify": {
-    icon: QrCode,
-    title: "Verifying QR Code",
-    subtitle: "Decoding and authenticating session token…",
-    color: "primary",
   },
   "manual-mark": {
     icon: Fingerprint,

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
 
 const normalizeApiUrl = (value?: string) => {
@@ -162,8 +163,6 @@ export const sessionsAPI = {
 
   deleteSession: (id: string | number) => api.delete(`/sessions/${id}`),
 
-  generateQR: (id: string | number) => api.post(`/sessions/${id}/qr`),
-
   getSessionAttendance: (id: string | number) =>
     api.get(`/sessions/${id}/attendance`),
 
@@ -185,30 +184,6 @@ export const attendanceAPI = {
     api.get(`/attendance/student/${studentId}`),
 
   markAttendance: (data: any) => api.post("/attendance", data),
-
-  markAttendanceQR: (
-    qrCode: string,
-    lat: number,
-    lng: number,
-    deviceInfo?: string,
-    accuracy?: number,
-    locationCapturedAt?: string,
-    locationMeta?: {
-      sampleCount?: number;
-      sampleSpreadMeters?: number;
-      source?: string;
-      isMocked?: boolean;
-    },
-  ) =>
-    api.post("/attendance/qr", {
-      qrCode,
-      lat,
-      lng,
-      deviceInfo,
-      accuracy,
-      locationCapturedAt,
-      locationMeta,
-    }),
 
   updateAttendance: (id: string | number, data: any) =>
     api.put(`/attendance/${id}`, data),

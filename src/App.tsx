@@ -12,9 +12,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 
 import StudentDashboard from "./pages/student/Dashboard";
-import QRScanner from "./pages/student/QRScanner";
 import StudentTimetable from "./pages/student/Timetable";
-import VerifyAttendance from "./pages/student/VerifyAttendance";
 import Leaves from "./pages/student/Leaves";
 import ExamPermit from "./pages/student/ExamPermit";
 import ProfilePage from "./pages/Profile";
@@ -66,8 +64,6 @@ const AppContent = () => {
           <Navigate to={user ? `/${user.role}/dashboard` : "/login"} replace />
         }
       />
-      <Route path="/student/verify" element={<VerifyAttendance />} />
-
       {/* Protected Routes Wrapper */}
       <Route element={<ProtectedRoute />}>
         <Route element={<AppLayout />}>
@@ -76,7 +72,6 @@ const AppContent = () => {
           <Route element={<ProtectedRoute allowedRoles={["student"]} />}>
             <Route path="/student/dashboard" element={<StudentDashboard />} />
             <Route path="/student/timetable" element={<StudentTimetable />} />
-            <Route path="/student/scan" element={<QRScanner />} />
             <Route path="/student/leaves" element={<Leaves />} />
             <Route path="/student/permit" element={<ExamPermit />} />
           </Route>

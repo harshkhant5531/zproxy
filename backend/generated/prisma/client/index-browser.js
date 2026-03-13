@@ -217,6 +217,9 @@ exports.Prisma.SessionScalarFieldEnum = {
   duration: 'duration',
   status: 'status',
   batches: 'batches',
+  geofenceRadius: 'geofenceRadius',
+  facultyLat: 'facultyLat',
+  facultyLng: 'facultyLng',
   attendanceCount: 'attendanceCount',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -234,18 +237,6 @@ exports.Prisma.AttendanceScalarFieldEnum = {
   notes: 'notes'
 };
 
-exports.Prisma.QrCodeScalarFieldEnum = {
-  id: 'id',
-  sessionId: 'sessionId',
-  codeValue: 'codeValue',
-  validFrom: 'validFrom',
-  validTo: 'validTo',
-  scannedCount: 'scannedCount',
-  maxScans: 'maxScans',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
 exports.Prisma.ExamPermitScalarFieldEnum = {
   id: 'id',
   studentId: 'studentId',
@@ -257,7 +248,6 @@ exports.Prisma.ExamPermitScalarFieldEnum = {
   status: 'status',
   validFrom: 'validFrom',
   validTo: 'validTo',
-  qrCode: 'qrCode',
   scanned: 'scanned',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -385,7 +375,6 @@ exports.Prisma.ModelName = {
   Subject: 'Subject',
   Session: 'Session',
   Attendance: 'Attendance',
-  QrCode: 'QrCode',
   ExamPermit: 'ExamPermit',
   LeaveApplication: 'LeaveApplication',
   Grade: 'Grade',

@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { QrCode, Loader2, BookOpen } from "lucide-react";
+import { Loader2, BookOpen, MapPin } from "lucide-react";
 import { FullScreenLoader } from "@/components/FullScreenLoader";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation } from "@tanstack/react-query";
@@ -379,7 +379,7 @@ export default function CreateSession() {
                         </span>
                       </p>
                       <p className="text-foreground font-mono text-sm flex items-center gap-2">
-                        <QrCode className="h-4 w-4 text-primary" />
+                        <MapPin className="h-4 w-4 text-primary" />
                         <span className="text-muted-foreground text-xs uppercase italic min-w-[70px]">
                           Topic:{" "}
                         </span>
@@ -405,7 +405,7 @@ export default function CreateSession() {
                     <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                   ) : (
                     <>
-                      <QrCode className="mr-3 h-5 w-5" /> Execute Initialization
+                      <BookOpen className="mr-3 h-5 w-5" /> Execute Initialization
                     </>
                   )}
                 </Button>
