@@ -40,15 +40,15 @@ export function AppLayout() {
       <div className="min-h-screen flex w-full">
         <AppSidebar />
         <div className="flex-1 flex flex-col min-w-0">
-          <header className="h-14 flex items-center border-b border-border/40 bg-background/90 backdrop-blur-md sticky top-0 z-20 px-4 gap-3">
+          <header className="h-12 sm:h-14 flex items-center border-b border-border/40 bg-background/90 backdrop-blur-md sticky top-0 z-20 px-3 sm:px-4 gap-2 sm:gap-3">
             <SidebarTrigger className="text-muted-foreground hover:text-foreground transition-colors" />
             <Separator orientation="vertical" className="h-5 bg-border/60" />
-            <div className="flex-1 flex items-center gap-3">
-              <span className="text-sm font-semibold text-foreground tracking-tight">
+            <div className="flex-1 flex items-center gap-2 sm:gap-3 min-w-0">
+              <span className="text-xs sm:text-sm font-semibold text-foreground tracking-tight truncate">
                 {pageTitle}
               </span>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
               <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-primary/8 border border-primary/15 motion-press">
                 <div className="h-1.5 w-1.5 rounded-full bg-primary animate-live-blink" />
                 <span className="text-[10px] font-mono text-primary/80 uppercase tracking-widest">
@@ -58,13 +58,15 @@ export function AppLayout() {
               <ModeToggle />
             </div>
           </header>
-          <main className="flex-1 p-6 overflow-auto relative isolate">
+          <main className="flex-1 px-3 py-4 sm:px-5 sm:py-5 lg:px-6 lg:py-6 overflow-auto overflow-x-hidden relative isolate">
             <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
               <div className="absolute -top-16 right-[6%] h-48 w-48 rounded-full bg-primary/10 blur-3xl motion-float" />
               <div className="absolute top-[34%] -left-12 h-44 w-44 rounded-full bg-sky-300/10 blur-3xl motion-float-delayed" />
               <div className="absolute -bottom-20 right-[28%] h-56 w-56 rounded-full bg-primary/8 blur-3xl motion-drift" />
             </div>
-            <Outlet />
+            <div className="app-main-shell">
+              <Outlet />
+            </div>
           </main>
         </div>
       </div>

@@ -68,7 +68,7 @@ const AnimatedStatCard = ({
     <Card
       className={`overflow-hidden border-l-4 ${color} bg-card hover:shadow-lg transition-all duration-300`}
     >
-      <CardContent className="p-6">
+      <CardContent className="p-4 sm:p-6">
         <div className="flex items-center justify-between">
           <div className="flex-1">
             <p className="text-sm font-medium text-muted-foreground">{title}</p>
@@ -123,7 +123,7 @@ const AnimatedTable = ({
     transition={{ delay, duration: 0.5 }}
     className="overflow-x-auto"
   >
-    <table className="w-full text-sm">
+    <table className="w-full min-w-[680px] text-sm">
       <thead>
         <tr className="border-b border-border bg-muted/40">
           <th className="text-left px-4 py-3 font-semibold text-foreground">
@@ -215,9 +215,9 @@ export default function ProxyAuditPage() {
 
   if (error)
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Card className="bg-red-50 border-red-200">
-          <CardContent className="p-6">
+      <div className="app-page flex items-center justify-center">
+        <Card className="bg-red-50 border-red-200 w-full max-w-md">
+          <CardContent className="p-5 sm:p-6">
             <p className="text-red-700">Error loading proxy audit data</p>
           </CardContent>
         </Card>
@@ -228,20 +228,20 @@ export default function ProxyAuditPage() {
   const records = auditData?.records || [];
 
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="app-page">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="mb-8"
+        className="mb-1"
       >
-        <div className="flex items-center justify-between mb-6">
+        <div className="app-page-header mb-5">
           <div>
-            <h1 className="text-4xl font-bold text-foreground flex items-center gap-2">
-              <AlertTriangle className="w-8 h-8 text-orange-500" />
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground flex items-center gap-2">
+              <AlertTriangle className="w-6 h-6 sm:w-7 sm:h-7 text-orange-500" />
               Proxy Activity Audit
             </h1>
-            <p className="text-muted-foreground mt-2">
+            <p className="text-muted-foreground mt-2 text-sm sm:text-base">
               Real-time analysis & risk assessment
             </p>
           </div>
@@ -249,7 +249,7 @@ export default function ProxyAuditPage() {
             onClick={() => setShowFilters(!showFilters)}
             variant="outline"
             size="sm"
-            className="border-border"
+            className="border-border self-start sm:self-auto"
           >
             {showFilters ? (
               <>
@@ -271,7 +271,7 @@ export default function ProxyAuditPage() {
             transition={{ duration: 0.3 }}
             className="bg-card p-4 rounded-lg border border-border mb-6"
           >
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4">
               <input
                 type="text"
                 placeholder="Course ID"
@@ -822,7 +822,7 @@ export default function ProxyAuditPage() {
             </CardHeader>
             <CardContent>
               <div className="overflow-x-auto">
-                <table className="w-full text-sm">
+                <table className="w-full min-w-[720px] text-sm">
                   <thead>
                     <tr className="border-b border-border bg-muted/40">
                       <th className="text-left px-4 py-2 font-semibold text-foreground">

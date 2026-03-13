@@ -278,6 +278,10 @@
 }
 
 /* Consistent page layout primitives */
+.app-main-shell {
+  @apply w-full max-w-[1280px] mx-auto;
+}
+
 .app-page {
   @apply space-y-6 relative min-h-screen motion-page-enter;
 }
@@ -288,6 +292,29 @@
 
 .app-surface {
   @apply glass-card border-border/50 motion-surface;
+}
+
+/* Shared mobile tuning for dense dashboard pages */
+@media (max-width: 640px) {
+  .app-page {
+    @apply min-h-0 space-y-4;
+  }
+
+  .app-page-header {
+    @apply gap-3;
+  }
+
+  .page-header-title {
+    @apply text-xl;
+  }
+
+  .page-header-sub {
+    @apply tracking-[0.14em];
+  }
+
+  .app-surface {
+    @apply rounded-xl;
+  }
 }
 
 /* Table readability helpers to keep hardcoded slate shades legible in light mode */
