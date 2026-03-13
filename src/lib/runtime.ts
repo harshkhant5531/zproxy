@@ -31,10 +31,3 @@ export function getPublicAppOrigin(fallbackOrigin = window.location.origin) {
     window.location.origin
   );
 }
-
-export function buildAttendanceVerifyUrl(
-  token: string,
-  fallbackOrigin?: string,
-) {
-  return `${getPublicAppOrigin(fallbackOrigin)}/student/verify?token=${encodeURIComponent(token)}`;
-}

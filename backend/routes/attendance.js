@@ -6,6 +6,9 @@ const {
   haversineDistanceMeters,
   validateStudentGeofence,
 } = require("../utils/geofence");
+const {
+  getGeofenceSecuritySettings,
+} = require("../utils/geofenceSecuritySettings");
 const { requireRole } = authMiddleware;
 
 const router = express.Router();
@@ -49,6 +52,12 @@ const formatLocation = (lat, lng) => {
   const lngValue = Number(lng);
   if (!Number.isFinite(latValue) || !Number.isFinite(lngValue)) return null;
   return `${latValue.toFixed(LOCATION_DECIMALS)},${lngValue.toFixed(LOCATION_DECIMALS)}`;
+};
+
+const normalizeDeviceFingerprint = (value) => {
+  if (!value || typeof value !== "string") return null;
+  const compact = value.trim().toLowerCase();
+  return compact.length > 0 ? compact.slice(0, 180) : null;
 };
 
 const appendNotes = (existingNotes, tags = []) => {
@@ -761,6 +770,7 @@ router.post(
       }
 
       const { sessionId, status, notes } = req.body;
+      const geofenceSecuritySettings = getGeofenceSecuritySettings();
 
       // Find session
       const session = await prisma.session.findUnique({
@@ -852,12 +862,27 @@ router.post(
       // Enforce faculty-centered geofence for student attendance.
       let geofenceResult = null;
       if (req.user.role === "student") {
+        if (
+          geofenceSecuritySettings.blockMockLocation &&
+          req.body?.locationMeta?.isMocked === true
+        ) {
+          const error = new Error(
+            "Mocked location signal detected. Disable fake GPS or developer mock location and retry.",
+          );
+          error.statusCode = 403;
+          error.decisionReason = "mock_location_detected";
+          throw error;
+        }
+
         geofenceResult = validateStudentGeofence(
           session,
           req.body.lat,
           req.body.lng,
           req.body.accuracy,
-          { capturedAt: req.body.locationCapturedAt },
+          {
+            capturedAt: req.body.locationCapturedAt,
+            locationMeta: req.body.locationMeta,
+          },
         );
 
         auditContext.geofence = {
@@ -877,10 +902,26 @@ router.post(
       let finalStatus = status || "present";
       let finalNotes = notes || null;
       const clientIp = getClientIp(req);
+      const normalizedDeviceInfo = normalizeDeviceFingerprint(
+        req.body.deviceInfo,
+      );
       const locationString =
         req.body.lat && req.body.lng
           ? formatLocation(req.body.lat, req.body.lng)
           : req.body.location;
+
+      if (
+        req.user.role === "student" &&
+        geofenceSecuritySettings.requireDeviceFingerprint &&
+        !normalizedDeviceInfo
+      ) {
+        const error = new Error(
+          "Device integrity metadata is required to mark attendance.",
+        );
+        error.statusCode = 400;
+        error.decisionReason = "missing_device_fingerprint";
+        throw error;
+      }
 
       if (req.user.role === "student" && locationString) {
         const geoRiskTags = await buildGeoRiskTags({
@@ -895,6 +936,55 @@ router.post(
       }
 
       if (clientIp && req.user.role === "student") {
+        const sameDeviceAnyRecord = normalizedDeviceInfo
+          ? await prisma.attendance.findFirst({
+              where: {
+                sessionId,
+                studentId: { not: studentId },
+                deviceInfo: normalizedDeviceInfo,
+              },
+              select: { id: true, studentId: true, notes: true },
+            })
+          : null;
+
+        if (geofenceSecuritySettings.strictProxyMode && sameDeviceAnyRecord) {
+          const error = new Error(
+            "Potential proxy detected: device fingerprint already used by another student in this session.",
+          );
+          error.statusCode = 409;
+          error.decisionReason = "proxy_same_device_session";
+          throw error;
+        }
+
+        if (
+          geofenceSecuritySettings.blockDuplicateLocationReplay &&
+          locationString
+        ) {
+          const strictWindowStart = new Date(
+            Date.now() -
+              geofenceSecuritySettings.duplicateLocationReplayWindowSeconds *
+                1000,
+          );
+          const sameLocationRecent = await prisma.attendance.findFirst({
+            where: {
+              sessionId,
+              studentId: { not: studentId },
+              location: locationString,
+              timestamp: { gte: strictWindowStart },
+            },
+            select: { id: true, studentId: true },
+          });
+
+          if (sameLocationRecent) {
+            const error = new Error(
+              "Potential proxy detected: identical coordinates were used by another student moments ago.",
+            );
+            error.statusCode = 409;
+            error.decisionReason = "proxy_identical_location_replay";
+            throw error;
+          }
+        }
+
         const sameIpRecords = await prisma.attendance.findMany({
           where: {
             sessionId,
@@ -906,18 +996,19 @@ router.post(
 
         if (sameIpRecords.length > 0) {
           // Check for strong proxy signal: same device identifier
-          const deviceInfo = req.body.deviceInfo || "";
+          const deviceInfo = normalizedDeviceInfo || "";
           const sameDeviceRecord = deviceInfo
-            ? sameIpRecords.find((r) => r.deviceInfo && r.deviceInfo === deviceInfo)
+            ? sameIpRecords.find(
+                (r) => r.deviceInfo && r.deviceInfo === deviceInfo,
+              )
             : null;
 
           if (sameDeviceRecord) {
             // Same IP + same device = strong proxy signal
             finalStatus = "absent";
-            finalNotes = appendNotes(
-              finalNotes,
-              [`[PROXY_DETECTED:sharedWith:${sameDeviceRecord.studentId}:SAME_DEVICE]`],
-            );
+            finalNotes = appendNotes(finalNotes, [
+              `[PROXY_DETECTED:sharedWith:${sameDeviceRecord.studentId}:SAME_DEVICE]`,
+            ]);
 
             // Retroactively flag the earlier record too
             const prevNotes = sameDeviceRecord.notes || "";
@@ -951,7 +1042,7 @@ router.post(
           notes: finalNotes,
           location: locationString,
           ipAddress: clientIp,
-          deviceInfo: req.body.deviceInfo,
+          deviceInfo: normalizedDeviceInfo,
         },
         include: {
           student: { include: { studentProfile: true } },
@@ -1136,288 +1227,6 @@ router.delete(
         message: "Attendance deleted successfully",
       });
     } catch (error) {
-      next(error);
-    }
-  },
-);
-
-// @route   POST /api/attendance/qr
-// @desc    Mark attendance using QR code
-// @access  Student
-router.post(
-  "/qr",
-  authMiddleware,
-  requireRole(["student"]),
-  [body("qrCode").notEmpty().withMessage("QR code is required")],
-  async (req, res, next) => {
-    let auditContext = {
-      attemptType: "qr",
-      sessionId: null,
-      decision: "rejected",
-      reason: "unknown",
-      geofence: null,
-    };
-
-    try {
-      // Role check handled by requireRole middleware
-
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        const error = new Error("Validation Error");
-        error.statusCode = 400;
-        error.errors = errors.array();
-        throw error;
-      }
-
-      const { qrCode } = req.body;
-
-      // Find QR code
-      const qrCodeData = await prisma.qrCode.findFirst({
-        where: {
-          codeValue: qrCode,
-          validFrom: { lte: new Date() },
-          validTo: { gte: new Date() },
-        },
-        include: {
-          session: {
-            include: {
-              course: {
-                select: {
-                  id: true,
-                  students: {
-                    where: { id: req.user.id },
-                    select: {
-                      id: true,
-                      studentProfile: { select: { batch: true } },
-                      studentSubjects: { select: { id: true } },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-      });
-
-      if (!qrCodeData) {
-        const error = new Error("Invalid or expired QR code");
-        error.statusCode = 400;
-        throw error;
-      }
-
-      auditContext.sessionId = qrCodeData.sessionId;
-
-      // Combined enrollment check
-      const studentData = qrCodeData.session.course.students[0];
-      if (!studentData) {
-        const error = new Error("Student is not enrolled in this course");
-        error.statusCode = 400;
-        throw error;
-      }
-
-      if (qrCodeData.session.subjectId) {
-        const isEnrolledInSubject = (studentData.studentSubjects || []).some(
-          (s) => s.id === qrCodeData.session.subjectId,
-        );
-
-        if (!isEnrolledInSubject) {
-          const error = new Error("Student is not enrolled in this subject");
-          error.statusCode = 400;
-          throw error;
-        }
-      }
-
-      // 🛡️ Batch-Wise Access Control
-      const sessionBatches = qrCodeData.session.batches || [];
-      const studentBatch = studentData.studentProfile?.batch;
-
-      if (
-        sessionBatches.length > 0 &&
-        (!studentBatch || !sessionBatches.includes(studentBatch))
-      ) {
-        const error = new Error(
-          `Protocol Violation: This session is locked to BATCHES [${sessionBatches.join(", ")}]. Authorized batch access only.`,
-        );
-        error.statusCode = 403;
-        throw error;
-      }
-
-      const { lat, lng } = req.body;
-      const geofenceResult = validateStudentGeofence(
-        qrCodeData.session,
-        lat,
-        lng,
-        req.body.accuracy,
-        { capturedAt: req.body.locationCapturedAt },
-      );
-      auditContext.geofence = {
-        decisionReason: geofenceResult.decisionReason,
-        distanceMeters: geofenceResult.distanceMeters,
-        rawDistanceMeters: geofenceResult.rawDistanceMeters,
-        toleranceMeters: geofenceResult.toleranceMeters,
-        retryBandMeters: geofenceResult.retryBandMeters,
-        radiusMeters: geofenceResult.radiusMeters,
-        reportedAccuracyMeters: geofenceResult.reportedAccuracyMeters,
-        locationAgeMs: geofenceResult.locationAgeMs,
-        maxLocationAgeMs: geofenceResult.maxLocationAgeMs,
-      };
-
-      // Check if attendance already exists
-      const existingAttendance = await prisma.attendance.findFirst({
-        where: {
-          sessionId: qrCodeData.sessionId,
-          studentId: req.user.id,
-        },
-      });
-
-      if (existingAttendance) {
-        const error = new Error(
-          "Neural Link Active: Attendance already recorded.",
-        );
-        error.statusCode = 409;
-        throw error;
-      }
-
-      // ─── Proxy Detection ────────────────────────────────────────────────
-      let status = "present";
-      let qrNotes = null;
-      const clientIp = getClientIp(req);
-      const locationString = formatLocation(lat, lng) || `${lat},${lng}`;
-
-      const geoRiskTags = await buildGeoRiskTags({
-        req,
-        sessionId: qrCodeData.sessionId,
-        studentId: req.user.id,
-        lat,
-        lng,
-        locationString,
-      });
-      qrNotes = appendNotes(qrNotes, geoRiskTags);
-
-      if (clientIp) {
-        const sameIpRecords = await prisma.attendance.findMany({
-          where: {
-            sessionId: qrCodeData.sessionId,
-            studentId: { not: req.user.id },
-            ipAddress: clientIp,
-          },
-          select: { id: true, studentId: true, notes: true, deviceInfo: true },
-        });
-
-        if (sameIpRecords.length > 0) {
-          // Check for strong proxy signal: same device identifier
-          const deviceInfo = req.body.deviceInfo || "";
-          const sameDeviceRecord = deviceInfo
-            ? sameIpRecords.find((r) => r.deviceInfo && r.deviceInfo === deviceInfo)
-            : null;
-
-          if (sameDeviceRecord) {
-            // Same IP + same device = strong proxy signal
-            status = "absent";
-            qrNotes = appendNotes(qrNotes, [
-              `[PROXY_DETECTED:sharedWith:${sameDeviceRecord.studentId}:SAME_DEVICE]`,
-            ]);
-
-            // Retroactively flag the earlier record too
-            const prevNotes = sameDeviceRecord.notes || "";
-            if (!prevNotes.includes("[PROXY_")) {
-              await prisma.attendance.update({
-                where: { id: sameDeviceRecord.id },
-                data: {
-                  status: "absent",
-                  notes: appendNotes(prevNotes, [
-                    `[PROXY_DETECTED:sharedWith:${req.user.id}:SAME_DEVICE]`,
-                  ]),
-                },
-              });
-            }
-          } else {
-            // Same IP but different device — likely campus WiFi (shared NAT)
-            // Add informational tag but do NOT change status
-            qrNotes = appendNotes(qrNotes, [
-              `[IP_SHARED:count=${sameIpRecords.length}]`,
-            ]);
-          }
-        }
-      }
-
-      // Create valid attendance record
-      const attendance = await prisma.attendance.create({
-        data: {
-          sessionId: qrCodeData.sessionId,
-          studentId: req.user.id,
-          status: status,
-          notes: qrNotes,
-          location: locationString,
-          ipAddress: clientIp,
-          deviceInfo: req.body.deviceInfo,
-        },
-        include: {
-          student: { include: { studentProfile: true } },
-          session: {
-            include: {
-              course: true,
-              faculty: true,
-              subject: true,
-            },
-          },
-        },
-      });
-
-      // Update QR code scanned count
-      await prisma.qrCode.update({
-        where: { id: qrCodeData.id },
-        data: { scannedCount: { increment: 1 } },
-      });
-
-      // Update attendance count in session
-      await prisma.session.update({
-        where: { id: qrCodeData.sessionId },
-        data: { attendanceCount: { increment: 1 } },
-      });
-
-      auditContext.decision = "accepted";
-      auditContext.reason =
-        status === "absent" ? "accepted_proxy_flagged" : "accepted";
-      await logAttendanceAttempt({
-        req,
-        userId: req.user.id,
-        sessionId: qrCodeData.sessionId,
-        attemptType: auditContext.attemptType,
-        decision: auditContext.decision,
-        reason: auditContext.reason,
-        geofence: auditContext.geofence,
-      });
-
-      res.json({
-        success: true,
-        message: "Attendance recorded successfully using QR code",
-        data: { attendance },
-      });
-    } catch (error) {
-      auditContext.reason = error.decisionReason || error.message || "rejected";
-      auditContext.geofence = {
-        ...(auditContext.geofence || {}),
-        decisionReason: error.decisionReason,
-        distanceMeters: error.distanceMeters,
-        rawDistanceMeters: error.rawDistanceMeters,
-        toleranceMeters: error.toleranceMeters,
-        retryBandMeters: error.retryBandMeters,
-        radiusMeters: error.radiusMeters,
-        reportedAccuracyMeters: error.reportedAccuracyMeters,
-        maxAcceptableAccuracyMeters: error.maxAcceptableAccuracyMeters,
-        locationAgeMs: error.locationAgeMs,
-        maxLocationAgeMs: error.maxLocationAgeMs,
-      };
-      await logAttendanceAttempt({
-        req,
-        userId: req.user.id,
-        sessionId: auditContext.sessionId,
-        attemptType: auditContext.attemptType,
-        decision: auditContext.decision,
-        reason: auditContext.reason,
-        geofence: auditContext.geofence,
-      });
       next(error);
     }
   },

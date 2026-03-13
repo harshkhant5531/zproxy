@@ -297,12 +297,6 @@
   to   { transform: rotate(-360deg); }
 }
 
-/* ── QR Scan beam */
-@keyframes scan-beam {
-  0%   { transform: translateY(0px);   opacity: 0.9; }
-  100% { transform: translateY(186px); opacity: 0.6; }
-}
-
 /* ── Skeleton shimmer */
 @keyframes shimmer {
   0%   { background-position: -200% 0; }
@@ -434,17 +428,6 @@
   animation: live-blink 1.8s ease-in-out infinite;
 }
 
-/* QR scanner beam */
-.animate-scan-beam {
-  animation: scan-beam 2s ease-in-out infinite alternate;
-  position: absolute;
-  left: 2rem;
-  right: 2rem;
-  height: 2px;
-  border-radius: 9999px;
-  z-index: 20;
-}
-
 /* Skeleton shimmer */
 .animate-shimmer {
   background: linear-gradient(
@@ -477,15 +460,6 @@
 /* Success ripple */
 .animate-success-ripple      { animation: success-ripple 1.2s ease-out forwards; }
 .animate-success-ripple-late { animation: success-ripple 1.2s ease-out 0.3s forwards; }
-
-/* Bracket pulse (QR corners) */
-@keyframes bracket-pulse {
-  0%, 100% { opacity: 0.5; }
-  50%       { opacity: 1; }
-}
-.animate-bracket-pulse {
-  animation: bracket-pulse 1.6s ease-in-out infinite;
-}
 
 /* Rotate CW / CCW */
 .animate-rotate-cw  { animation: orbit     0.8s linear infinite; }
@@ -567,13 +541,11 @@
   .motion-stagger > *,
   .stat-card-enter,
   .motion-table-stagger tbody tr,
-  .animate-scan-beam,
   .animate-ring-pulse,
   .animate-bounce-dot,
   .animate-progress-indeterminate,
   .animate-success-ripple,
   .animate-success-ripple-late,
-  .animate-bracket-pulse,
   .animate-aura-pulse,
   .animate-live-blink,
   .animate-line-draw {

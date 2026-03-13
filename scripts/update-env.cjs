@@ -29,14 +29,45 @@ function parseEnvValue(rawValue) {
     .replace(/^['"]|['"]$/g, "");
 }
 
-function getConfiguredPublicFrontendUrl(rootEnvPath) {
-  if (!fs.existsSync(rootEnvPath)) return "";
-  const content = fs.readFileSync(rootEnvPath, "utf8");
-  const match = content.match(/^PUBLIC_FRONTEND_URL\s*=\s*(.*)$/m);
+function getConfiguredEnvValue(envPath, key) {
+  if (!fs.existsSync(envPath)) return "";
+  const content = fs.readFileSync(envPath, "utf8");
+  const match = content.match(new RegExp(`^${key}\\s*=\\s*(.*)$`, "m"));
   if (!match) return "";
+  return parseEnvValue(match[1]);
+}
 
-  const parsed = normalizeUrl(parseEnvValue(match[1]));
+function getConfiguredPublicFrontendUrl(rootEnvPath) {
+  const parsed = normalizeUrl(
+    getConfiguredEnvValue(rootEnvPath, "PUBLIC_FRONTEND_URL"),
+  );
   return /^https?:\/\//i.test(parsed) ? parsed : "";
+}
+
+function ensureBackendEnvFile(
+  backendEnvPath,
+  backendEnvExamplePath,
+  databaseUrl,
+) {
+  if (!fs.existsSync(backendEnvPath)) {
+    if (fs.existsSync(backendEnvExamplePath)) {
+      fs.copyFileSync(backendEnvExamplePath, backendEnvPath);
+    } else {
+      fs.writeFileSync(
+        backendEnvPath,
+        "# Auto-created by scripts/update-env.cjs\n",
+        "utf8",
+      );
+    }
+    console.log(`Created: ${path.basename(backendEnvPath)}`);
+  }
+
+  if (databaseUrl) {
+    const content = fs.readFileSync(backendEnvPath, "utf8");
+    const updated = upsertEnvValue(content, "DATABASE_URL", databaseUrl);
+    fs.writeFileSync(backendEnvPath, updated, "utf8");
+    console.log("Synced: DATABASE_URL -> backend/.env");
+  }
 }
 
 function upsertEnvValue(content, key, value) {
@@ -125,9 +156,13 @@ const rootDir = path.join(__dirname, "..");
 const backendDir = path.join(rootDir, "backend");
 const rootEnvPath = path.join(rootDir, ".env");
 const backendEnvPath = path.join(backendDir, ".env");
+const backendEnvExamplePath = path.join(backendDir, ".env.example");
 const publicFrontendUrl =
   normalizeUrl(process.env.PUBLIC_FRONTEND_URL) ||
   getConfiguredPublicFrontendUrl(rootEnvPath);
+const configuredDatabaseUrl =
+  process.env.DATABASE_URL ||
+  getConfiguredEnvValue(rootEnvPath, "DATABASE_URL");
 
 console.log(`🚀 Auto-configuring network IP: ${localIp}`);
 if (publicFrontendUrl) {
@@ -135,6 +170,11 @@ if (publicFrontendUrl) {
 }
 
 updateEnvFile(rootEnvPath, localIp, { frontendUrl: publicFrontendUrl });
+ensureBackendEnvFile(
+  backendEnvPath,
+  backendEnvExamplePath,
+  configuredDatabaseUrl,
+);
 updateEnvFile(backendEnvPath, localIp, { frontendUrl: publicFrontendUrl });
 
 console.log("✅ Network configuration complete.");

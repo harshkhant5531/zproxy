@@ -185,7 +185,6 @@ model Session {
   faculty           Users       @relation("FacultySessions", fields: [facultyId], references: [id], onDelete: Cascade)
   subject           Subject?    @relation("SubjectSessions", fields: [subjectId], references: [id], onDelete: SetNull)
   attendanceRecords Attendance[]
-  qrCodes           QrCode[]
 }
 
 model Attendance {
@@ -208,24 +207,6 @@ model Attendance {
   @@index([timestamp])
 }
 
-// ─── QR Code ─────────────────────────────────────────────────────────────────
-
-model QrCode {
-  id           Int      @id @default(autoincrement())
-  sessionId    Int
-  codeValue    String   @unique
-  validFrom    DateTime
-  validTo      DateTime
-  scannedCount Int      @default(0)
-  maxScans     Int      @default(50)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  session Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-
-  @@index([sessionId])
-}
-
 // ─── Exams ────────────────────────────────────────────────────────────────────
 
 model ExamPermit {
@@ -239,7 +220,6 @@ model ExamPermit {
   status    String   @default("pending")
   validFrom DateTime
   validTo   DateTime
-  qrCode    String?
   scanned   Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

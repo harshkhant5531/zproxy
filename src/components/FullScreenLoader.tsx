@@ -1,6 +1,5 @@
 import {
   Fingerprint,
-  QrCode,
   Radio,
   Save,
   Trash2,
@@ -29,7 +28,6 @@ export type LoaderOperation =
   | "enrolling"
   | "refreshing"
   | "locating"
-  | "qr-verify"
   | "manual-mark"
   | "load-sessions";
 
@@ -113,12 +111,6 @@ const CONFIGS: Record<LoaderOperation, Config> = {
     subtitle: "Requesting GPS permission and locking your current position…",
     color: "amber",
   },
-  "qr-verify": {
-    icon: QrCode,
-    title: "Verifying QR Code",
-    subtitle: "Decoding and authenticating session token…",
-    color: "primary",
-  },
   "manual-mark": {
     icon: Fingerprint,
     title: "Recording Attendance",
@@ -198,7 +190,7 @@ export function FullScreenLoader({
   show,
   operation = "loading",
   label,
-  position = "fixed",
+  position = "absolute",
   withSidebarOffset = false,
 }: FullScreenLoaderProps) {
   if (!show) return null;
@@ -212,7 +204,7 @@ export function FullScreenLoader({
 
   return (
     <div
-      className={`${positionClass} inset-0 z-[9999] bg-background/95 flex flex-col items-center justify-center gap-8 animate-in fade-in duration-300 ${sidebarClass}`}
+      className={`${positionClass} inset-0 z-[120] bg-background/92 backdrop-blur-[1px] flex flex-col items-center justify-center gap-8 animate-in fade-in duration-300 ${sidebarClass}`}
     >
       {/* Expanding rings + icon */}
       <div className="relative flex items-center justify-center">

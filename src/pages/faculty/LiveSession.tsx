@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from "react";
-import { QRCodeSVG } from "qrcode.react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -16,7 +15,6 @@ import { StatusBadge } from "@/components/StatusBadge";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
-  QrCode,
   Users,
   Clock,
   Shield,
@@ -32,14 +30,12 @@ import { FullScreenLoader } from "@/components/FullScreenLoader";
 import { useParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { sessionsAPI, attendanceAPI } from "@/lib/api";
-import { buildAttendanceVerifyUrl } from "@/lib/runtime";
 import { format } from "date-fns";
 import { toast } from "sonner";
 
 export default function LiveSession() {
   const { id } = useParams();
   const queryClient = useQueryClient();
-  const [qrTimer, setQrTimer] = useState(15);
   const [showOverride, setShowOverride] = useState(false);
   const [overrideStudentId, setOverrideStudentId] = useState("");
   const [overrideReason, setOverrideReason] = useState("");
@@ -90,25 +86,6 @@ export default function LiveSession() {
     },
   });
 
-  const generateQRMutation = useMutation({
-    mutationFn: () => sessionsAPI.generateQR(id!),
-    onSuccess: (data) => {
-      queryClient.setQueryData(["session", id], (old: any) => ({
-        ...old,
-        qrCode: data.data.data.qrCode,
-      }));
-      setQrTimer(15);
-    },
-    onError: (err: any) => {
-      const detail =
-        err.response?.data?.message ||
-        err.message ||
-        "Could not synchronize QR code.";
-      console.error("QR Generation Failure:", err);
-      toast.error(`Spatial Link Failure: ${detail}`);
-    },
-  });
-
   const overrideMutation = useMutation({
     mutationFn: (data: any) => attendanceAPI.markAttendance(data),
     onSuccess: () => {
@@ -122,32 +99,6 @@ export default function LiveSession() {
     },
   });
 
-  useEffect(() => {
-    if (
-      sessionData &&
-      !sessionData.qrCode &&
-      sessionData.status !== "completed" &&
-      !generateQRMutation.isPending
-    ) {
-      generateQRMutation.mutate();
-    }
-  }, [sessionData]);
-
-  useEffect(() => {
-    if (sessionData?.status === "completed") return;
-
-    const interval = setInterval(() => {
-      setQrTimer((prev) => {
-        if (prev <= 1) {
-          generateQRMutation.mutate();
-          return 15;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [id, sessionData?.status]);
-
   const session = sessionData;
   const isCompleted = session?.status === "completed";
   const presentRecords =
@@ -160,8 +111,8 @@ export default function LiveSession() {
   const eligibleStudents =
     session?.batches?.length > 0
       ? allEnrolledStudents.filter((s: any) =>
-        session.batches.includes(s.studentProfile?.batch),
-      )
+          session.batches.includes(s.studentProfile?.batch),
+        )
       : allEnrolledStudents;
   const presentStudentIds = new Set(
     presentRecords.map((a: any) => a.studentId),
@@ -173,10 +124,10 @@ export default function LiveSession() {
   // For completed view: map absent records to student-shape objects
   const absenteeRoster: any[] = isCompleted
     ? absentRecords.map((r: any) => ({
-      id: r.studentId,
-      username: r.student?.username || "Unknown",
-      studentProfile: r.student?.studentProfile || null,
-    }))
+        id: r.studentId,
+        username: r.student?.username || "Unknown",
+        studentProfile: r.student?.studentProfile || null,
+      }))
     : absentees;
 
   // Proxy suspects: attendance records whose notes contain [PROXY_SUSPECT…] or [PROXY_DETECTED…]
@@ -187,7 +138,9 @@ export default function LiveSession() {
   );
   const parseProxyFlag = (notes: string | null): number | null => {
     if (!notes) return null;
-    const m = notes.match(/\[PROXY_(?:SUSPECT|DETECTED):sharedWith:(\d+)[^\]]*\]/);
+    const m = notes.match(
+      /\[PROXY_(?:SUSPECT|DETECTED):sharedWith:(\d+)[^\]]*\]/,
+    );
     return m ? parseInt(m[1]) : null;
   };
 
@@ -245,7 +198,7 @@ export default function LiveSession() {
           new Date(log.timestamp),
           "yyyy-MM-dd HH:mm:ss",
         );
-        const method = log.method || "QR_SCAN";
+        const method = log.method || "GEOFENCE";
         return `${id}\t${name}\t${log.status}\t${timestamp}\t${method}`;
       })
       .join("\n");
@@ -387,7 +340,7 @@ export default function LiveSession() {
             <CardHeader className="pb-3 px-6 border-b border-border/40 bg-gradient-to-b from-primary/5 to-transparent">
               <CardTitle className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest flex items-center justify-between">
                 <span>
-                  {isCompleted ? "Session Statistics" : "Attendance QR"}
+                  {isCompleted ? "Session Statistics" : "Geofence Attendance"}
                 </span>
                 <div className="flex items-center gap-2">
                   <span
@@ -406,52 +359,27 @@ export default function LiveSession() {
             <CardContent className="p-4 sm:p-6 text-center relative h-full">
               {!isCompleted ? (
                 <div className="space-y-5">
-                  <div className="rounded-2xl border border-border bg-muted/30 p-4">
-                    <div className="aspect-square bg-white rounded-xl flex items-center justify-center border-4 border-background shadow-sm relative overflow-hidden mx-auto max-w-[300px]">
-                      {session?.qrCode?.codeValue ? (
-                        <>
-                          <QRCodeSVG
-                            value={buildAttendanceVerifyUrl(
-                              session.qrCode.codeValue,
-                              session.networkIp || window.location.origin,
-                            )}
-                            size={240}
-                            level="H"
-                            includeMargin={true}
-                            className={
-                              generateQRMutation.isPending
-                                ? "opacity-30"
-                                : "opacity-100 transition-opacity duration-300"
-                            }
-                          />
-                          {generateQRMutation.isPending && (
-                            <div className="absolute inset-0 flex items-center justify-center bg-background/70">
-                              <Loader2 className="h-9 w-9 text-foreground/70 animate-spin" />
-                            </div>
-                          )}
-                        </>
-                      ) : (
-                        <div className="flex flex-col items-center gap-6">
-                          <div className="h-40 w-40 bg-muted animate-pulse rounded-full flex items-center justify-center border-4 border-dashed border-primary/20">
-                            <Loader2 className="h-9 w-9 text-primary animate-spin" />
-                          </div>
-                          <div className="space-y-2">
-                            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground animate-pulse">
-                              Syncing...
-                            </p>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => generateQRMutation.mutate()}
-                              disabled={generateQRMutation.isPending}
-                              className="h-8 text-[10px] uppercase font-bold tracking-widest border-primary/20 text-primary motion-press"
-                            >
-                              <RefreshCw
-                                className={`mr-2 h-3 w-3 ${generateQRMutation.isPending ? "animate-spin" : ""}`}
-                              />
-                              Force Pulse Start
-                            </Button>
-                          </div>
+                  <div className="rounded-2xl border border-border bg-muted/30 p-6">
+                    <div className="flex flex-col items-center gap-4">
+                      <div className="h-24 w-24 bg-primary/10 rounded-full flex items-center justify-center">
+                        <MapPin className="h-12 w-12 text-primary" />
+                      </div>
+                      <div className="text-center">
+                        <p className="text-lg font-bold text-primary">
+                          Geofence Active
+                        </p>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          Students mark attendance using GPS location
+                        </p>
+                      </div>
+                      {session?.geofenceRadius && (
+                        <div className="px-4 py-2 bg-primary/10 rounded-lg">
+                          <p className="text-2xl font-bold text-primary font-mono">
+                            {session.geofenceRadius}m
+                          </p>
+                          <p className="text-xs text-muted-foreground uppercase">
+                            Radius
+                          </p>
                         </div>
                       )}
                     </div>
@@ -459,32 +387,19 @@ export default function LiveSession() {
 
                   <div className="grid gap-3 sm:grid-cols-2">
                     <div className="p-4 bg-muted/20 border border-border rounded-xl shadow-sm text-left">
-                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Rotation Sync</p>
-                      <p className="text-4xl font-bold text-primary font-mono">
-                        {qrTimer}s
+                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">
+                        Status
                       </p>
-                      <Progress
-                        value={(qrTimer / 15) * 100}
-                        className="h-1.5 mt-3 bg-muted"
-                      />
+                      <p className="text-xl font-bold text-primary">Active</p>
                     </div>
                     <div className="p-4 bg-muted/20 border border-border rounded-xl shadow-sm text-left">
-                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2">Guidance</p>
-                      <p className="text-xs text-muted-foreground leading-relaxed">
-                        Stay within the geofence radius.
+                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2">
+                        Instructions
                       </p>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => generateQRMutation.mutate()}
-                        disabled={generateQRMutation.isPending}
-                        className="mt-3 h-8 text-[10px] uppercase font-bold tracking-widest border-primary/20 text-primary motion-press"
-                      >
-                        <RefreshCw
-                          className={`mr-2 h-3 w-3 ${generateQRMutation.isPending ? "animate-spin" : ""}`}
-                        />
-                        Refresh QR
-                      </Button>
+                      <p className="text-xs text-muted-foreground leading-relaxed">
+                        Students must be within {session?.geofenceRadius || 60}m
+                        to mark attendance.
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -550,7 +465,9 @@ export default function LiveSession() {
             <CardContent className="p-5 sm:p-6">
               <div className="grid gap-4 sm:grid-cols-3 items-stretch">
                 <div className="rounded-xl border border-border bg-muted/20 p-4 text-center">
-                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Rate</p>
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                    Rate
+                  </p>
                   <p className="text-5xl font-bold text-foreground tracking-tighter mt-2">
                     {pct}%
                   </p>
@@ -589,7 +506,9 @@ export default function LiveSession() {
                 </div>
 
                 <div className="rounded-xl border border-border bg-muted/20 p-4 text-center flex flex-col justify-center">
-                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Assets</p>
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                    Assets
+                  </p>
                   <p className="text-3xl font-bold text-foreground mt-2">
                     {presentCount}
                     <span className="text-muted-foreground text-sm font-medium">
@@ -756,9 +675,7 @@ export default function LiveSession() {
           <CardHeader className="border-b border-border px-6 py-4 bg-muted/30">
             <CardTitle className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
               <Users className="h-4 w-4" />
-              {isCompleted
-                ? "Attendance Record"
-                : "Authentication Stream"}
+              {isCompleted ? "Attendance Record" : "Authentication Stream"}
               {!isCompleted && (
                 <span className="ml-auto h-2 w-2 rounded-full bg-primary animate-pulse shadow-[0_0_8px_rgba(var(--primary),0.5)]" />
               )}
@@ -810,8 +727,8 @@ export default function LiveSession() {
                     const proxySharedWithId = parseProxyFlag(log.notes);
                     const proxyPartner = proxySharedWithId
                       ? attendanceData.find(
-                        (a: any) => a.studentId === proxySharedWithId,
-                      )
+                          (a: any) => a.studentId === proxySharedWithId,
+                        )
                       : null;
                     return (
                       <TableRow
@@ -846,7 +763,7 @@ export default function LiveSession() {
                         </TableCell>
                         <TableCell>
                           <span className="text-[9px] font-black text-muted-foreground bg-muted px-2 py-0.5 rounded uppercase tracking-tighter border border-border/50">
-                            {log.method || "QR_SCAN"}
+                            {log.method || "GEOFENCE"}
                           </span>
                         </TableCell>
                         <TableCell className="pr-6">
@@ -869,7 +786,7 @@ export default function LiveSession() {
                           <>
                             <Loader2 className="h-10 w-10 text-muted-foreground/20 animate-spin mx-auto mb-4" />
                             <p className="text-sm text-muted-foreground font-medium italic">
-                              Scanning for authentication signals...
+                              Waiting for attendance check-ins...
                             </p>
                           </>
                         )}

@@ -12,9 +12,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 
 import StudentDashboard from "./pages/student/Dashboard";
-import QRScanner from "./pages/student/QRScanner";
 import StudentTimetable from "./pages/student/Timetable";
-import VerifyAttendance from "./pages/student/VerifyAttendance";
 import Leaves from "./pages/student/Leaves";
 import ExamPermit from "./pages/student/ExamPermit";
 import ProfilePage from "./pages/Profile";
@@ -36,6 +34,7 @@ import FacultyManagement from "./pages/admin/FacultyManagement";
 import Timetable from "./pages/admin/Timetable";
 import Reports from "./pages/admin/Reports";
 import ShortageAlerts from "./pages/admin/Alerts";
+import GeofenceSecurity from "./pages/admin/GeofenceSecurity";
 
 const AppContent = () => {
   const { user, loading } = useAuth();
@@ -66,8 +65,6 @@ const AppContent = () => {
           <Navigate to={user ? `/${user.role}/dashboard` : "/login"} replace />
         }
       />
-      <Route path="/student/verify" element={<VerifyAttendance />} />
-
       {/* Protected Routes Wrapper */}
       <Route element={<ProtectedRoute />}>
         <Route element={<AppLayout />}>
@@ -76,7 +73,6 @@ const AppContent = () => {
           <Route element={<ProtectedRoute allowedRoles={["student"]} />}>
             <Route path="/student/dashboard" element={<StudentDashboard />} />
             <Route path="/student/timetable" element={<StudentTimetable />} />
-            <Route path="/student/scan" element={<QRScanner />} />
             <Route path="/student/leaves" element={<Leaves />} />
             <Route path="/student/permit" element={<ExamPermit />} />
           </Route>
@@ -104,6 +100,10 @@ const AppContent = () => {
             <Route path="/admin/reports" element={<Reports />} />
             <Route path="/admin/alerts" element={<ShortageAlerts />} />
             <Route path="/admin/proxy-audit" element={<ProxyAuditPage />} />
+            <Route
+              path="/admin/geofence-security"
+              element={<GeofenceSecurity />}
+            />
           </Route>
         </Route>
       </Route>

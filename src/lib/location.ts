@@ -127,22 +127,28 @@ export async function requestStabilizedPosition(
   input: StabilizedLocationOptions = {},
 ): Promise<StabilizedLocation> {
   const {
-    sampleCount = 8, // Increased default samples
-    intervalMs = 800, // Slightly longer interval
-    desiredAccuracyMeters = 50,
+    sampleCount = 5,
+    intervalMs = 350,
+    desiredAccuracyMeters = 35,
     ...options
   } = input;
 
   const targetSampleCount = Math.min(10, Math.max(3, sampleCount));
   const samples: GeolocationPosition[] = [];
+  let bestAccuracy = Number.POSITIVE_INFINITY;
 
   for (let i = 0; i < targetSampleCount; i++) {
     try {
       const sample = await requestCurrentPosition(options);
       samples.push(sample);
+      bestAccuracy = Math.min(bestAccuracy, sample.coords.accuracy);
     } catch (err) {
       // Continue trying even if some samples fail
       console.warn(`GPS sample ${i + 1} failed:`, err);
+    }
+
+    if (samples.length >= 3 && bestAccuracy <= desiredAccuracyMeters * 0.75) {
+      break;
     }
 
     // Don't exit early - collect all samples for better accuracy
@@ -220,8 +226,8 @@ export async function requestStabilizedPositionWithRetry(
   input: RetryLocationOptions = {},
 ): Promise<StabilizedLocation> {
   const {
-    maxRetries = 4,
-    desiredAccuracyMeters = 60,
+    maxRetries = 3,
+    desiredAccuracyMeters = 35,
     minSamplesRequired = 2,
     ...rest
   } = input;
@@ -246,7 +252,7 @@ export async function requestStabilizedPositionWithRetry(
         return latestLocation;
       }
 
-      // If we have minimum samples and accuracy is significantly better than before, use it
+      // If we have enough samples and a materially better fix than prior attempt, accept it.
       if (
         latestLocation.sampleCount >= minSamplesRequired &&
         latestLocation.accuracy < bestAccuracy * 0.8
@@ -259,8 +265,7 @@ export async function requestStabilizedPositionWithRetry(
     }
 
     if (attempt < maxRetries - 1) {
-      // Exponential backoff with jitter
-      const backoffMs = 1000 * Math.pow(1.5, attempt) + Math.random() * 500;
+      const backoffMs = 450 * Math.pow(1.35, attempt) + Math.random() * 180;
       await delay(backoffMs);
     }
   }

@@ -114,6 +114,39 @@ export default function AdminDashboard() {
           </div>
         </div>
 
+        <div className="grid gap-3 md:grid-cols-3">
+          <Card className="border border-border/70 bg-card/70">
+            <CardContent className="p-4">
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+                Risk Students
+              </p>
+              <p className="text-2xl font-semibold text-foreground mt-1">
+                {shortageStudents.length}
+              </p>
+            </CardContent>
+          </Card>
+          <Card className="border border-border/70 bg-card/70">
+            <CardContent className="p-4">
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+                Departments
+              </p>
+              <p className="text-2xl font-semibold text-foreground mt-1">
+                {deptData?.length || 0}
+              </p>
+            </CardContent>
+          </Card>
+          <Card className="border border-border/70 bg-card/70">
+            <CardContent className="p-4">
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+                Global Attendance
+              </p>
+              <p className="text-2xl font-semibold text-foreground mt-1">
+                {avgAttendance}%
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           <div
             className="motion-page-enter motion-surface"
