@@ -13,6 +13,7 @@ import {
   AlertTriangle,
   Network,
   Settings,
+  LocateFixed,
   LogOut,
   Shield,
   UserCircle2,
@@ -100,6 +101,11 @@ const adminSections: MenuSection[] = [
       { title: "Reports", url: "/admin/reports", icon: FileBarChart },
       { title: "Alerts", url: "/admin/alerts", icon: AlertTriangle },
       { title: "Proxy Audit", url: "/admin/proxy-audit", icon: Network },
+      {
+        title: "Geofence Security",
+        url: "/admin/geofence-security",
+        icon: LocateFixed,
+      },
     ],
   },
   {
@@ -123,13 +129,20 @@ export function AppSidebar() {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
   const config = roleConfig[role];
+  const totalLinks = config.sections.reduce(
+    (sum, section) => sum + section.items.length,
+    0,
+  );
 
   return (
-    <Sidebar collapsible="icon" className="border-r border-border bg-sidebar">
+    <Sidebar
+      collapsible="icon"
+      className="border-r border-border/70 bg-[linear-gradient(180deg,hsl(var(--sidebar))_0%,hsl(var(--sidebar)/0.96)_100%)]"
+    >
       <SidebarHeader className="p-4 pb-3">
         {!collapsed ? (
-          <div className="flex items-center gap-3 mb-4">
-            <div className="h-10 w-10 rounded-xl bg-primary/15 border border-primary/25 flex items-center justify-center flex-shrink-0 motion-float-delayed motion-press">
+          <div className="flex items-center gap-3 mb-4 rounded-xl border border-border/70 bg-card/40 px-3 py-2.5">
+            <div className="h-10 w-10 rounded-xl bg-primary/15 border border-primary/25 flex items-center justify-center flex-shrink-0 motion-float-delayed motion-press shadow-sm">
               <Shield className="h-5 w-5 text-primary" />
             </div>
             <div>
@@ -142,18 +155,31 @@ export function AppSidebar() {
             </div>
           </div>
         ) : (
-          <div className="mb-3 h-9 w-9 rounded-xl bg-primary/15 border border-primary/25 flex items-center justify-center text-primary font-semibold text-sm">
+          <div className="mb-3 h-9 w-9 rounded-xl bg-primary/15 border border-primary/25 flex items-center justify-center text-primary font-semibold text-sm shadow-sm">
             A
           </div>
         )}
         {!collapsed && (
           <div
-            className="px-3 py-2 rounded-lg bg-primary/10 border border-primary/20 mb-1 motion-slide-up"
+            className="grid grid-cols-2 gap-2 mb-1 motion-slide-up"
             style={{ animationDelay: "80ms" }}
           >
-            <p className="text-xs font-semibold text-primary flex items-center gap-1.5">
-              <config.icon className="h-3 w-3" /> {config.label} Portal
-            </p>
+            <div className="rounded-lg border border-primary/25 bg-primary/10 px-2.5 py-2">
+              <p className="text-[9px] font-semibold uppercase tracking-widest text-primary/70">
+                Role
+              </p>
+              <p className="text-[11px] font-semibold text-primary mt-0.5 flex items-center gap-1">
+                <config.icon className="h-3.5 w-3.5" /> {config.label}
+              </p>
+            </div>
+            <div className="rounded-lg border border-border/70 bg-card/50 px-2.5 py-2">
+              <p className="text-[9px] font-semibold uppercase tracking-widest text-muted-foreground">
+                Modules
+              </p>
+              <p className="text-[11px] font-semibold text-foreground mt-0.5">
+                {totalLinks}
+              </p>
+            </div>
           </div>
         )}
       </SidebarHeader>
@@ -166,7 +192,7 @@ export function AppSidebar() {
             <SidebarGroupLabel className="text-[11px] uppercase tracking-wide text-muted-foreground/60 px-3">
               {section.label}
             </SidebarGroupLabel>
-            <SidebarGroupContent>
+            <SidebarGroupContent className="px-2">
               <SidebarMenu>
                 {section.items.map((item, idx) => {
                   return (
@@ -179,8 +205,8 @@ export function AppSidebar() {
                         <NavLink
                           to={item.url}
                           end
-                          className="group/sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent transition-colors duration-160 text-sm font-medium motion-press"
-                          activeClassName="bg-primary/10 text-primary hover:bg-primary/15 font-semibold border border-primary/20"
+                          className="group/sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent/70 transition-colors duration-160 text-sm font-medium motion-press border border-transparent"
+                          activeClassName="bg-primary/12 text-primary hover:bg-primary/15 font-semibold border border-primary/30 shadow-[inset_0_0_0_1px_hsl(var(--primary)/0.1)]"
                         >
                           <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-transparent text-muted-foreground group-hover/sidebar-link:text-primary group-hover/sidebar-link:bg-primary/10 transition-all duration-160 flex-shrink-0">
                             <item.icon className="h-4 w-4" />

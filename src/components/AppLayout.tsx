@@ -21,6 +21,7 @@ function getPageTitle(pathname: string): string {
     courses: "Courses",
     reports: "Reports",
     alerts: "Alerts",
+    "geofence-security": "Geofence Security",
     new: "New Session",
     profile: "Profile Center",
   };

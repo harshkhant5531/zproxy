@@ -190,7 +190,7 @@ export function FullScreenLoader({
   show,
   operation = "loading",
   label,
-  position = "fixed",
+  position = "absolute",
   withSidebarOffset = false,
 }: FullScreenLoaderProps) {
   if (!show) return null;
@@ -204,7 +204,7 @@ export function FullScreenLoader({
 
   return (
     <div
-      className={`${positionClass} inset-0 z-[9999] bg-background/95 flex flex-col items-center justify-center gap-8 animate-in fade-in duration-300 ${sidebarClass}`}
+      className={`${positionClass} inset-0 z-[120] bg-background/92 backdrop-blur-[1px] flex flex-col items-center justify-center gap-8 animate-in fade-in duration-300 ${sidebarClass}`}
     >
       {/* Expanding rings + icon */}
       <div className="relative flex items-center justify-center">

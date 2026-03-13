@@ -34,6 +34,7 @@ import FacultyManagement from "./pages/admin/FacultyManagement";
 import Timetable from "./pages/admin/Timetable";
 import Reports from "./pages/admin/Reports";
 import ShortageAlerts from "./pages/admin/Alerts";
+import GeofenceSecurity from "./pages/admin/GeofenceSecurity";
 
 const AppContent = () => {
   const { user, loading } = useAuth();
@@ -99,6 +100,10 @@ const AppContent = () => {
             <Route path="/admin/reports" element={<Reports />} />
             <Route path="/admin/alerts" element={<ShortageAlerts />} />
             <Route path="/admin/proxy-audit" element={<ProxyAuditPage />} />
+            <Route
+              path="/admin/geofence-security"
+              element={<GeofenceSecurity />}
+            />
           </Route>
         </Route>
       </Route>

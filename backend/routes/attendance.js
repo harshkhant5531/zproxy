@@ -6,6 +6,9 @@ const {
   haversineDistanceMeters,
   validateStudentGeofence,
 } = require("../utils/geofence");
+const {
+  getGeofenceSecuritySettings,
+} = require("../utils/geofenceSecuritySettings");
 const { requireRole } = authMiddleware;
 
 const router = express.Router();
@@ -49,6 +52,12 @@ const formatLocation = (lat, lng) => {
   const lngValue = Number(lng);
   if (!Number.isFinite(latValue) || !Number.isFinite(lngValue)) return null;
   return `${latValue.toFixed(LOCATION_DECIMALS)},${lngValue.toFixed(LOCATION_DECIMALS)}`;
+};
+
+const normalizeDeviceFingerprint = (value) => {
+  if (!value || typeof value !== "string") return null;
+  const compact = value.trim().toLowerCase();
+  return compact.length > 0 ? compact.slice(0, 180) : null;
 };
 
 const appendNotes = (existingNotes, tags = []) => {
@@ -761,6 +770,7 @@ router.post(
       }
 
       const { sessionId, status, notes } = req.body;
+      const geofenceSecuritySettings = getGeofenceSecuritySettings();
 
       // Find session
       const session = await prisma.session.findUnique({
@@ -852,12 +862,27 @@ router.post(
       // Enforce faculty-centered geofence for student attendance.
       let geofenceResult = null;
       if (req.user.role === "student") {
+        if (
+          geofenceSecuritySettings.blockMockLocation &&
+          req.body?.locationMeta?.isMocked === true
+        ) {
+          const error = new Error(
+            "Mocked location signal detected. Disable fake GPS or developer mock location and retry.",
+          );
+          error.statusCode = 403;
+          error.decisionReason = "mock_location_detected";
+          throw error;
+        }
+
         geofenceResult = validateStudentGeofence(
           session,
           req.body.lat,
           req.body.lng,
           req.body.accuracy,
-          { capturedAt: req.body.locationCapturedAt },
+          {
+            capturedAt: req.body.locationCapturedAt,
+            locationMeta: req.body.locationMeta,
+          },
         );
 
         auditContext.geofence = {
@@ -877,10 +902,26 @@ router.post(
       let finalStatus = status || "present";
       let finalNotes = notes || null;
       const clientIp = getClientIp(req);
+      const normalizedDeviceInfo = normalizeDeviceFingerprint(
+        req.body.deviceInfo,
+      );
       const locationString =
         req.body.lat && req.body.lng
           ? formatLocation(req.body.lat, req.body.lng)
           : req.body.location;
+
+      if (
+        req.user.role === "student" &&
+        geofenceSecuritySettings.requireDeviceFingerprint &&
+        !normalizedDeviceInfo
+      ) {
+        const error = new Error(
+          "Device integrity metadata is required to mark attendance.",
+        );
+        error.statusCode = 400;
+        error.decisionReason = "missing_device_fingerprint";
+        throw error;
+      }
 
       if (req.user.role === "student" && locationString) {
         const geoRiskTags = await buildGeoRiskTags({
@@ -895,6 +936,55 @@ router.post(
       }
 
       if (clientIp && req.user.role === "student") {
+        const sameDeviceAnyRecord = normalizedDeviceInfo
+          ? await prisma.attendance.findFirst({
+              where: {
+                sessionId,
+                studentId: { not: studentId },
+                deviceInfo: normalizedDeviceInfo,
+              },
+              select: { id: true, studentId: true, notes: true },
+            })
+          : null;
+
+        if (geofenceSecuritySettings.strictProxyMode && sameDeviceAnyRecord) {
+          const error = new Error(
+            "Potential proxy detected: device fingerprint already used by another student in this session.",
+          );
+          error.statusCode = 409;
+          error.decisionReason = "proxy_same_device_session";
+          throw error;
+        }
+
+        if (
+          geofenceSecuritySettings.blockDuplicateLocationReplay &&
+          locationString
+        ) {
+          const strictWindowStart = new Date(
+            Date.now() -
+              geofenceSecuritySettings.duplicateLocationReplayWindowSeconds *
+                1000,
+          );
+          const sameLocationRecent = await prisma.attendance.findFirst({
+            where: {
+              sessionId,
+              studentId: { not: studentId },
+              location: locationString,
+              timestamp: { gte: strictWindowStart },
+            },
+            select: { id: true, studentId: true },
+          });
+
+          if (sameLocationRecent) {
+            const error = new Error(
+              "Potential proxy detected: identical coordinates were used by another student moments ago.",
+            );
+            error.statusCode = 409;
+            error.decisionReason = "proxy_identical_location_replay";
+            throw error;
+          }
+        }
+
         const sameIpRecords = await prisma.attendance.findMany({
           where: {
             sessionId,
@@ -906,7 +996,7 @@ router.post(
 
         if (sameIpRecords.length > 0) {
           // Check for strong proxy signal: same device identifier
-          const deviceInfo = req.body.deviceInfo || "";
+          const deviceInfo = normalizedDeviceInfo || "";
           const sameDeviceRecord = deviceInfo
             ? sameIpRecords.find(
                 (r) => r.deviceInfo && r.deviceInfo === deviceInfo,
@@ -952,7 +1042,7 @@ router.post(
           notes: finalNotes,
           location: locationString,
           ipAddress: clientIp,
-          deviceInfo: req.body.deviceInfo,
+          deviceInfo: normalizedDeviceInfo,
         },
         include: {
           student: { include: { studentProfile: true } },

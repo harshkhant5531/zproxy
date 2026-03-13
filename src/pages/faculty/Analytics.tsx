@@ -156,6 +156,49 @@ export default function Analytics() {
           </div>
         </div>
 
+        <div className="grid gap-3 md:grid-cols-4">
+          <Card className="border border-border/70 bg-card/70">
+            <CardContent className="p-4">
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+                Completed Sessions
+              </p>
+              <p className="text-2xl font-semibold text-foreground mt-1">
+                {totalCompleted}
+              </p>
+            </CardContent>
+          </Card>
+          <Card className="border border-border/70 bg-card/70">
+            <CardContent className="p-4">
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+                Completion Rate
+              </p>
+              <p className="text-2xl font-semibold text-foreground mt-1">
+                {completionRate}%
+              </p>
+            </CardContent>
+          </Card>
+          <Card className="border border-border/70 bg-card/70">
+            <CardContent className="p-4">
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+                Avg Present Rate
+              </p>
+              <p className="text-2xl font-semibold text-foreground mt-1">
+                {avgPresentRate}%
+              </p>
+            </CardContent>
+          </Card>
+          <Card className="border border-border/70 bg-card/70">
+            <CardContent className="p-4">
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+                Tracked Students
+              </p>
+              <p className="text-2xl font-semibold text-foreground mt-1">
+                {students.length}
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+
         <div className="grid gap-8 lg:grid-cols-2">
           <Card className="bg-card border border-border shadow-sm motion-surface overflow-hidden group">
             <CardHeader className="bg-muted/30 border-b border-border px-6 py-4">
@@ -264,9 +307,7 @@ export default function Analytics() {
                     tickLine={false}
                     domain={[0, 100]}
                   />
-                  <Tooltip
-                    contentStyle={tooltipStyle}
-                  />
+                  <Tooltip contentStyle={tooltipStyle} />
                   <Line
                     type="monotone"
                     dataKey="attendance"

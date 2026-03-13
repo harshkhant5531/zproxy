@@ -135,6 +135,39 @@ export default function StudentDashboard() {
         </div>
       </div>
 
+      <div className="grid gap-3 md:grid-cols-3 motion-stagger">
+        <Card className="border border-border/70 bg-card/70">
+          <CardContent className="p-4">
+            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+              Weekly Present
+            </p>
+            <p className="text-2xl font-semibold text-foreground mt-1">
+              {weeklyData.reduce((a, d) => a + d.present, 0)}
+            </p>
+          </CardContent>
+        </Card>
+        <Card className="border border-border/70 bg-card/70">
+          <CardContent className="p-4">
+            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+              Weekly Sessions
+            </p>
+            <p className="text-2xl font-semibold text-foreground mt-1">
+              {weeklyData.reduce((a, d) => a + d.total, 0)}
+            </p>
+          </CardContent>
+        </Card>
+        <Card className="border border-border/70 bg-card/70">
+          <CardContent className="p-4">
+            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+              Below Threshold
+            </p>
+            <p className="text-2xl font-semibold text-foreground mt-1">
+              {flaggedCourses.length}
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 motion-stagger">
         <div>
           <StatCard
@@ -176,7 +209,10 @@ export default function StudentDashboard() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card className="bg-card border border-border shadow-sm motion-slide-up" style={{ animationDelay: '280ms' }}>
+        <Card
+          className="bg-card border border-border shadow-sm motion-slide-up"
+          style={{ animationDelay: "280ms" }}
+        >
           <CardHeader className="card-header-muted py-4 px-6">
             <CardTitle className="text-sm font-semibold text-foreground">
               This Week's Attendance
@@ -230,14 +266,17 @@ export default function StudentDashboard() {
           </CardContent>
         </Card>
 
-        <Card className="bg-card border border-border shadow-sm motion-slide-up" style={{ animationDelay: '280ms' }}>
+        <Card
+          className="bg-card border border-border shadow-sm motion-slide-up"
+          style={{ animationDelay: "280ms" }}
+        >
           <CardHeader className="card-header-muted py-4 px-6">
             <CardTitle className="text-sm font-semibold text-foreground">
               Attendance by Course
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 px-6 pb-6 pt-4 max-h-[260px] overflow-y-auto">
-          {courseAttendanceData.map((course: any, i: number) => (
+            {courseAttendanceData.map((course: any, i: number) => (
               <div
                 key={course.id}
                 className="space-y-1.5 motion-slide-up"

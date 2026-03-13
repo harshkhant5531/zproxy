@@ -108,6 +108,45 @@ export default function FacultyDashboard() {
         </Button>
       </div>
 
+      <div className="grid gap-3 md:grid-cols-3">
+        <Card className="border border-border/70 bg-card/70">
+          <CardContent className="p-4">
+            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+              Session Completion
+            </p>
+            <p className="text-2xl font-semibold text-foreground mt-1">
+              {todaySessions.length > 0
+                ? Math.round((completedToday / todaySessions.length) * 100)
+                : 0}
+              %
+            </p>
+          </CardContent>
+        </Card>
+        <Card className="border border-border/70 bg-card/70">
+          <CardContent className="p-4">
+            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+              Live Sessions
+            </p>
+            <p className="text-2xl font-semibold text-foreground mt-1">
+              {
+                todaySessions.filter((s: any) => s.status !== "completed")
+                  .length
+              }
+            </p>
+          </CardContent>
+        </Card>
+        <Card className="border border-border/70 bg-card/70">
+          <CardContent className="p-4">
+            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+              Class Average
+            </p>
+            <p className="text-2xl font-semibold text-foreground mt-1">
+              {performanceData?.statistics?.classAverage || 0}%
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div
           className="motion-page-enter motion-surface"
@@ -292,7 +331,7 @@ export default function FacultyDashboard() {
                   className="flex items-start gap-4 p-4 rounded-xl border border-transparent hover:border-border hover:bg-muted/20 transition-all cursor-default group motion-page-enter"
                   style={{ animationDelay: `${70 + i * 70}ms` }}
                 >
-                <div className="mt-1.5 h-2 w-2 rounded-full bg-primary shrink-0 group-hover:scale-125 transition-transform" />
+                  <div className="mt-1.5 h-2 w-2 rounded-full bg-primary shrink-0 group-hover:scale-125 transition-transform" />
                   <div className="space-y-1">
                     <p className="text-sm text-foreground font-black uppercase tracking-tight leading-none group-hover:text-primary transition-colors">
                       {item.text}
