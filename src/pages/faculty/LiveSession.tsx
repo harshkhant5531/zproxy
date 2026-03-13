@@ -271,15 +271,15 @@ export default function LiveSession() {
         operation="saving"
         label="Applying Override..."
       />
-      <div className="space-y-6 px-4 sm:px-0 scroll-mt-20">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="app-page">
+        <div className="app-page-header">
           <div>
-            <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+            <h1 className="page-header-title">
               {session?.subject?.name || session?.course?.code} —{" "}
               {session?.topic}
             </h1>
-            <p className="text-sm text-muted-foreground font-medium flex items-center gap-2 mt-1">
-              <Clock className="h-4 w-4 text-primary/70" />
+            <p className="page-header-sub flex items-center gap-2">
+              <Clock className="h-3 w-3 text-primary/70" />
               {session?.date &&
                 format(new Date(session.date), "MMMM dd, yyyy")}{" "}
               • {session?.startTime} - {session?.endTime}

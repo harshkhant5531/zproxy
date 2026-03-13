@@ -81,14 +81,12 @@ export default function LeaveManagement() {
         show={createLeaveMutation.isPending}
         operation="submitting"
       />
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
+      <div className="app-page">
+        <div className="app-page-header">
           <div>
-            <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-              Leave Requests
-            </h1>
-            <p className="text-sm text-muted-foreground mt-1">
-              Submit and track your leave requests.
+            <h1 className="page-header-title">Leave Requests</h1>
+            <p className="page-header-sub">
+              Submit and track your leave requests
             </p>
           </div>
           <Button

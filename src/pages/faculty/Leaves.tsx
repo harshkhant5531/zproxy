@@ -104,14 +104,11 @@ export default function FacultyLeaves() {
         operation="approving"
       />
       <FullScreenLoader show={rejectMutation.isPending} operation="rejecting" />
-      <div className="space-y-6">
-        {/* Page Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="app-page">
+        <div className="app-page-header">
           <div>
-            <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-              Leave Requests
-            </h1>
-            <p className="text-[10px] text-muted-foreground font-mono uppercase tracking-[0.2em] mt-1">
+            <h1 className="page-header-title">Leave Requests</h1>
+            <p className="page-header-sub">
               {leaves.length} Pending Approvals // Faculty Review Portal
             </p>
           </div>

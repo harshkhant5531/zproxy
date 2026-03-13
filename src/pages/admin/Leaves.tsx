@@ -16,7 +16,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Check, X, Loader2, FileText, RefreshCw, Clock, Filter } from "lucide-react";
+import {
+  Check,
+  X,
+  Loader2,
+  FileText,
+  RefreshCw,
+  Clock,
+  Filter,
+} from "lucide-react";
 import { FullScreenLoader } from "@/components/FullScreenLoader";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { leavesAPI } from "@/lib/api";
@@ -124,14 +132,11 @@ export default function AdminLeaves() {
         operation="approving"
       />
       <FullScreenLoader show={rejectMutation.isPending} operation="rejecting" />
-      <div className="space-y-6">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="app-page">
+        <div className="app-page-header">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-foreground">
-              Leave Approvals
-            </h1>
-            <p className="text-xs text-muted-foreground font-mono uppercase tracking-[0.2em] mt-1">
+            <h1 className="page-header-title">Leave Approvals</h1>
+            <p className="page-header-sub">
               {leaves.length} {statusFilter === "all" ? "Total" : statusFilter}{" "}
               Applications
             </p>

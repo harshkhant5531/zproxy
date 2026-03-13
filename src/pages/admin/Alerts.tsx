@@ -72,14 +72,14 @@ export default function ShortageAlerts() {
         show={isUsersLoading || isAttLoading}
         operation="loading"
       />
-      <div className="space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="app-page">
+        <div className="app-page-header">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
-              <ShieldAlert className="h-6 w-6 text-rose-500" /> Attendance
+            <h1 className="page-header-title flex items-center gap-2">
+              <ShieldAlert className="h-5 w-5 text-rose-500" /> Attendance
               Alerts
             </h1>
-            <p className="text-sm text-muted-foreground">
+            <p className="page-header-sub">
               Monitor students below attendance threshold
             </p>
           </div>
