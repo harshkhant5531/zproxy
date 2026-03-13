@@ -743,6 +743,14 @@ router.post(
   authMiddleware,
   [body("sessionId").isInt().withMessage("Session ID is required")],
   async (req, res, next) => {
+    let auditContext = {
+      attemptType: "manual",
+      sessionId: null,
+      decision: "rejected",
+      reason: "unknown",
+      geofence: null,
+    };
+
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
