@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import { API_HEALTH_URL } from "@/lib/api";
 import {
   Link,
   useLocation,
@@ -59,12 +60,10 @@ const Index = () => {
     const checkApi = async () => {
       try {
         console.log("Checking API health...");
-        // Use a simple endpoint like /auth/me or a root health check if available
-        // For now, we'll try to reach the API base URL
-        await fetch(
-          import.meta.env.VITE_API_URL ||
-            `${window.location.origin.replace(":8080", ":3001")}/api/auth/me`,
-        );
+        const response = await fetch(API_HEALTH_URL, { method: "GET" });
+        if (!response.ok) {
+          throw new Error(`Health check failed with status ${response.status}`);
+        }
         setApiStatus("online");
         console.log("API status: ONLINE");
       } catch (err) {
@@ -171,7 +170,10 @@ const Index = () => {
         {/* Left Section - Hero */}
         <div className="hidden lg:flex flex-1 flex-col justify-center px-16 z-10 relative">
           <div className="max-w-lg">
-            <div className="flex items-center gap-3 mb-10 motion-slide-left" style={{ animationDelay: '0ms' }}>
+            <div
+              className="flex items-center gap-3 mb-10 motion-slide-left"
+              style={{ animationDelay: "0ms" }}
+            >
               <div className="p-2.5 bg-primary/10 rounded-xl border border-primary/20 motion-breathe">
                 <ShieldCheck className="w-7 h-7 text-primary" />
               </div>
@@ -179,12 +181,18 @@ const Index = () => {
                 Aura Integrity
               </span>
             </div>
-            <h1 className="text-5xl font-bold tracking-tight text-foreground mb-6 leading-[1.1] motion-slide-left" style={{ animationDelay: '80ms' }}>
+            <h1
+              className="text-5xl font-bold tracking-tight text-foreground mb-6 leading-[1.1] motion-slide-left"
+              style={{ animationDelay: "80ms" }}
+            >
               Attendance Management
               <br />
               Platform
             </h1>
-            <p className="text-base text-muted-foreground mb-10 leading-relaxed motion-slide-left" style={{ animationDelay: '160ms' }}>
+            <p
+              className="text-base text-muted-foreground mb-10 leading-relaxed motion-slide-left"
+              style={{ animationDelay: "160ms" }}
+            >
               Secure, transparent, and seamless attendance management. Monitor
               academic integrity with real-time analytics and verified proof of
               presence.
@@ -214,7 +222,10 @@ const Index = () => {
 
         {/* Right Section - Login Form */}
         <div className="flex-1 flex items-center justify-center p-6 z-10 relative">
-          <Card className="w-full max-w-md bg-card border border-border shadow-lg motion-fade-scale" style={{ animationDelay: '200ms' }}>
+          <Card
+            className="w-full max-w-md bg-card border border-border shadow-lg motion-fade-scale"
+            style={{ animationDelay: "200ms" }}
+          >
             <CardHeader className="space-y-3 pb-4">
               <div className="flex justify-center mb-2 lg:hidden">
                 <div className="p-3 bg-primary/10 rounded-2xl border border-primary/20 motion-breathe">
