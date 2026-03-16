@@ -155,30 +155,24 @@ export default function AdminDashboard() {
         </div>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          <div
-            className="motion-page-enter motion-surface"
-            style={{ animationDelay: "30ms" }}
-          >
+          <div className="motion-page-enter" style={{ animationDelay: "30ms" }}>
             <StatCard
               title="Total Students"
               value={studentsData?.length.toString() || "0"}
               icon={Users}
-              className="app-card motion-surface"
+              className="app-card"
             />
           </div>
-          <div
-            className="motion-page-enter motion-surface"
-            style={{ animationDelay: "90ms" }}
-          >
+          <div className="motion-page-enter" style={{ animationDelay: "90ms" }}>
             <StatCard
               title="Staff Faculty"
               value={facultyData?.length.toString() || "0"}
               icon={ShieldAlert}
-              className="app-card motion-surface"
+              className="app-card"
             />
           </div>
           <div
-            className="motion-page-enter motion-surface"
+            className="motion-page-enter"
             style={{ animationDelay: "150ms" }}
           >
             <StatCard
@@ -186,18 +180,18 @@ export default function AdminDashboard() {
               value={coursesData?.length.toString() || "0"}
               subtitle={`${deptData?.length || 0} SECTORS`}
               icon={BookOpen}
-              className="bg-card border border-border shadow-sm motion-surface"
+              className="bg-card border border-border shadow-sm"
             />
           </div>
           <div
-            className="motion-page-enter motion-surface"
+            className="motion-page-enter"
             style={{ animationDelay: "210ms" }}
           >
             <StatCard
               title="Avg Attendance"
               value={`${avgAttendance}%`}
               icon={TrendingUp}
-              className="bg-card border border-border shadow-sm motion-surface"
+              className="bg-card border border-border shadow-sm"
             />
           </div>
         </div>
