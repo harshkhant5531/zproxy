@@ -102,6 +102,17 @@ const isPrivateNetworkOrigin = (origin) => {
 
 const allowPrivateNetworkOrigins =
   process.env.CORS_ALLOW_PRIVATE_NETWORK !== "false";
+const allowVercelPreviewOrigins =
+  process.env.CORS_ALLOW_VERCEL_PREVIEW_ORIGINS !== "false";
+
+const isVercelPreviewOrigin = (origin) => {
+  try {
+    const parsed = new URL(origin);
+    return /\.vercel\.app$/i.test(parsed.hostname);
+  } catch {
+    return false;
+  }
+};
 
 app.use(
   cors({
@@ -116,15 +127,16 @@ app.use(
         !origin ||
         allowedOrigins.has(normalizedOrigin) ||
         isWildcardAllowed ||
+        (allowVercelPreviewOrigins && isVercelPreviewOrigin(origin)) ||
         (allowPrivateNetworkOrigins && isPrivateNetworkOrigin(origin))
       ) {
         callback(null, true);
       } else {
-        callback(
-          new Error(
-            `CORS Violation: Origin ${origin} is not authorized for this instance.`,
-          ),
+        const corsError = new Error(
+          `CORS Violation: Origin ${origin} is not authorized for this instance.`,
         );
+        corsError.statusCode = 403;
+        callback(corsError);
       }
     },
     credentials: true,
