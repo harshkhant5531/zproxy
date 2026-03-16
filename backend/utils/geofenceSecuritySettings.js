@@ -9,7 +9,7 @@ const SETTINGS_PATH = path.resolve(
 );
 
 const DEFAULT_GEOFENCE_SECURITY_SETTINGS = {
-  maxAcceptableAccuracyMeters: 80,
+  maxAcceptableAccuracyMeters: 200,
   maxLocationAgeMs: 15000,
   baseToleranceMeters: 4,
   maxToleranceMeters: 12,

@@ -26,16 +26,62 @@ if (trustProxyEnv === "true") {
 const { getLocalIp } = require("./utils/network");
 const networkIp = getLocalIp();
 
-const baseOrigins = (process.env.CORS_ORIGIN || "http://localhost:8080").split(
-  ",",
-);
-const allowedOrigins = [
-  ...new Set([
-    ...baseOrigins,
-    `http://${networkIp}:8080`,
-    `http://localhost:8080`,
-  ]),
+const normalizeOrigin = (value) => {
+  const raw = String(value || "")
+    .trim()
+    .replace(/^['\"]|['\"]$/g, "")
+    .replace(/\/$/, "");
+
+  if (!raw) return "";
+
+  const withProtocol = /^https?:\/\//i.test(raw)
+    ? raw
+    : /^(localhost|127\.0\.0\.1|\d+\.\d+\.\d+\.\d+)(:\d+)?$/i.test(raw)
+      ? `http://${raw}`
+      : `https://${raw}`;
+
+  try {
+    const parsed = new URL(withProtocol);
+    return `${parsed.protocol}//${parsed.host}`.toLowerCase();
+  } catch {
+    return "";
+  }
+};
+
+const configuredOrigins = [
+  ...(process.env.CORS_ORIGIN || "http://localhost:8080").split(","),
+  process.env.FRONTEND_URL,
+  process.env.PUBLIC_FRONTEND_URL,
+  `http://${networkIp}:8080`,
+  "http://localhost:8080",
 ];
+
+const wildcardOriginMatchers = [];
+const allowedOrigins = new Set();
+
+for (const origin of configuredOrigins) {
+  const raw = String(origin || "")
+    .trim()
+    .replace(/^['\"]|['\"]$/g, "")
+    .replace(/\/$/, "");
+  if (!raw) continue;
+
+  if (raw.includes("*")) {
+    const maybeWithProtocol = /^https?:\/\//i.test(raw)
+      ? raw
+      : `https://${raw}`;
+    const regexPattern = maybeWithProtocol
+      .replace(/[.+?^${}()|[\]\\]/g, "\\$&")
+      .replace(/\*/g, "[^/.:]+");
+    wildcardOriginMatchers.push(new RegExp(`^${regexPattern}$`, "i"));
+    continue;
+  }
+
+  const normalized = normalizeOrigin(raw);
+  if (normalized) {
+    allowedOrigins.add(normalized);
+  }
+}
 
 const isPrivateNetworkOrigin = (origin) => {
   try {
@@ -60,10 +106,16 @@ const allowPrivateNetworkOrigins =
 app.use(
   cors({
     origin: (origin, callback) => {
+      const normalizedOrigin = normalizeOrigin(origin);
+      const isWildcardAllowed = wildcardOriginMatchers.some((matcher) =>
+        matcher.test(normalizedOrigin),
+      );
+
       // Allow if no origin (like mobile apps) or if it's in our allowed list
       if (
         !origin ||
-        allowedOrigins.includes(origin) ||
+        allowedOrigins.has(normalizedOrigin) ||
+        isWildcardAllowed ||
         (allowPrivateNetworkOrigins && isPrivateNetworkOrigin(origin))
       ) {
         callback(null, true);

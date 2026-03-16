@@ -18,7 +18,7 @@ const normalizeApiUrl = (value?: string) => {
   return url;
 };
 
-const getBaseUrl = () => {
+export const getApiBaseUrl = () => {
   const configuredUrl =
     normalizeApiUrl(import.meta.env.VITE_API_URL as string) ||
     normalizeApiUrl(import.meta.env.VITE_PUBLIC_API_URL as string);
@@ -36,7 +36,8 @@ const getBaseUrl = () => {
   return `${window.location.protocol}//${window.location.hostname}:3001/api`;
 };
 
-const API_BASE_URL = getBaseUrl();
+export const API_BASE_URL = getApiBaseUrl();
+export const API_HEALTH_URL = `${API_BASE_URL.replace(/\/$/, "")}/health`;
 
 // Create API instance
 const api = axios.create({
