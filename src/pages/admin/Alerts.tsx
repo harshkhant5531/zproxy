@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -8,13 +9,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import {
-  AlertTriangle,
-  Mail,
-  MessageSquare,
-  Phone,
-  ShieldAlert,
-} from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Mail, ShieldAlert } from "lucide-react";
 import { FullScreenLoader } from "@/components/FullScreenLoader";
 import { useQuery } from "@tanstack/react-query";
 import { reportsAPI, usersAPI } from "@/lib/api";
@@ -83,36 +79,33 @@ export default function ShortageAlerts() {
               Monitor students below attendance threshold
             </p>
           </div>
-          <div className="bg-destructive/10 border border-destructive/20 px-4 py-2 rounded flex items-center gap-3">
-            <div className="h-2 w-2 rounded-full bg-destructive" />
-            <p className="text-[10px] font-bold text-destructive uppercase tracking-widest">
-              {shortageStudents.length} Students Flagged
-            </p>
-          </div>
+          <Badge className="rounded-full bg-destructive/10 text-destructive border border-destructive/20 px-3 py-1 text-[10px] uppercase tracking-[0.12em]">
+            {shortageStudents.length} Students Flagged
+          </Badge>
         </div>
 
-        <Card className="bg-card/75 border-destructive/25 shadow-2xl overflow-hidden relative">
+        <Card className="app-card border-destructive/25 overflow-hidden relative">
           <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-rose-600 to-transparent" />
           <CardContent className="p-0">
             <Table>
               <TableHeader className="bg-muted/35 dark:bg-muted/20">
                 <TableRow className="border-border/60 hover:bg-transparent">
-                  <TableHead className="text-muted-foreground font-medium text-[10px] uppercase tracking-wider h-11 pl-6">
+                  <TableHead className="text-muted-foreground font-semibold text-[10px] uppercase tracking-[0.12em] h-11 pl-6">
                     Student Information
                   </TableHead>
-                  <TableHead className="text-muted-foreground font-medium text-[10px] uppercase tracking-wider h-11">
+                  <TableHead className="text-muted-foreground font-semibold text-[10px] uppercase tracking-[0.12em] h-11">
                     Department
                   </TableHead>
-                  <TableHead className="text-muted-foreground font-medium text-[10px] uppercase tracking-wider h-11">
+                  <TableHead className="text-muted-foreground font-semibold text-[10px] uppercase tracking-[0.12em] h-11">
                     Attendance Rate
                   </TableHead>
-                  <TableHead className="text-muted-foreground font-medium text-[10px] uppercase tracking-wider h-11">
+                  <TableHead className="text-muted-foreground font-semibold text-[10px] uppercase tracking-[0.12em] h-11">
                     Status
                   </TableHead>
-                  <TableHead className="text-muted-foreground font-medium text-[10px] uppercase tracking-wider h-11">
+                  <TableHead className="text-muted-foreground font-semibold text-[10px] uppercase tracking-[0.12em] h-11">
                     Parent Contacts
                   </TableHead>
-                  <TableHead className="text-muted-foreground font-medium text-[10px] uppercase tracking-wider h-11 text-right pr-6">
+                  <TableHead className="text-muted-foreground font-semibold text-[10px] uppercase tracking-[0.12em] h-11 text-right pr-6">
                     Actions
                   </TableHead>
                 </TableRow>
@@ -135,7 +128,7 @@ export default function ShortageAlerts() {
                   return (
                     <TableRow
                       key={s.id}
-                      className="border-border/50 hover:bg-destructive/8 transition-colors"
+                      className="border-border/50 hover:bg-destructive/10 transition-colors"
                     >
                       <TableCell className="pl-6">
                         <p className="font-bold text-sm text-foreground">
@@ -158,7 +151,7 @@ export default function ShortageAlerts() {
                       </TableCell>
                       <TableCell>
                         <span
-                          className={`text-[9px] px-2 py-0.5 rounded border font-black tracking-widest ${severityColor}`}
+                          className={`text-[9px] px-2 py-0.5 rounded-full border font-semibold tracking-[0.12em] ${severityColor}`}
                         >
                           {severity}
                         </span>
@@ -176,9 +169,11 @@ export default function ShortageAlerts() {
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8 text-muted-foreground hover:text-primary"
+                            className="h-9 w-9 text-muted-foreground hover:text-primary"
                             onClick={() =>
-                              toast.info(`Dispatching memo to ${s.username}`)
+                              toast.info(
+                                `Email reminder queued for ${s.username}`,
+                              )
                             }
                           >
                             <Mail className="h-3.5 w-3.5" />
@@ -186,9 +181,9 @@ export default function ShortageAlerts() {
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8 text-muted-foreground/80 hover:text-destructive"
+                            className="h-9 w-9 text-muted-foreground/80 hover:text-destructive"
                             onClick={() =>
-                              toast.error(`Inhibiting user access for ${s.id}`)
+                              toast.error(`Escalation flag added for ${s.id}`)
                             }
                           >
                             <ShieldAlert className="h-3.5 w-3.5" />
@@ -204,7 +199,7 @@ export default function ShortageAlerts() {
                       colSpan={6}
                       className="h-32 text-center text-muted-foreground italic font-mono uppercase tracking-[0.5em] text-[10px]"
                     >
-                      Neural integrity 100% — No breaches detected
+                      No attendance risks detected
                     </TableCell>
                   </TableRow>
                 )}
@@ -215,19 +210,23 @@ export default function ShortageAlerts() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4">
           {[
-            { label: "Critical Threshold", value: "50%", color: "bg-destructive" },
+            {
+              label: "Critical Threshold",
+              value: "50%",
+              color: "bg-destructive",
+            },
             { label: "High Sensitivity", value: "65%", color: "bg-warning" },
             { label: "Watchlist Target", value: "75%", color: "bg-warning" },
           ].map((item) => (
             <div
               key={item.label}
-              className="bg-card/70 p-3 border border-border/70 rounded-lg flex items-center justify-between"
+              className="app-card p-3 rounded-lg flex items-center justify-between"
             >
-              <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">
+              <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-[0.12em]">
                 {item.label}
               </span>
               <span
-                className={`text-xs font-black ${item.color.replace("bg-", "text-")} font-mono`}
+                className={`text-xs font-semibold ${item.color.replace("bg-", "text-")} font-mono`}
               >
                 {item.value}
               </span>

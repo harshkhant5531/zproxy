@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { AttendanceStatus, LeaveStatus } from "@/lib/types";
+import { Badge } from "@/components/ui/badge";
 
 const statusConfig = {
   present: {
@@ -45,9 +46,10 @@ export function StatusBadge({
   const config = statusConfig[status];
   if (!config) return null;
   return (
-    <span
+    <Badge
+      variant="outline"
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-medium",
+        "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-semibold",
         config.className,
       )}
     >
@@ -55,6 +57,6 @@ export function StatusBadge({
         className={cn("h-1.5 w-1.5 rounded-full flex-shrink-0", config.dot)}
       />
       {config.label}
-    </span>
+    </Badge>
   );
 }

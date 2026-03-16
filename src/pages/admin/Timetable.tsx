@@ -1,30 +1,16 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Calendar,
-  Loader2,
-  Clock,
-  MapPin,
-  Plus,
-  Trash2,
-  Save,
-  Search,
-  Filter,
-  Download,
-  Printer,
-  ChevronLeft,
-  ChevronRight,
-} from "lucide-react";
-import { FullScreenLoader } from "@/components/FullScreenLoader";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useEffect, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { timetableAPI, coursesAPI, usersAPI } from "@/lib/api";
-import { useState, useEffect } from "react";
+import { FullScreenLoader } from "@/components/FullScreenLoader";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Select,
@@ -36,10 +22,21 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Calendar,
+  Loader2,
+  Clock,
+  MapPin,
+  Plus,
+  Trash2,
+  Save,
+  Search,
+  Download,
+  Printer,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 
 // Define types for data structures
 interface Course {
@@ -111,8 +108,6 @@ export default function Timetable() {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
   const [subjects, setSubjects] = useState<Subject[]>([]);
-  const [faculty, setFaculty] = useState<Faculty[]>([]);
-
   const { data: timetableData, isLoading } = useQuery<TimetableEntry[]>({
     queryKey: ["admin", "timetable"],
     queryFn: async () => {
@@ -239,63 +234,74 @@ export default function Timetable() {
             <h1 className="page-header-title flex items-center gap-2">
               <Calendar className="h-5 w-5 text-primary" /> Timetable Management
             </h1>
-            <p className="page-header-sub">
-              Create and manage class schedules
-            </p>
+            <p className="page-header-sub">Create and manage class schedules</p>
           </div>
+          <Badge
+            variant="outline"
+            className="rounded-full border-primary/30 bg-primary/10 text-primary px-3 py-1 text-[10px] uppercase tracking-[0.12em]"
+          >
+            {entries.length} Total Entries
+          </Badge>
         </div>
 
-        {/* Search and Filter */}
-        <div className="flex flex-col sm:flex-row gap-4 items-center">
-          <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="text"
-              placeholder="Search courses, rooms, or faculty..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 bg-background/80 border-border/70 focus:ring-primary/40"
-            />
-          </div>
-          <Select value={filterType} onValueChange={setFilterType}>
-            <SelectTrigger className="w-[180px] bg-background/80 border-border/70">
-              <SelectValue placeholder="Filter by type" />
-            </SelectTrigger>
-            <SelectContent className="bg-popover border-border text-popover-foreground">
-              {sessionTypes.map((type) => (
-                <SelectItem key={type} value={type}>
-                  {type}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Button
-            variant="outline"
-            className="border-border/70 text-muted-foreground hover:text-foreground"
-            onClick={handleExport}
-          >
-            <Download className="h-4 w-4 mr-2" />
-            Export
-          </Button>
-          <Button
-            variant="outline"
-            className="border-border/70 text-muted-foreground hover:text-foreground"
-            onClick={handlePrint}
-          >
-            <Printer className="h-4 w-4 mr-2" />
-            Print
-          </Button>
-        </div>
+        <Card className="app-card">
+          <CardContent className="p-4">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+              <div className="relative flex-1 max-w-lg">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  type="text"
+                  placeholder="Search courses, rooms, or faculty..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10 bg-background/80 border-border/70 focus:ring-primary/40"
+                />
+              </div>
+              <Select value={filterType} onValueChange={setFilterType}>
+                <SelectTrigger className="w-[180px] bg-background/80 border-border/70">
+                  <SelectValue placeholder="Filter by type" />
+                </SelectTrigger>
+                <SelectContent className="bg-popover border-border text-popover-foreground">
+                  {sessionTypes.map((type) => (
+                    <SelectItem key={type} value={type}>
+                      {type}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Button
+                variant="outline"
+                className="border-border/70 text-muted-foreground hover:text-foreground"
+                onClick={handleExport}
+              >
+                <Download className="h-4 w-4 mr-2" />
+                Export
+              </Button>
+              <Button
+                variant="outline"
+                className="border-border/70 text-muted-foreground hover:text-foreground"
+                onClick={handlePrint}
+              >
+                <Printer className="h-4 w-4 mr-2" />
+                Print
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
 
-        <Card className="bg-card/75 border-border/60 overflow-x-auto shadow-2xl">
+        <Card className="app-card overflow-x-auto">
+          <CardHeader className="card-header-muted py-4 px-6">
+            <CardTitle className="text-sm font-semibold text-foreground">
+              Weekly Matrix
+            </CardTitle>
+          </CardHeader>
           <CardContent className="p-0">
             <div className="min-w-[1000px]">
-              {/* Header */}
               <div className="grid grid-cols-[130px_repeat(5,1fr)] bg-muted/35 dark:bg-muted/20 border-b border-border/70">
                 <div className="p-4 text-xs font-semibold text-foreground/80 uppercase tracking-[0.12em] flex items-center gap-2">
                   <Clock className="h-3 w-3" /> Time Slots
                 </div>
-                {days.map((day, idx) => (
+                {days.map((day) => (
                   <div
                     key={day}
                     className="p-4 text-sm font-semibold text-foreground text-center border-l border-border/50 uppercase tracking-[0.08em]"
@@ -305,7 +311,6 @@ export default function Timetable() {
                 ))}
               </div>
 
-              {/* Rows */}
               {timeSlots.map((slot) => (
                 <div
                   key={slot.start}
@@ -315,7 +320,6 @@ export default function Timetable() {
                     {slot.start} - {slot.end}
                   </div>
                   {days.map((day, dayIdx) => {
-                    // dayOfWeek is 0-6 (Sun-Sat), but our grid is Mon-Fri (1-5)
                     const session = currentEntries.find(
                       (e) =>
                         e.dayOfWeek === dayIdx + 1 &&
@@ -355,7 +359,7 @@ export default function Timetable() {
                               <p className="text-xs text-foreground/70 font-mono truncate">
                                 {session.facultyProfile?.fullName ||
                                   session.faculty?.username ||
-                                  "SECURE ACCESS"}
+                                  "Unassigned"}
                               </p>
                             </div>
                             <div className="absolute bottom-1 right-1">
@@ -421,11 +425,11 @@ export default function Timetable() {
         <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
           <DialogContent className="bg-popover border-border text-popover-foreground">
             <DialogHeader>
-              <DialogTitle className="text-xl font-black uppercase tracking-tight text-primary">
+              <DialogTitle className="text-lg font-semibold tracking-tight text-primary">
                 Create Timetable Entry
               </DialogTitle>
-              <DialogDescription className="text-muted-foreground font-mono text-[10px] uppercase tracking-widest">
-                Assigning for {selectedSlot && days[selectedSlot.day - 1]} //{" "}
+              <DialogDescription className="text-muted-foreground text-xs uppercase tracking-[0.12em]">
+                Assigning for {selectedSlot && days[selectedSlot.day - 1]} •{" "}
                 {selectedSlot?.time.start} - {selectedSlot?.time.end}
               </DialogDescription>
             </DialogHeader>
@@ -572,7 +576,7 @@ export default function Timetable() {
               </div>
 
               <Button
-                className="w-full mt-4 bg-primary hover:bg-primary/90 font-black uppercase tracking-tight"
+                className="w-full mt-4 bg-primary hover:bg-primary/90 font-semibold uppercase tracking-[0.08em]"
                 onClick={() =>
                   createMutation.mutate({
                     ...formData,

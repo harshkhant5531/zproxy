@@ -79,13 +79,26 @@ export default function StudentTimetable() {
               Semester
             </p>
           </div>
-          <Button variant="outline" size="sm" onClick={() => window.print()}>
-            <Printer className="h-4 w-4 mr-2" /> Print
-          </Button>
+          <div className="flex items-center gap-2">
+            <Badge
+              variant="outline"
+              className="rounded-full border-primary/30 bg-primary/10 text-primary px-3 py-1 text-[10px] uppercase tracking-[0.12em]"
+            >
+              {entries.length} Slots
+            </Badge>
+            <Button variant="outline" size="sm" onClick={() => window.print()}>
+              <Printer className="h-4 w-4 mr-2" /> Print
+            </Button>
+          </div>
         </div>
 
         {/* Timetable grid */}
-        <Card className="bg-card border border-border shadow-sm motion-surface overflow-hidden">
+        <Card className="app-card motion-surface overflow-hidden">
+          <CardHeader className="card-header-muted py-4 px-6">
+            <CardTitle className="text-sm font-semibold text-foreground">
+              Weekly Matrix
+            </CardTitle>
+          </CardHeader>
           <CardContent className="p-0 overflow-x-auto">
             <div className="min-w-[860px]">
               {/* Column headers */}
@@ -97,7 +110,9 @@ export default function StudentTimetable() {
                   <div
                     key={day}
                     className={`p-3.5 text-center text-[10px] font-bold uppercase tracking-widest border-l border-border transition-colors ${
-                      i === todayIdx ? "text-primary bg-primary/5" : "text-muted-foreground"
+                      i === todayIdx
+                        ? "text-primary bg-primary/5"
+                        : "text-muted-foreground"
                     }`}
                   >
                     {dayShort[i]}
@@ -215,7 +230,7 @@ export default function StudentTimetable() {
             faculty coordinator.
           </p>
         </div>
-      </div>{" "}
+      </div>
     </>
   );
 }

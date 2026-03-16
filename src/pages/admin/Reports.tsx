@@ -9,13 +9,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import {
-  FileBarChart,
-  Download,
-  FileText,
-  FileSpreadsheet,
-  Loader2,
-} from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { FileBarChart, Download, Loader2 } from "lucide-react";
 import { FullScreenLoader } from "@/components/FullScreenLoader";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { reportsAPI, coursesAPI } from "@/lib/api";
@@ -123,9 +118,15 @@ export default function Reports() {
             Generate accreditation-ready data for audits
           </p>
         </div>
+        <Badge
+          variant="outline"
+          className="rounded-full border-primary/30 bg-primary/10 text-primary px-3 py-1 text-[10px] uppercase tracking-[0.12em]"
+        >
+          {reportsData?.length || 0} Generated
+        </Badge>
       </div>
 
-      <Card className="bg-card border border-border shadow-sm motion-surface">
+      <Card className="app-card motion-surface">
         <CardHeader className="card-header-muted py-4 px-6">
           <CardTitle className="text-sm font-semibold text-foreground">
             Configuration Engine
@@ -134,11 +135,11 @@ export default function Reports() {
         <CardContent className="space-y-6 px-6 pb-6 pt-4">
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <div className="space-y-2">
-              <label className="text-[10px] font-semibold text-muted-foreground/70 uppercase tracking-widest">
+              <label className="text-[10px] font-semibold text-muted-foreground/70 uppercase tracking-[0.12em]">
                 Department Scope
               </label>
               <Select value={dept} onValueChange={setDept}>
-                <SelectTrigger className="bg-background border-border">
+                <SelectTrigger className="h-11 bg-background border-border">
                   <SelectValue placeholder="All Departments" />
                 </SelectTrigger>
                 <SelectContent>
@@ -152,11 +153,11 @@ export default function Reports() {
               </Select>
             </div>
             <div className="space-y-2">
-              <label className="text-[10px] font-semibold text-muted-foreground/70 uppercase tracking-widest">
+              <label className="text-[10px] font-semibold text-muted-foreground/70 uppercase tracking-[0.12em]">
                 Report Type
               </label>
               <Select value={reportType} onValueChange={setReportType}>
-                <SelectTrigger className="bg-background border-border">
+                <SelectTrigger className="h-11 bg-background border-border">
                   <SelectValue placeholder="Select report type" />
                 </SelectTrigger>
                 <SelectContent>
@@ -169,30 +170,30 @@ export default function Reports() {
               </Select>
             </div>
             <div className="space-y-2">
-              <label className="text-[10px] font-semibold text-muted-foreground/70 uppercase tracking-widest">
+              <label className="text-[10px] font-semibold text-muted-foreground/70 uppercase tracking-[0.12em]">
                 From Date
               </label>
               <Input
                 type="date"
-                className="bg-background border-border"
+                className="h-11 bg-background border-border"
                 value={dateFrom}
                 onChange={(e) => setDateFrom(e.target.value)}
               />
             </div>
             <div className="space-y-2">
-              <label className="text-[10px] font-semibold text-muted-foreground/70 uppercase tracking-widest">
+              <label className="text-[10px] font-semibold text-muted-foreground/70 uppercase tracking-[0.12em]">
                 To Date
               </label>
               <Input
                 type="date"
-                className="bg-background border-border"
+                className="h-11 bg-background border-border"
                 value={dateTo}
                 onChange={(e) => setDateTo(e.target.value)}
               />
             </div>
           </div>
           <Button
-            className="px-8 font-semibold"
+            className="h-11 px-8 font-semibold"
             disabled={!dept || !reportType || isGenerating}
             onClick={handleGenerate}
           >
@@ -207,14 +208,14 @@ export default function Reports() {
       </Card>
 
       <div className="space-y-4">
-        <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">
+        <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-[0.12em]">
           Generated Reports
         </h2>
         <div className="grid gap-4 md:grid-cols-2">
           {reportsData?.map((r: any) => (
             <Card
               key={r.id}
-              className="bg-card border border-border shadow-sm group hover:border-primary/20 transition-all duration-200"
+              className="app-card group hover:border-primary/20 transition-all duration-200"
             >
               <CardContent className="p-5 flex items-start justify-between">
                 <div className="space-y-1.5 min-w-0 flex-1 pr-3">
@@ -224,8 +225,8 @@ export default function Reports() {
                   <p className="text-[10px] text-muted-foreground/60 font-mono uppercase tracking-tight">
                     Scope: {r.scope} · Status: {r.status}
                   </p>
-                  <div className="mt-2 flex items-center gap-2 text-[11px] text-muted-foreground/50">
-                    <span className="h-1.5 w-1.5 rounded-full bg-success" />
+                  <div className="mt-2 flex items-center gap-2 text-[11px] text-muted-foreground/60">
+                    <span className="h-1.5 w-1.5 rounded-full bg-success animate-live-blink" />
                     Generated: {new Date(r.createdAt).toLocaleDateString()}
                   </div>
                 </div>
