@@ -51,6 +51,21 @@ export default function CreateSession() {
   const selectedSubject = facultySubjects.find(
     (s: any) => s.id.toString() === subjectId,
   );
+  const radiusValue = Math.min(
+    MAX_RADIUS_METERS,
+    Math.max(
+      MIN_RADIUS_METERS,
+      Number.parseInt(radius, 10) || DEFAULT_RADIUS_METERS,
+    ),
+  );
+  const radiusZone =
+    radiusValue <= 24
+      ? "office"
+      : radiusValue <= 60
+        ? "class"
+        : radiusValue <= 120
+          ? "auditorium"
+          : "max";
 
   const createSessionMutation = useMutation({
     mutationFn: (data: any) => sessionsAPI.createSession(data),
@@ -314,7 +329,8 @@ export default function CreateSession() {
                           MAX_RADIUS_METERS,
                           Math.max(
                             MIN_RADIUS_METERS,
-                            Number.parseInt(e.target.value, 10) || 25,
+                            Number.parseInt(e.target.value, 10) ||
+                              DEFAULT_RADIUS_METERS,
                           ),
                         );
                         setRadius(String(nextRadius));
@@ -322,16 +338,40 @@ export default function CreateSession() {
                       className="w-full h-1.5 bg-muted rounded-lg appearance-none cursor-pointer accent-primary"
                     />
                     <div className="flex justify-between mt-2">
-                      <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest text-left">
+                      <span
+                        className={`text-[8px] font-bold uppercase tracking-widest text-left ${
+                          radiusZone === "office"
+                            ? "text-primary"
+                            : "text-muted-foreground"
+                        }`}
+                      >
                         Office (10m)
                       </span>
-                      <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest text-primary text-center">
+                      <span
+                        className={`text-[8px] font-bold uppercase tracking-widest text-center ${
+                          radiusZone === "class"
+                            ? "text-primary"
+                            : "text-muted-foreground"
+                        }`}
+                      >
                         Class (25m)
                       </span>
-                      <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest text-success text-center">
+                      <span
+                        className={`text-[8px] font-bold uppercase tracking-widest text-center ${
+                          radiusZone === "auditorium"
+                            ? "text-success"
+                            : "text-muted-foreground"
+                        }`}
+                      >
                         Auditorium (100m)
                       </span>
-                      <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest text-right">
+                      <span
+                        className={`text-[8px] font-bold uppercase tracking-widest text-right ${
+                          radiusZone === "max"
+                            ? "text-warning"
+                            : "text-muted-foreground"
+                        }`}
+                      >
                         Max (200m)
                       </span>
                     </div>
@@ -405,7 +445,8 @@ export default function CreateSession() {
                     <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                   ) : (
                     <>
-                      <BookOpen className="mr-3 h-5 w-5" /> Execute Initialization
+                      <BookOpen className="mr-3 h-5 w-5" /> Execute
+                      Initialization
                     </>
                   )}
                 </Button>

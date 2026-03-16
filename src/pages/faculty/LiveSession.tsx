@@ -30,6 +30,11 @@ import { FullScreenLoader } from "@/components/FullScreenLoader";
 import { useParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { sessionsAPI, attendanceAPI } from "@/lib/api";
+import {
+  getGeolocationPermissionState,
+  getLocationErrorMessage,
+  requestStabilizedPositionWithRetry,
+} from "@/lib/location";
 import { format } from "date-fns";
 import { toast } from "sonner";
 
@@ -39,6 +44,7 @@ export default function LiveSession() {
   const [showOverride, setShowOverride] = useState(false);
   const [overrideStudentId, setOverrideStudentId] = useState("");
   const [overrideReason, setOverrideReason] = useState("");
+  const [isCalibratingAnchor, setIsCalibratingAnchor] = useState(false);
 
   const { data: sessionData, isLoading: isSessionLoading } = useQuery({
     queryKey: ["session", id],
@@ -96,6 +102,18 @@ export default function LiveSession() {
       setShowOverride(false);
       setOverrideStudentId("");
       setOverrideReason("");
+    },
+  });
+
+  const calibrateAnchorMutation = useMutation({
+    mutationFn: (data: { facultyLat: number; facultyLng: number }) =>
+      sessionsAPI.updateSession(id!, data),
+    onSuccess: () => {
+      toast.success("Session anchor updated");
+      queryClient.invalidateQueries({ queryKey: ["session", id] });
+    },
+    onError: (err: any) => {
+      toast.error(err.response?.data?.message || "Failed to update anchor");
     },
   });
 
