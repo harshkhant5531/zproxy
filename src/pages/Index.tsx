@@ -27,7 +27,6 @@ import {
   Sparkles,
   Radar,
   GraduationCap,
-  Zap,
   BarChart3,
   Shield,
   Chrome,
@@ -184,16 +183,13 @@ const Index = () => {
                 <p className="text-sm font-semibold tracking-tight">
                   Aura Grid
                 </p>
-                <p className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
-                  Integrity Console
-                </p>
               </div>
             </div>
             <Badge
               variant="outline"
               className="rounded-full px-3 py-1 text-[10px] uppercase tracking-[0.12em] border-primary/30 bg-primary/10 text-primary"
             >
-              March 2026
+              Secure Access
             </Badge>
           </header>
 
@@ -201,34 +197,33 @@ const Index = () => {
             <section className="rounded-3xl border border-border/70 bg-card/70 p-6 sm:p-8 lg:p-10 backdrop-blur motion-fade-scale">
               <div className="max-w-2xl">
                 <Badge className="mb-4 rounded-full bg-primary/15 text-primary border border-primary/25">
-                  <Sparkles className="mr-1 h-3.5 w-3.5" /> New Interface
+                  <Sparkles className="mr-1 h-3.5 w-3.5" /> Attendance Portal
                 </Badge>
                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight tracking-tight">
-                  Campus Attendance,
+                  Campus Attendance
                   <br />
-                  Reframed For Precision
+                  Command Center
                 </h1>
                 <p className="mt-4 max-w-xl text-sm sm:text-base text-muted-foreground leading-relaxed">
-                  A focused command surface for institutions that need
-                  reliability, transparency, and speed across attendance,
-                  reporting, and security workflows.
+                  One secure place to run attendance, sessions, reports, and
+                  daily academic operations.
                 </p>
 
                 <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-3">
                   {[
                     {
                       label: "Realtime",
-                      sub: "Session telemetry",
+                      sub: "Sessions",
                       icon: Radar,
                     },
                     {
                       label: "Integrity",
-                      sub: "Proxy-resistant",
+                      sub: "Security",
                       icon: Shield,
                     },
                     {
                       label: "Insights",
-                      sub: "Actionable analytics",
+                      sub: "Reports",
                       icon: BarChart3,
                     },
                   ].map((item) => (
@@ -245,27 +240,6 @@ const Index = () => {
                       </CardContent>
                     </Card>
                   ))}
-                </div>
-
-                <div className="mt-8 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                  <Badge
-                    variant="outline"
-                    className="rounded-full border-border/80"
-                  >
-                    <GraduationCap className="mr-1 h-3.5 w-3.5" /> Student
-                  </Badge>
-                  <Badge
-                    variant="outline"
-                    className="rounded-full border-border/80"
-                  >
-                    Faculty
-                  </Badge>
-                  <Badge
-                    variant="outline"
-                    className="rounded-full border-border/80"
-                  >
-                    Administration
-                  </Badge>
                 </div>
               </div>
             </section>
@@ -301,7 +275,7 @@ const Index = () => {
                     </div>
                   </div>
                   <CardDescription className="text-xs uppercase tracking-[0.12em] text-muted-foreground">
-                    Institutional credentials required
+                    Use institutional credentials
                   </CardDescription>
                 </CardHeader>
                 <form onSubmit={handleLogin}>
@@ -367,7 +341,7 @@ const Index = () => {
 
                     <div className="w-full flex items-center gap-2 text-[10px] uppercase tracking-[0.12em] text-muted-foreground/70">
                       <div className="h-px flex-1 bg-border" />
-                      Or continue with
+                      Or
                       <div className="h-px flex-1 bg-border" />
                     </div>
 
@@ -387,10 +361,6 @@ const Index = () => {
                         Unavailable
                       </Button>
                     )}
-
-                    <p className="text-center text-xs text-muted-foreground/70">
-                      Unauthorized access is monitored and audited.
-                    </p>
                   </CardFooter>
                 </form>
               </Card>

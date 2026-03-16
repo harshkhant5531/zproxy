@@ -157,10 +157,7 @@ export default function FacultyDashboard() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div
-          className="motion-page-enter motion-surface"
-          style={{ animationDelay: "30ms" }}
-        >
+        <div className="motion-page-enter" style={{ animationDelay: "30ms" }}>
           <StatCard
             title="Today's Sessions"
             value={todaySessions.length.toString()}
@@ -168,10 +165,7 @@ export default function FacultyDashboard() {
             icon={CalendarCheck}
           />
         </div>
-        <div
-          className="motion-page-enter motion-surface"
-          style={{ animationDelay: "90ms" }}
-        >
+        <div className="motion-page-enter" style={{ animationDelay: "90ms" }}>
           <StatCard
             title="Assigned Subjects"
             value={subjectsData?.length.toString() || "0"}
@@ -179,10 +173,7 @@ export default function FacultyDashboard() {
             icon={BookOpen}
           />
         </div>
-        <div
-          className="motion-page-enter motion-surface"
-          style={{ animationDelay: "150ms" }}
-        >
+        <div className="motion-page-enter" style={{ animationDelay: "150ms" }}>
           <StatCard
             title="Class Average"
             value={`${performanceData?.statistics?.classAverage || 0}%`}
@@ -190,10 +181,7 @@ export default function FacultyDashboard() {
             icon={BarChart3}
           />
         </div>
-        <div
-          className="motion-page-enter motion-surface"
-          style={{ animationDelay: "210ms" }}
-        >
+        <div className="motion-page-enter" style={{ animationDelay: "210ms" }}>
           <StatCard
             title="Total Students"
             value={
