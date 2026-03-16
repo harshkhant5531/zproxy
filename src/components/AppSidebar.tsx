@@ -36,7 +36,6 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import React from "react";
 import { Link } from "react-router-dom";
 
@@ -130,70 +129,30 @@ export function AppSidebar() {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
   const config = roleConfig[role];
-  const totalLinks = config.sections.reduce(
-    (sum, section) => sum + section.items.length,
-    0,
-  );
 
   return (
     <Sidebar
       collapsible="icon"
-      className="border-r border-sidebar-border/80 bg-[linear-gradient(180deg,hsl(var(--sidebar))_0%,hsl(var(--sidebar)/0.96)_45%,hsl(var(--sidebar)/0.9)_100%)]"
+      className="border-r border-sidebar-border/80 bg-sidebar"
     >
-      <SidebarHeader className="p-4 pb-2">
+      <SidebarHeader className="p-3 pb-2">
         {!collapsed ? (
-          <div className="mb-3 rounded-2xl border border-sidebar-border/90 bg-sidebar-accent/45 px-3 py-3">
-            <div className="flex items-center gap-3">
-              <div className="h-11 w-11 rounded-2xl bg-sidebar-primary/15 border border-sidebar-primary/30 flex items-center justify-center flex-shrink-0 motion-float-delayed motion-press shadow-sm">
-                <Shield className="h-5 w-5 text-sidebar-primary" />
-              </div>
-              <div>
-                <h1 className="text-base font-semibold tracking-tight text-sidebar-foreground leading-none">
-                  Aura Grid
-                </h1>
-                <p className="text-[11px] text-sidebar-foreground/70 mt-1 uppercase tracking-[0.14em]">
-                  Integrity Suite
-                </p>
-              </div>
+          <div className="mb-2 flex items-center gap-2 px-2 py-1">
+            <div className="h-8 w-8 rounded-lg bg-sidebar-primary/10 border border-sidebar-primary/20 flex items-center justify-center flex-shrink-0">
+              <Shield className="h-4 w-4 text-sidebar-primary" />
             </div>
-            <div className="mt-3 flex items-center justify-between rounded-xl border border-sidebar-border/70 bg-sidebar/60 px-2.5 py-1.5">
-              <p className="text-[10px] uppercase tracking-wider text-sidebar-foreground/70">
-                Session Role
-              </p>
-              <Badge
-                variant="outline"
-                className="rounded-full border-sidebar-primary/35 bg-sidebar-primary/12 text-sidebar-primary text-[10px] px-2 py-0"
-              >
+            <div>
+              <h1 className="text-sm font-semibold tracking-tight text-sidebar-foreground leading-none">
+                Aura Grid
+              </h1>
+              <p className="text-[10px] text-sidebar-foreground/70 mt-0.5 uppercase tracking-[0.12em]">
                 {config.label}
-              </Badge>
+              </p>
             </div>
           </div>
         ) : (
-          <div className="mb-3 h-10 w-10 rounded-2xl bg-sidebar-primary/15 border border-sidebar-primary/25 flex items-center justify-center text-sidebar-primary font-semibold text-sm shadow-sm">
-            AG
-          </div>
-        )}
-        {!collapsed && (
-          <div
-            className="grid grid-cols-2 gap-2 mb-1 motion-slide-up"
-            style={{ animationDelay: "80ms" }}
-          >
-            <div className="rounded-xl border border-sidebar-primary/30 bg-sidebar-primary/10 px-2.5 py-2">
-              <p className="text-[9px] font-semibold uppercase tracking-widest text-sidebar-primary/80">
-                Role
-              </p>
-              <p className="text-[11px] font-semibold text-sidebar-primary mt-0.5 flex items-center gap-1">
-                <config.icon className="h-3.5 w-3.5" /> {config.label}
-              </p>
-            </div>
-            <div className="rounded-xl border border-sidebar-border/80 bg-sidebar/70 px-2.5 py-2">
-              <p className="text-[9px] font-semibold uppercase tracking-widest text-sidebar-foreground/70">
-                Modules
-              </p>
-              <p className="text-[11px] font-semibold text-sidebar-foreground mt-0.5">
-                {totalLinks}
-              </p>
-            </div>
+          <div className="mb-2 h-8 w-8 rounded-xl bg-sidebar-primary/15 border border-sidebar-primary/25 flex items-center justify-center text-sidebar-primary font-semibold text-xs">
+            A
           </div>
         )}
       </SidebarHeader>
@@ -203,27 +162,26 @@ export function AppSidebar() {
       <SidebarContent>
         {config.sections.map((section) => (
           <SidebarGroup key={section.label}>
-            <SidebarGroupLabel className="text-[10px] uppercase tracking-[0.12em] text-sidebar-foreground/55 px-3">
+            <SidebarGroupLabel className="text-[10px] uppercase tracking-[0.1em] text-sidebar-foreground/55 px-3">
               {section.label}
             </SidebarGroupLabel>
-            <SidebarGroupContent className="px-2 pb-1">
+            <SidebarGroupContent className="px-2 pb-0.5">
               <SidebarMenu>
                 {section.items.map((item, idx) => {
                   return (
                     <SidebarMenuItem
                       key={item.url}
-                      style={{ animationDelay: `${idx * 40}ms` }}
-                      className="motion-slide-up"
+                      style={{ animationDelay: `${idx * 25}ms` }}
                     >
                       <SidebarMenuButton asChild tooltip={item.title}>
                         <NavLink
                           to={item.url}
                           end
-                          className="group/sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sidebar-foreground/80 hover:text-sidebar-foreground hover:bg-sidebar-accent/70 transition-colors duration-160 text-sm font-medium motion-press border border-transparent"
-                          activeClassName="bg-sidebar-primary/14 text-sidebar-primary hover:bg-sidebar-primary/18 font-semibold border border-sidebar-primary/35 shadow-[inset_0_0_0_1px_hsl(var(--sidebar-primary)/0.22)]"
+                          className="group/sidebar-link flex items-center gap-2.5 px-3 py-2 rounded-md text-sidebar-foreground/80 hover:text-sidebar-foreground hover:bg-sidebar-accent/55 transition-colors duration-150 text-sm font-medium border border-transparent"
+                          activeClassName="bg-sidebar-primary/12 text-sidebar-primary font-semibold border border-sidebar-primary/30"
                         >
-                          <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-transparent text-sidebar-foreground/65 group-hover/sidebar-link:text-sidebar-primary group-hover/sidebar-link:bg-sidebar-primary/10 transition-all duration-160 flex-shrink-0">
-                            <item.icon className="h-4 w-4" />
+                          <span className="inline-flex items-center justify-center text-sidebar-foreground/65 group-hover/sidebar-link:text-sidebar-primary transition-colors duration-150 flex-shrink-0">
+                            <item.icon className="h-[15px] w-[15px]" />
                           </span>
                           {!collapsed && (
                             <span className="truncate">{item.title}</span>
@@ -239,11 +197,11 @@ export function AppSidebar() {
         ))}
       </SidebarContent>
 
-      <SidebarFooter className="p-3 border-t border-sidebar-border/80">
+      <SidebarFooter className="p-2 border-t border-sidebar-border/80">
         {!collapsed && user ? (
-          <div className="rounded-xl bg-sidebar-accent/45 border border-sidebar-border/80 p-3 motion-surface">
+          <div className="rounded-lg bg-sidebar-accent/35 border border-sidebar-border/70 p-2.5">
             <div className="flex items-center gap-3">
-              <div className="h-9 w-9 rounded-full bg-sidebar-primary/15 flex items-center justify-center text-[11px] font-semibold text-sidebar-primary border border-sidebar-primary/25 flex-shrink-0">
+              <div className="h-8 w-8 rounded-full bg-sidebar-primary/15 flex items-center justify-center text-[10px] font-semibold text-sidebar-primary border border-sidebar-primary/25 flex-shrink-0">
                 {(user.profile?.fullName || user.username)
                   .split(" ")
                   .map((n: string) => n[0])
@@ -264,7 +222,7 @@ export function AppSidebar() {
                 asChild
                 variant="ghost"
                 size="icon"
-                className="h-7 w-7 text-sidebar-foreground/70 hover:text-sidebar-primary hover:bg-sidebar-primary/10 transition-colors flex-shrink-0"
+                className="h-6 w-6 text-sidebar-foreground/70 hover:text-sidebar-primary hover:bg-sidebar-primary/10 transition-colors flex-shrink-0"
                 title="Profile"
               >
                 <Link to="/profile">
@@ -274,7 +232,7 @@ export function AppSidebar() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-7 w-7 text-sidebar-foreground/70 hover:text-rose-500 hover:bg-rose-500/10 transition-colors flex-shrink-0"
+                className="h-6 w-6 text-sidebar-foreground/70 hover:text-rose-500 hover:bg-rose-500/10 transition-colors flex-shrink-0"
                 onClick={() => logout()}
                 title="Sign out"
               >
