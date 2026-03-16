@@ -43,6 +43,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { FullScreenLoader } from "@/components/FullScreenLoader";
 import { attendanceAPI } from "@/lib/api";
+import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 
 const AnimatedStatCard = ({
