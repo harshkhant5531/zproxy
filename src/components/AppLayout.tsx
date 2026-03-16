@@ -3,8 +3,7 @@ import { AppSidebar } from "@/components/AppSidebar";
 import { Outlet, useLocation } from "react-router-dom";
 import { ModeToggle } from "@/components/ModeToggle";
 import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
-import { Orbit, Command } from "lucide-react";
+import { Command } from "lucide-react";
 
 function getPageTitle(pathname: string): string {
   const segments = pathname.split("/").filter(Boolean);
@@ -54,13 +53,6 @@ export function AppLayout() {
                 <h1 className="text-sm sm:text-base font-semibold text-foreground truncate">
                   {pageTitle}
                 </h1>
-                <Badge
-                  variant="outline"
-                  className="hidden md:inline-flex rounded-full border-primary/30 bg-primary/10 text-primary px-2 py-0.5 text-[10px]"
-                >
-                  <Orbit className="h-3 w-3 mr-1" />
-                  Adaptive UI
-                </Badge>
               </div>
             </div>
             <div className="flex items-center gap-2 sm:gap-3">
@@ -79,7 +71,7 @@ export function AppLayout() {
               <div className="absolute top-[28%] -left-14 h-52 w-52 rounded-full bg-warning/15 blur-3xl motion-float-delayed" />
               <div className="absolute -bottom-20 right-[26%] h-60 w-60 rounded-full bg-info/15 blur-3xl motion-float" />
             </div>
-            <div className="app-main-shell rounded-2xl border border-border/60 bg-card/50 p-3 sm:p-4 lg:p-5 shadow-[0_20px_70px_-45px_rgba(17,24,39,0.45)]">
+            <div className="app-main-shell p-1 sm:p-2 lg:p-3">
               <Outlet />
             </div>
           </main>

@@ -339,26 +339,26 @@ export default function FacultyManagement() {
         </div>
 
         <div className="grid gap-6">
-          <Card className="bg-slate-900/40 border-slate-800">
+          <Card className="app-card overflow-hidden">
             <CardHeader>
-              <CardTitle className="text-sm font-medium text-slate-400 uppercase tracking-wider">
+              <CardTitle className="text-sm font-semibold text-muted-foreground uppercase tracking-[0.12em]">
                 Active Faculty Members
               </CardTitle>
             </CardHeader>
             <CardContent>
               <Table>
-                <TableHeader className="bg-slate-950/60">
-                  <TableRow className="border-slate-800">
-                    <TableHead className="text-slate-400 font-bold text-[10px] uppercase">
+                <TableHeader className="bg-muted/40">
+                  <TableRow className="border-border/60">
+                    <TableHead className="text-muted-foreground font-semibold text-[10px] uppercase tracking-[0.12em]">
                       Faculty Info
                     </TableHead>
-                    <TableHead className="text-slate-400 font-bold text-[10px] uppercase">
+                    <TableHead className="text-muted-foreground font-semibold text-[10px] uppercase tracking-[0.12em]">
                       Department & Role
                     </TableHead>
-                    <TableHead className="text-slate-400 font-bold text-[10px] uppercase">
+                    <TableHead className="text-muted-foreground font-semibold text-[10px] uppercase tracking-[0.12em]">
                       Assigned Subjects
                     </TableHead>
-                    <TableHead className="text-slate-400 font-bold text-[10px] uppercase text-right">
+                    <TableHead className="text-muted-foreground font-semibold text-[10px] uppercase tracking-[0.12em] text-right">
                       Actions
                     </TableHead>
                   </TableRow>
@@ -367,7 +367,7 @@ export default function FacultyManagement() {
                   {faculty?.map((member: any) => (
                     <TableRow
                       key={member.id}
-                      className="border-slate-800 hover:bg-white/5 transition-colors"
+                      className="border-border/60 hover:bg-muted/25 transition-colors"
                     >
                       <TableCell>
                         <div className="flex items-center gap-3">
@@ -399,7 +399,7 @@ export default function FacultyManagement() {
                           {member.facultyCourses?.map((course: any) => (
                             <span
                               key={course.id}
-                              className="text-[9px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded border border-slate-700"
+                              className="text-[9px] bg-primary/10 text-primary px-2 py-0.5 rounded-full border border-primary/20"
                             >
                               {course.code}
                             </span>
@@ -422,7 +422,7 @@ export default function FacultyManagement() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="text-slate-400 hover:text-white hover:bg-white/10"
+                            className="text-muted-foreground hover:text-foreground hover:bg-muted"
                             onClick={() => handleEdit(member)}
                           >
                             <Edit2 className="h-4 w-4" />
