@@ -2,6 +2,7 @@
 import { StatCard } from "@/components/StatCard";
 import { StatusBadge } from "@/components/StatusBadge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import {
   Table,
   TableBody,
@@ -133,10 +134,16 @@ export default function StudentDashboard() {
               : ""}
           </p>
         </div>
+        <Badge
+          variant="outline"
+          className="rounded-full border-primary/30 bg-primary/10 text-primary px-3 py-1 text-[10px] uppercase tracking-[0.12em]"
+        >
+          Weekly View
+        </Badge>
       </div>
 
       <div className="grid gap-3 md:grid-cols-3 motion-stagger">
-        <Card className="border border-border/70 bg-card/70">
+        <Card className="app-card bg-card/80 border-border/70">
           <CardContent className="p-4">
             <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
               Weekly Present
@@ -146,7 +153,7 @@ export default function StudentDashboard() {
             </p>
           </CardContent>
         </Card>
-        <Card className="border border-border/70 bg-card/70">
+        <Card className="app-card bg-card/80 border-border/70">
           <CardContent className="p-4">
             <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
               Weekly Sessions
@@ -156,7 +163,7 @@ export default function StudentDashboard() {
             </p>
           </CardContent>
         </Card>
-        <Card className="border border-border/70 bg-card/70">
+        <Card className="app-card bg-card/80 border-border/70">
           <CardContent className="p-4">
             <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
               Below Threshold
@@ -210,7 +217,7 @@ export default function StudentDashboard() {
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card
-          className="bg-card border border-border shadow-sm motion-slide-up"
+          className="app-card motion-slide-up"
           style={{ animationDelay: "280ms" }}
         >
           <CardHeader className="card-header-muted py-4 px-6">
@@ -267,7 +274,7 @@ export default function StudentDashboard() {
         </Card>
 
         <Card
-          className="bg-card border border-border shadow-sm motion-slide-up"
+          className="app-card motion-slide-up"
           style={{ animationDelay: "280ms" }}
         >
           <CardHeader className="card-header-muted py-4 px-6">
@@ -304,7 +311,7 @@ export default function StudentDashboard() {
         </Card>
       </div>
 
-      <Card className="bg-card border border-border shadow-sm motion-surface">
+      <Card className="app-card motion-surface">
         <CardHeader className="card-header-muted py-4 px-6">
           <CardTitle className="text-sm font-semibold text-foreground">
             Recent Attendance Log

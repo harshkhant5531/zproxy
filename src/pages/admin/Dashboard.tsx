@@ -1,5 +1,6 @@
 import { StatCard } from "@/components/StatCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import {
   BarChart,
   Bar,
@@ -112,10 +113,16 @@ export default function AdminDashboard() {
               Global System Metrics // Admin Portal
             </p>
           </div>
+          <Badge
+            variant="outline"
+            className="rounded-full border-primary/30 bg-primary/10 text-primary px-3 py-1 text-[10px] uppercase tracking-[0.12em]"
+          >
+            Central Analytics
+          </Badge>
         </div>
 
         <div className="grid gap-3 md:grid-cols-3">
-          <Card className="border border-border/70 bg-card/70">
+          <Card className="app-card bg-card/80 border-border/70">
             <CardContent className="p-4">
               <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
                 Risk Students
@@ -125,7 +132,7 @@ export default function AdminDashboard() {
               </p>
             </CardContent>
           </Card>
-          <Card className="border border-border/70 bg-card/70">
+          <Card className="app-card bg-card/80 border-border/70">
             <CardContent className="p-4">
               <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
                 Departments
@@ -135,7 +142,7 @@ export default function AdminDashboard() {
               </p>
             </CardContent>
           </Card>
-          <Card className="border border-border/70 bg-card/70">
+          <Card className="app-card bg-card/80 border-border/70">
             <CardContent className="p-4">
               <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
                 Global Attendance
@@ -156,7 +163,7 @@ export default function AdminDashboard() {
               title="Total Students"
               value={studentsData?.length.toString() || "0"}
               icon={Users}
-              className="bg-card border border-border shadow-sm motion-surface"
+              className="app-card motion-surface"
             />
           </div>
           <div
@@ -167,7 +174,7 @@ export default function AdminDashboard() {
               title="Staff Faculty"
               value={facultyData?.length.toString() || "0"}
               icon={ShieldAlert}
-              className="bg-card border border-border shadow-sm motion-surface"
+              className="app-card motion-surface"
             />
           </div>
           <div
@@ -196,7 +203,7 @@ export default function AdminDashboard() {
         </div>
 
         <div className="grid gap-8 lg:grid-cols-2">
-          <Card className="bg-card border border-border shadow-sm motion-surface overflow-hidden group">
+          <Card className="app-card motion-surface overflow-hidden group">
             <CardHeader className="card-header-muted px-6 py-4">
               <CardTitle className="text-sm font-semibold text-foreground">
                 Department Attendance
@@ -238,14 +245,14 @@ export default function AdminDashboard() {
                     fill="hsl(var(--primary))"
                     radius={[8, 8, 2, 2]}
                     barSize={45}
-                    className="filter drop-shadow-[0_0_8px_rgba(var(--primary),0.4)]"
+                    className="filter drop-shadow-[0_0_8px_hsl(var(--primary)/0.35)]"
                   />
                 </BarChart>
               </ResponsiveContainer>
             </CardContent>
           </Card>
 
-          <Card className="bg-card border border-border shadow-sm motion-surface overflow-hidden group">
+          <Card className="app-card motion-surface overflow-hidden group">
             <CardHeader className="card-header-muted px-6 py-4">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-sm font-semibold text-foreground flex items-center gap-2">
@@ -280,7 +287,7 @@ export default function AdminDashboard() {
                   return (
                     <div
                       key={s.id}
-                      className="flex items-center justify-between rounded-xl bg-muted/20 border border-border/40 p-4 hover:border-destructive/30 transition-all hover:bg-muted/30 motion-page-enter"
+                      className="flex items-center justify-between rounded-xl bg-muted/30 border border-border/60 p-4 hover:border-destructive/30 transition-all hover:bg-muted/40 motion-page-enter"
                       style={{ animationDelay: `${40 + i * 55}ms` }}
                     >
                       <div>
@@ -324,7 +331,7 @@ export default function AdminDashboard() {
           {deptData?.map((dept: any, i: number) => (
             <Card
               key={dept.department}
-              className="bg-card border border-border shadow-sm motion-surface hover:scale-[1.01] transition-all duration-300 group overflow-hidden motion-page-enter motion-surface"
+              className="app-card hover:scale-[1.01] transition-all duration-300 group overflow-hidden motion-page-enter motion-surface"
               style={{ animationDelay: `${60 + i * 45}ms` }}
             >
               <CardContent className="p-5 relative">

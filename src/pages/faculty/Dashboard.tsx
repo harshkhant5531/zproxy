@@ -1,6 +1,7 @@
 import { StatCard } from "@/components/StatCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
   BarChart,
   Bar,
@@ -98,18 +99,26 @@ export default function FacultyDashboard() {
             Signed in as {user?.profile?.fullName || user?.username}
           </p>
         </div>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => navigate("/faculty/records")}
-          className="bg-card border border-border shadow-sm text-muted-foreground hover:text-primary font-bold uppercase text-[10px] tracking-widest px-4 h-9 transition-colors"
-        >
-          Audit History <ChevronRight className="ml-2 h-3.5 w-3.5" />
-        </Button>
+        <div className="flex items-center gap-2">
+          <Badge
+            variant="outline"
+            className="rounded-full border-primary/30 bg-primary/10 text-primary px-3 py-1 text-[10px] uppercase tracking-[0.12em]"
+          >
+            Daily Ops
+          </Badge>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate("/faculty/records")}
+            className="bg-card border border-border shadow-sm text-muted-foreground hover:text-primary font-bold uppercase text-[10px] tracking-widest px-4 h-9 transition-colors"
+          >
+            Audit History <ChevronRight className="ml-2 h-3.5 w-3.5" />
+          </Button>
+        </div>
       </div>
 
       <div className="grid gap-3 md:grid-cols-3">
-        <Card className="border border-border/70 bg-card/70">
+        <Card className="app-card bg-card/80 border-border/70">
           <CardContent className="p-4">
             <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
               Session Completion
@@ -122,7 +131,7 @@ export default function FacultyDashboard() {
             </p>
           </CardContent>
         </Card>
-        <Card className="border border-border/70 bg-card/70">
+        <Card className="app-card bg-card/80 border-border/70">
           <CardContent className="p-4">
             <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
               Live Sessions
@@ -135,7 +144,7 @@ export default function FacultyDashboard() {
             </p>
           </CardContent>
         </Card>
-        <Card className="border border-border/70 bg-card/70">
+        <Card className="app-card bg-card/80 border-border/70">
           <CardContent className="p-4">
             <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
               Class Average
@@ -197,7 +206,7 @@ export default function FacultyDashboard() {
       </div>
 
       {/* Today's Sessions */}
-      <Card className="bg-card border border-border shadow-sm motion-surface overflow-hidden">
+      <Card className="app-card motion-surface overflow-hidden">
         <CardHeader className="card-header-muted">
           <CardTitle className="text-sm font-semibold text-foreground flex items-center gap-2">
             <Clock className="h-4 w-4 text-primary" /> Today's Schedule
@@ -208,7 +217,7 @@ export default function FacultyDashboard() {
             todaySessions.map((session: any, i: number) => (
               <div
                 key={session.id}
-                className="flex items-center justify-between rounded-2xl bg-muted/10 border border-white/5 p-5 transition-all hover:bg-muted/20 hover:border-primary/40 group relative overflow-hidden motion-page-enter"
+                className="flex items-center justify-between rounded-2xl bg-muted/30 border border-border/70 p-5 transition-all hover:bg-muted/40 hover:border-primary/40 group relative overflow-hidden motion-page-enter"
                 style={{ animationDelay: `${50 + i * 60}ms` }}
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/[0.02] to-primary/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
@@ -255,10 +264,10 @@ export default function FacultyDashboard() {
               </div>
             ))
           ) : (
-            <div className="text-center py-20 border-2 border-dashed border-white/5 rounded-2xl bg-muted/5">
+            <div className="text-center py-20 border-2 border-dashed border-border/60 rounded-2xl bg-muted/20">
               <Clock className="h-16 w-16 text-muted-foreground/10 mx-auto mb-6" />
-              <p className="text-[10px] font-black text-muted-foreground/40 uppercase tracking-[0.4em]">
-                Static Schedule // No Active Sessions
+              <p className="text-[10px] font-semibold text-muted-foreground/70 uppercase tracking-[0.2em]">
+                No Active Sessions Today
               </p>
             </div>
           )}
@@ -266,7 +275,7 @@ export default function FacultyDashboard() {
       </Card>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card className="bg-card border-border shadow-xl">
+        <Card className="app-card">
           <CardHeader className="bg-muted/30 border-b border-border px-6 py-4">
             <CardTitle className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">
               Performance Metrics // Attainment
@@ -317,7 +326,7 @@ export default function FacultyDashboard() {
           </CardContent>
         </Card>
 
-        <Card className="bg-card border-border shadow-xl">
+        <Card className="app-card">
           <CardHeader className="bg-muted/30 border-b border-border px-6 py-4">
             <CardTitle className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">
               Telemetry Feed // Recent Activity
@@ -328,7 +337,7 @@ export default function FacultyDashboard() {
               recentActivity.map((item, i) => (
                 <div
                   key={i}
-                  className="flex items-start gap-4 p-4 rounded-xl border border-transparent hover:border-border hover:bg-muted/20 transition-all cursor-default group motion-page-enter"
+                  className="flex items-start gap-4 p-4 rounded-xl border border-border/60 hover:border-border hover:bg-muted/30 transition-all cursor-default group motion-page-enter"
                   style={{ animationDelay: `${70 + i * 70}ms` }}
                 >
                   <div className="mt-1.5 h-2 w-2 rounded-full bg-primary shrink-0 group-hover:scale-125 transition-transform" />
@@ -345,8 +354,8 @@ export default function FacultyDashboard() {
               ))
             ) : (
               <div className="text-center py-10">
-                <p className="text-xs text-muted-foreground italic">
-                  Standby // No recent activity detected
+                <p className="text-xs text-muted-foreground">
+                  No recent activity detected
                 </p>
               </div>
             )}

@@ -18,11 +18,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
 import {
   Mail,
   Lock,
   ShieldCheck,
   ArrowRight,
+  Sparkles,
+  Radar,
+  GraduationCap,
   Zap,
   BarChart3,
   Shield,
@@ -163,189 +167,235 @@ const Index = () => {
         position="absolute"
       />
 
-      <div className="flex min-h-screen relative overflow-hidden bg-background text-foreground">
-        {/* Subtle top accent line */}
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
-
-        {/* Left Section - Hero */}
-        <div className="hidden lg:flex flex-1 flex-col justify-center px-16 z-10 relative">
-          <div className="max-w-lg">
-            <div
-              className="flex items-center gap-3 mb-10 motion-slide-left"
-              style={{ animationDelay: "0ms" }}
-            >
-              <div className="p-2.5 bg-primary/10 rounded-xl border border-primary/20 motion-breathe">
-                <ShieldCheck className="w-7 h-7 text-primary" />
-              </div>
-              <span className="text-xl font-bold tracking-tight text-foreground">
-                Aura Integrity
-              </span>
-            </div>
-            <h1
-              className="text-5xl font-bold tracking-tight text-foreground mb-6 leading-[1.1] motion-slide-left"
-              style={{ animationDelay: "80ms" }}
-            >
-              Attendance Management
-              <br />
-              Platform
-            </h1>
-            <p
-              className="text-base text-muted-foreground mb-10 leading-relaxed motion-slide-left"
-              style={{ animationDelay: "160ms" }}
-            >
-              Secure, transparent, and seamless attendance management. Monitor
-              academic integrity with real-time analytics and verified proof of
-              presence.
-            </p>
-            <div className="grid grid-cols-3 gap-4 motion-stagger">
-              {[
-                { label: "Real-time", sub: "Live tracking", icon: Zap },
-                { label: "Secure", sub: "End-to-end", icon: Shield },
-                { label: "Analytics", sub: "Deep insights", icon: BarChart3 },
-              ].map((item) => (
-                <div
-                  key={item.label}
-                  className="rounded-xl border border-border bg-card p-4 group motion-surface"
-                >
-                  <item.icon className="h-4 w-4 text-primary mb-2 group-hover:scale-110 transition-transform" />
-                  <p className="text-sm font-semibold text-foreground">
-                    {item.label}
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    {item.sub}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
+      <div className="min-h-screen relative overflow-hidden bg-transparent text-foreground">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-primary/18 blur-3xl" />
+          <div className="absolute top-1/2 -translate-y-1/2 -right-28 h-80 w-80 rounded-full bg-warning/18 blur-3xl" />
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 h-64 w-64 rounded-full bg-info/16 blur-3xl" />
         </div>
 
-        {/* Right Section - Login Form */}
-        <div className="flex-1 flex items-center justify-center p-6 z-10 relative">
-          <Card
-            className="w-full max-w-md bg-card border border-border shadow-lg motion-fade-scale"
-            style={{ animationDelay: "200ms" }}
-          >
-            <CardHeader className="space-y-3 pb-4">
-              <div className="flex justify-center mb-2 lg:hidden">
-                <div className="p-3 bg-primary/10 rounded-2xl border border-primary/20 motion-breathe">
-                  <ShieldCheck className="w-10 h-10 text-primary" />
-                </div>
+        <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-7xl flex-col p-4 sm:p-6 lg:p-8">
+          <header className="flex items-center justify-between rounded-2xl border border-border/70 bg-card/70 px-4 py-3 backdrop-blur">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-primary/30 bg-primary/15">
+                <ShieldCheck className="h-5 w-5 text-primary" />
               </div>
-              <CardTitle className="text-2xl font-bold text-center tracking-tight">
-                Sign In
-              </CardTitle>
-              <div className="flex justify-center items-center gap-2">
-                <div
-                  className={`h-2 w-2 rounded-full transition-colors ${
-                    apiStatus === "online"
-                      ? "bg-success shadow-[0_0_8px_rgba(52,211,153,0.5)] animate-live-blink"
-                      : apiStatus === "offline"
-                        ? "bg-destructive shadow-[0_0_8px_rgba(239,68,68,0.5)]"
-                        : "bg-muted-foreground/40 animate-pulse"
-                  }`}
-                />
-                <span
-                  className={`text-[10px] font-black uppercase tracking-widest ${
-                    apiStatus === "online"
-                      ? "text-success"
-                      : apiStatus === "offline"
-                        ? "text-destructive"
-                        : "text-muted-foreground"
-                  }`}
-                >
-                  Backend {apiStatus}
-                </span>
-              </div>
-              <CardDescription className="text-center text-muted-foreground text-[11px] uppercase tracking-wider">
-                Enter your institutional credentials to continue
-              </CardDescription>
-            </CardHeader>
-            <form onSubmit={handleLogin}>
-              <CardContent className="grid gap-4">
-                <div className="grid gap-2">
-                  <Label
-                    htmlFor="email"
-                    className="text-xs font-medium text-muted-foreground"
-                  >
-                    Email
-                  </Label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="student@institution.ac.in"
-                      className="pl-10 h-11 rounded-xl"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                    />
-                  </div>
-                </div>
-                <div className="grid gap-2">
-                  <div className="flex items-center justify-between">
-                    <Label
-                      htmlFor="password"
-                      className="text-xs font-medium text-muted-foreground"
-                    >
-                      Password
-                    </Label>
-                    <Link
-                      to="/forgot-password"
-                      className="text-[10px] font-black uppercase tracking-[0.12em] text-primary hover:text-primary/80 transition-colors"
-                    >
-                      Forgot Password?
-                    </Link>
-                  </div>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="password"
-                      type="password"
-                      className="pl-10 h-11 rounded-xl"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                    />
-                  </div>
-                </div>
-              </CardContent>
-              <CardFooter className="flex flex-col gap-4 pt-2">
-                <Button
-                  type="submit"
-                  className="w-full font-semibold h-11 rounded-xl text-sm shadow-sm hover:shadow-md transition-shadow motion-press"
-                  disabled={isSubmitting}
-                >
-                  <ArrowRight className="mr-2 h-4 w-4" /> Sign In
-                </Button>
-                <div className="w-full flex items-center gap-2 text-[10px] uppercase tracking-widest text-muted-foreground/70">
-                  <div className="h-px flex-1 bg-border" />
-                  Or continue with
-                  <div className="h-px flex-1 bg-border" />
-                </div>
-                {import.meta.env.VITE_GOOGLE_CLIENT_ID ? (
-                  <div
-                    id="google-signin-button"
-                    className="w-full min-h-[42px] flex items-center justify-center"
-                  />
-                ) : (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="w-full h-11 rounded-xl"
-                    disabled
-                  >
-                    <Chrome className="mr-2 h-4 w-4" /> Google Sign-In
-                    Unavailable
-                  </Button>
-                )}
-                <p className="text-center text-xs text-muted-foreground/60">
-                  Unauthorized access is strictly prohibited and logged.
+              <div>
+                <p className="text-sm font-semibold tracking-tight">
+                  Aura Grid
                 </p>
-              </CardFooter>
-            </form>
-          </Card>
+                <p className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
+                  Integrity Console
+                </p>
+              </div>
+            </div>
+            <Badge
+              variant="outline"
+              className="rounded-full px-3 py-1 text-[10px] uppercase tracking-[0.12em] border-primary/30 bg-primary/10 text-primary"
+            >
+              March 2026
+            </Badge>
+          </header>
+
+          <div className="mt-5 grid flex-1 grid-cols-1 gap-5 lg:grid-cols-[1.15fr_0.85fr]">
+            <section className="rounded-3xl border border-border/70 bg-card/70 p-6 sm:p-8 lg:p-10 backdrop-blur motion-fade-scale">
+              <div className="max-w-2xl">
+                <Badge className="mb-4 rounded-full bg-primary/15 text-primary border border-primary/25">
+                  <Sparkles className="mr-1 h-3.5 w-3.5" /> New Interface
+                </Badge>
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight tracking-tight">
+                  Campus Attendance,
+                  <br />
+                  Reframed For Precision
+                </h1>
+                <p className="mt-4 max-w-xl text-sm sm:text-base text-muted-foreground leading-relaxed">
+                  A focused command surface for institutions that need
+                  reliability, transparency, and speed across attendance,
+                  reporting, and security workflows.
+                </p>
+
+                <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  {[
+                    {
+                      label: "Realtime",
+                      sub: "Session telemetry",
+                      icon: Radar,
+                    },
+                    {
+                      label: "Integrity",
+                      sub: "Proxy-resistant",
+                      icon: Shield,
+                    },
+                    {
+                      label: "Insights",
+                      sub: "Actionable analytics",
+                      icon: BarChart3,
+                    },
+                  ].map((item) => (
+                    <Card
+                      key={item.label}
+                      className="app-card bg-card/80 border-border/80 motion-surface"
+                    >
+                      <CardContent className="p-4">
+                        <item.icon className="h-4 w-4 text-primary mb-2" />
+                        <p className="text-sm font-semibold">{item.label}</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">
+                          {item.sub}
+                        </p>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+
+                <div className="mt-8 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                  <Badge
+                    variant="outline"
+                    className="rounded-full border-border/80"
+                  >
+                    <GraduationCap className="mr-1 h-3.5 w-3.5" /> Student
+                  </Badge>
+                  <Badge
+                    variant="outline"
+                    className="rounded-full border-border/80"
+                  >
+                    Faculty
+                  </Badge>
+                  <Badge
+                    variant="outline"
+                    className="rounded-full border-border/80"
+                  >
+                    Administration
+                  </Badge>
+                </div>
+              </div>
+            </section>
+
+            <section className="flex items-center">
+              <Card className="w-full rounded-3xl border-border/80 bg-card shadow-xl motion-fade-scale">
+                <CardHeader className="space-y-3 pb-2">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-2xl tracking-tight">
+                      Sign In
+                    </CardTitle>
+                    <div className="flex items-center gap-2">
+                      <div
+                        className={`h-2 w-2 rounded-full ${
+                          apiStatus === "online"
+                            ? "bg-success animate-live-blink"
+                            : apiStatus === "offline"
+                              ? "bg-destructive"
+                              : "bg-muted-foreground/40 animate-pulse"
+                        }`}
+                      />
+                      <span
+                        className={`text-[10px] font-semibold uppercase tracking-[0.12em] ${
+                          apiStatus === "online"
+                            ? "text-success"
+                            : apiStatus === "offline"
+                              ? "text-destructive"
+                              : "text-muted-foreground"
+                        }`}
+                      >
+                        API {apiStatus}
+                      </span>
+                    </div>
+                  </div>
+                  <CardDescription className="text-xs uppercase tracking-[0.12em] text-muted-foreground">
+                    Institutional credentials required
+                  </CardDescription>
+                </CardHeader>
+                <form onSubmit={handleLogin}>
+                  <CardContent className="grid gap-4 pt-2">
+                    <div className="grid gap-2">
+                      <Label
+                        htmlFor="email"
+                        className="text-xs uppercase tracking-[0.08em] text-muted-foreground"
+                      >
+                        Email
+                      </Label>
+                      <div className="relative">
+                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input
+                          id="email"
+                          type="email"
+                          placeholder="student@institution.ac.in"
+                          className="pl-10 h-11 rounded-xl"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid gap-2">
+                      <div className="flex items-center justify-between">
+                        <Label
+                          htmlFor="password"
+                          className="text-xs uppercase tracking-[0.08em] text-muted-foreground"
+                        >
+                          Password
+                        </Label>
+                        <Link
+                          to="/forgot-password"
+                          className="text-[11px] font-semibold text-primary hover:text-primary/80 transition-colors"
+                        >
+                          Forgot Password?
+                        </Link>
+                      </div>
+                      <div className="relative">
+                        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input
+                          id="password"
+                          type="password"
+                          className="pl-10 h-11 rounded-xl"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          required
+                        />
+                      </div>
+                    </div>
+                  </CardContent>
+
+                  <CardFooter className="flex flex-col gap-4 pt-2">
+                    <Button
+                      type="submit"
+                      className="w-full font-semibold h-11 rounded-xl text-sm shadow-sm hover:shadow-md transition-shadow motion-press"
+                      disabled={isSubmitting}
+                    >
+                      <ArrowRight className="mr-2 h-4 w-4" /> Enter Workspace
+                    </Button>
+
+                    <div className="w-full flex items-center gap-2 text-[10px] uppercase tracking-[0.12em] text-muted-foreground/70">
+                      <div className="h-px flex-1 bg-border" />
+                      Or continue with
+                      <div className="h-px flex-1 bg-border" />
+                    </div>
+
+                    {import.meta.env.VITE_GOOGLE_CLIENT_ID ? (
+                      <div
+                        id="google-signin-button"
+                        className="w-full min-h-[42px] flex items-center justify-center"
+                      />
+                    ) : (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="w-full h-11 rounded-xl"
+                        disabled
+                      >
+                        <Chrome className="mr-2 h-4 w-4" /> Google Sign-In
+                        Unavailable
+                      </Button>
+                    )}
+
+                    <p className="text-center text-xs text-muted-foreground/70">
+                      Unauthorized access is monitored and audited.
+                    </p>
+                  </CardFooter>
+                </form>
+              </Card>
+            </section>
+          </div>
         </div>
       </div>
     </div>

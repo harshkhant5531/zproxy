@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 import { Search, Eye, Calendar, BookOpen } from "lucide-react";
 import { FullScreenLoader } from "@/components/FullScreenLoader";
 import { useNavigate } from "react-router-dom";
@@ -76,45 +77,57 @@ export default function AttendanceRecords() {
             logs
           </p>
         </div>
-
-        <div className="relative max-w-sm group">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
-          <Input
-            placeholder="Filter by subject or topic..."
-            className="pl-9 bg-background border-border text-foreground placeholder:text-muted-foreground focus-visible:ring-primary/50"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+        <div className="flex flex-wrap items-center gap-2 justify-end">
+          <Badge
+            variant="outline"
+            className="rounded-full border-primary/30 bg-primary/10 text-primary px-3 py-1 text-[10px] uppercase tracking-[0.12em]"
+          >
+            {filtered.length} Sessions
+          </Badge>
+          <div className="relative max-w-sm group min-w-[230px]">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+            <Input
+              placeholder="Filter by subject or topic..."
+              className="h-10 pl-9 bg-background border-border text-foreground placeholder:text-muted-foreground focus-visible:ring-primary/50"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleCopyExport}
+            className="border-primary/20 text-primary motion-press"
+          >
+            Copy Export
+          </Button>
         </div>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={handleCopyExport}
-          className="border-primary/20 text-primary motion-press"
-        >
-          Copy Export
-        </Button>
       </div>
 
-      <Card className="bg-card border-border shadow-sm overflow-hidden motion-fade-scale">
+      <Card className="app-card overflow-hidden motion-fade-scale">
+        <CardHeader className="card-header-muted py-4 px-6">
+          <CardTitle className="text-sm font-semibold text-foreground">
+            Session Ledger
+          </CardTitle>
+        </CardHeader>
         <CardContent className="p-0">
           <div className="overflow-x-auto">
             <Table className="motion-table-stagger">
               <TableHeader className="bg-muted/40 border-b border-border">
                 <TableRow className="border-none hover:bg-transparent">
-                  <TableHead className="text-muted-foreground font-bold text-[10px] uppercase tracking-widest h-12 pl-6">
+                  <TableHead className="text-muted-foreground font-semibold text-[10px] uppercase tracking-[0.12em] h-11 pl-6">
                     Temporal Data
                   </TableHead>
-                  <TableHead className="text-muted-foreground font-bold text-[10px] uppercase tracking-widest h-12">
+                  <TableHead className="text-muted-foreground font-semibold text-[10px] uppercase tracking-[0.12em] h-11">
                     Subject Module
                   </TableHead>
-                  <TableHead className="text-muted-foreground font-bold text-[10px] uppercase tracking-widest h-12">
+                  <TableHead className="text-muted-foreground font-semibold text-[10px] uppercase tracking-[0.12em] h-11">
                     Session Details
                   </TableHead>
-                  <TableHead className="text-muted-foreground font-bold text-[10px] uppercase tracking-widest h-12 text-center">
+                  <TableHead className="text-muted-foreground font-semibold text-[10px] uppercase tracking-[0.12em] h-11 text-center">
                     Metrics
                   </TableHead>
-                  <TableHead className="text-muted-foreground font-bold text-[10px] uppercase tracking-widest h-12">
+                  <TableHead className="text-muted-foreground font-semibold text-[10px] uppercase tracking-[0.12em] h-11">
                     Status
                   </TableHead>
                   <TableHead className="w-[80px] pr-6"></TableHead>
@@ -176,7 +189,7 @@ export default function AttendanceRecords() {
                     </TableCell>
                     <TableCell>
                       <span
-                        className={`text-[9px] px-2 py-0.5 rounded-md font-bold uppercase tracking-widest ${s.status === "completed" ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20" : "bg-primary/10 text-primary border border-primary/20"}`}
+                        className={`text-[9px] px-2 py-0.5 rounded-full font-semibold uppercase tracking-[0.12em] ${s.status === "completed" ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20" : "bg-primary/10 text-primary border border-primary/20"}`}
                       >
                         {s.status || "Live"}
                       </span>
@@ -211,11 +224,9 @@ export default function AttendanceRecords() {
         </CardContent>
       </Card>
 
-      <div className="text-center">
-        <p className="text-[9px] text-muted-foreground/40 font-mono uppercase tracking-[0.5em]">
-          Academic Integrity Engine // Historical Audit Feed
-        </p>
-      </div>
+      <p className="text-center text-[10px] text-muted-foreground/60 uppercase tracking-[0.2em]">
+        Historical Audit Feed
+      </p>
     </div>
   );
 }

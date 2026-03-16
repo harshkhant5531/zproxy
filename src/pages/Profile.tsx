@@ -18,7 +18,6 @@ import {
   IdCard,
   KeyRound,
   Mail,
-  Phone,
   Save,
   ShieldCheck,
   Sparkles,
@@ -269,7 +268,7 @@ export default function ProfilePage() {
           </div>
 
           <div className="grid gap-3 sm:grid-cols-3 lg:w-[28rem] motion-stagger">
-            <Card className="border-border bg-muted/20 shadow-none motion-surface">
+            <Card className="app-card bg-muted/20 shadow-none motion-surface">
               <CardContent className="p-4">
                 <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                   Username
@@ -279,7 +278,7 @@ export default function ProfilePage() {
                 </p>
               </CardContent>
             </Card>
-            <Card className="border-border bg-muted/20 shadow-none motion-surface">
+            <Card className="app-card bg-muted/20 shadow-none motion-surface">
               <CardContent className="p-4">
                 <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                   Identifier
@@ -291,15 +290,13 @@ export default function ProfilePage() {
                 </p>
               </CardContent>
             </Card>
-            <Card className="border-border bg-muted/20 shadow-none motion-surface">
+            <Card className="app-card bg-muted/20 shadow-none motion-surface">
               <CardContent className="p-4">
                 <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                   Security
                 </p>
                 <p className="mt-2 text-sm font-semibold text-foreground">
-                  {user.requiresPasswordChange
-                    ? "Action Needed"
-                    : "Secure"}
+                  {user.requiresPasswordChange ? "Action Needed" : "Secure"}
                 </p>
               </CardContent>
             </Card>
@@ -332,7 +329,10 @@ export default function ProfilePage() {
       )}
 
       <div className="grid gap-6 xl:grid-cols-[1.3fr_0.9fr]">
-        <Card className="overflow-hidden border-border bg-card shadow-sm motion-slide-up" style={{ animationDelay: '150ms' }}>
+        <Card
+          className="app-card overflow-hidden motion-slide-up"
+          style={{ animationDelay: "150ms" }}
+        >
           <CardHeader className="border-b border-border bg-muted/30">
             <CardTitle className="flex items-center gap-3 text-lg font-bold tracking-tight">
               <UserCircle2 className="h-5 w-5 text-primary" /> Profile Details
@@ -350,7 +350,7 @@ export default function ProfilePage() {
                     onChange={(event) =>
                       handleProfileField("fullName", event.target.value)
                     }
-                    className="h-12 rounded-2xl border-border/70 bg-background/80"
+                    className="h-11 rounded-xl border-border/70 bg-background/80"
                   />
                 </div>
                 <div className="space-y-2">
@@ -362,7 +362,7 @@ export default function ProfilePage() {
                     onChange={(event) =>
                       handleProfileField("username", event.target.value)
                     }
-                    className="h-12 rounded-2xl border-border/70 bg-background/80"
+                    className="h-11 rounded-xl border-border/70 bg-background/80"
                   />
                 </div>
                 <div className="space-y-2">
@@ -375,7 +375,7 @@ export default function ProfilePage() {
                     onChange={(event) =>
                       handleProfileField("email", event.target.value)
                     }
-                    className="h-12 rounded-2xl border-border/70 bg-background/80"
+                    className="h-11 rounded-xl border-border/70 bg-background/80"
                   />
                 </div>
                 <div className="space-y-2">
@@ -387,7 +387,7 @@ export default function ProfilePage() {
                     onChange={(event) =>
                       handleProfileField("phone", event.target.value)
                     }
-                    className="h-12 rounded-2xl border-border/70 bg-background/80"
+                    className="h-11 rounded-xl border-border/70 bg-background/80"
                   />
                 </div>
                 <div className="space-y-2">
@@ -399,7 +399,7 @@ export default function ProfilePage() {
                     onChange={(event) =>
                       handleProfileField("department", event.target.value)
                     }
-                    className="h-12 rounded-2xl border-border/70 bg-background/80"
+                    className="h-11 rounded-xl border-border/70 bg-background/80"
                   />
                 </div>
                 {user.role === "faculty" && (
@@ -412,7 +412,7 @@ export default function ProfilePage() {
                       onChange={(event) =>
                         handleProfileField("designation", event.target.value)
                       }
-                      className="h-12 rounded-2xl border-border/70 bg-background/80"
+                      className="h-11 rounded-xl border-border/70 bg-background/80"
                     />
                   </div>
                 )}
@@ -426,7 +426,7 @@ export default function ProfilePage() {
                       onChange={(event) =>
                         handleProfileField("qualification", event.target.value)
                       }
-                      className="h-12 rounded-2xl border-border/70 bg-background/80"
+                      className="h-11 rounded-xl border-border/70 bg-background/80"
                     />
                   </div>
                 )}
@@ -440,7 +440,7 @@ export default function ProfilePage() {
                       onChange={(event) =>
                         handleProfileField("officeHours", event.target.value)
                       }
-                      className="h-12 rounded-2xl border-border/70 bg-background/80"
+                      className="h-11 rounded-xl border-border/70 bg-background/80"
                     />
                   </div>
                 )}
@@ -454,7 +454,7 @@ export default function ProfilePage() {
                       onChange={(event) =>
                         handleProfileField("parentPhone", event.target.value)
                       }
-                      className="h-12 rounded-2xl border-border/70 bg-background/80"
+                      className="h-11 rounded-xl border-border/70 bg-background/80"
                     />
                   </div>
                 )}
@@ -482,7 +482,7 @@ export default function ProfilePage() {
                     onChange={(event) =>
                       handleProfileField("address", event.target.value)
                     }
-                    className="h-12 rounded-2xl border-border/70 bg-background/80"
+                    className="h-11 rounded-xl border-border/70 bg-background/80"
                   />
                 </div>
                 <div className="space-y-2 md:col-span-2">
@@ -511,11 +511,14 @@ export default function ProfilePage() {
         </Card>
 
         <div className="space-y-6">
-          <Card className="overflow-hidden border-border bg-card shadow-sm motion-slide-up" style={{ animationDelay: '200ms' }}>
+          <Card
+            className="app-card overflow-hidden motion-slide-up"
+            style={{ animationDelay: "200ms" }}
+          >
             <CardHeader className="border-b border-border bg-muted/30">
               <CardTitle className="flex items-center gap-3 text-lg font-bold tracking-tight">
-                <KeyRound className="h-5 w-5 text-amber-500" />{" "}
-                Security Settings
+                <KeyRound className="h-5 w-5 text-amber-500" /> Security
+                Settings
               </CardTitle>
             </CardHeader>
             <CardContent className="p-6">
@@ -581,7 +584,7 @@ export default function ProfilePage() {
                 <Button
                   type="submit"
                   disabled={isSavingPassword}
-                  className="h-12 w-full rounded-2xl text-sm font-black uppercase tracking-[0.16em] shadow-lg shadow-success/20"
+                  className="h-11 w-full rounded-xl text-sm font-semibold uppercase tracking-[0.08em] shadow-lg shadow-success/20"
                 >
                   <ShieldCheck className="mr-2 h-4 w-4" />
                   {isSavingPassword ? "Updating..." : "Update Password"}
@@ -590,7 +593,10 @@ export default function ProfilePage() {
             </CardContent>
           </Card>
 
-          <Card className="border-border bg-card shadow-sm motion-slide-up" style={{ animationDelay: '250ms' }}>
+          <Card
+            className="app-card motion-slide-up"
+            style={{ animationDelay: "250ms" }}
+          >
             <CardHeader className="pb-3 px-6 pt-6">
               <CardTitle className="flex items-center gap-3 text-lg font-bold tracking-tight">
                 <IdCard className="h-5 w-5 text-primary" /> Identity Snapshot
@@ -599,19 +605,25 @@ export default function ProfilePage() {
             <CardContent className="space-y-4 text-sm px-6 pb-6">
               <div className="space-y-2">
                 <div className="flex items-center justify-between gap-3 rounded-lg border border-border bg-muted/20 px-4 py-2.5">
-                  <span className="text-muted-foreground font-medium">Role</span>
+                  <span className="text-muted-foreground font-medium">
+                    Role
+                  </span>
                   <span className="font-bold capitalize text-primary">
                     {user.role}
                   </span>
                 </div>
                 <div className="flex items-center justify-between gap-3 rounded-lg border border-border bg-muted/20 px-4 py-2.5">
-                  <span className="text-muted-foreground font-medium">Department</span>
+                  <span className="text-muted-foreground font-medium">
+                    Department
+                  </span>
                   <span className="font-bold text-foreground">
                     {user.profile?.department || "Not set"}
                   </span>
                 </div>
                 <div className="flex items-center justify-between gap-3 rounded-lg border border-border bg-muted/20 px-4 py-2.5">
-                  <span className="text-muted-foreground font-medium">Phone</span>
+                  <span className="text-muted-foreground font-medium">
+                    Phone
+                  </span>
                   <span className="font-bold text-foreground">
                     {user.profile?.phone || "Not set"}
                   </span>
@@ -620,11 +632,11 @@ export default function ProfilePage() {
               <Separator className="bg-border" />
               <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 motion-surface">
                 <p className="text-[10px] font-bold uppercase tracking-wider text-primary">
-                  Redesign Note
+                  Account Guidance
                 </p>
                 <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                  The profile interface has been updated to a clean, flat design with no glassmorphism, 
-                  prioritizing accessibility and fast performance.
+                  Keep contact and department details up to date for leave
+                  approvals, timetable mapping, and institutional notifications.
                 </p>
               </div>
             </CardContent>

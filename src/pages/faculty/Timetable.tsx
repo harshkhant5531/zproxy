@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, Clock, MapPin, Download, Printer } from "lucide-react";
+import { Calendar, Clock, MapPin, Printer } from "lucide-react";
 import { FullScreenLoader } from "@/components/FullScreenLoader";
 import { useQuery } from "@tanstack/react-query";
 import { timetableAPI } from "@/lib/api";
@@ -75,7 +75,13 @@ export default function FacultyTimetable() {
               {user?.profile?.fullName || user?.username}
             </p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
+            <Badge
+              variant="outline"
+              className="rounded-full border-primary/30 bg-primary/10 text-primary px-3 py-1 text-[10px] uppercase tracking-[0.12em]"
+            >
+              {entries.length} Sessions
+            </Badge>
             <Button
               variant="outline"
               size="sm"
@@ -88,7 +94,12 @@ export default function FacultyTimetable() {
           </div>
         </div>
 
-        <Card className="bg-card/75 border-border/60 overflow-x-auto shadow-2xl">
+        <Card className="app-card overflow-x-auto">
+          <CardHeader className="card-header-muted py-4 px-6">
+            <CardTitle className="text-sm font-semibold text-foreground">
+              Weekly Matrix
+            </CardTitle>
+          </CardHeader>
           <CardContent className="p-0">
             <div className="min-w-[800px]">
               {/* Header */}
@@ -182,14 +193,12 @@ export default function FacultyTimetable() {
           </div>
           <div className="space-y-1">
             <p className="text-xs font-semibold text-foreground/70 uppercase tracking-wide">
-              Procedural Note
+              Operational Note
             </p>
             <p className="text-sm text-foreground/80 leading-relaxed">
-              The timetable is fixed by the institutional oversight. Any
-              schedule conflicts or room reassignments must be authorized via
-              the HOD terminal. Sessions marked with{" "}
-              <span className="text-primary font-bold">Aura-Link</span> are
-              enabled for real-time biometric verification.
+              The timetable is managed by administration. Any schedule conflicts
+              or room reassignments should be escalated through the department
+              workflow.
             </p>
           </div>
         </div>
