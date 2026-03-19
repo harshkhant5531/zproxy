@@ -58,7 +58,10 @@ export default function ResetPassword() {
       </div>
 
       <div className="relative z-10 mx-auto flex min-h-screen max-w-5xl items-center justify-center px-6 py-10">
-        <Card className="w-full max-w-xl border border-border/60 bg-card/85 shadow-2xl">
+        <Card
+          variant="elevated"
+          className="w-full max-w-xl border border-border/60 bg-card/85 shadow-2xl"
+        >
           <CardHeader className="space-y-4">
             <Link
               to="/login"

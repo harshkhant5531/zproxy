@@ -199,7 +199,10 @@ export default function AdminDashboard() {
       </div>
 
       <div className="grid gap-8 lg:grid-cols-2">
-        <Card className="app-card motion-surface overflow-hidden group">
+        <Card
+          variant="elevated"
+          className="app-card motion-surface overflow-hidden group"
+        >
           <CardHeader className="card-header-muted px-6 py-4">
             <CardTitle className="text-sm font-semibold text-foreground">
               Department Attendance
@@ -248,7 +251,10 @@ export default function AdminDashboard() {
           </CardContent>
         </Card>
 
-        <Card className="app-card motion-surface overflow-hidden group">
+        <Card
+          variant="elevated"
+          className="app-card motion-surface overflow-hidden group"
+        >
           <CardHeader className="card-header-muted px-6 py-4">
             <div className="flex items-center justify-between">
               <CardTitle className="text-sm font-semibold text-foreground flex items-center gap-2">

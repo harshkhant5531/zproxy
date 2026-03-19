@@ -10,8 +10,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 import { Loader2, BookOpen } from "lucide-react";
-import { FullScreenLoader } from "@/components/FullScreenLoader";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { subjectsAPI, sessionsAPI } from "@/lib/api";
@@ -83,242 +83,252 @@ export default function CreateSession() {
     });
   };
 
-  return (
-    <>
-      <FullScreenLoader show={isSubjectsLoading} operation="loading" />
-      <FullScreenLoader
-        show={createSessionMutation.isPending}
-        operation="creating"
-      />
-      <div className="app-page max-w-2xl mx-auto">
-        <div className="app-page-header text-center sm:text-left">
-          <div>
-            <h1 className="page-header-title">Create Session</h1>
-            <p className="page-header-sub">Set up a live attendance session</p>
-          </div>
-        </div>
-
-        <div className="flex items-center justify-center gap-4 py-4">
-          {["Subject", "Setup", "Deploy"].map((label, i) => (
-            <div key={label} className="flex items-center gap-3">
-              <div
-                className={`h-8 w-8 rounded-lg flex items-center justify-center text-xs font-black border transition-all duration-500 ${i + 1 <= step ? "bg-primary border-primary text-primary-foreground shadow-[0_0_15px_rgba(34,211,238,0.3)]" : "bg-muted border-border text-muted-foreground"}`}
-              >
-                {i + 1}
-              </div>
-              <span
-                className={`text-[10px] font-black uppercase tracking-widest ${i + 1 <= step ? "text-foreground" : "text-muted-foreground"}`}
-              >
-                {label}
-              </span>
-              {i < 2 && (
-                <div
-                  className={`h-[1px] w-8 ${i + 1 < step ? "bg-primary" : "bg-border"}`}
-                />
-              )}
-            </div>
-          ))}
-        </div>
-
-        <Card
-          className="bg-card border border-border shadow-sm relative overflow-hidden motion-fade-scale"
-          style={{ animationDelay: "100ms" }}
-        >
-          <CardContent className="p-8 space-y-8 relative">
-            {step >= 1 && (
-              <div className="space-y-3 motion-slide-up">
-                <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em] ml-1">
-                  Subject Module
-                </label>
-                <Select
-                  value={subjectId}
-                  onValueChange={(v) => {
-                    setSubjectId(v);
-                    setStep(Math.max(step, 2));
-                  }}
-                >
-                  <SelectTrigger className="h-12 bg-background border-border text-foreground focus:ring-primary/50">
-                    <SelectValue placeholder="Identify target subject..." />
-                  </SelectTrigger>
-                  <SelectContent className="bg-popover border-border text-popover-foreground">
-                    {facultySubjects.map((s: any) => (
-                      <SelectItem
-                        key={s.id}
-                        value={s.id.toString()}
-                        className="focus:bg-accent focus:text-accent-foreground"
-                      >
-                        {s.name}{" "}
-                        <span className="text-muted-foreground ml-1 text-[10px] italic">
-                          ({s.course?.code || "Core"})
-                        </span>
-                      </SelectItem>
-                    ))}
-                    {facultySubjects.length === 0 && (
-                      <p className="p-2 text-xs text-muted-foreground italic">
-                        No assigned subjects detected
-                      </p>
-                    )}
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
-
-            {step >= 2 && subjectId && (
-              <div
-                className="space-y-5 motion-slide-up"
-                style={{ animationDelay: "40ms" }}
-              >
-                <div className="space-y-4">
-                  <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em] ml-1">
-                    Target Batches
-                  </label>
-                  <div className="grid grid-cols-4 sm:grid-cols-6 gap-2">
-                    {[
-                      "A1",
-                      "A2",
-                      "A3",
-                      "A4",
-                      "A5",
-                      "A6",
-                      "B1",
-                      "B2",
-                      "B3",
-                      "B4",
-                      "B5",
-                      "B6",
-                      "B7",
-                      "B8",
-                      "B9",
-                      "C1",
-                      "C2",
-                      "C3",
-                      "C4",
-                      "C5",
-                      "C6",
-                      "C7",
-                      "C8",
-                      "C9",
-                      "C10",
-                      "C11",
-                    ].map((batch) => (
-                      <div
-                        key={batch}
-                        onClick={() => {
-                          const newBatches = selectedBatches.includes(batch)
-                            ? selectedBatches.filter((b) => b !== batch)
-                            : [...selectedBatches, batch];
-                          setSelectedBatches(newBatches);
-                          if (newBatches.length > 0 && topic) setStep(3);
-                        }}
-                        className={`cursor-pointer h-10 flex items-center justify-center rounded-lg border font-black text-xs transition-colors duration-300 ${
-                          selectedBatches.includes(batch)
-                            ? "bg-primary/10 border-primary text-primary"
-                            : "bg-muted/30 border-border text-muted-foreground hover:border-primary/50 hover:text-foreground"
-                        }`}
-                      >
-                        {batch}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="space-y-3">
-                  <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em] ml-1">
-                    Session Topic
-                  </label>
-                  <Input
-                    className="h-12 bg-background border-border text-foreground placeholder:text-muted-foreground focus-visible:ring-primary/50"
-                    placeholder="e.g. AVL Trees, SQL Joins, Deadlocks..."
-                    value={topic}
-                    onChange={(e) => {
-                      setTopic(e.target.value);
-                      if (e.target.value.trim() && selectedBatches.length > 0)
-                        setStep(3);
-                    }}
-                  />
-                </div>
-
-                <div className="rounded-xl border border-info/25 bg-info/5 p-3">
-                  <p className="text-[10px] font-black text-info uppercase tracking-[0.2em]">
-                    Attendance Mode
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-2 leading-relaxed">
-                    Manual check-in with server-side IP and device verification.
-                    Student location is not required.
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {step === 3 && topic && (
-              <div className="space-y-4 motion-fade-scale text-center pt-4">
-                <div className="p-4 bg-primary/5 border border-primary/20 rounded-xl text-left space-y-1 mb-4">
-                  <p className="text-[10px] font-black text-primary uppercase tracking-[0.25em] text-center mb-3">
-                    Ready for Deployment
-                  </p>
-                  <div className="space-y-3">
-                    <div className="flex flex-col">
-                      <span className="text-muted-foreground text-[10px] uppercase font-bold tracking-wider mb-1">
-                        Target Batches
-                      </span>
-                      <div className="flex flex-wrap gap-1">
-                        {selectedBatches.map((b) => (
-                          <span
-                            key={b}
-                            className="px-2 py-0.5 bg-primary/10 text-primary border border-primary/20 rounded text-[10px] font-black"
-                          >
-                            {b}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                    <div className="h-px bg-border/50" />
-                    <div className="space-y-2">
-                      <p className="text-foreground font-mono text-sm flex items-center gap-2">
-                        <BookOpen className="h-4 w-4 text-primary" />
-                        <span className="text-muted-foreground text-xs uppercase italic min-w-[70px]">
-                          Subject:{" "}
-                        </span>
-                        <span className="font-bold">
-                          {selectedSubject?.name}
-                        </span>
-                      </p>
-                      <p className="text-foreground font-mono text-sm flex items-center gap-2">
-                        <BookOpen className="h-4 w-4 text-primary" />
-                        <span className="text-muted-foreground text-xs uppercase italic min-w-[70px]">
-                          Topic:{" "}
-                        </span>
-                        <span className="font-bold">{topic}</span>
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <Button
-                  size="lg"
-                  className="w-full h-14 font-semibold bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm hover:shadow-md transition-shadow motion-press"
-                  onClick={handleGenerate}
-                  disabled={createSessionMutation.isPending}
-                >
-                  {createSessionMutation.isPending ? (
-                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                  ) : (
-                    <>
-                      <BookOpen className="mr-3 h-5 w-5" /> Execute
-                      Initialization
-                    </>
-                  )}
-                </Button>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        <div className="text-center">
-          <p className="text-[9px] text-muted-foreground/60 font-mono uppercase tracking-[0.5em]">
-            Academic Integrity Engine // Secure Authentication
-          </p>
+  if (isSubjectsLoading) {
+    return (
+      <div className="app-page min-h-[60vh] flex items-center justify-center">
+        <div className="flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-3">
+          <Loader2 className="h-4 w-4 animate-spin text-primary" />
+          <span className="text-sm text-muted-foreground">
+            Loading assigned subjects...
+          </span>
         </div>
       </div>
-    </>
+    );
+  }
+
+  return (
+    <div className="app-page max-w-2xl mx-auto">
+      <div className="app-page-header text-center sm:text-left">
+        <div>
+          <h1 className="page-header-title">Create Session</h1>
+          <p className="page-header-sub">Set up a live attendance session</p>
+          {createSessionMutation.isPending && (
+            <div className="mt-2 inline-flex items-center gap-2 rounded-md border border-primary/20 bg-primary/10 px-2.5 py-1 text-xs text-primary">
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              Creating session...
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="flex items-center justify-center gap-4 py-4">
+        {["Subject", "Setup", "Deploy"].map((label, i) => (
+          <div key={label} className="flex items-center gap-3">
+            <div
+              className={`h-8 w-8 rounded-lg flex items-center justify-center text-xs font-black border transition-all duration-500 ${i + 1 <= step ? "bg-primary border-primary text-primary-foreground shadow-[0_0_15px_rgba(34,211,238,0.3)]" : "bg-muted border-border text-muted-foreground"}`}
+            >
+              {i + 1}
+            </div>
+            <span
+              className={`text-[10px] font-black uppercase tracking-widest ${i + 1 <= step ? "text-foreground" : "text-muted-foreground"}`}
+            >
+              {label}
+            </span>
+            {i < 2 && (
+              <div
+                className={`h-[1px] w-8 ${i + 1 < step ? "bg-primary" : "bg-border"}`}
+              />
+            )}
+          </div>
+        ))}
+      </div>
+
+      <Card
+        variant="elevated"
+        className="bg-card border border-border shadow-sm relative overflow-hidden motion-fade-scale"
+        style={{ animationDelay: "100ms" }}
+      >
+        <CardContent className="p-8 space-y-8 relative">
+          {step >= 1 && (
+            <div className="space-y-3 motion-slide-up">
+              <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em] ml-1">
+                Subject Module
+              </Label>
+              <Select
+                value={subjectId}
+                onValueChange={(v) => {
+                  setSubjectId(v);
+                  setStep(Math.max(step, 2));
+                }}
+              >
+                <SelectTrigger className="h-12 bg-background border-border text-foreground focus:ring-primary/50">
+                  <SelectValue placeholder="Identify target subject..." />
+                </SelectTrigger>
+                <SelectContent className="bg-popover border-border text-popover-foreground">
+                  {facultySubjects.map((s: any) => (
+                    <SelectItem
+                      key={s.id}
+                      value={s.id.toString()}
+                      className="focus:bg-accent focus:text-accent-foreground"
+                    >
+                      {s.name}{" "}
+                      <span className="text-muted-foreground ml-1 text-[10px] italic">
+                        ({s.course?.code || "Core"})
+                      </span>
+                    </SelectItem>
+                  ))}
+                  {facultySubjects.length === 0 && (
+                    <p className="p-2 text-xs text-muted-foreground italic">
+                      No assigned subjects detected
+                    </p>
+                  )}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+
+          {step >= 2 && subjectId && (
+            <div
+              className="space-y-5 motion-slide-up"
+              style={{ animationDelay: "40ms" }}
+            >
+              <div className="space-y-4">
+                <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em] ml-1">
+                  Target Batches
+                </Label>
+                <div className="grid grid-cols-4 sm:grid-cols-6 gap-2">
+                  {[
+                    "A1",
+                    "A2",
+                    "A3",
+                    "A4",
+                    "A5",
+                    "A6",
+                    "B1",
+                    "B2",
+                    "B3",
+                    "B4",
+                    "B5",
+                    "B6",
+                    "B7",
+                    "B8",
+                    "B9",
+                    "C1",
+                    "C2",
+                    "C3",
+                    "C4",
+                    "C5",
+                    "C6",
+                    "C7",
+                    "C8",
+                    "C9",
+                    "C10",
+                    "C11",
+                  ].map((batch) => (
+                    <div
+                      key={batch}
+                      onClick={() => {
+                        const newBatches = selectedBatches.includes(batch)
+                          ? selectedBatches.filter((b) => b !== batch)
+                          : [...selectedBatches, batch];
+                        setSelectedBatches(newBatches);
+                        if (newBatches.length > 0 && topic) setStep(3);
+                      }}
+                      className={`cursor-pointer h-10 flex items-center justify-center rounded-lg border font-black text-xs transition-colors duration-300 ${
+                        selectedBatches.includes(batch)
+                          ? "bg-primary/10 border-primary text-primary"
+                          : "bg-muted/30 border-border text-muted-foreground hover:border-primary/50 hover:text-foreground"
+                      }`}
+                    >
+                      {batch}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em] ml-1">
+                  Session Topic
+                </Label>
+                <Input
+                  className="h-12 bg-background border-border text-foreground placeholder:text-muted-foreground focus-visible:ring-primary/50"
+                  placeholder="e.g. AVL Trees, SQL Joins, Deadlocks..."
+                  value={topic}
+                  onChange={(e) => {
+                    setTopic(e.target.value);
+                    if (e.target.value.trim() && selectedBatches.length > 0)
+                      setStep(3);
+                  }}
+                />
+              </div>
+
+              <div className="rounded-xl border border-info/25 bg-info/5 p-3">
+                <p className="text-[10px] font-black text-info uppercase tracking-[0.2em]">
+                  Attendance Mode
+                </p>
+                <p className="text-xs text-muted-foreground mt-2 leading-relaxed">
+                  Manual check-in with server-side IP and device verification.
+                  Student location is not required.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {step === 3 && topic && (
+            <div className="space-y-4 motion-fade-scale text-center pt-4">
+              <div className="p-4 bg-primary/5 border border-primary/20 rounded-xl text-left space-y-1 mb-4">
+                <p className="text-[10px] font-black text-primary uppercase tracking-[0.25em] text-center mb-3">
+                  Ready for Deployment
+                </p>
+                <div className="space-y-3">
+                  <div className="flex flex-col">
+                    <span className="text-muted-foreground text-[10px] uppercase font-bold tracking-wider mb-1">
+                      Target Batches
+                    </span>
+                    <div className="flex flex-wrap gap-1">
+                      {selectedBatches.map((b) => (
+                        <span
+                          key={b}
+                          className="px-2 py-0.5 bg-primary/10 text-primary border border-primary/20 rounded text-[10px] font-black"
+                        >
+                          {b}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="h-px bg-border/50" />
+                  <div className="space-y-2">
+                    <p className="text-foreground font-mono text-sm flex items-center gap-2">
+                      <BookOpen className="h-4 w-4 text-primary" />
+                      <span className="text-muted-foreground text-xs uppercase italic min-w-[70px]">
+                        Subject:{" "}
+                      </span>
+                      <span className="font-bold">{selectedSubject?.name}</span>
+                    </p>
+                    <p className="text-foreground font-mono text-sm flex items-center gap-2">
+                      <BookOpen className="h-4 w-4 text-primary" />
+                      <span className="text-muted-foreground text-xs uppercase italic min-w-[70px]">
+                        Topic:{" "}
+                      </span>
+                      <span className="font-bold">{topic}</span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <Button
+                size="lg"
+                className="w-full h-14 font-semibold bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm hover:shadow-md transition-shadow motion-press"
+                onClick={handleGenerate}
+                disabled={createSessionMutation.isPending}
+              >
+                {createSessionMutation.isPending ? (
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                ) : (
+                  <>
+                    <BookOpen className="mr-3 h-5 w-5" /> Execute Initialization
+                  </>
+                )}
+              </Button>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      <div className="text-center">
+        <p className="text-[9px] text-muted-foreground/60 font-mono uppercase tracking-[0.5em]">
+          Academic Integrity Engine // Secure Authentication
+        </p>
+      </div>
+    </div>
   );
 }

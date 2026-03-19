@@ -11,7 +11,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { FileBarChart, Download, Loader2 } from "lucide-react";
-import { FullScreenLoader } from "@/components/FullScreenLoader";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { reportsAPI, coursesAPI } from "@/lib/api";
 import { toast } from "sonner";
@@ -104,7 +103,18 @@ export default function Reports() {
     }
   };
 
-  if (isReportsLoading) return <FullScreenLoader show operation="loading" />;
+  if (isReportsLoading) {
+    return (
+      <div className="app-page min-h-[60vh] flex items-center justify-center">
+        <div className="flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-3">
+          <Loader2 className="h-4 w-4 animate-spin text-primary" />
+          <span className="text-sm text-muted-foreground">
+            Loading reports...
+          </span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="app-page">
@@ -126,7 +136,7 @@ export default function Reports() {
         </Badge>
       </div>
 
-      <Card className="app-card motion-surface">
+      <Card variant="glass" className="app-card motion-surface">
         <CardHeader className="card-header-muted py-4 px-6">
           <CardTitle className="text-sm font-semibold text-foreground">
             Configuration Engine
@@ -204,6 +214,12 @@ export default function Reports() {
             )}
             Generate Report
           </Button>
+          {isGenerating && (
+            <div className="inline-flex items-center gap-2 rounded-md border border-primary/20 bg-primary/10 px-2.5 py-1 text-xs text-primary">
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              Generating report...
+            </div>
+          )}
         </CardContent>
       </Card>
 
@@ -215,6 +231,7 @@ export default function Reports() {
           {reportsData?.map((r: any) => (
             <Card
               key={r.id}
+              variant="interactive"
               className="app-card group hover:border-primary/20 transition-all duration-200"
             >
               <CardContent className="p-5 flex items-start justify-between">
@@ -250,7 +267,6 @@ export default function Reports() {
           )}
         </div>
       </div>
-      <FullScreenLoader show={isGenerating} operation="generating" />
     </div>
   );
 }

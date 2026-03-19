@@ -218,7 +218,10 @@ export default function StudentDashboard() {
         </Badge>
       </div>
 
-      <Card className="app-card motion-slide-up overflow-hidden">
+      <Card
+        variant="elevated"
+        className="app-card motion-slide-up overflow-hidden"
+      >
         <CardHeader className="card-header-muted py-4 px-6">
           <CardTitle className="text-sm font-semibold text-foreground flex items-center gap-2">
             <MapPin className="h-4 w-4 text-primary" /> Mark Attendance
@@ -361,6 +364,7 @@ export default function StudentDashboard() {
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card
+          variant="elevated"
           className="app-card motion-slide-up"
           style={{ animationDelay: "280ms" }}
         >
@@ -418,6 +422,7 @@ export default function StudentDashboard() {
         </Card>
 
         <Card
+          variant="elevated"
           className="app-card motion-slide-up"
           style={{ animationDelay: "280ms" }}
         >
@@ -455,7 +460,7 @@ export default function StudentDashboard() {
         </Card>
       </div>
 
-      <Card className="app-card motion-surface">
+      <Card variant="elevated" className="app-card motion-surface">
         <CardHeader className="card-header-muted py-4 px-6">
           <CardTitle className="text-sm font-semibold text-foreground">
             Recent Attendance Log

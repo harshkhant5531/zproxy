@@ -345,7 +345,7 @@ export default function FacultyManagement() {
         </div>
 
         <div className="grid gap-6">
-          <Card className="app-card overflow-hidden">
+          <Card variant="elevated" className="app-card overflow-hidden">
             <CardHeader>
               <CardTitle className="text-sm font-semibold text-muted-foreground uppercase tracking-[0.12em]">
                 Active Faculty Members
