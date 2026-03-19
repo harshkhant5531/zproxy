@@ -15,6 +15,8 @@ import {
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -37,7 +39,6 @@ import {
   Edit2,
   Save,
 } from "lucide-react";
-import { FullScreenLoader } from "@/components/FullScreenLoader";
 
 export default function FacultyManagement() {
   const queryClient = useQueryClient();
@@ -172,28 +173,20 @@ export default function FacultyManagement() {
   };
 
   if (isFacultyLoading) {
-    return <div className="flex h-[60vh] items-center justify-center" />;
+    return (
+      <div className="app-page min-h-[60vh] flex items-center justify-center">
+        <div className="flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-3">
+          <Loader2 className="h-4 w-4 animate-spin text-primary" />
+          <span className="text-sm text-muted-foreground">
+            Loading faculty...
+          </span>
+        </div>
+      </div>
+    );
   }
 
   return (
     <>
-      <FullScreenLoader show={isFacultyLoading} operation="loading" />
-      <FullScreenLoader
-        show={createFacultyMutation.isPending}
-        operation="creating"
-      />
-      <FullScreenLoader
-        show={updateFacultyMutation.isPending}
-        operation="saving"
-      />
-      <FullScreenLoader
-        show={deleteFacultyMutation.isPending}
-        operation="deleting"
-      />
-      <FullScreenLoader
-        show={assignSubjectMutation.isPending}
-        operation="saving"
-      />
       <div className="app-page">
         <div className="app-page-header">
           <div>
@@ -208,9 +201,14 @@ export default function FacultyManagement() {
                 <UserPlus className="mr-2 h-4 w-4" /> Add Faculty
               </Button>
             </DialogTrigger>
-            <DialogContent className="bg-card border-border">
+            <DialogContent className="max-w-2xl bg-popover border-border text-popover-foreground">
               <DialogHeader>
-                <DialogTitle>Add New Faculty Member</DialogTitle>
+                <DialogTitle className="text-lg font-semibold tracking-tight text-foreground">
+                  Add New Faculty Member
+                </DialogTitle>
+                <DialogDescription className="text-sm text-muted-foreground">
+                  Create a faculty account and profile information.
+                </DialogDescription>
               </DialogHeader>
               <div className="space-y-4 py-4">
                 <div className="grid grid-cols-2 gap-4">
@@ -323,8 +321,16 @@ export default function FacultyManagement() {
                     />
                   </div>
                 </div>
+              </div>
+              <DialogFooter className="border-t border-border/60 pt-4">
                 <Button
-                  className="w-full mt-4"
+                  variant="outline"
+                  onClick={() => setIsAddDialogOpen(false)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  className="bg-primary hover:bg-primary/90"
                   onClick={() => createFacultyMutation.mutate(formData)}
                   disabled={createFacultyMutation.isPending}
                 >
@@ -333,7 +339,7 @@ export default function FacultyManagement() {
                   ) : null}
                   Create Account
                 </Button>
-              </div>
+              </DialogFooter>
             </DialogContent>
           </Dialog>
         </div>
@@ -447,9 +453,14 @@ export default function FacultyManagement() {
 
         {/* Edit Dialog */}
         <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-          <DialogContent className="bg-card border-border">
+          <DialogContent className="max-w-2xl bg-popover border-border text-popover-foreground">
             <DialogHeader>
-              <DialogTitle>Edit Faculty Profile</DialogTitle>
+              <DialogTitle className="text-lg font-semibold tracking-tight text-foreground">
+                Edit Faculty Profile
+              </DialogTitle>
+              <DialogDescription className="text-sm text-muted-foreground">
+                Update selected faculty details.
+              </DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-4">
               <div className="space-y-2">
@@ -519,8 +530,13 @@ export default function FacultyManagement() {
                   />
                 </div>
               </div>
+            </div>
+            <DialogFooter className="border-t border-border/60 pt-4">
+              <Button variant="outline" onClick={() => setIsEditOpen(false)}>
+                Cancel
+              </Button>
               <Button
-                className="w-full mt-4"
+                className="bg-primary hover:bg-primary/90"
                 onClick={() =>
                   updateFacultyMutation.mutate({
                     id: selectedFaculty?.id,
@@ -534,19 +550,22 @@ export default function FacultyManagement() {
                 ) : (
                   <Save className="h-4 w-4 mr-2" />
                 )}
-                Update Profile
+                Save Changes
               </Button>
-            </div>
+            </DialogFooter>
           </DialogContent>
         </Dialog>
 
         {/* Assign Subject Dialog */}
         <Dialog open={isAssignOpen} onOpenChange={setIsAssignOpen}>
-          <DialogContent className="bg-card border-border">
+          <DialogContent className="max-w-xl bg-popover border-border text-popover-foreground">
             <DialogHeader>
-              <DialogTitle>
+              <DialogTitle className="text-lg font-semibold tracking-tight text-foreground">
                 Assign Subject to {selectedFaculty?.username}
               </DialogTitle>
+              <DialogDescription className="text-sm text-muted-foreground">
+                Select one course to assign this faculty member.
+              </DialogDescription>
             </DialogHeader>
             <div className="py-4 space-y-4">
               <Select
@@ -576,6 +595,11 @@ export default function FacultyManagement() {
                 </div>
               )}
             </div>
+            <DialogFooter className="border-t border-border/60 pt-4">
+              <Button variant="outline" onClick={() => setIsAssignOpen(false)}>
+                Close
+              </Button>
+            </DialogFooter>
           </DialogContent>
         </Dialog>
       </div>

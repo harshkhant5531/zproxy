@@ -9,6 +9,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -423,19 +424,19 @@ export default function Timetable() {
         </div>
 
         <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-          <DialogContent className="bg-popover border-border text-popover-foreground">
+          <DialogContent className="max-w-2xl bg-popover border-border text-popover-foreground">
             <DialogHeader>
-              <DialogTitle className="text-lg font-semibold tracking-tight text-primary">
+              <DialogTitle className="text-lg font-semibold tracking-tight text-foreground">
                 Create Timetable Entry
               </DialogTitle>
-              <DialogDescription className="text-muted-foreground text-xs uppercase tracking-[0.12em]">
+              <DialogDescription className="text-sm text-muted-foreground">
                 Assigning for {selectedSlot && days[selectedSlot.day - 1]} •{" "}
                 {selectedSlot?.time.start} - {selectedSlot?.time.end}
               </DialogDescription>
             </DialogHeader>
-            <div className="space-y-4 py-4">
+            <div className="space-y-5 py-3">
               <div className="space-y-2">
-                <Label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                <Label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">
                   Course
                 </Label>
                 <Select
@@ -458,7 +459,7 @@ export default function Timetable() {
               </div>
 
               <div className="space-y-2">
-                <Label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                <Label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">
                   Subject
                 </Label>
                 <Select
@@ -488,7 +489,7 @@ export default function Timetable() {
               </div>
 
               <div className="space-y-2">
-                <Label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                <Label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">
                   Faculty
                 </Label>
                 <Select
@@ -519,7 +520,7 @@ export default function Timetable() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                  <Label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">
                     Room Number
                   </Label>
                   <Input
@@ -533,7 +534,7 @@ export default function Timetable() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                  <Label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">
                     Semester
                   </Label>
                   <Select
@@ -557,7 +558,7 @@ export default function Timetable() {
               </div>
 
               <div className="space-y-2">
-                <Label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                <Label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">
                   Session Type
                 </Label>
                 <Select
@@ -574,9 +575,13 @@ export default function Timetable() {
                   </SelectContent>
                 </Select>
               </div>
-
+            </div>
+            <DialogFooter className="border-t border-border/60 pt-4">
+              <Button variant="outline" onClick={() => setIsAddOpen(false)}>
+                Cancel
+              </Button>
               <Button
-                className="w-full mt-4 bg-primary hover:bg-primary/90 font-semibold uppercase tracking-[0.08em]"
+                className="bg-primary hover:bg-primary/90"
                 onClick={() =>
                   createMutation.mutate({
                     ...formData,
@@ -603,7 +608,7 @@ export default function Timetable() {
                 )}
                 Create Entry
               </Button>
-            </div>
+            </DialogFooter>
           </DialogContent>
         </Dialog>
       </div>

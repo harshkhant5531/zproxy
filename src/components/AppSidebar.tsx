@@ -132,12 +132,12 @@ export function AppSidebar() {
       <SidebarHeader className="p-3 pb-2">
         {!collapsed ? (
           <div className="mb-2 flex items-center gap-2 px-2 py-1">
-            <div className="h-8 w-8 rounded-lg bg-sidebar-primary/10 border border-sidebar-primary/20 flex items-center justify-center flex-shrink-0">
+            <div className="h-8 w-8 rounded-md bg-sidebar-primary/12 border border-sidebar-primary/30 flex items-center justify-center flex-shrink-0">
               <Shield className="h-4 w-4 text-sidebar-primary" />
             </div>
             <div>
-              <h1 className="text-sm font-semibold tracking-tight text-sidebar-foreground leading-none">
-                Aura Grid
+              <h1 className="text-sm font-bold tracking-tight text-sidebar-foreground leading-none">
+                Aura Royal
               </h1>
               <p className="text-[10px] text-sidebar-foreground/70 mt-0.5 uppercase tracking-[0.12em]">
                 {config.label}
@@ -145,7 +145,7 @@ export function AppSidebar() {
             </div>
           </div>
         ) : (
-          <div className="mb-2 h-8 w-8 rounded-xl bg-sidebar-primary/15 border border-sidebar-primary/25 flex items-center justify-center text-sidebar-primary font-semibold text-xs">
+          <div className="mb-2 h-8 w-8 rounded-md bg-sidebar-primary/15 border border-sidebar-primary/25 flex items-center justify-center text-sidebar-primary font-semibold text-xs">
             A
           </div>
         )}
@@ -171,8 +171,8 @@ export function AppSidebar() {
                         <NavLink
                           to={item.url}
                           end
-                          className="group/sidebar-link flex items-center gap-2.5 px-3 py-2 rounded-md text-sidebar-foreground/80 hover:text-sidebar-foreground hover:bg-sidebar-accent/55 transition-colors duration-150 text-sm font-medium border border-transparent"
-                          activeClassName="bg-sidebar-primary/12 text-sidebar-primary font-semibold border border-sidebar-primary/30"
+                          className="group/sidebar-link flex items-center gap-2.5 px-3 py-2 rounded-md text-sidebar-foreground/80 hover:text-sidebar-foreground hover:bg-sidebar-accent/60 transition-colors duration-150 text-sm font-medium border border-transparent"
+                          activeClassName="bg-sidebar-primary/12 text-sidebar-primary font-semibold border border-sidebar-primary/35 shadow-sm"
                         >
                           <span className="inline-flex items-center justify-center text-sidebar-foreground/65 group-hover/sidebar-link:text-sidebar-primary transition-colors duration-150 flex-shrink-0">
                             <item.icon className="h-[15px] w-[15px]" />
@@ -193,7 +193,7 @@ export function AppSidebar() {
 
       <SidebarFooter className="p-2 border-t border-sidebar-border/80">
         {!collapsed && user ? (
-          <div className="rounded-lg bg-sidebar-accent/35 border border-sidebar-border/70 p-2.5">
+          <div className="rounded-md bg-sidebar-accent/35 border border-sidebar-border/70 p-2.5">
             <div className="flex items-center gap-3">
               <div className="h-8 w-8 rounded-full bg-sidebar-primary/15 flex items-center justify-center text-[10px] font-semibold text-sidebar-primary border border-sidebar-primary/25 flex-shrink-0">
                 {(user.profile?.fullName || user.username)

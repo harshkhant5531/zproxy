@@ -10,8 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Search, Eye, Calendar, BookOpen } from "lucide-react";
-import { FullScreenLoader } from "@/components/FullScreenLoader";
+import { Search, Eye, Calendar, BookOpen, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -65,7 +64,16 @@ export default function AttendanceRecords() {
     });
   };
 
-  if (isLoading) return <FullScreenLoader show operation="loading" />;
+  if (isLoading) {
+    return (
+      <div className="app-page min-h-[60vh] flex items-center justify-center">
+        <div className="flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-3">
+          <Loader2 className="h-4 w-4 animate-spin text-primary" />
+          <span className="text-sm text-muted-foreground">Loading records...</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="app-page">

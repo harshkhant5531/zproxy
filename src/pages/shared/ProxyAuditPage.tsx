@@ -31,6 +31,7 @@ import {
   Download,
   Eye,
   EyeOff,
+  Loader2,
 } from "lucide-react";
 import {
   Card,
@@ -41,7 +42,6 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { FullScreenLoader } from "@/components/FullScreenLoader";
 import { attendanceAPI } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
@@ -64,27 +64,40 @@ const AnimatedStatCard = ({
   <Card
     className={cn(
       "overflow-hidden border border-border bg-card motion-slide-up group transition-all duration-300",
-      "hover:border-primary/30"
+      "hover:border-primary/30",
     )}
     style={{ animationDelay: `${delay}s` }}
   >
     <CardContent className="p-4 sm:p-6">
       <div className="flex items-center justify-between">
         <div className="flex-1 space-y-1">
-          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{title}</p>
+          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+            {title}
+          </p>
           <h3 className="text-3xl font-bold tracking-tight text-foreground motion-stat">
             {value}
           </h3>
-          <p className="text-[10px] text-muted-foreground font-medium">{subtitle}</p>
+          <p className="text-[10px] text-muted-foreground font-medium">
+            {subtitle}
+          </p>
         </div>
         <div
           className={cn(
             "p-3 rounded-xl border border-border bg-muted/20 transition-all duration-300",
             "group-hover:bg-primary/10 group-hover:scale-110",
-            color.includes("destructive") ? "group-hover:bg-destructive/10" : ""
+            color.includes("destructive")
+              ? "group-hover:bg-destructive/10"
+              : "",
           )}
         >
-          <Icon className={cn("w-6 h-6", color.includes("destructive") ? "text-destructive" : "text-primary")} />
+          <Icon
+            className={cn(
+              "w-6 h-6",
+              color.includes("destructive")
+                ? "text-destructive"
+                : "text-primary",
+            )}
+          />
         </div>
       </div>
     </CardContent>
@@ -146,12 +159,18 @@ const AnimatedTable = ({
             className="border-b border-border hover:bg-muted/40 transition-colors"
             style={{ "--row-index": idx } as any}
           >
-            <td className="px-4 py-4 text-foreground font-mono">[#{row.studentId}]</td>
+            <td className="px-4 py-4 text-foreground font-mono">
+              [#{row.studentId}]
+            </td>
             <td className="px-4 py-4 font-bold text-amber-500">
               {row.flaggedCount}
             </td>
-            <td className="px-4 py-4 text-foreground font-medium">{row.flagRate}%</td>
-            <td className="px-4 py-4 text-muted-foreground font-mono text-xs">{row.uniqueIps}</td>
+            <td className="px-4 py-4 text-foreground font-medium">
+              {row.flagRate}%
+            </td>
+            <td className="px-4 py-4 text-muted-foreground font-mono text-xs">
+              {row.uniqueIps}
+            </td>
             <td className="px-4 py-4">
               <div className="w-full bg-muted/30 rounded-full h-1.5 overflow-hidden max-w-20">
                 <div
@@ -192,7 +211,18 @@ export default function ProxyAuditPage() {
     refetchInterval: 60000,
   });
 
-  if (isLoading) return <FullScreenLoader show={true} />;
+  if (isLoading) {
+    return (
+      <div className="app-page min-h-[60vh] flex items-center justify-center">
+        <div className="flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-3">
+          <Loader2 className="h-4 w-4 animate-spin text-primary" />
+          <span className="text-sm text-muted-foreground">
+            Loading proxy audit...
+          </span>
+        </div>
+      </div>
+    );
+  }
 
   if (error)
     return (

@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;600&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -6,103 +6,102 @@
 
 @layer base {
   :root {
-    /* Light mode - editorial, warm-neutral with vivid blue accents */
-    --background: 36 40% 97%;
-    --foreground: 218 30% 15%;
+    /* Royal minimal: ivory canvas + cobalt accents */
+    --background: 42 35% 97%;
+    --foreground: 223 33% 14%;
 
     --card: 0 0% 100%;
-    --card-foreground: 218 30% 15%;
+    --card-foreground: 223 33% 14%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 218 30% 15%;
+    --popover-foreground: 223 33% 14%;
 
-    --primary: 221 83% 53%;
-    --primary-foreground: 220 100% 98%;
+    --primary: 226 74% 42%;
+    --primary-foreground: 210 40% 98%;
 
-    --secondary: 40 28% 92%;
-    --secondary-foreground: 218 30% 18%;
+    --secondary: 42 28% 92%;
+    --secondary-foreground: 223 31% 18%;
 
-    --muted: 42 24% 91%;
-    --muted-foreground: 221 16% 39%;
+    --muted: 42 22% 92%;
+    --muted-foreground: 223 13% 38%;
 
-    --accent: 45 40% 89%;
-    --accent-foreground: 218 30% 18%;
+    --accent: 43 52% 88%;
+    --accent-foreground: 223 31% 18%;
 
-    --destructive: 0 80% 57%;
+    --destructive: 0 78% 56%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 222 20% 84%;
-    --input: 222 20% 84%;
-    --ring: 221 83% 53%;
+    --border: 222 20% 82%;
+    --input: 222 20% 82%;
+    --ring: 226 74% 42%;
 
-    --radius: 0.45rem;
+    --radius: 0.75rem;
 
     /* Semantic */
-    --success: 146 62% 36%;
+    --success: 150 58% 35%;
     --success-foreground: 210 40% 98%;
-    --warning: 38 94% 52%;
-    --warning-foreground: 218 30% 15%;
-    --info: 200 86% 46%;
+    --warning: 39 92% 48%;
+    --warning-foreground: 223 33% 14%;
+    --info: 204 83% 44%;
     --info-foreground: 210 40% 98%;
 
     /* Sidebar */
-    --sidebar-background: 42 34% 95%;
-    --sidebar-foreground: 220 26% 21%;
-    --sidebar-primary: 221 83% 53%;
+    --sidebar-background: 40 30% 95%;
+    --sidebar-foreground: 223 25% 20%;
+    --sidebar-primary: 226 74% 42%;
     --sidebar-primary-foreground: 220 100% 98%;
-    --sidebar-accent: 45 36% 90%;
-    --sidebar-accent-foreground: 220 26% 21%;
+    --sidebar-accent: 42 34% 91%;
+    --sidebar-accent-foreground: 223 25% 20%;
     --sidebar-border: 40 20% 84%;
-    --sidebar-ring: 221 83% 53%;
+    --sidebar-ring: 226 74% 42%;
   }
 
   .dark {
-    /* Dark mode - deep slate with warm highlights */
-    --background: 222 28% 8%;
-    --foreground: 45 20% 94%;
+    --background: 224 32% 8%;
+    --foreground: 42 22% 92%;
 
     --card: 223 24% 12%;
-    --card-foreground: 45 20% 94%;
+    --card-foreground: 42 22% 92%;
 
     --popover: 223 24% 12%;
-    --popover-foreground: 45 20% 94%;
+    --popover-foreground: 42 22% 92%;
 
-    --primary: 213 97% 63%;
+    --primary: 221 86% 65%;
     --primary-foreground: 224 29% 8%;
 
-    --secondary: 220 19% 18%;
-    --secondary-foreground: 45 20% 94%;
+    --secondary: 220 19% 17%;
+    --secondary-foreground: 42 22% 92%;
 
-    --muted: 220 20% 16%;
-    --muted-foreground: 39 10% 68%;
+    --muted: 220 19% 16%;
+    --muted-foreground: 40 12% 69%;
 
-    --accent: 218 21% 20%;
-    --accent-foreground: 45 20% 94%;
+    --accent: 220 20% 19%;
+    --accent-foreground: 42 22% 92%;
 
     --destructive: 0 70% 56%;
     --destructive-foreground: 210 40% 98%;
 
     --border: 222 16% 25%;
     --input: 222 16% 25%;
-    --ring: 213 97% 63%;
+    --ring: 221 86% 65%;
 
     /* Semantic */
-    --success: 145 60% 45%;
+    --success: 150 58% 45%;
     --success-foreground: 222 28% 8%;
-    --warning: 40 90% 60%;
+    --warning: 40 88% 58%;
     --warning-foreground: 222 28% 8%;
-    --info: 201 86% 58%;
+    --info: 204 84% 56%;
     --info-foreground: 222 28% 8%;
 
     /* Sidebar */
-    --sidebar-background: 220 26% 10%;
-    --sidebar-foreground: 44 20% 90%;
-    --sidebar-primary: 213 97% 63%;
+    --sidebar-background: 223 26% 10%;
+    --sidebar-foreground: 42 20% 90%;
+    --sidebar-primary: 221 86% 65%;
     --sidebar-primary-foreground: 223 25% 10%;
     --sidebar-accent: 220 19% 16%;
-    --sidebar-accent-foreground: 44 20% 90%;
+    --sidebar-accent-foreground: 42 20% 90%;
     --sidebar-border: 221 18% 20%;
-    --sidebar-ring: 213 97% 63%;
+    --sidebar-ring: 221 86% 65%;
   }
 }
 
@@ -113,19 +112,19 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: "Sora", sans-serif;
+    font-family: "Manrope", sans-serif;
     -webkit-font-smoothing: antialiased;
-    letter-spacing: -0.015em;
+    letter-spacing: -0.012em;
     background-image:
       radial-gradient(
-        circle at 8% 10%,
-        hsl(var(--primary) / 0.12),
-        transparent 26%
+        circle at 6% 12%,
+        hsl(var(--primary) / 0.1),
+        transparent 30%
       ),
       radial-gradient(
-        circle at 92% 82%,
-        hsl(var(--warning) / 0.13),
-        transparent 28%
+        circle at 92% 80%,
+        hsl(var(--accent) / 0.55),
+        transparent 34%
       ),
       linear-gradient(
         180deg,
@@ -170,14 +169,14 @@
 /* ─────────────────────────────────────────────────────────────────────────── */
 
 .app-card {
-  @apply bg-card border border-border rounded-xl shadow-sm;
+  @apply bg-card border border-border/80 rounded-xl shadow-sm;
   transition:
     box-shadow 240ms ease,
     transform 240ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .app-card:hover {
-  box-shadow: 0 6px 16px rgba(31, 41, 55, 0.08);
+  box-shadow: 0 10px 24px rgba(20, 30, 70, 0.09);
   transform: translateY(0);
 }
 
@@ -195,7 +194,7 @@
 /* ─────────────────────────────────────────────────────────────────────────── */
 
 .page-header-title {
-  @apply text-2xl font-bold tracking-tight text-foreground;
+  @apply text-2xl font-extrabold tracking-tight text-foreground;
 }
 
 .page-header-sub {
@@ -223,7 +222,7 @@
 /* ─────────────────────────────────────────────────────────────────────────── */
 
 .app-main-shell {
-  @apply w-full max-w-[1280px] mx-auto;
+  @apply w-full max-w-[1320px] mx-auto;
 }
 
 .app-page {
