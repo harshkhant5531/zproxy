@@ -268,7 +268,10 @@ export default function ProfilePage() {
           </div>
 
           <div className="grid gap-3 sm:grid-cols-3 lg:w-[28rem] motion-stagger">
-            <Card className="app-card bg-muted/20 shadow-none motion-surface">
+            <Card
+              variant="glass"
+              className="app-card bg-muted/20 shadow-none motion-surface"
+            >
               <CardContent className="p-4">
                 <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                   Username
@@ -278,7 +281,10 @@ export default function ProfilePage() {
                 </p>
               </CardContent>
             </Card>
-            <Card className="app-card bg-muted/20 shadow-none motion-surface">
+            <Card
+              variant="glass"
+              className="app-card bg-muted/20 shadow-none motion-surface"
+            >
               <CardContent className="p-4">
                 <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                   Identifier
@@ -290,7 +296,10 @@ export default function ProfilePage() {
                 </p>
               </CardContent>
             </Card>
-            <Card className="app-card bg-muted/20 shadow-none motion-surface">
+            <Card
+              variant="glass"
+              className="app-card bg-muted/20 shadow-none motion-surface"
+            >
               <CardContent className="p-4">
                 <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                   Security

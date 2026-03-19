@@ -6,7 +6,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { ArrowLeft, Copy, KeyRound, Link2, MailCheck, Sparkles } from "lucide-react";
+import {
+  ArrowLeft,
+  Copy,
+  KeyRound,
+  Link2,
+  MailCheck,
+  Sparkles,
+} from "lucide-react";
 
 type ForgotPasswordResponse = {
   data?: {
@@ -61,9 +68,9 @@ export default function ForgotPassword() {
               Reset access without breaking the rest of your workflow.
             </h1>
             <p className="mt-5 max-w-xl text-base leading-7 text-slate-600">
-              Generate a secure reset link, hand it off, and get the account back
-              into a healthy state quickly. The experience is optimized for the
-              institutional light theme first.
+              Generate a secure reset link, hand it off, and get the account
+              back into a healthy state quickly. The experience is optimized for
+              the institutional light theme first.
             </p>
             <div className="mt-10 grid gap-4 md:grid-cols-2">
               {[
@@ -72,15 +79,23 @@ export default function ForgotPassword() {
                 ["Institution ready", "Works with existing account model"],
                 ["Fast recovery", "Copy and open reset link instantly"],
               ].map(([title, subtitle]) => (
-                <div key={title} className="rounded-2xl border border-slate-200 bg-white/80 p-5 shadow-sm">
-                  <p className="text-sm font-black uppercase tracking-[0.12em] text-slate-900">{title}</p>
+                <div
+                  key={title}
+                  className="rounded-2xl border border-slate-200 bg-white/80 p-5 shadow-sm"
+                >
+                  <p className="text-sm font-black uppercase tracking-[0.12em] text-slate-900">
+                    {title}
+                  </p>
                   <p className="mt-1 text-sm text-slate-600">{subtitle}</p>
                 </div>
               ))}
             </div>
           </div>
 
-          <Card className="border border-border/60 bg-card/85 shadow-2xl">
+          <Card
+            variant="elevated"
+            className="border border-border/60 bg-card/85 shadow-2xl"
+          >
             <CardHeader className="space-y-3 pb-3">
               <Link
                 to="/login"
@@ -95,8 +110,8 @@ export default function ForgotPassword() {
                 Forgot Password
               </CardTitle>
               <p className="text-sm leading-6 text-muted-foreground">
-                Enter the institutional email address. A reset link will be generated
-                for the account if it exists.
+                Enter the institutional email address. A reset link will be
+                generated for the account if it exists.
               </p>
             </CardHeader>
             <CardContent>
@@ -132,7 +147,9 @@ export default function ForgotPassword() {
                         Reset Link Ready
                       </p>
                       <p className="mt-1 text-sm text-slate-700 dark:text-slate-300">
-                        {expiresIn ? `Valid for ${expiresIn}.` : "Use this link to reset the password."}
+                        {expiresIn
+                          ? `Valid for ${expiresIn}.`
+                          : "Use this link to reset the password."}
                       </p>
                     </div>
                     <Link2 className="mt-0.5 h-4 w-4 text-emerald-600" />
@@ -141,10 +158,19 @@ export default function ForgotPassword() {
                     {resetUrl}
                   </div>
                   <div className="flex gap-3">
-                    <Button type="button" onClick={copyResetUrl} className="flex-1 rounded-2xl font-black uppercase tracking-[0.14em]">
+                    <Button
+                      type="button"
+                      onClick={copyResetUrl}
+                      className="flex-1 rounded-2xl font-black uppercase tracking-[0.14em]"
+                    >
                       <Copy className="mr-2 h-4 w-4" /> Copy Link
                     </Button>
-                    <Button type="button" asChild variant="outline" className="flex-1 rounded-2xl font-black uppercase tracking-[0.14em]">
+                    <Button
+                      type="button"
+                      asChild
+                      variant="outline"
+                      className="flex-1 rounded-2xl font-black uppercase tracking-[0.14em]"
+                    >
                       <a href={resetUrl}>Open Link</a>
                     </Button>
                   </div>

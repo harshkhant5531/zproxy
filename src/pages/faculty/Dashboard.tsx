@@ -201,7 +201,10 @@ export default function FacultyDashboard() {
       </div>
 
       {/* Today's Sessions */}
-      <Card className="app-card motion-surface overflow-hidden">
+      <Card
+        variant="elevated"
+        className="app-card motion-surface overflow-hidden"
+      >
         <CardHeader className="card-header-muted">
           <CardTitle className="text-sm font-semibold text-foreground flex items-center gap-2">
             <Clock className="h-4 w-4 text-primary" /> Today's Schedule
@@ -270,7 +273,7 @@ export default function FacultyDashboard() {
       </Card>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card className="app-card">
+        <Card variant="elevated" className="app-card">
           <CardHeader className="bg-muted/30 border-b border-border px-6 py-4">
             <CardTitle className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">
               Performance Metrics // Attainment
@@ -321,7 +324,7 @@ export default function FacultyDashboard() {
           </CardContent>
         </Card>
 
-        <Card className="app-card">
+        <Card variant="elevated" className="app-card">
           <CardHeader className="bg-muted/30 border-b border-border px-6 py-4">
             <CardTitle className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">
               Telemetry Feed // Recent Activity

@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { timetableAPI, coursesAPI, usersAPI } from "@/lib/api";
-import { FullScreenLoader } from "@/components/FullScreenLoader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
@@ -224,11 +223,21 @@ export default function Timetable() {
     window.print();
   };
 
+  if (isLoading) {
+    return (
+      <div className="app-page min-h-[60vh] flex items-center justify-center">
+        <div className="flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-3">
+          <Loader2 className="h-4 w-4 animate-spin text-primary" />
+          <span className="text-sm text-muted-foreground">
+            Loading timetable...
+          </span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
-      <FullScreenLoader show={isLoading} operation="loading" />
-      <FullScreenLoader show={createMutation.isPending} operation="creating" />
-      <FullScreenLoader show={deleteMutation.isPending} operation="deleting" />
       <div className="app-page">
         <div className="app-page-header">
           <div>
@@ -236,6 +245,14 @@ export default function Timetable() {
               <Calendar className="h-5 w-5 text-primary" /> Timetable Management
             </h1>
             <p className="page-header-sub">Create and manage class schedules</p>
+            {(createMutation.isPending || deleteMutation.isPending) && (
+              <div className="mt-2 inline-flex items-center gap-2 rounded-md border border-primary/20 bg-primary/10 px-2.5 py-1 text-xs text-primary">
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                {createMutation.isPending
+                  ? "Creating entry..."
+                  : "Deleting entry..."}
+              </div>
+            )}
           </div>
           <Badge
             variant="outline"
@@ -245,7 +262,7 @@ export default function Timetable() {
           </Badge>
         </div>
 
-        <Card className="app-card">
+        <Card variant="glass" className="app-card">
           <CardContent className="p-4">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
               <div className="relative flex-1 max-w-lg">
@@ -290,7 +307,7 @@ export default function Timetable() {
           </CardContent>
         </Card>
 
-        <Card className="app-card overflow-x-auto">
+        <Card variant="elevated" className="app-card overflow-x-auto">
           <CardHeader className="card-header-muted py-4 px-6">
             <CardTitle className="text-sm font-semibold text-foreground">
               Weekly Matrix

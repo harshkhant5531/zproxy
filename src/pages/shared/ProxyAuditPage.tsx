@@ -227,7 +227,10 @@ export default function ProxyAuditPage() {
   if (error)
     return (
       <div className="app-page flex items-center justify-center">
-        <Card className="bg-destructive/10 border-destructive/20 w-full max-w-md">
+        <Card
+          variant="elevated"
+          className="bg-destructive/10 border-destructive/20 w-full max-w-md"
+        >
           <CardContent className="p-5 sm:p-6">
             <p className="text-destructive">Error loading proxy audit data</p>
           </CardContent>
@@ -401,7 +404,7 @@ export default function ProxyAuditPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
           >
-            <Card className="bg-card border-border">
+            <Card variant="elevated" className="bg-card border-border">
               <CardHeader>
                 <CardTitle className="text-foreground flex items-center gap-2">
                   <TrendingUp className="w-5 h-5 text-info" />
@@ -469,7 +472,7 @@ export default function ProxyAuditPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
           >
-            <Card className="bg-card border-border">
+            <Card variant="elevated" className="bg-card border-border">
               <CardHeader>
                 <CardTitle className="text-foreground flex items-center gap-2">
                   <Clock className="w-5 h-5 text-info" />
@@ -516,7 +519,7 @@ export default function ProxyAuditPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
             >
-              <Card className="bg-card border-border">
+              <Card variant="elevated" className="bg-card border-border">
                 <CardHeader>
                   <CardTitle className="text-foreground flex items-center gap-2">
                     <TrendingUp className="w-5 h-5 text-info" />
@@ -554,7 +557,7 @@ export default function ProxyAuditPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7 }}
           >
-            <Card className="bg-card border-border">
+            <Card variant="elevated" className="bg-card border-border">
               <CardHeader>
                 <CardTitle className="text-foreground flex items-center gap-2">
                   <Network className="w-5 h-5 text-info" />
@@ -599,7 +602,7 @@ export default function ProxyAuditPage() {
           transition={{ delay: 0.8 }}
           className="mb-8"
         >
-          <Card className="bg-card border-border">
+          <Card variant="elevated" className="bg-card border-border">
             <CardHeader>
               <CardTitle className="text-foreground flex items-center gap-2">
                 <Network className="w-5 h-5 text-info" />
@@ -644,7 +647,7 @@ export default function ProxyAuditPage() {
             transition={{ delay: 0.9 }}
             className="mb-8"
           >
-            <Card className="bg-card border-border">
+            <Card variant="elevated" className="bg-card border-border">
               <CardHeader>
                 <CardTitle className="text-foreground flex items-center gap-2">
                   <Smartphone className="w-5 h-5 text-success" />
@@ -691,7 +694,7 @@ export default function ProxyAuditPage() {
             transition={{ delay: 1.0 }}
             className="mb-8"
           >
-            <Card className="bg-card border-border">
+            <Card variant="elevated" className="bg-card border-border">
               <CardHeader>
                 <CardTitle className="text-foreground flex items-center gap-2">
                   <Users className="w-5 h-5 text-info" />
@@ -719,7 +722,7 @@ export default function ProxyAuditPage() {
           transition={{ delay: 1.1 }}
           className="mb-8"
         >
-          <Card className="bg-card border-border">
+          <Card variant="elevated" className="bg-card border-border">
             <CardHeader>
               <CardTitle className="text-foreground flex items-center gap-2">
                 <Activity className="w-5 h-5 text-destructive" />
@@ -772,7 +775,7 @@ export default function ProxyAuditPage() {
           transition={{ delay: 1.2 }}
           className="mb-8"
         >
-          <Card className="bg-card border-border">
+          <Card variant="elevated" className="bg-card border-border">
             <CardHeader>
               <CardTitle className="text-foreground flex items-center gap-2">
                 <Users className="w-5 h-5 text-info" />
@@ -816,7 +819,7 @@ export default function ProxyAuditPage() {
           transition={{ delay: 1.3 }}
           className="mb-8"
         >
-          <Card className="bg-card border-border">
+          <Card variant="elevated" className="bg-card border-border">
             <CardHeader>
               <CardTitle className="text-foreground flex items-center justify-between">
                 <div className="flex items-center gap-2">

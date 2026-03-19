@@ -102,7 +102,10 @@ export default function StudentTimetable() {
       </div>
 
       {/* Timetable grid */}
-      <Card className="app-card motion-surface overflow-hidden">
+      <Card
+        variant="elevated"
+        className="app-card motion-surface overflow-hidden"
+      >
         <CardHeader className="card-header-muted py-4 px-6">
           <CardTitle className="text-sm font-semibold text-foreground">
             Weekly Matrix

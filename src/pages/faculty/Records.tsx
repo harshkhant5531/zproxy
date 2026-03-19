@@ -69,7 +69,9 @@ export default function AttendanceRecords() {
       <div className="app-page min-h-[60vh] flex items-center justify-center">
         <div className="flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-3">
           <Loader2 className="h-4 w-4 animate-spin text-primary" />
-          <span className="text-sm text-muted-foreground">Loading records...</span>
+          <span className="text-sm text-muted-foreground">
+            Loading records...
+          </span>
         </div>
       </div>
     );
@@ -112,7 +114,10 @@ export default function AttendanceRecords() {
         </div>
       </div>
 
-      <Card className="app-card overflow-hidden motion-fade-scale">
+      <Card
+        variant="elevated"
+        className="app-card overflow-hidden motion-fade-scale"
+      >
         <CardHeader className="card-header-muted py-4 px-6">
           <CardTitle className="text-sm font-semibold text-foreground">
             Session Ledger

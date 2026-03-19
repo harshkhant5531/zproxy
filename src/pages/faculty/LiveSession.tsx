@@ -370,7 +370,10 @@ export default function LiveSession() {
         </section>
 
         {isCompleted && (
-          <Card className="border-border bg-card shadow-sm motion-slide-up">
+          <Card
+            variant="elevated"
+            className="border-border bg-card shadow-sm motion-slide-up"
+          >
             <CardHeader className="border-b border-border/50 pb-3">
               <CardTitle className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">
                 Absentee Roster
@@ -404,7 +407,10 @@ export default function LiveSession() {
 
         {/* ─── Proxy Suspects Alert ─────────────────────────────────────────── */}
         {proxyRecords.length > 0 && (
-          <Card className="border-destructive/30 bg-destructive/5 shadow-sm overflow-hidden motion-slide-up">
+          <Card
+            variant="elevated"
+            className="border-destructive/30 bg-destructive/5 shadow-sm overflow-hidden motion-slide-up"
+          >
             <CardHeader className="pb-2 px-6 pt-4 border-b border-destructive/20 bg-destructive/10">
               <CardTitle className="text-[11px] font-bold text-destructive uppercase tracking-widest flex items-center gap-2">
                 <AlertTriangle className="h-4 w-4" />
@@ -457,7 +463,10 @@ export default function LiveSession() {
         )}
 
         {showOverride && !isCompleted && (
-          <Card className="bg-card border-primary/20 border shadow-md motion-slide-up">
+          <Card
+            variant="elevated"
+            className="bg-card border-primary/20 border shadow-md motion-slide-up"
+          >
             <CardHeader>
               <CardTitle className="text-sm font-black text-foreground uppercase tracking-widest">
                 Manual Presence Authentication
@@ -515,7 +524,10 @@ export default function LiveSession() {
           </Card>
         )}
 
-        <Card className="border-border bg-card shadow-sm overflow-hidden motion-slide-up">
+        <Card
+          variant="elevated"
+          className="border-border bg-card shadow-sm overflow-hidden motion-slide-up"
+        >
           <CardHeader className="border-b border-border px-6 py-4 bg-muted/30">
             <CardTitle className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
               <Users className="h-4 w-4" />

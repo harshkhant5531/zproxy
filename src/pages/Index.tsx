@@ -26,13 +26,12 @@ import {
   ArrowRight,
   Sparkles,
   Radar,
-  GraduationCap,
   BarChart3,
   Shield,
   Chrome,
+  Loader2,
 } from "lucide-react";
 import { toast } from "sonner";
-import { FullScreenLoader } from "@/components/FullScreenLoader";
 
 const Index = () => {
   const [email, setEmail] = useState("");
@@ -112,12 +111,13 @@ const Index = () => {
       const container = document.getElementById("google-signin-button");
       if (container) {
         container.innerHTML = "";
+        const width = Math.min(360, container.clientWidth || 360);
         window.google.accounts.id.renderButton(container, {
           theme: "outline",
           size: "large",
           shape: "pill",
           text: "signin_with",
-          width: 360,
+          width,
         });
       }
     };
@@ -135,7 +135,18 @@ const Index = () => {
     }
   }, [loginWithGoogle]);
 
-  if (loading) return null;
+  if (loading) {
+    return (
+      <div className="app-page min-h-screen flex items-center justify-center">
+        <div className="flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-3">
+          <Loader2 className="h-4 w-4 animate-spin text-primary" />
+          <span className="text-sm text-muted-foreground">
+            Checking session...
+          </span>
+        </div>
+      </div>
+    );
+  }
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -160,12 +171,6 @@ const Index = () => {
 
   return (
     <div className="relative min-h-screen">
-      <FullScreenLoader
-        show={isSubmitting}
-        operation="authenticating"
-        position="absolute"
-      />
-
       <div className="min-h-screen relative overflow-hidden bg-transparent text-foreground">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-primary/18 blur-3xl" />
@@ -229,15 +234,14 @@ const Index = () => {
                   ].map((item) => (
                     <Card
                       key={item.label}
-                      className="app-card bg-card/80 border-border/80 motion-surface"
+                      variant="glass"
+                      className="px-4 py-3 motion-surface"
                     >
-                      <CardContent className="p-4">
-                        <item.icon className="h-4 w-4 text-primary mb-2" />
-                        <p className="text-sm font-semibold">{item.label}</p>
-                        <p className="text-xs text-muted-foreground mt-0.5">
-                          {item.sub}
-                        </p>
-                      </CardContent>
+                      <item.icon className="h-4 w-4 text-primary mb-2" />
+                      <p className="text-sm font-semibold">{item.label}</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        {item.sub}
+                      </p>
                     </Card>
                   ))}
                 </div>
@@ -245,7 +249,10 @@ const Index = () => {
             </section>
 
             <section className="flex items-center">
-              <Card className="w-full rounded-3xl border-border/80 bg-card shadow-xl motion-fade-scale">
+              <Card
+                variant="elevated"
+                className="w-full rounded-3xl border-border/80 bg-card motion-fade-scale"
+              >
                 <CardHeader className="space-y-3 pb-2">
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-2xl tracking-tight">
@@ -280,6 +287,12 @@ const Index = () => {
                 </CardHeader>
                 <form onSubmit={handleLogin}>
                   <CardContent className="grid gap-4 pt-2">
+                    {isSubmitting && (
+                      <div className="flex items-center gap-2 rounded-xl border border-primary/20 bg-primary/10 px-3 py-2 text-xs text-primary">
+                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                        Authenticating...
+                      </div>
+                    )}
                     <div className="grid gap-2">
                       <Label
                         htmlFor="email"
@@ -336,7 +349,12 @@ const Index = () => {
                       className="w-full font-semibold h-11 rounded-xl text-sm shadow-sm hover:shadow-md transition-shadow motion-press"
                       disabled={isSubmitting}
                     >
-                      <ArrowRight className="mr-2 h-4 w-4" /> Enter Workspace
+                      {isSubmitting ? (
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      ) : (
+                        <ArrowRight className="mr-2 h-4 w-4" />
+                      )}
+                      Enter Workspace
                     </Button>
 
                     <div className="w-full flex items-center gap-2 text-[10px] uppercase tracking-[0.12em] text-muted-foreground/70">
@@ -348,7 +366,7 @@ const Index = () => {
                     {import.meta.env.VITE_GOOGLE_CLIENT_ID ? (
                       <div
                         id="google-signin-button"
-                        className="w-full min-h-[42px] flex items-center justify-center"
+                        className="w-full min-h-[42px] flex items-center justify-center overflow-hidden"
                       />
                     ) : (
                       <Button
