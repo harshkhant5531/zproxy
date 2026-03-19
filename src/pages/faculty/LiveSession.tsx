@@ -24,17 +24,11 @@ import {
   Loader2,
   RefreshCw,
   CheckCircle2,
-  MapPin,
 } from "lucide-react";
 import { FullScreenLoader } from "@/components/FullScreenLoader";
 import { useParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { sessionsAPI, attendanceAPI } from "@/lib/api";
-import {
-  getGeolocationPermissionState,
-  getLocationErrorMessage,
-  requestStabilizedPositionWithRetry,
-} from "@/lib/location";
 import { format } from "date-fns";
 import { toast } from "sonner";
 
@@ -44,7 +38,6 @@ export default function LiveSession() {
   const [showOverride, setShowOverride] = useState(false);
   const [overrideStudentId, setOverrideStudentId] = useState("");
   const [overrideReason, setOverrideReason] = useState("");
-  const [isCalibratingAnchor, setIsCalibratingAnchor] = useState(false);
 
   const { data: sessionData, isLoading: isSessionLoading } = useQuery({
     queryKey: ["session", id],
@@ -102,18 +95,6 @@ export default function LiveSession() {
       setShowOverride(false);
       setOverrideStudentId("");
       setOverrideReason("");
-    },
-  });
-
-  const calibrateAnchorMutation = useMutation({
-    mutationFn: (data: { facultyLat: number; facultyLng: number }) =>
-      sessionsAPI.updateSession(id!, data),
-    onSuccess: () => {
-      toast.success("Session anchor updated");
-      queryClient.invalidateQueries({ queryKey: ["session", id] });
-    },
-    onError: (err: any) => {
-      toast.error(err.response?.data?.message || "Failed to update anchor");
     },
   });
 
@@ -216,7 +197,7 @@ export default function LiveSession() {
           new Date(log.timestamp),
           "yyyy-MM-dd HH:mm:ss",
         );
-        const method = log.method || "GEOFENCE";
+        const method = log.method || "MANUAL_IP";
         return `${id}\t${name}\t${log.status}\t${timestamp}\t${method}`;
       })
       .join("\n");
@@ -224,41 +205,6 @@ export default function LiveSession() {
     navigator.clipboard.writeText(headers + body).then(() => {
       toast.success("Attendance copied to clipboard (Excel format)");
     });
-  };
-
-  const handleCalibrateAnchor = async () => {
-    if (!id) return;
-
-    setIsCalibratingAnchor(true);
-    try {
-      const permissionState = await getGeolocationPermissionState();
-      if (permissionState === "denied") {
-        throw new Error(
-          "Location permission is blocked. Enable browser location access and retry.",
-        );
-      }
-
-      const location = await requestStabilizedPositionWithRetry({
-        timeout: 20000,
-        desiredAccuracyMeters: 55,
-        maxRetries: 3,
-      });
-
-      if (Number.isFinite(location.accuracy) && location.accuracy > 90) {
-        throw new Error(
-          `GPS accuracy is too low (±${Math.round(location.accuracy)}m). Move to an open area and retry calibration.`,
-        );
-      }
-
-      await calibrateAnchorMutation.mutateAsync({
-        facultyLat: location.latitude,
-        facultyLng: location.longitude,
-      });
-    } catch (error: any) {
-      toast.error(getLocationErrorMessage(error));
-    } finally {
-      setIsCalibratingAnchor(false);
-    }
   };
 
   if (isSessionLoading || !session) {
@@ -276,15 +222,6 @@ export default function LiveSession() {
         show={overrideMutation.isPending}
         operation="saving"
         label="Applying Override..."
-      />
-      <FullScreenLoader
-        show={isCalibratingAnchor || calibrateAnchorMutation.isPending}
-        operation={isCalibratingAnchor ? "locating" : "saving"}
-        label={
-          isCalibratingAnchor
-            ? "Calibrating Session Anchor..."
-            : "Saving Anchor..."
-        }
       />
       <div className="app-page">
         <div className="app-page-header">
@@ -309,12 +246,9 @@ export default function LiveSession() {
                     Batch {b}
                   </span>
                 ))}
-                {session?.geofenceRadius && (
-                  <span className="px-2 py-0.5 bg-warning/10 text-warning border border-warning/20 rounded text-[10px] font-black uppercase tracking-wider flex items-center gap-1">
-                    <MapPin className="h-3 w-3" /> Grid:{" "}
-                    {session.geofenceRadius}m
-                  </span>
-                )}
+                <span className="px-2 py-0.5 bg-info/10 text-info border border-info/20 rounded text-[10px] font-black uppercase tracking-wider">
+                  Manual + IP Verification
+                </span>
               </div>
             )}
           </div>
@@ -358,7 +292,7 @@ export default function LiveSession() {
             <CardHeader className="pb-3 px-6 border-b border-border/40 bg-gradient-to-b from-primary/5 to-transparent">
               <CardTitle className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest flex items-center justify-between">
                 <span>
-                  {isCompleted ? "Session Statistics" : "Geofence Attendance"}
+                  {isCompleted ? "Session Statistics" : "Live Attendance"}
                 </span>
                 <div className="flex items-center gap-2">
                   <span
@@ -366,9 +300,9 @@ export default function LiveSession() {
                   >
                     {isCompleted ? "Concluded" : "Live"}
                   </span>
-                  {!isCompleted && session?.geofenceRadius && (
+                  {!isCompleted && (
                     <span className="px-2 py-0.5 rounded-full text-[9px] bg-info/10 text-info border border-info/20">
-                      {session.geofenceRadius}m Grid
+                      Manual + IP
                     </span>
                   )}
                 </div>
@@ -380,26 +314,24 @@ export default function LiveSession() {
                   <div className="rounded-2xl border border-border bg-muted/30 p-6">
                     <div className="flex flex-col items-center gap-4">
                       <div className="h-24 w-24 bg-primary/10 rounded-full flex items-center justify-center">
-                        <MapPin className="h-12 w-12 text-primary" />
+                        <Shield className="h-12 w-12 text-primary" />
                       </div>
                       <div className="text-center">
                         <p className="text-lg font-bold text-primary">
-                          Geofence Active
+                          Manual Check-in Active
                         </p>
                         <p className="text-sm text-muted-foreground mt-1">
-                          Students mark attendance using GPS location
+                          Students mark attendance directly from dashboard
                         </p>
                       </div>
-                      {session?.geofenceRadius && (
-                        <div className="px-4 py-2 bg-primary/10 rounded-lg">
-                          <p className="text-2xl font-bold text-primary font-mono">
-                            {session.geofenceRadius}m
-                          </p>
-                          <p className="text-xs text-muted-foreground uppercase">
-                            Radius
-                          </p>
-                        </div>
-                      )}
+                      <div className="px-4 py-2 bg-primary/10 rounded-lg">
+                        <p className="text-2xl font-bold text-primary font-mono">
+                          IP
+                        </p>
+                        <p className="text-xs text-muted-foreground uppercase">
+                          Verified
+                        </p>
+                      </div>
                     </div>
                   </div>
 
@@ -415,8 +347,8 @@ export default function LiveSession() {
                         Instructions
                       </p>
                       <p className="text-xs text-muted-foreground leading-relaxed">
-                        Students must be within {session?.geofenceRadius || 60}m
-                        to mark attendance.
+                        Students can mark attendance manually. Proxy detection
+                        uses IP and device fingerprint checks.
                       </p>
                     </div>
                   </div>
@@ -563,9 +495,9 @@ export default function LiveSession() {
                   <div className="mx-auto h-11 w-11 rounded-xl bg-info/10 border border-info/20 flex items-center justify-center mb-3">
                     <Wifi className="h-5 w-5 text-info" />
                   </div>
-                  <p className="app-kicker">Geo-Fence</p>
+                  <p className="app-kicker">IP Guard</p>
                   <p className="text-xs text-info font-black mt-1">
-                    CAMPUS GRID
+                    IP MONITOR
                   </p>
                 </div>
 
@@ -708,17 +640,11 @@ export default function LiveSession() {
             </CardTitle>
             <div className="flex flex-wrap gap-2 items-center mt-2 px-6">
               <span className="text-[10px] font-black text-success uppercase tracking-widest border border-success/30 bg-success/5 px-2 py-0.5 rounded">
-                Grid Status: Active ({sessionData?.geofenceRadius}m)
+                Mode: Manual + IP Verified
               </span>
-              {sessionData?.facultyLat ? (
-                <span className="text-[10px] font-black text-primary uppercase tracking-widest border border-primary/30 bg-primary/5 px-2 py-0.5 rounded flex items-center gap-1">
-                  <MapPin className="h-3 w-3" /> Anchor Locked
-                </span>
-              ) : (
-                <span className="text-[10px] font-black text-warning uppercase tracking-widest border border-warning/30 bg-warning/5 px-2 py-0.5 rounded flex items-center gap-1">
-                  <AlertTriangle className="h-3 w-3" /> Campus Fallback
-                </span>
-              )}
+              <span className="text-[10px] font-black text-primary uppercase tracking-widest border border-primary/30 bg-primary/5 px-2 py-0.5 rounded">
+                Network Trust: Render Proxy Headers
+              </span>
             </div>
           </CardHeader>
           <CardContent className="p-0">
@@ -781,7 +707,7 @@ export default function LiveSession() {
                         </TableCell>
                         <TableCell>
                           <span className="text-[9px] font-black text-muted-foreground bg-muted px-2 py-0.5 rounded uppercase tracking-tighter border border-border/50">
-                            {log.method || "GEOFENCE"}
+                            {log.method || "MANUAL_IP"}
                           </span>
                         </TableCell>
                         <TableCell className="pr-6">

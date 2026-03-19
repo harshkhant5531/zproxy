@@ -2,11 +2,6 @@ const express = require("express");
 const { body, validationResult } = require("express-validator");
 const prisma = require("../prisma");
 const authMiddleware = require("../middleware/auth");
-const {
-  MAX_RADIUS_METERS,
-  MIN_RADIUS_METERS,
-  resolveRadiusMeters,
-} = require("../utils/geofence");
 const { requireRole } = authMiddleware;
 
 const router = express.Router();
@@ -195,14 +190,6 @@ router.post(
     body("date").isISO8601().withMessage("Valid date is required"),
     body("startTime").notEmpty().withMessage("Start time is required"),
     body("endTime").notEmpty().withMessage("End time is required"),
-    body("geofenceRadius")
-      .optional()
-      .isInt({ min: MIN_RADIUS_METERS, max: MAX_RADIUS_METERS })
-      .withMessage(
-        `Radius must be between ${MIN_RADIUS_METERS}m and ${MAX_RADIUS_METERS}m`,
-      ),
-    body("facultyLat").optional().isFloat().withMessage("Invalid latitude"),
-    body("facultyLng").optional().isFloat().withMessage("Invalid longitude"),
   ],
   async (req, res, next) => {
     try {
@@ -228,9 +215,6 @@ router.post(
         duration,
         status,
         batches,
-        geofenceRadius,
-        facultyLat,
-        facultyLng,
       } = req.body;
 
       // Check if faculty has access to this course or specialized subject
@@ -275,9 +259,6 @@ router.post(
           duration: duration || 60,
           status: status || "scheduled",
           batches: batches || [],
-          geofenceRadius: resolveRadiusMeters({ geofenceRadius }),
-          facultyLat: facultyLat ? parseFloat(facultyLat) : null,
-          facultyLng: facultyLng ? parseFloat(facultyLng) : null,
         },
         include: {
           course: { select: { id: true, name: true, code: true } },
@@ -309,16 +290,7 @@ router.post(
 router.put(
   "/:id",
   authMiddleware,
-  [
-    body("geofenceRadius")
-      .optional()
-      .isInt({ min: MIN_RADIUS_METERS, max: MAX_RADIUS_METERS })
-      .withMessage(
-        `Radius must be between ${MIN_RADIUS_METERS}m and ${MAX_RADIUS_METERS}m`,
-      ),
-    body("facultyLat").optional().isFloat().withMessage("Invalid latitude"),
-    body("facultyLng").optional().isFloat().withMessage("Invalid longitude"),
-  ],
+  [],
   async (req, res, next) => {
     try {
       const errors = validationResult(req);
@@ -369,9 +341,6 @@ router.put(
         duration,
         status,
         batches,
-        geofenceRadius,
-        facultyLat,
-        facultyLng,
       } = req.body;
 
       const updatedSession = await prisma.session.update({
@@ -388,15 +357,6 @@ router.put(
           ...(duration && { duration }),
           ...(status && { status }),
           ...(batches && { batches }),
-          ...(geofenceRadius !== undefined && {
-            geofenceRadius: resolveRadiusMeters({ geofenceRadius }),
-          }),
-          ...(facultyLat !== undefined && {
-            facultyLat: facultyLat === null ? null : parseFloat(facultyLat),
-          }),
-          ...(facultyLng !== undefined && {
-            facultyLng: facultyLng === null ? null : parseFloat(facultyLng),
-          }),
         },
         include: {
           course: true,

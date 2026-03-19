@@ -295,14 +295,4 @@ export const notificationsAPI = {
   markAsRead: (id: string) => api.put(`/notifications/${id}/read`),
 };
 
-export const settingsAPI = {
-  getGeofenceSecurity: () => api.get("/settings/geofence-security"),
-
-  updateGeofenceSecurity: (data: any) =>
-    api.put("/settings/geofence-security", data),
-
-  getGeofenceSecurityHistory: (params?: any) =>
-    api.get("/settings/geofence-security/history", { params }),
-};
-
 export default api;

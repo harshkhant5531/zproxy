@@ -34,11 +34,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/AuthContext";
 import { attendanceAPI, reportsAPI, coursesAPI, sessionsAPI } from "@/lib/api";
 import {
-  getGeolocationPermissionState,
-  getLocationErrorMessage,
-  requestStabilizedPositionWithRetry,
-} from "@/lib/location";
-import {
   format,
   startOfWeek,
   endOfWeek,
@@ -111,21 +106,6 @@ export default function StudentDashboard() {
 
   const markAttendanceMutation = useMutation({
     mutationFn: async (session: any) => {
-      const permissionState = await getGeolocationPermissionState();
-      if (permissionState === "denied") {
-        throw new Error(
-          "Location permission is blocked. Enable browser location access and retry.",
-        );
-      }
-
-      const location = await requestStabilizedPositionWithRetry({
-        timeout: 30000,
-        desiredAccuracyMeters: 65,
-        maxRetries: 4,
-        sampleCount: 8,
-        intervalMs: 700,
-      });
-
       const deviceInfo = [
         navigator.userAgent,
         navigator.platform,
@@ -138,15 +118,6 @@ export default function StudentDashboard() {
 
       return attendanceAPI.markAttendance({
         sessionId: session.id,
-        lat: location.latitude,
-        lng: location.longitude,
-        accuracy: location.accuracy,
-        locationCapturedAt: location.capturedAt,
-        locationMeta: {
-          isMocked: false,
-          sampleCount: location.sampleCount,
-          sampleSpreadMeters: location.sampleSpreadMeters,
-        },
         deviceInfo,
       });
     },
@@ -168,7 +139,7 @@ export default function StudentDashboard() {
         return;
       }
       toast.error(
-        error?.response?.data?.message || getLocationErrorMessage(error),
+        error?.response?.data?.message || "Failed to mark attendance",
       );
     },
   });
@@ -266,9 +237,7 @@ export default function StudentDashboard() {
                       <p className="text-xs text-muted-foreground mt-1">
                         {session.course?.code || "Course"} • {session.startTime}
                         -{session.endTime}
-                        {session.geofenceRadius
-                          ? ` • Radius ${session.geofenceRadius}m`
-                          : ""}
+                        {" • Manual + IP verified"}
                       </p>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
@@ -291,7 +260,7 @@ export default function StudentDashboard() {
                           {isMarkingCurrent ? (
                             <>
                               <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                              Locating
+                              Marking
                             </>
                           ) : (
                             "Mark Now"

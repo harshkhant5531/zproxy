@@ -13,7 +13,6 @@ import {
   AlertTriangle,
   Network,
   Settings,
-  LocateFixed,
   LogOut,
   Shield,
   UserCircle2,
@@ -101,11 +100,6 @@ const adminSections: MenuSection[] = [
       { title: "Reports", url: "/admin/reports", icon: FileBarChart },
       { title: "Alerts", url: "/admin/alerts", icon: AlertTriangle },
       { title: "Proxy Audit", url: "/admin/proxy-audit", icon: Network },
-      {
-        title: "Geofence Security",
-        url: "/admin/geofence-security",
-        icon: LocateFixed,
-      },
     ],
   },
   {
