@@ -200,60 +200,39 @@ export function FullScreenLoader({
   const Icon = cfg.icon;
 
   const positionClass = position === "absolute" ? "absolute" : "fixed";
-  const sidebarClass = withSidebarOffset ? "lg:pl-[16rem]" : "";
+  const anchorClass =
+    position === "absolute" ? "top-3 right-3" : "top-4 right-4";
+  const sidebarClass = withSidebarOffset ? "lg:right-6" : "";
 
   return (
     <div
-      className={`${positionClass} inset-0 z-[120] bg-background/92 backdrop-blur-[1px] flex flex-col items-center justify-center gap-8 animate-in fade-in duration-300 ${sidebarClass}`}
+      className={`${positionClass} ${anchorClass} z-[120] animate-in fade-in duration-200 ${sidebarClass}`}
     >
-      {/* Expanding rings + icon */}
-      <div className="relative flex items-center justify-center">
-        {[0, 0.3, 0.6].map((delay, i) => (
+      <div className="pointer-events-none rounded-lg border border-border bg-card/95 shadow-md px-3 py-2 min-w-[220px]">
+        <div className="flex items-center gap-2">
           <div
-            key={i}
-            className={`absolute w-36 h-36 rounded-full border ${cl.ring} animate-ring-pulse`}
-            style={{ animationDelay: `${delay}s` }}
-          />
-        ))}
+            className={`h-8 w-8 shrink-0 rounded-md border ${cl.iconBg} flex items-center justify-center`}
+          >
+            <Icon className={`h-4 w-4 ${cl.iconColor} animate-spin`} />
+          </div>
 
-        <div
-          className={`relative w-20 h-20 rounded-full border border-primary/20 ${cl.iconBg} flex items-center justify-center shadow-sm`}
-        >
-          <div
-            className={`absolute inset-[-3px] rounded-full border-[2.5px] border-dashed ${cl.outerDash} animate-rotate-cw`}
-          />
-          <div
-            className={`absolute inset-[6px] rounded-full border border-dashed ${cl.innerDash} animate-rotate-ccw`}
-          />
-          <div className="relative z-10">
-            <Icon className={`h-8 w-8 ${cl.iconColor}`} />
+          <div className="min-w-0">
+            <p
+              className={`text-[11px] font-bold uppercase tracking-wider leading-tight ${cl.title}`}
+            >
+              {label || cfg.title}
+            </p>
+            <p className="text-[10px] text-muted-foreground truncate">
+              {cfg.subtitle}
+            </p>
           </div>
         </div>
-      </div>
 
-      {/* Text */}
-      <div className="text-center space-y-1.5 px-8">
-        <p
-          className={`text-base font-bold uppercase tracking-widest ${cl.title}`}
-        >
-          {label || cfg.title}
-        </p>
-        <div className="flex items-center justify-center gap-2 pt-1">
-          {[0, 1, 2].map((i) => (
-            <span
-              key={i}
-              className={`block w-1.5 h-1.5 rounded-full ${cl.dot} animate-bounce-dot`}
-              style={{ animationDelay: `${i * 0.15}s` }}
-            />
-          ))}
+        <div className="mt-2 h-1 w-full rounded-full bg-muted overflow-hidden">
+          <div
+            className={`h-full ${cl.bar} animate-progress-indeterminate rounded-full`}
+          />
         </div>
-      </div>
-
-      {/* Indeterminate bar */}
-      <div className="w-48 h-px bg-border rounded-full overflow-hidden">
-        <div
-          className={`h-full ${cl.bar} animate-progress-indeterminate rounded-full`}
-        />
       </div>
     </div>
   );

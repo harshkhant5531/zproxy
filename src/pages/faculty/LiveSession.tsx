@@ -18,14 +18,11 @@ import {
   Users,
   Clock,
   Shield,
-  Wifi,
   AlertTriangle,
   UserPlus,
   Loader2,
   RefreshCw,
-  CheckCircle2,
 } from "lucide-react";
-import { FullScreenLoader } from "@/components/FullScreenLoader";
 import { useParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { sessionsAPI, attendanceAPI } from "@/lib/api";
@@ -208,22 +205,21 @@ export default function LiveSession() {
   };
 
   if (isSessionLoading || !session) {
-    return <FullScreenLoader show operation="loading" />;
+    return (
+      <div className="app-page min-h-[60vh] flex items-center justify-center">
+        <div className="flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-3">
+          <Loader2 className="h-4 w-4 animate-spin text-primary" />
+          <span className="text-sm text-muted-foreground">
+            Loading session...
+          </span>
+        </div>
+      </div>
+    );
   }
 
   return (
     <>
-      <FullScreenLoader
-        show={endSessionMutation.isPending}
-        operation="submitting"
-        label="Ending Session..."
-      />
-      <FullScreenLoader
-        show={overrideMutation.isPending}
-        operation="saving"
-        label="Applying Override..."
-      />
-      <div className="app-page">
+      <div className="app-page space-y-6">
         <div className="app-page-header">
           <div>
             <h1 className="page-header-title">
@@ -270,7 +266,14 @@ export default function LiveSession() {
                   disabled={endSessionMutation.isPending}
                   className="font-bold uppercase tracking-widest shadow-sm motion-press"
                 >
-                  End Session
+                  {endSessionMutation.isPending ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Ending...
+                    </>
+                  ) : (
+                    "End Session"
+                  )}
                 </Button>
               </>
             )}
@@ -287,233 +290,117 @@ export default function LiveSession() {
           </div>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-3">
-          <Card className="lg:row-span-2 overflow-hidden border-border bg-card shadow-sm relative motion-slide-up">
-            <CardHeader className="pb-3 px-6 border-b border-border/40 bg-gradient-to-b from-primary/5 to-transparent">
-              <CardTitle className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest flex items-center justify-between">
-                <span>
-                  {isCompleted ? "Session Statistics" : "Live Attendance"}
+        <section className="relative overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/10 via-background to-background shadow-sm motion-slide-up">
+          <div className="pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full bg-primary/10 blur-3xl" />
+          <div className="pointer-events-none absolute -left-20 bottom-0 h-40 w-40 rounded-full bg-primary/5 blur-3xl" />
+
+          <div className="relative p-5 sm:p-6">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex items-center gap-2">
+                <span
+                  className={`px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-widest ${isCompleted ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" : "bg-primary/10 text-primary"}`}
+                >
+                  {isCompleted ? "Concluded" : "Live"}
                 </span>
-                <div className="flex items-center gap-2">
-                  <span
-                    className={`px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-widest ${isCompleted ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" : "bg-primary/10 text-primary animate-pulse"}`}
-                  >
-                    {isCompleted ? "Concluded" : "Live"}
-                  </span>
-                  {!isCompleted && (
-                    <span className="px-2 py-0.5 rounded-full text-[9px] bg-info/10 text-info border border-info/20">
-                      Manual + IP
-                    </span>
-                  )}
-                </div>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-4 sm:p-6 text-center relative h-full">
-              {!isCompleted ? (
-                <div className="space-y-5">
-                  <div className="rounded-2xl border border-border bg-muted/30 p-6">
-                    <div className="flex flex-col items-center gap-4">
-                      <div className="h-24 w-24 bg-primary/10 rounded-full flex items-center justify-center">
-                        <Shield className="h-12 w-12 text-primary" />
-                      </div>
-                      <div className="text-center">
-                        <p className="text-lg font-bold text-primary">
-                          Manual Check-in Active
-                        </p>
-                        <p className="text-sm text-muted-foreground mt-1">
-                          Students mark attendance directly from dashboard
-                        </p>
-                      </div>
-                      <div className="px-4 py-2 bg-primary/10 rounded-lg">
-                        <p className="text-2xl font-bold text-primary font-mono">
-                          IP
-                        </p>
-                        <p className="text-xs text-muted-foreground uppercase">
-                          Verified
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+                <span className="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-widest bg-info/10 text-info border border-info/20">
+                  Manual + IP
+                </span>
+              </div>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+                Render Proxy Headers Trusted
+              </p>
+            </div>
 
-                  <div className="grid gap-3 sm:grid-cols-2">
-                    <div className="p-4 bg-muted/20 border border-border rounded-xl shadow-sm text-left">
-                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">
-                        Status
-                      </p>
-                      <p className="text-xl font-bold text-primary">Active</p>
-                    </div>
-                    <div className="p-4 bg-muted/20 border border-border rounded-xl shadow-sm text-left">
-                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2">
-                        Instructions
-                      </p>
-                      <p className="text-xs text-muted-foreground leading-relaxed">
-                        Students can mark attendance manually. Proxy detection
-                        uses IP and device fingerprint checks.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className="space-y-6 py-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="text-center p-4 bg-muted/20 border border-border rounded-xl shadow-sm">
-                      <p className="text-[10px] uppercase text-muted-foreground font-bold tracking-widest mb-1">
-                        Present
-                      </p>
-                      <p className="text-4xl font-bold text-emerald-600 dark:text-emerald-400">
-                        {presentCount}
-                      </p>
-                    </div>
-                    <div className="text-center p-4 bg-muted/20 border border-border rounded-xl shadow-sm">
-                      <p className="text-[10px] uppercase text-muted-foreground font-bold tracking-widest mb-1">
-                        Absent
-                      </p>
-                      <p className="text-4xl font-bold text-destructive">
-                        {absenteeRoster.length}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="text-left mt-8">
-                    <h3 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
-                      <Shield className="h-3 w-3" /> Absentee Roster
-                    </h3>
-                    <div className="space-y-2 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
-                      {absenteeRoster.map((s: any) => (
-                        <div
-                          key={s.id}
-                          className="p-3 rounded-lg bg-background border border-border group hover:border-destructive/30 transition-colors"
-                        >
-                          <p className="text-sm font-bold text-foreground group-hover:text-destructive transition-colors">
-                            {s.studentProfile?.fullName || s.username}
-                          </p>
-                          <p className="text-[10px] text-muted-foreground font-mono mt-0.5">
-                            {s.studentProfile?.studentId || "UID: " + s.id}
-                          </p>
-                        </div>
-                      ))}
-                      {absenteeRoster.length === 0 && (
-                        <div className="text-center py-8">
-                          <CheckCircle2 className="h-8 w-8 text-success mx-auto mb-2 opacity-20" />
-                          <p className="text-xs text-muted-foreground italic">
-                            No absentees detected
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+            <div className="mt-4 grid gap-3 sm:grid-cols-4">
+              <div className="rounded-xl border border-border/70 bg-background/80 p-3">
+                <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">
+                  Presence
+                </p>
+                <p className="mt-1 text-2xl font-bold text-foreground">
+                  {presentCount}
+                </p>
+              </div>
+              <div className="rounded-xl border border-border/70 bg-background/80 p-3">
+                <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">
+                  Absent
+                </p>
+                <p className="mt-1 text-2xl font-bold text-destructive">
+                  {absenteeRoster.length}
+                </p>
+              </div>
+              <div className="rounded-xl border border-border/70 bg-background/80 p-3">
+                <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">
+                  Coverage
+                </p>
+                <p className="mt-1 text-2xl font-bold text-foreground">
+                  {pct}%
+                </p>
+              </div>
+              <div className="rounded-xl border border-border/70 bg-background/80 p-3">
+                <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">
+                  Proxy Flags
+                </p>
+                <p className="mt-1 text-2xl font-bold text-warning">
+                  {proxyRecords.length}
+                </p>
+              </div>
+            </div>
 
-          <Card className="col-span-1 lg:col-span-2 border-border bg-card shadow-sm overflow-hidden motion-slide-up">
-            <CardHeader className="pb-3 px-6 border-b border-border bg-muted/30">
+            <div className="mt-4 space-y-2">
+              <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                <span>Session Coverage</span>
+                <span>
+                  {presentCount}/{totalCount}
+                </span>
+              </div>
+              <Progress
+                value={(presentCount / totalCount) * 100}
+                className="h-2"
+              />
+            </div>
+
+            <div className="mt-4 rounded-lg border border-border/70 bg-background/70 px-3 py-2">
+              <p className="text-xs text-muted-foreground flex items-center gap-2">
+                <Shield className="h-3.5 w-3.5 text-primary" />
+                Clean mode: students check in manually, with IP and device
+                verification active.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {isCompleted && (
+          <Card className="border-border bg-card shadow-sm motion-slide-up">
+            <CardHeader className="border-b border-border/50 pb-3">
               <CardTitle className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">
-                Participation Insight
+                Absentee Roster
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-5 sm:p-6">
-              <div className="grid gap-4 sm:grid-cols-3 items-stretch">
-                <div className="rounded-xl border border-border bg-muted/20 p-4 text-center">
-                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-                    Rate
-                  </p>
-                  <p className="text-5xl font-bold text-foreground tracking-tighter mt-2">
-                    {pct}%
-                  </p>
-                  <div className="mt-3 h-1.5 rounded-full bg-muted overflow-hidden">
+            <CardContent className="p-4">
+              <div className="space-y-2 max-h-[260px] overflow-y-auto custom-scrollbar">
+                {absenteeRoster.length > 0 ? (
+                  absenteeRoster.map((s: any) => (
                     <div
-                      className="h-full bg-primary rounded-full motion-progress"
-                      style={{ width: `${pct}%` }}
-                    />
-                  </div>
-                </div>
-
-                <div className="rounded-xl border border-border bg-background/80 p-4">
-                  <p className="app-kicker mb-3 text-left">Live Distribution</p>
-                  <div className="space-y-3 text-left">
-                    <div>
-                      <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">
-                        <span>Present</span>
-                        <span>{presentCount}</span>
-                      </div>
-                      <Progress
-                        value={(presentCount / totalCount) * 100}
-                        className="h-2 bg-muted"
-                      />
+                      key={s.id}
+                      className="rounded-lg border border-border/70 bg-background px-3 py-2"
+                    >
+                      <p className="text-sm font-semibold text-foreground">
+                        {s.studentProfile?.fullName || s.username}
+                      </p>
+                      <p className="text-[10px] text-muted-foreground font-mono mt-0.5">
+                        {s.studentProfile?.studentId || `UID: ${s.id}`}
+                      </p>
                     </div>
-                    <div>
-                      <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">
-                        <span>Absent</span>
-                        <span>{absenteeRoster.length}</span>
-                      </div>
-                      <Progress
-                        value={(absenteeRoster.length / totalCount) * 100}
-                        className="h-2 bg-muted"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="rounded-xl border border-border bg-muted/20 p-4 text-center flex flex-col justify-center">
-                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-                    Assets
+                  ))
+                ) : (
+                  <p className="text-sm text-muted-foreground italic text-center py-4">
+                    No absentees detected.
                   </p>
-                  <p className="text-3xl font-bold text-foreground mt-2">
-                    {presentCount}
-                    <span className="text-muted-foreground text-sm font-medium">
-                      /{totalCount}
-                    </span>
-                  </p>
-                  <p className="text-[10px] text-muted-foreground mt-2">
-                    Verified participants
-                  </p>
-                </div>
+                )}
               </div>
             </CardContent>
           </Card>
-
-          <Card className="col-span-1 lg:col-span-2 border-border/70 bg-card/95 shadow-xl overflow-hidden">
-            <CardHeader className="pb-3 px-6 border-b border-border/40 bg-gradient-to-b from-primary/5 to-transparent">
-              <CardTitle className="app-kicker">
-                Integrity Protocol Status
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-5 sm:p-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="rounded-xl border border-success/30 bg-success/5 p-4 text-center">
-                  <div className="mx-auto h-11 w-11 rounded-xl bg-success/10 border border-success/20 flex items-center justify-center mb-3">
-                    <Shield className="h-5 w-5 text-success" />
-                  </div>
-                  <p className="app-kicker">Encryption</p>
-                  <p className="text-xs text-success font-black mt-1">
-                    AES-256 ACTIVE
-                  </p>
-                </div>
-
-                <div className="rounded-xl border border-info/30 bg-info/5 p-4 text-center">
-                  <div className="mx-auto h-11 w-11 rounded-xl bg-info/10 border border-info/20 flex items-center justify-center mb-3">
-                    <Wifi className="h-5 w-5 text-info" />
-                  </div>
-                  <p className="app-kicker">IP Guard</p>
-                  <p className="text-xs text-info font-black mt-1">
-                    IP MONITOR
-                  </p>
-                </div>
-
-                <div className="rounded-xl border border-success/30 bg-success/5 p-4 text-center">
-                  <div className="mx-auto h-11 w-11 rounded-xl bg-success/10 border border-success/20 flex items-center justify-center mb-3">
-                    <CheckCircle2 className="h-5 w-5 text-success" />
-                  </div>
-                  <p className="app-kicker">Threat Monitor</p>
-                  <p className="text-xs text-success font-black mt-1">
-                    OPERATIONAL
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+        )}
 
         {/* ─── Proxy Suspects Alert ─────────────────────────────────────────── */}
         {proxyRecords.length > 0 && (
@@ -614,7 +501,14 @@ export default function LiveSession() {
                   disabled={overrideMutation.isPending}
                   className="bg-primary text-primary-foreground font-bold uppercase tracking-widest px-8 h-12 rounded-xl motion-press"
                 >
-                  Authenticate
+                  {overrideMutation.isPending ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Authenticating...
+                    </>
+                  ) : (
+                    "Authenticate"
+                  )}
                 </Button>
               </div>
             </CardContent>

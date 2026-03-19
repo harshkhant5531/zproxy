@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Table,
@@ -20,7 +21,6 @@ import {
   Save,
   BookOpen,
 } from "lucide-react";
-import { FullScreenLoader } from "@/components/FullScreenLoader";
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { coursesAPI, usersAPI } from "@/lib/api";
@@ -177,300 +177,80 @@ export default function CourseManagement() {
   );
 
   if (isLoading) {
-    return <div className="flex h-[60vh] items-center justify-center" />;
+    return (
+      <div className="app-page min-h-[60vh] flex items-center justify-center">
+        <div className="flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-3">
+          <Loader2 className="h-4 w-4 animate-spin text-primary" />
+          <span className="text-sm text-muted-foreground">
+            Loading courses...
+          </span>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <>
-      <FullScreenLoader show={isLoading} operation="loading" />
-      <FullScreenLoader show={createMutation.isPending} operation="creating" />
-      <FullScreenLoader show={updateMutation.isPending} operation="saving" />
-      <FullScreenLoader show={deleteMutation.isPending} operation="deleting" />
-      <FullScreenLoader show={subjectMutation.isPending} operation="creating" />
-      <div className="app-page">
-        <div className="app-page-header">
-          <div>
-            <h1 className="page-header-title flex items-center gap-2">
-              <BookOpen className="h-5 w-5 text-primary" />
-              Course Management
-            </h1>
-            <p className="page-header-sub">
-              Manage courses and subject assignments
-            </p>
-          </div>
-          <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-            <DialogTrigger asChild>
-              <Button className="bg-primary hover:bg-primary/90 font-bold uppercase tracking-widest text-[10px] h-9 px-6">
-                <Plus className="mr-2 h-4 w-4" /> Index New Course
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="bg-popover border-border text-popover-foreground">
-              <DialogHeader>
-                <DialogTitle className="text-xl font-semibold tracking-tight text-primary">
-                  Add Course
-                </DialogTitle>
-                <DialogDescription className="text-muted-foreground text-sm">
-                  Enter the course details below.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="space-y-4 py-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-                      Unique Code
-                    </Label>
-                    <Input
-                      placeholder="e.g. CSE-302"
-                      value={formData.code}
-                      onChange={(e) =>
-                        setFormData({ ...formData, code: e.target.value })
-                      }
-                      className="bg-background/80 border-border/70 focus:ring-primary/40"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-                      Credits
-                    </Label>
-                    <Input
-                      type="number"
-                      value={formData.credits}
-                      onChange={(e) =>
-                        setFormData({ ...formData, credits: e.target.value })
-                      }
-                      className="bg-background/80 border-border/70 focus:ring-primary/40"
-                    />
-                  </div>
-                </div>
+    <div className="app-page">
+      <div className="app-page-header">
+        <div>
+          <h1 className="page-header-title flex items-center gap-2">
+            <BookOpen className="h-5 w-5 text-primary" />
+            Course Management
+          </h1>
+          <p className="page-header-sub">
+            Manage courses and subject assignments
+          </p>
+        </div>
+        <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
+          <DialogTrigger asChild>
+            <Button className="bg-primary hover:bg-primary/90 font-bold uppercase tracking-widest text-[10px] h-9 px-6">
+              <Plus className="mr-2 h-4 w-4" /> Index New Course
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-2xl bg-popover border-border text-popover-foreground">
+            <DialogHeader>
+              <DialogTitle className="text-lg font-semibold tracking-tight text-foreground">
+                Add Course
+              </DialogTitle>
+              <DialogDescription className="text-sm text-muted-foreground">
+                Add a new course record and assign an in-charge faculty member.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-5 py-3">
+              <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-                    Course Title
+                  <Label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">
+                    Unique Code
                   </Label>
                   <Input
-                    placeholder="e.g. Distributed Systems"
-                    value={formData.name}
+                    placeholder="e.g. CSE-302"
+                    value={formData.code}
                     onChange={(e) =>
-                      setFormData({ ...formData, name: e.target.value })
+                      setFormData({ ...formData, code: e.target.value })
                     }
                     className="bg-background/80 border-border/70 focus:ring-primary/40"
                   />
                 </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-                      Department
-                    </Label>
-                    <Input
-                      placeholder="e.g. CSE"
-                      value={formData.department}
-                      onChange={(e) =>
-                        setFormData({ ...formData, department: e.target.value })
-                      }
-                      className="bg-background/80 border-border/70 focus:ring-primary/40"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-                      Semester
-                    </Label>
-                    <Select
-                      value={formData.semester}
-                      onValueChange={(v) =>
-                        setFormData({ ...formData, semester: v })
-                      }
-                    >
-                      <SelectTrigger className="bg-background/80 border-border/70">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent className="bg-popover border-border text-popover-foreground">
-                        {[1, 2, 3, 4, 5, 6, 7, 8].map((s) => (
-                          <SelectItem key={s} value={s.toString()}>
-                            SEM {s}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
                 <div className="space-y-2">
-                  <Label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-                    Faculty Head / In-Charge
+                  <Label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">
+                    Credits
                   </Label>
-                  <Select
-                    value={formData.facultyId}
-                    onValueChange={(v) =>
-                      setFormData({ ...formData, facultyId: v })
+                  <Input
+                    type="number"
+                    value={formData.credits}
+                    onChange={(e) =>
+                      setFormData({ ...formData, credits: e.target.value })
                     }
-                  >
-                    <SelectTrigger className="bg-background/80 border-border/70">
-                      <SelectValue placeholder="Assign course lead..." />
-                    </SelectTrigger>
-                    <SelectContent className="bg-popover border-border text-popover-foreground">
-                      {facultyMembers.map((f: any) => (
-                        <SelectItem key={f.id} value={f.id.toString()}>
-                          {f.facultyProfile?.fullName || f.username}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                    className="bg-background/80 border-border/70 focus:ring-primary/40"
+                  />
                 </div>
-                <Button
-                  className="w-full mt-4 bg-primary hover:bg-primary/90 font-black uppercase tracking-tight"
-                  onClick={() => createMutation.mutate(formData)}
-                  disabled={createMutation.isPending}
-                >
-                  {createMutation.isPending ? (
-                    <Loader2 className="animate-spin h-4 w-4 mr-2" />
-                  ) : (
-                    <Save className="h-4 w-4 mr-2" />
-                  )}
-                  Commit to Registry
-                </Button>
               </div>
-            </DialogContent>
-          </Dialog>
-        </div>
-
-        <div className="relative max-w-sm group">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
-          <Input
-            placeholder="Filter courses by code or name..."
-            className="pl-9 bg-background/75 border-border/70 text-foreground placeholder:text-muted-foreground/85 focus:ring-primary/50"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
-
-        <Card className="bg-card/75 border-border/60 shadow-2xl overflow-hidden">
-          <CardContent className="p-0">
-            <Table>
-              <TableHeader className="bg-muted/35 dark:bg-muted/20">
-                <TableRow className="border-border/60 hover:bg-transparent">
-                  <TableHead className="text-muted-foreground font-mono text-[10px] uppercase tracking-wider h-11">
-                    Unique Code
-                  </TableHead>
-                  <TableHead className="text-muted-foreground font-mono text-[10px] uppercase tracking-wider h-11">
-                    Course Title
-                  </TableHead>
-                  <TableHead className="text-muted-foreground font-mono text-[10px] uppercase tracking-wider h-11">
-                    Department
-                  </TableHead>
-                  <TableHead className="text-muted-foreground font-mono text-[10px] uppercase tracking-wider h-11">
-                    Sem/Credits
-                  </TableHead>
-                  <TableHead className="text-muted-foreground font-mono text-[10px] uppercase tracking-wider h-11">
-                    Course Head
-                  </TableHead>
-                  <TableHead className="text-muted-foreground font-mono text-[10px] uppercase tracking-wider h-11">
-                    Enrollment
-                  </TableHead>
-                  <TableHead className="text-muted-foreground font-mono text-[10px] uppercase tracking-wider h-11 text-right">
-                    Actions
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filtered.map((c: any) => (
-                  <TableRow
-                    key={c.id}
-                    className="border-border/55 hover:bg-accent/45 transition-colors group"
-                  >
-                    <TableCell className="font-mono text-sm font-black text-primary group-hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.3)]">
-                      {c.code}
-                    </TableCell>
-                    <TableCell className="font-bold text-sm text-foreground">
-                      {c.name}
-                    </TableCell>
-                    <TableCell className="text-xs text-muted-foreground font-medium uppercase tracking-tighter">
-                      {c.department}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex flex-col">
-                        <span className="text-sm font-mono text-foreground/85">
-                          SEM {c.semester}
-                        </span>
-                        <span className="text-[10px] font-bold text-primary">
-                          {c.credits} CR
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-sm text-muted-foreground">
-                      {c.faculty?.facultyProfile?.fullName ||
-                        c.faculty?.username ||
-                        "Not Assigned"}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs font-bold text-foreground">
-                          {c.students?.length || 0}
-                        </span>
-                        <span className="text-[10px] text-muted-foreground uppercase font-mono">
-                          Students
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-muted-foreground hover:text-foreground hover:bg-accent"
-                          onClick={() => handleEdit(c)}
-                        >
-                          <Edit2 className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-destructive/90 hover:text-destructive hover:bg-destructive/10"
-                          onClick={() => {
-                            if (
-                              confirm(
-                                `Purge ${c.code} from registry? This will affect all associated subjects and sessions.`,
-                              )
-                            ) {
-                              deleteMutation.mutate(c.id);
-                            }
-                          }}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-                {filtered.length === 0 && (
-                  <TableRow>
-                    <TableCell
-                      colSpan={6}
-                      className="h-32 text-center text-muted-foreground italic"
-                    >
-                      No matching courses found in registry
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
-
-        {/* Edit Course Dialog */}
-        <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-          <DialogContent className="bg-popover border-border text-popover-foreground">
-            <DialogHeader>
-              <DialogTitle className="text-xl font-black uppercase tracking-tight text-primary">
-                Modify Course Parameters
-              </DialogTitle>
-              <DialogDescription className="text-muted-foreground font-mono text-[10px] uppercase tracking-widest">
-                Update registry entry for {selectedCourse?.code}
-              </DialogDescription>
-            </DialogHeader>
-            <div className="space-y-4 py-4">
               <div className="space-y-2">
-                <Label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                <Label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">
                   Course Title
                 </Label>
                 <Input
+                  placeholder="e.g. Distributed Systems"
                   value={formData.name}
                   onChange={(e) =>
                     setFormData({ ...formData, name: e.target.value })
@@ -480,10 +260,11 @@ export default function CourseManagement() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                  <Label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">
                     Department
                   </Label>
                   <Input
+                    placeholder="e.g. CSE"
                     value={formData.department}
                     onChange={(e) =>
                       setFormData({ ...formData, department: e.target.value })
@@ -492,7 +273,7 @@ export default function CourseManagement() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                  <Label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">
                     Semester
                   </Label>
                   <Select
@@ -514,206 +295,444 @@ export default function CourseManagement() {
                   </Select>
                 </div>
               </div>
+              <div className="space-y-2">
+                <Label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">
+                  Faculty Head / In-Charge
+                </Label>
+                <Select
+                  value={formData.facultyId}
+                  onValueChange={(v) =>
+                    setFormData({ ...formData, facultyId: v })
+                  }
+                >
+                  <SelectTrigger className="bg-background/80 border-border/70">
+                    <SelectValue placeholder="Assign course lead..." />
+                  </SelectTrigger>
+                  <SelectContent className="bg-popover border-border text-popover-foreground">
+                    {facultyMembers.map((f: any) => (
+                      <SelectItem key={f.id} value={f.id.toString()}>
+                        {f.facultyProfile?.fullName || f.username}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <DialogFooter className="border-t border-border/60 pt-4">
+              <Button variant="outline" onClick={() => setIsAddOpen(false)}>
+                Cancel
+              </Button>
               <Button
-                className="w-full mt-4 bg-primary hover:bg-primary/90 font-black uppercase tracking-tight"
-                onClick={() =>
-                  updateMutation.mutate({
-                    id: selectedCourse.id,
-                    data: formData,
-                  })
-                }
-                disabled={updateMutation.isPending}
+                className="bg-primary hover:bg-primary/90"
+                onClick={() => createMutation.mutate(formData)}
+                disabled={createMutation.isPending}
               >
-                {updateMutation.isPending ? (
+                {createMutation.isPending ? (
                   <Loader2 className="animate-spin h-4 w-4 mr-2" />
                 ) : (
                   <Save className="h-4 w-4 mr-2" />
                 )}
-                Synchronize Changes
+                Save Course
               </Button>
-            </div>
-          </DialogContent>
-        </Dialog>
-        {/* Subject Management Dialog */}
-        <Dialog open={isSubjectsOpen} onOpenChange={setIsSubjectsOpen}>
-          <DialogContent className="bg-popover border-border text-popover-foreground max-w-2xl">
-            <DialogHeader>
-              <DialogTitle className="text-xl font-black uppercase tracking-tight text-primary">
-                Granular Subject Registry
-              </DialogTitle>
-              <DialogDescription className="text-muted-foreground font-mono text-[10px] uppercase tracking-widest">
-                Managing components for {selectedCourse?.code}
-              </DialogDescription>
-            </DialogHeader>
-
-            <div className="space-y-6 py-4">
-              {/* Add Subject form */}
-              <div className="bg-card/65 p-4 border border-border/70 rounded-lg space-y-4">
-                <h3 className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest pl-1">
-                  Index New Subject Component
-                </h3>
-                <div className="grid grid-cols-12 gap-3">
-                  <Input
-                    placeholder="CODE"
-                    className="col-span-3 bg-background/80 border-border/70 text-xs"
-                    value={subjectForm.code}
-                    onChange={(e) =>
-                      setSubjectForm({ ...subjectForm, code: e.target.value })
-                    }
-                  />
-                  <Input
-                    placeholder="SUBJECT NAME"
-                    className="col-span-4 bg-background/80 border-border/70 text-xs"
-                    value={subjectForm.name}
-                    onChange={(e) =>
-                      setSubjectForm({ ...subjectForm, name: e.target.value })
-                    }
-                  />
-                  <Select
-                    value={subjectForm.type}
-                    onValueChange={(v) =>
-                      setSubjectForm({ ...subjectForm, type: v })
-                    }
-                  >
-                    <SelectTrigger className="col-span-3 bg-background/80 border-border/70 text-xs h-9">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent className="bg-popover border-border text-popover-foreground">
-                      <SelectItem value="Theory">Theory</SelectItem>
-                      <SelectItem value="Practical">Practical</SelectItem>
-                      <SelectItem value="Tutorial">Tutorial</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <Select
-                    value={subjectForm.facultyId}
-                    onValueChange={(v) =>
-                      setSubjectForm({ ...subjectForm, facultyId: v })
-                    }
-                  >
-                    <SelectTrigger className="col-span-3 bg-background/80 border-border/70 text-xs h-9">
-                      <SelectValue placeholder="Select Faculty" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-popover border-border text-popover-foreground">
-                      {facultyMembers.map((f: any) => (
-                        <SelectItem key={f.id} value={f.id.toString()}>
-                          {f.facultyProfile?.fullName || f.username}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="grid grid-cols-12 gap-3 mt-3">
-                  <Input
-                    placeholder="CREDITS"
-                    type="number"
-                    className="col-span-2 bg-background/80 border-border/70 text-xs"
-                    value={subjectForm.credits}
-                    onChange={(e) =>
-                      setSubjectForm({
-                        ...subjectForm,
-                        credits: e.target.value,
-                      })
-                    }
-                  />
-                  <Input
-                    placeholder="TOTAL SESSIONS"
-                    type="number"
-                    className="col-span-3 bg-background/80 border-border/70 text-xs"
-                    value={subjectForm.totalClasses}
-                    onChange={(e) =>
-                      setSubjectForm({
-                        ...subjectForm,
-                        totalClasses: e.target.value,
-                      })
-                    }
-                  />
-                  <Input
-                    placeholder="DESCRIPTION"
-                    className="col-span-5 bg-background/80 border-border/70 text-xs"
-                    value={subjectForm.description}
-                    onChange={(e) =>
-                      setSubjectForm({
-                        ...subjectForm,
-                        description: e.target.value,
-                      })
-                    }
-                  />
-                  <Button
-                    className="col-span-2 h-9 bg-primary/20 hover:bg-primary/30 text-primary border border-primary/30"
-                    onClick={() => subjectMutation.mutate(subjectForm)}
-                    disabled={subjectMutation.isPending}
-                  >
-                    {subjectMutation.isPending ? (
-                      <Loader2 className="animate-spin h-4 w-4" />
-                    ) : (
-                      <Plus className="h-4 w-4" />
-                    )}
-                  </Button>
-                </div>
-              </div>
-
-              {/* List of subjects */}
-              <div className="space-y-2">
-                <h3 className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest pl-1">
-                  Active Components
-                </h3>
-                <div className="border border-border/60 rounded-lg overflow-hidden bg-card/50">
-                  <Table>
-                    <TableBody>
-                      {selectedCourse?.subjects?.map((s: any) => (
-                        <TableRow
-                          key={s.id}
-                          className="border-border/55 hover:bg-accent/45 bg-transparent"
-                        >
-                          <TableCell className="font-mono text-xs font-bold text-primary">
-                            {s.code}
-                          </TableCell>
-                          <TableCell className="text-sm font-medium">
-                            {s.name}
-                          </TableCell>
-                          <TableCell>
-                            <span className="text-[10px] font-bold uppercase tracking-widest bg-muted/50 px-2 py-0.5 rounded text-muted-foreground border border-border/65">
-                              {s.type}
-                            </span>
-                          </TableCell>
-                          <TableCell>
-                            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-tighter">
-                              {s.faculty?.facultyProfile?.fullName ||
-                                s.faculty?.username ||
-                                "Not Assigned"}
-                            </span>
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="text-destructive/90 hover:text-destructive hover:bg-destructive/10 h-8 w-8 p-0"
-                              onClick={() => {
-                                if (confirm("Purge this subject component?"))
-                                  deleteSubjectMutation.mutate(s.id);
-                              }}
-                            >
-                              <Trash2 className="h-3 w-3" />
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                      {(!selectedCourse?.subjects ||
-                        selectedCourse.subjects.length === 0) && (
-                        <TableRow>
-                          <TableCell className="text-center py-8 text-muted-foreground font-mono text-xs uppercase italic">
-                            No active components indexed
-                          </TableCell>
-                        </TableRow>
-                      )}
-                    </TableBody>
-                  </Table>
-                </div>
-              </div>
-            </div>
+            </DialogFooter>
           </DialogContent>
         </Dialog>
       </div>
-    </>
+
+      <div className="relative max-w-sm group">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+        <Input
+          placeholder="Filter courses by code or name..."
+          className="pl-9 bg-background/75 border-border/70 text-foreground placeholder:text-muted-foreground/85 focus:ring-primary/50"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
+
+      <Card className="bg-card/75 border-border/60 shadow-2xl overflow-hidden">
+        <CardContent className="p-0">
+          <Table>
+            <TableHeader className="bg-muted/35 dark:bg-muted/20">
+              <TableRow className="border-border/60 hover:bg-transparent">
+                <TableHead className="text-muted-foreground font-mono text-[10px] uppercase tracking-wider h-11">
+                  Unique Code
+                </TableHead>
+                <TableHead className="text-muted-foreground font-mono text-[10px] uppercase tracking-wider h-11">
+                  Course Title
+                </TableHead>
+                <TableHead className="text-muted-foreground font-mono text-[10px] uppercase tracking-wider h-11">
+                  Department
+                </TableHead>
+                <TableHead className="text-muted-foreground font-mono text-[10px] uppercase tracking-wider h-11">
+                  Sem/Credits
+                </TableHead>
+                <TableHead className="text-muted-foreground font-mono text-[10px] uppercase tracking-wider h-11">
+                  Course Head
+                </TableHead>
+                <TableHead className="text-muted-foreground font-mono text-[10px] uppercase tracking-wider h-11">
+                  Enrollment
+                </TableHead>
+                <TableHead className="text-muted-foreground font-mono text-[10px] uppercase tracking-wider h-11 text-right">
+                  Actions
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filtered.map((c: any) => (
+                <TableRow
+                  key={c.id}
+                  className="border-border/55 hover:bg-accent/45 transition-colors group"
+                >
+                  <TableCell className="font-mono text-sm font-black text-primary group-hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.3)]">
+                    {c.code}
+                  </TableCell>
+                  <TableCell className="font-bold text-sm text-foreground">
+                    {c.name}
+                  </TableCell>
+                  <TableCell className="text-xs text-muted-foreground font-medium uppercase tracking-tighter">
+                    {c.department}
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex flex-col">
+                      <span className="text-sm font-mono text-foreground/85">
+                        SEM {c.semester}
+                      </span>
+                      <span className="text-[10px] font-bold text-primary">
+                        {c.credits} CR
+                      </span>
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground">
+                    {c.faculty?.facultyProfile?.fullName ||
+                      c.faculty?.username ||
+                      "Not Assigned"}
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-bold text-foreground">
+                        {c.students?.length || 0}
+                      </span>
+                      <span className="text-[10px] text-muted-foreground uppercase font-mono">
+                        Students
+                      </span>
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <div className="flex justify-end gap-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-muted-foreground hover:text-foreground hover:bg-accent"
+                        onClick={() => handleEdit(c)}
+                        disabled={
+                          updateMutation.isPending || deleteMutation.isPending
+                        }
+                      >
+                        <Edit2 className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-destructive/90 hover:text-destructive hover:bg-destructive/10"
+                        onClick={() => {
+                          if (
+                            confirm(
+                              `Purge ${c.code} from registry? This will affect all associated subjects and sessions.`,
+                            )
+                          ) {
+                            deleteMutation.mutate(c.id);
+                          }
+                        }}
+                        disabled={
+                          deleteMutation.isPending || updateMutation.isPending
+                        }
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+              {filtered.length === 0 && (
+                <TableRow>
+                  <TableCell
+                    colSpan={6}
+                    className="h-32 text-center text-muted-foreground italic"
+                  >
+                    No matching courses found in registry
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+
+      {/* Edit Course Dialog */}
+      <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
+        <DialogContent className="max-w-2xl bg-popover border-border text-popover-foreground">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-semibold tracking-tight text-foreground">
+              Edit Course
+            </DialogTitle>
+            <DialogDescription className="text-sm text-muted-foreground">
+              Update the selected course details for {selectedCourse?.code}.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-5 py-3">
+            <div className="space-y-2">
+              <Label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">
+                Course Title
+              </Label>
+              <Input
+                value={formData.name}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
+                className="bg-background/80 border-border/70 focus:ring-primary/40"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">
+                  Department
+                </Label>
+                <Input
+                  value={formData.department}
+                  onChange={(e) =>
+                    setFormData({ ...formData, department: e.target.value })
+                  }
+                  className="bg-background/80 border-border/70 focus:ring-primary/40"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">
+                  Semester
+                </Label>
+                <Select
+                  value={formData.semester}
+                  onValueChange={(v) =>
+                    setFormData({ ...formData, semester: v })
+                  }
+                >
+                  <SelectTrigger className="bg-background/80 border-border/70">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-popover border-border text-popover-foreground">
+                    {[1, 2, 3, 4, 5, 6, 7, 8].map((s) => (
+                      <SelectItem key={s} value={s.toString()}>
+                        SEM {s}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </div>
+          <DialogFooter className="border-t border-border/60 pt-4">
+            <Button variant="outline" onClick={() => setIsEditOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              className="bg-primary hover:bg-primary/90"
+              onClick={() =>
+                updateMutation.mutate({
+                  id: selectedCourse.id,
+                  data: formData,
+                })
+              }
+              disabled={updateMutation.isPending}
+            >
+              {updateMutation.isPending ? (
+                <Loader2 className="animate-spin h-4 w-4 mr-2" />
+              ) : (
+                <Save className="h-4 w-4 mr-2" />
+              )}
+              Save Changes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      {/* Subject Management Dialog */}
+      <Dialog open={isSubjectsOpen} onOpenChange={setIsSubjectsOpen}>
+        <DialogContent className="bg-popover border-border text-popover-foreground max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-semibold tracking-tight text-foreground">
+              Subject Registry
+            </DialogTitle>
+            <DialogDescription className="text-sm text-muted-foreground">
+              Manage subjects under {selectedCourse?.code}.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-6 py-3">
+            {/* Add Subject form */}
+            <div className="bg-card/65 p-4 border border-border/70 rounded-lg space-y-4">
+              <h3 className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide pl-1">
+                Add Subject
+              </h3>
+              <div className="grid grid-cols-12 gap-3">
+                <Input
+                  placeholder="CODE"
+                  className="col-span-3 bg-background/80 border-border/70 text-xs"
+                  value={subjectForm.code}
+                  onChange={(e) =>
+                    setSubjectForm({ ...subjectForm, code: e.target.value })
+                  }
+                />
+                <Input
+                  placeholder="SUBJECT NAME"
+                  className="col-span-4 bg-background/80 border-border/70 text-xs"
+                  value={subjectForm.name}
+                  onChange={(e) =>
+                    setSubjectForm({ ...subjectForm, name: e.target.value })
+                  }
+                />
+                <Select
+                  value={subjectForm.type}
+                  onValueChange={(v) =>
+                    setSubjectForm({ ...subjectForm, type: v })
+                  }
+                >
+                  <SelectTrigger className="col-span-3 bg-background/80 border-border/70 text-xs h-9">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-popover border-border text-popover-foreground">
+                    <SelectItem value="Theory">Theory</SelectItem>
+                    <SelectItem value="Practical">Practical</SelectItem>
+                    <SelectItem value="Tutorial">Tutorial</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Select
+                  value={subjectForm.facultyId}
+                  onValueChange={(v) =>
+                    setSubjectForm({ ...subjectForm, facultyId: v })
+                  }
+                >
+                  <SelectTrigger className="col-span-3 bg-background/80 border-border/70 text-xs h-9">
+                    <SelectValue placeholder="Select Faculty" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-popover border-border text-popover-foreground">
+                    {facultyMembers.map((f: any) => (
+                      <SelectItem key={f.id} value={f.id.toString()}>
+                        {f.facultyProfile?.fullName || f.username}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="grid grid-cols-12 gap-3 mt-3">
+                <Input
+                  placeholder="CREDITS"
+                  type="number"
+                  className="col-span-2 bg-background/80 border-border/70 text-xs"
+                  value={subjectForm.credits}
+                  onChange={(e) =>
+                    setSubjectForm({
+                      ...subjectForm,
+                      credits: e.target.value,
+                    })
+                  }
+                />
+                <Input
+                  placeholder="TOTAL SESSIONS"
+                  type="number"
+                  className="col-span-3 bg-background/80 border-border/70 text-xs"
+                  value={subjectForm.totalClasses}
+                  onChange={(e) =>
+                    setSubjectForm({
+                      ...subjectForm,
+                      totalClasses: e.target.value,
+                    })
+                  }
+                />
+                <Input
+                  placeholder="DESCRIPTION"
+                  className="col-span-5 bg-background/80 border-border/70 text-xs"
+                  value={subjectForm.description}
+                  onChange={(e) =>
+                    setSubjectForm({
+                      ...subjectForm,
+                      description: e.target.value,
+                    })
+                  }
+                />
+                <Button
+                  className="col-span-2 h-9 bg-primary hover:bg-primary/90 text-primary-foreground"
+                  onClick={() => subjectMutation.mutate(subjectForm)}
+                  disabled={subjectMutation.isPending}
+                >
+                  {subjectMutation.isPending ? (
+                    <Loader2 className="animate-spin h-4 w-4" />
+                  ) : (
+                    <Plus className="h-4 w-4" />
+                  )}
+                </Button>
+              </div>
+            </div>
+
+            {/* List of subjects */}
+            <div className="space-y-2">
+              <h3 className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide pl-1">
+                Active Subjects
+              </h3>
+              <div className="border border-border/60 rounded-lg overflow-hidden bg-card/50">
+                <Table>
+                  <TableBody>
+                    {selectedCourse?.subjects?.map((s: any) => (
+                      <TableRow
+                        key={s.id}
+                        className="border-border/55 hover:bg-accent/45 bg-transparent"
+                      >
+                        <TableCell className="font-mono text-xs font-bold text-primary">
+                          {s.code}
+                        </TableCell>
+                        <TableCell className="text-sm font-medium">
+                          {s.name}
+                        </TableCell>
+                        <TableCell>
+                          <span className="text-[10px] font-bold uppercase tracking-widest bg-muted/50 px-2 py-0.5 rounded text-muted-foreground border border-border/65">
+                            {s.type}
+                          </span>
+                        </TableCell>
+                        <TableCell>
+                          <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-tighter">
+                            {s.faculty?.facultyProfile?.fullName ||
+                              s.faculty?.username ||
+                              "Not Assigned"}
+                          </span>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-destructive/90 hover:text-destructive hover:bg-destructive/10 h-8 w-8 p-0"
+                            onClick={() => {
+                              if (confirm("Purge this subject component?"))
+                                deleteSubjectMutation.mutate(s.id);
+                            }}
+                            disabled={deleteSubjectMutation.isPending}
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                    {(!selectedCourse?.subjects ||
+                      selectedCourse.subjects.length === 0) && (
+                      <TableRow>
+                        <TableCell className="text-center py-8 text-muted-foreground font-mono text-xs uppercase italic">
+                          No active components indexed
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
   );
 }
