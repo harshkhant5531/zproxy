@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -10,22 +10,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Loader2, BookOpen, MapPin } from "lucide-react";
+import { Loader2, BookOpen } from "lucide-react";
 import { FullScreenLoader } from "@/components/FullScreenLoader";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { subjectsAPI, sessionsAPI } from "@/lib/api";
-import {
-  getGeolocationPermissionState,
-  getLocationErrorMessage,
-  requestStabilizedPositionWithRetry,
-} from "@/lib/location";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
-
-const MIN_RADIUS_METERS = 10;
-const MAX_RADIUS_METERS = 200;
-const DEFAULT_RADIUS_METERS = 60;
 
 export default function CreateSession() {
   const navigate = useNavigate();
@@ -35,8 +26,6 @@ export default function CreateSession() {
   const [topic, setTopic] = useState("");
   const [room, setRoom] = useState("");
   const [selectedBatches, setSelectedBatches] = useState<string[]>([]);
-  const [radius, setRadius] = useState(String(DEFAULT_RADIUS_METERS));
-  const [locating, setLocating] = useState(false);
 
   const { data: subjectsData, isLoading: isSubjectsLoading } = useQuery({
     queryKey: ["faculty", "my-subjects", user?.id],
@@ -72,15 +61,9 @@ export default function CreateSession() {
       return;
     }
 
-    const normalizedRadius = Math.min(
-      MAX_RADIUS_METERS,
-      Math.max(
-        MIN_RADIUS_METERS,
-        Number.parseInt(radius, 10) || DEFAULT_RADIUS_METERS,
-      ),
-    );
-    if (String(normalizedRadius) !== radius) {
-      setRadius(String(normalizedRadius));
+    if (!selectedSubject?.courseId) {
+      toast.error("Invalid subject selection.");
+      return;
     }
 
     const now = new Date();
@@ -88,61 +71,24 @@ export default function CreateSession() {
     const end = new Date(now.getTime() + 60 * 60 * 1000);
     const endTime = end.toTimeString().split(" ")[0].substring(0, 5);
 
-    setLocating(true);
-
-    getGeolocationPermissionState()
-      .then((permissionState) => {
-        if (permissionState === "denied") {
-          throw new Error(
-            "Location permission is blocked. Enable it in the browser and try again.",
-          );
-        }
-
-        return requestStabilizedPositionWithRetry({
-          timeout: 30000,
-          desiredAccuracyMeters: 60,
-          maxRetries: 4,
-          sampleCount: 8,
-          intervalMs: 800,
-        });
-      })
-      .then((location) => {
-        const facultyAccuracy = location.accuracy;
-        if (Number.isFinite(facultyAccuracy) && facultyAccuracy > 80) {
-          setLocating(false);
-          toast.error(
-            `GPS accuracy is too low (±${Math.round(facultyAccuracy)}m). Move to an open area and try again.`,
-          );
-          return;
-        }
-
-        setLocating(false);
-        createSessionMutation.mutate({
-          courseId: selectedSubject.courseId,
-          subjectId: parseInt(subjectId),
-          topic,
-          room,
-          batches: selectedBatches,
-          date: now.toISOString(),
-          startTime,
-          endTime,
-          geofenceRadius: normalizedRadius,
-          facultyLat: location.latitude,
-          facultyLng: location.longitude,
-        });
-      })
-      .catch((error) => {
-        setLocating(false);
-        toast.error(getLocationErrorMessage(error));
-      });
+    createSessionMutation.mutate({
+      courseId: selectedSubject.courseId,
+      subjectId: parseInt(subjectId, 10),
+      topic,
+      room,
+      batches: selectedBatches,
+      date: now.toISOString(),
+      startTime,
+      endTime,
+    });
   };
 
   return (
     <>
       <FullScreenLoader show={isSubjectsLoading} operation="loading" />
       <FullScreenLoader
-        show={createSessionMutation.isPending || locating}
-        operation={locating ? "locating" : "creating"}
+        show={createSessionMutation.isPending}
+        operation="creating"
       />
       <div className="app-page max-w-2xl mx-auto">
         <div className="app-page-header text-center sm:text-left">
@@ -152,9 +98,8 @@ export default function CreateSession() {
           </div>
         </div>
 
-        {/* Steps Progress */}
         <div className="flex items-center justify-center gap-4 py-4">
-          {["Subject", "Logic", "Deploy"].map((label, i) => (
+          {["Subject", "Setup", "Deploy"].map((label, i) => (
             <div key={label} className="flex items-center gap-3">
               <div
                 className={`h-8 w-8 rounded-lg flex items-center justify-center text-xs font-black border transition-all duration-500 ${i + 1 <= step ? "bg-primary border-primary text-primary-foreground shadow-[0_0_15px_rgba(34,211,238,0.3)]" : "bg-muted border-border text-muted-foreground"}`}
@@ -293,53 +238,13 @@ export default function CreateSession() {
                   />
                 </div>
 
-                <div className="space-y-4">
-                  <div className="flex justify-between items-end">
-                    <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em] ml-1">
-                      Geofence Radius (meters)
-                    </label>
-                    <span className="text-xs font-black text-primary font-mono tracking-tighter bg-primary/10 px-2 py-0.5 rounded border border-primary/20">
-                      {radius}m
-                    </span>
-                  </div>
-                  <div className="px-2 pt-2">
-                    <input
-                      type="range"
-                      min="10"
-                      max="200"
-                      step="5"
-                      value={radius}
-                      onChange={(e) => {
-                        const nextRadius = Math.min(
-                          MAX_RADIUS_METERS,
-                          Math.max(
-                            MIN_RADIUS_METERS,
-                            Number.parseInt(e.target.value, 10) || 25,
-                          ),
-                        );
-                        setRadius(String(nextRadius));
-                      }}
-                      className="w-full h-1.5 bg-muted rounded-lg appearance-none cursor-pointer accent-primary"
-                    />
-                    <div className="flex justify-between mt-2">
-                      <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest text-left">
-                        Office (10m)
-                      </span>
-                      <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest text-primary text-center">
-                        Class (25m)
-                      </span>
-                      <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest text-success text-center">
-                        Auditorium (100m)
-                      </span>
-                      <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest text-right">
-                        Max (200m)
-                      </span>
-                    </div>
-                  </div>
-                  <p className="text-[9px] text-muted-foreground italic ml-1">
-                    Defines the valid spatial grid centered at your current
-                    location. Students must be within this {radius}m radius to
-                    authenticate.
+                <div className="rounded-xl border border-info/25 bg-info/5 p-3">
+                  <p className="text-[10px] font-black text-info uppercase tracking-[0.2em]">
+                    Attendance Mode
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-2 leading-relaxed">
+                    Manual check-in with server-side IP and device verification.
+                    Student location is not required.
                   </p>
                 </div>
               </div>
@@ -379,18 +284,11 @@ export default function CreateSession() {
                         </span>
                       </p>
                       <p className="text-foreground font-mono text-sm flex items-center gap-2">
-                        <MapPin className="h-4 w-4 text-primary" />
+                        <BookOpen className="h-4 w-4 text-primary" />
                         <span className="text-muted-foreground text-xs uppercase italic min-w-[70px]">
                           Topic:{" "}
                         </span>
                         <span className="font-bold">{topic}</span>
-                      </p>
-                      <p className="text-foreground font-mono text-sm flex items-center gap-2">
-                        <BookOpen className="h-4 w-4 text-primary" />
-                        <span className="text-muted-foreground text-xs uppercase italic min-w-[70px]">
-                          Radius:{" "}
-                        </span>
-                        <span className="font-bold">{radius} Meters</span>
                       </p>
                     </div>
                   </div>
@@ -405,7 +303,8 @@ export default function CreateSession() {
                     <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                   ) : (
                     <>
-                      <BookOpen className="mr-3 h-5 w-5" /> Execute Initialization
+                      <BookOpen className="mr-3 h-5 w-5" /> Execute
+                      Initialization
                     </>
                   )}
                 </Button>

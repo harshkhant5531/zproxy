@@ -10337,9 +10337,6 @@ export namespace Prisma {
     facultyId: number | null
     subjectId: number | null
     duration: number | null
-    geofenceRadius: number | null
-    facultyLat: number | null
-    facultyLng: number | null
     attendanceCount: number | null
   }
 
@@ -10349,9 +10346,6 @@ export namespace Prisma {
     facultyId: number | null
     subjectId: number | null
     duration: number | null
-    geofenceRadius: number | null
-    facultyLat: number | null
-    facultyLng: number | null
     attendanceCount: number | null
   }
 
@@ -10368,9 +10362,6 @@ export namespace Prisma {
     endTime: string | null
     duration: number | null
     status: string | null
-    geofenceRadius: number | null
-    facultyLat: number | null
-    facultyLng: number | null
     attendanceCount: number | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -10389,9 +10380,6 @@ export namespace Prisma {
     endTime: string | null
     duration: number | null
     status: string | null
-    geofenceRadius: number | null
-    facultyLat: number | null
-    facultyLng: number | null
     attendanceCount: number | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -10411,9 +10399,6 @@ export namespace Prisma {
     duration: number
     status: number
     batches: number
-    geofenceRadius: number
-    facultyLat: number
-    facultyLng: number
     attendanceCount: number
     createdAt: number
     updatedAt: number
@@ -10427,9 +10412,6 @@ export namespace Prisma {
     facultyId?: true
     subjectId?: true
     duration?: true
-    geofenceRadius?: true
-    facultyLat?: true
-    facultyLng?: true
     attendanceCount?: true
   }
 
@@ -10439,9 +10421,6 @@ export namespace Prisma {
     facultyId?: true
     subjectId?: true
     duration?: true
-    geofenceRadius?: true
-    facultyLat?: true
-    facultyLng?: true
     attendanceCount?: true
   }
 
@@ -10458,9 +10437,6 @@ export namespace Prisma {
     endTime?: true
     duration?: true
     status?: true
-    geofenceRadius?: true
-    facultyLat?: true
-    facultyLng?: true
     attendanceCount?: true
     createdAt?: true
     updatedAt?: true
@@ -10479,9 +10455,6 @@ export namespace Prisma {
     endTime?: true
     duration?: true
     status?: true
-    geofenceRadius?: true
-    facultyLat?: true
-    facultyLng?: true
     attendanceCount?: true
     createdAt?: true
     updatedAt?: true
@@ -10501,9 +10474,6 @@ export namespace Prisma {
     duration?: true
     status?: true
     batches?: true
-    geofenceRadius?: true
-    facultyLat?: true
-    facultyLng?: true
     attendanceCount?: true
     createdAt?: true
     updatedAt?: true
@@ -10610,9 +10580,6 @@ export namespace Prisma {
     duration: number
     status: string
     batches: string[]
-    geofenceRadius: number
-    facultyLat: number | null
-    facultyLng: number | null
     attendanceCount: number
     createdAt: Date
     updatedAt: Date
@@ -10651,9 +10618,6 @@ export namespace Prisma {
     duration?: boolean
     status?: boolean
     batches?: boolean
-    geofenceRadius?: boolean
-    facultyLat?: boolean
-    facultyLng?: boolean
     attendanceCount?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -10678,9 +10642,6 @@ export namespace Prisma {
     duration?: boolean
     status?: boolean
     batches?: boolean
-    geofenceRadius?: boolean
-    facultyLat?: boolean
-    facultyLng?: boolean
     attendanceCount?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -10703,9 +10664,6 @@ export namespace Prisma {
     duration?: boolean
     status?: boolean
     batches?: boolean
-    geofenceRadius?: boolean
-    facultyLat?: boolean
-    facultyLng?: boolean
     attendanceCount?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -10728,15 +10686,12 @@ export namespace Prisma {
     duration?: boolean
     status?: boolean
     batches?: boolean
-    geofenceRadius?: boolean
-    facultyLat?: boolean
-    facultyLng?: boolean
     attendanceCount?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type SessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "courseId" | "facultyId" | "subjectId" | "topic" | "description" | "sessionType" | "date" | "startTime" | "endTime" | "duration" | "status" | "batches" | "geofenceRadius" | "facultyLat" | "facultyLng" | "attendanceCount" | "createdAt" | "updatedAt", ExtArgs["result"]["session"]>
+  export type SessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "courseId" | "facultyId" | "subjectId" | "topic" | "description" | "sessionType" | "date" | "startTime" | "endTime" | "duration" | "status" | "batches" | "attendanceCount" | "createdAt" | "updatedAt", ExtArgs["result"]["session"]>
   export type SessionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     course?: boolean | CourseDefaultArgs<ExtArgs>
     faculty?: boolean | UsersDefaultArgs<ExtArgs>
@@ -10777,9 +10732,6 @@ export namespace Prisma {
       duration: number
       status: string
       batches: string[]
-      geofenceRadius: number
-      facultyLat: number | null
-      facultyLng: number | null
       attendanceCount: number
       createdAt: Date
       updatedAt: Date
@@ -11223,9 +11175,6 @@ export namespace Prisma {
     readonly duration: FieldRef<"Session", 'Int'>
     readonly status: FieldRef<"Session", 'String'>
     readonly batches: FieldRef<"Session", 'String[]'>
-    readonly geofenceRadius: FieldRef<"Session", 'Int'>
-    readonly facultyLat: FieldRef<"Session", 'Float'>
-    readonly facultyLng: FieldRef<"Session", 'Float'>
     readonly attendanceCount: FieldRef<"Session", 'Int'>
     readonly createdAt: FieldRef<"Session", 'DateTime'>
     readonly updatedAt: FieldRef<"Session", 'DateTime'>
@@ -21402,9 +21351,6 @@ export namespace Prisma {
     duration: 'duration',
     status: 'status',
     batches: 'batches',
-    geofenceRadius: 'geofenceRadius',
-    facultyLat: 'facultyLat',
-    facultyLng: 'facultyLng',
     attendanceCount: 'attendanceCount',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -21640,20 +21586,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Float'
-   */
-  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
-    
-
-
-  /**
-   * Reference to a field of type 'Float[]'
-   */
-  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
-    
-
-
-  /**
    * Reference to a field of type 'Boolean'
    */
   export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
@@ -21671,6 +21603,20 @@ export namespace Prisma {
    * Reference to a field of type 'QueryMode'
    */
   export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+  /**
+   * Reference to a field of type 'Float'
+   */
+  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+  /**
+   * Reference to a field of type 'Float[]'
+   */
+  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
   /**
    * Deep Input Types
@@ -22296,9 +22242,6 @@ export namespace Prisma {
     duration?: IntFilter<"Session"> | number
     status?: StringFilter<"Session"> | string
     batches?: StringNullableListFilter<"Session">
-    geofenceRadius?: IntFilter<"Session"> | number
-    facultyLat?: FloatNullableFilter<"Session"> | number | null
-    facultyLng?: FloatNullableFilter<"Session"> | number | null
     attendanceCount?: IntFilter<"Session"> | number
     createdAt?: DateTimeFilter<"Session"> | Date | string
     updatedAt?: DateTimeFilter<"Session"> | Date | string
@@ -22322,9 +22265,6 @@ export namespace Prisma {
     duration?: SortOrder
     status?: SortOrder
     batches?: SortOrder
-    geofenceRadius?: SortOrder
-    facultyLat?: SortOrderInput | SortOrder
-    facultyLng?: SortOrderInput | SortOrder
     attendanceCount?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -22351,9 +22291,6 @@ export namespace Prisma {
     duration?: IntFilter<"Session"> | number
     status?: StringFilter<"Session"> | string
     batches?: StringNullableListFilter<"Session">
-    geofenceRadius?: IntFilter<"Session"> | number
-    facultyLat?: FloatNullableFilter<"Session"> | number | null
-    facultyLng?: FloatNullableFilter<"Session"> | number | null
     attendanceCount?: IntFilter<"Session"> | number
     createdAt?: DateTimeFilter<"Session"> | Date | string
     updatedAt?: DateTimeFilter<"Session"> | Date | string
@@ -22377,9 +22314,6 @@ export namespace Prisma {
     duration?: SortOrder
     status?: SortOrder
     batches?: SortOrder
-    geofenceRadius?: SortOrder
-    facultyLat?: SortOrderInput | SortOrder
-    facultyLng?: SortOrderInput | SortOrder
     attendanceCount?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -22407,9 +22341,6 @@ export namespace Prisma {
     duration?: IntWithAggregatesFilter<"Session"> | number
     status?: StringWithAggregatesFilter<"Session"> | string
     batches?: StringNullableListFilter<"Session">
-    geofenceRadius?: IntWithAggregatesFilter<"Session"> | number
-    facultyLat?: FloatNullableWithAggregatesFilter<"Session"> | number | null
-    facultyLng?: FloatNullableWithAggregatesFilter<"Session"> | number | null
     attendanceCount?: IntWithAggregatesFilter<"Session"> | number
     createdAt?: DateTimeWithAggregatesFilter<"Session"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Session"> | Date | string
@@ -23825,9 +23756,6 @@ export namespace Prisma {
     duration?: number
     status?: string
     batches?: SessionCreatebatchesInput | string[]
-    geofenceRadius?: number
-    facultyLat?: number | null
-    facultyLng?: number | null
     attendanceCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -23851,9 +23779,6 @@ export namespace Prisma {
     duration?: number
     status?: string
     batches?: SessionCreatebatchesInput | string[]
-    geofenceRadius?: number
-    facultyLat?: number | null
-    facultyLng?: number | null
     attendanceCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -23870,9 +23795,6 @@ export namespace Prisma {
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     batches?: SessionUpdatebatchesInput | string[]
-    geofenceRadius?: IntFieldUpdateOperationsInput | number
-    facultyLat?: NullableFloatFieldUpdateOperationsInput | number | null
-    facultyLng?: NullableFloatFieldUpdateOperationsInput | number | null
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23896,9 +23818,6 @@ export namespace Prisma {
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     batches?: SessionUpdatebatchesInput | string[]
-    geofenceRadius?: IntFieldUpdateOperationsInput | number
-    facultyLat?: NullableFloatFieldUpdateOperationsInput | number | null
-    facultyLng?: NullableFloatFieldUpdateOperationsInput | number | null
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23919,9 +23838,6 @@ export namespace Prisma {
     duration?: number
     status?: string
     batches?: SessionCreatebatchesInput | string[]
-    geofenceRadius?: number
-    facultyLat?: number | null
-    facultyLng?: number | null
     attendanceCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -23937,9 +23853,6 @@ export namespace Prisma {
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     batches?: SessionUpdatebatchesInput | string[]
-    geofenceRadius?: IntFieldUpdateOperationsInput | number
-    facultyLat?: NullableFloatFieldUpdateOperationsInput | number | null
-    facultyLng?: NullableFloatFieldUpdateOperationsInput | number | null
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23959,9 +23872,6 @@ export namespace Prisma {
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     batches?: SessionUpdatebatchesInput | string[]
-    geofenceRadius?: IntFieldUpdateOperationsInput | number
-    facultyLat?: NullableFloatFieldUpdateOperationsInput | number | null
-    facultyLng?: NullableFloatFieldUpdateOperationsInput | number | null
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -25384,17 +25294,6 @@ export namespace Prisma {
     isEmpty?: boolean
   }
 
-  export type FloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
-  }
-
   export type SubjectNullableScalarRelationFilter = {
     is?: SubjectWhereInput | null
     isNot?: SubjectWhereInput | null
@@ -25414,9 +25313,6 @@ export namespace Prisma {
     duration?: SortOrder
     status?: SortOrder
     batches?: SortOrder
-    geofenceRadius?: SortOrder
-    facultyLat?: SortOrder
-    facultyLng?: SortOrder
     attendanceCount?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -25428,9 +25324,6 @@ export namespace Prisma {
     facultyId?: SortOrder
     subjectId?: SortOrder
     duration?: SortOrder
-    geofenceRadius?: SortOrder
-    facultyLat?: SortOrder
-    facultyLng?: SortOrder
     attendanceCount?: SortOrder
   }
 
@@ -25447,9 +25340,6 @@ export namespace Prisma {
     endTime?: SortOrder
     duration?: SortOrder
     status?: SortOrder
-    geofenceRadius?: SortOrder
-    facultyLat?: SortOrder
-    facultyLng?: SortOrder
     attendanceCount?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -25468,9 +25358,6 @@ export namespace Prisma {
     endTime?: SortOrder
     duration?: SortOrder
     status?: SortOrder
-    geofenceRadius?: SortOrder
-    facultyLat?: SortOrder
-    facultyLng?: SortOrder
     attendanceCount?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -25482,26 +25369,7 @@ export namespace Prisma {
     facultyId?: SortOrder
     subjectId?: SortOrder
     duration?: SortOrder
-    geofenceRadius?: SortOrder
-    facultyLat?: SortOrder
-    facultyLng?: SortOrder
     attendanceCount?: SortOrder
-  }
-
-  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedFloatNullableFilter<$PrismaModel>
-    _min?: NestedFloatNullableFilter<$PrismaModel>
-    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type SessionScalarRelationFilter = {
@@ -27323,14 +27191,6 @@ export namespace Prisma {
     push?: string | string[]
   }
 
-  export type NullableFloatFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
   export type CourseUpdateOneRequiredWithoutSessionsNestedInput = {
     create?: XOR<CourseCreateWithoutSessionsInput, CourseUncheckedCreateWithoutSessionsInput>
     connectOrCreate?: CourseCreateOrConnectWithoutSessionsInput
@@ -27807,22 +27667,6 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
-  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedFloatNullableFilter<$PrismaModel>
-    _min?: NestedFloatNullableFilter<$PrismaModel>
-    _max?: NestedFloatNullableFilter<$PrismaModel>
-  }
-
   export type NestedBoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
@@ -28033,9 +27877,6 @@ export namespace Prisma {
     duration?: number
     status?: string
     batches?: SessionCreatebatchesInput | string[]
-    geofenceRadius?: number
-    facultyLat?: number | null
-    facultyLng?: number | null
     attendanceCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -28057,9 +27898,6 @@ export namespace Prisma {
     duration?: number
     status?: string
     batches?: SessionCreatebatchesInput | string[]
-    geofenceRadius?: number
-    facultyLat?: number | null
-    facultyLng?: number | null
     attendanceCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -28692,9 +28530,6 @@ export namespace Prisma {
     duration?: IntFilter<"Session"> | number
     status?: StringFilter<"Session"> | string
     batches?: StringNullableListFilter<"Session">
-    geofenceRadius?: IntFilter<"Session"> | number
-    facultyLat?: FloatNullableFilter<"Session"> | number | null
-    facultyLng?: FloatNullableFilter<"Session"> | number | null
     attendanceCount?: IntFilter<"Session"> | number
     createdAt?: DateTimeFilter<"Session"> | Date | string
     updatedAt?: DateTimeFilter<"Session"> | Date | string
@@ -29658,9 +29493,6 @@ export namespace Prisma {
     duration?: number
     status?: string
     batches?: SessionCreatebatchesInput | string[]
-    geofenceRadius?: number
-    facultyLat?: number | null
-    facultyLng?: number | null
     attendanceCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -29682,9 +29514,6 @@ export namespace Prisma {
     duration?: number
     status?: string
     batches?: SessionCreatebatchesInput | string[]
-    geofenceRadius?: number
-    facultyLat?: number | null
-    facultyLng?: number | null
     attendanceCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -30084,9 +29913,6 @@ export namespace Prisma {
     duration?: number
     status?: string
     batches?: SessionCreatebatchesInput | string[]
-    geofenceRadius?: number
-    facultyLat?: number | null
-    facultyLng?: number | null
     attendanceCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -30108,9 +29934,6 @@ export namespace Prisma {
     duration?: number
     status?: string
     batches?: SessionCreatebatchesInput | string[]
-    geofenceRadius?: number
-    facultyLat?: number | null
-    facultyLng?: number | null
     attendanceCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -30808,9 +30631,6 @@ export namespace Prisma {
     duration?: number
     status?: string
     batches?: SessionCreatebatchesInput | string[]
-    geofenceRadius?: number
-    facultyLat?: number | null
-    facultyLng?: number | null
     attendanceCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -30833,9 +30653,6 @@ export namespace Prisma {
     duration?: number
     status?: string
     batches?: SessionCreatebatchesInput | string[]
-    geofenceRadius?: number
-    facultyLat?: number | null
-    facultyLng?: number | null
     attendanceCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -30927,9 +30744,6 @@ export namespace Prisma {
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     batches?: SessionUpdatebatchesInput | string[]
-    geofenceRadius?: IntFieldUpdateOperationsInput | number
-    facultyLat?: NullableFloatFieldUpdateOperationsInput | number | null
-    facultyLng?: NullableFloatFieldUpdateOperationsInput | number | null
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -30952,9 +30766,6 @@ export namespace Prisma {
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     batches?: SessionUpdatebatchesInput | string[]
-    geofenceRadius?: IntFieldUpdateOperationsInput | number
-    facultyLat?: NullableFloatFieldUpdateOperationsInput | number | null
-    facultyLng?: NullableFloatFieldUpdateOperationsInput | number | null
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32631,9 +32442,6 @@ export namespace Prisma {
     duration?: number
     status?: string
     batches?: SessionCreatebatchesInput | string[]
-    geofenceRadius?: number
-    facultyLat?: number | null
-    facultyLng?: number | null
     attendanceCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -32850,9 +32658,6 @@ export namespace Prisma {
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     batches?: SessionUpdatebatchesInput | string[]
-    geofenceRadius?: IntFieldUpdateOperationsInput | number
-    facultyLat?: NullableFloatFieldUpdateOperationsInput | number | null
-    facultyLng?: NullableFloatFieldUpdateOperationsInput | number | null
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32874,9 +32679,6 @@ export namespace Prisma {
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     batches?: SessionUpdatebatchesInput | string[]
-    geofenceRadius?: IntFieldUpdateOperationsInput | number
-    facultyLat?: NullableFloatFieldUpdateOperationsInput | number | null
-    facultyLng?: NullableFloatFieldUpdateOperationsInput | number | null
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32896,9 +32698,6 @@ export namespace Prisma {
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     batches?: SessionUpdatebatchesInput | string[]
-    geofenceRadius?: IntFieldUpdateOperationsInput | number
-    facultyLat?: NullableFloatFieldUpdateOperationsInput | number | null
-    facultyLng?: NullableFloatFieldUpdateOperationsInput | number | null
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33432,9 +33231,6 @@ export namespace Prisma {
     duration?: number
     status?: string
     batches?: SessionCreatebatchesInput | string[]
-    geofenceRadius?: number
-    facultyLat?: number | null
-    facultyLng?: number | null
     attendanceCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -33676,9 +33472,6 @@ export namespace Prisma {
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     batches?: SessionUpdatebatchesInput | string[]
-    geofenceRadius?: IntFieldUpdateOperationsInput | number
-    facultyLat?: NullableFloatFieldUpdateOperationsInput | number | null
-    facultyLng?: NullableFloatFieldUpdateOperationsInput | number | null
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33700,9 +33493,6 @@ export namespace Prisma {
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     batches?: SessionUpdatebatchesInput | string[]
-    geofenceRadius?: IntFieldUpdateOperationsInput | number
-    facultyLat?: NullableFloatFieldUpdateOperationsInput | number | null
-    facultyLng?: NullableFloatFieldUpdateOperationsInput | number | null
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33722,9 +33512,6 @@ export namespace Prisma {
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     batches?: SessionUpdatebatchesInput | string[]
-    geofenceRadius?: IntFieldUpdateOperationsInput | number
-    facultyLat?: NullableFloatFieldUpdateOperationsInput | number | null
-    facultyLng?: NullableFloatFieldUpdateOperationsInput | number | null
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33825,9 +33612,6 @@ export namespace Prisma {
     duration?: number
     status?: string
     batches?: SessionCreatebatchesInput | string[]
-    geofenceRadius?: number
-    facultyLat?: number | null
-    facultyLng?: number | null
     attendanceCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -33872,9 +33656,6 @@ export namespace Prisma {
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     batches?: SessionUpdatebatchesInput | string[]
-    geofenceRadius?: IntFieldUpdateOperationsInput | number
-    facultyLat?: NullableFloatFieldUpdateOperationsInput | number | null
-    facultyLng?: NullableFloatFieldUpdateOperationsInput | number | null
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33896,9 +33677,6 @@ export namespace Prisma {
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     batches?: SessionUpdatebatchesInput | string[]
-    geofenceRadius?: IntFieldUpdateOperationsInput | number
-    facultyLat?: NullableFloatFieldUpdateOperationsInput | number | null
-    facultyLng?: NullableFloatFieldUpdateOperationsInput | number | null
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33918,9 +33696,6 @@ export namespace Prisma {
     duration?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     batches?: SessionUpdatebatchesInput | string[]
-    geofenceRadius?: IntFieldUpdateOperationsInput | number
-    facultyLat?: NullableFloatFieldUpdateOperationsInput | number | null
-    facultyLng?: NullableFloatFieldUpdateOperationsInput | number | null
     attendanceCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

@@ -157,7 +157,6 @@ const gradeRoutes = require("./routes/grades");
 const reportRoutes = require("./routes/reports");
 const notificationRoutes = require("./routes/notifications");
 const subjectRoutes = require("./routes/subjects");
-const settingsRoutes = require("./routes/settings");
 
 // Public routes
 app.use("/api/auth", authRoutes);
@@ -174,7 +173,6 @@ app.use("/api/grades", authMiddleware, gradeRoutes);
 app.use("/api/reports", authMiddleware, reportRoutes);
 app.use("/api/notifications", authMiddleware, notificationRoutes);
 app.use("/api/subjects", authMiddleware, subjectRoutes);
-app.use("/api/settings", settingsRoutes);
 
 // Health check endpoint
 app.get("/api/health", (req, res) => {

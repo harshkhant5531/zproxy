@@ -217,9 +217,6 @@ exports.Prisma.SessionScalarFieldEnum = {
   duration: 'duration',
   status: 'status',
   batches: 'batches',
-  geofenceRadius: 'geofenceRadius',
-  facultyLat: 'facultyLat',
-  facultyLng: 'facultyLng',
   attendanceCount: 'attendanceCount',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

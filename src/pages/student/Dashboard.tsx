@@ -3,6 +3,7 @@ import { StatCard } from "@/components/StatCard";
 import { StatusBadge } from "@/components/StatusBadge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -20,11 +21,18 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { GraduationCap, CalendarCheck, Clock, TrendingUp } from "lucide-react";
+import {
+  GraduationCap,
+  CalendarCheck,
+  Clock,
+  TrendingUp,
+  MapPin,
+  Loader2,
+} from "lucide-react";
 import { FullScreenLoader } from "@/components/FullScreenLoader";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/AuthContext";
-import { attendanceAPI, reportsAPI, coursesAPI } from "@/lib/api";
+import { attendanceAPI, reportsAPI, coursesAPI, sessionsAPI } from "@/lib/api";
 import {
   format,
   startOfWeek,
@@ -32,11 +40,13 @@ import {
   isWithinInterval,
   parseISO,
 } from "date-fns";
+import { toast } from "sonner";
 
 const DAY_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 export default function StudentDashboard() {
   const { user } = useAuth();
+  const queryClient = useQueryClient();
 
   const { data: attendanceStats, isLoading: isStatsLoading } = useQuery({
     queryKey: ["student", "attendance-stats", user?.id],
@@ -71,12 +81,68 @@ export default function StudentDashboard() {
     enabled: !!user?.id,
   });
 
-  const isLoading = isStatsLoading || isLogsLoading || isCoursesLoading;
+  const { data: activeSessionsData, isLoading: isSessionsLoading } = useQuery({
+    queryKey: ["student", "active-sessions", user?.id],
+    queryFn: async () => {
+      const resp = await sessionsAPI.getSessions({
+        timetableOnly: true,
+        limit: 30,
+      });
+      return resp.data.data.sessions || [];
+    },
+    enabled: !!user?.id,
+  });
+
+  const isLoading =
+    isStatsLoading || isLogsLoading || isCoursesLoading || isSessionsLoading;
 
   const records: any[] = Array.isArray(attendanceRecords)
     ? attendanceRecords
     : [];
   const courses: any[] = Array.isArray(coursesData) ? coursesData : [];
+  const activeSessions: any[] = Array.isArray(activeSessionsData)
+    ? activeSessionsData
+    : [];
+
+  const markAttendanceMutation = useMutation({
+    mutationFn: async (session: any) => {
+      const deviceInfo = [
+        navigator.userAgent,
+        navigator.platform,
+        navigator.language,
+        Intl.DateTimeFormat().resolvedOptions().timeZone,
+      ]
+        .filter(Boolean)
+        .join(" | ")
+        .slice(0, 180);
+
+      return attendanceAPI.markAttendance({
+        sessionId: session.id,
+        deviceInfo,
+      });
+    },
+    onSuccess: () => {
+      toast.success("Attendance marked successfully");
+      queryClient.invalidateQueries({
+        queryKey: ["student", "attendance-logs"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["student", "attendance-stats"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["student", "active-sessions"],
+      });
+    },
+    onError: (error: any) => {
+      if (error?.response?.status === 409) {
+        toast.info("Attendance already marked for this session");
+        return;
+      }
+      toast.error(
+        error?.response?.data?.message || "Failed to mark attendance",
+      );
+    },
+  });
 
   // --- Real weekly attendance chart ---
   const now = new Date();
@@ -141,6 +207,78 @@ export default function StudentDashboard() {
           Weekly View
         </Badge>
       </div>
+
+      <Card className="app-card motion-slide-up overflow-hidden">
+        <CardHeader className="card-header-muted py-4 px-6">
+          <CardTitle className="text-sm font-semibold text-foreground flex items-center gap-2">
+            <MapPin className="h-4 w-4 text-primary" /> Mark Attendance
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-4 sm:p-5">
+          {activeSessions.length > 0 ? (
+            <div className="space-y-3">
+              {activeSessions.map((session: any) => {
+                const alreadyMarked = records.some(
+                  (r: any) => r.sessionId === session.id,
+                );
+                const isMarkingCurrent =
+                  markAttendanceMutation.isPending &&
+                  markAttendanceMutation.variables?.id === session.id;
+
+                return (
+                  <div
+                    key={session.id}
+                    className="rounded-xl border border-border bg-muted/20 p-3 sm:p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
+                  >
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-foreground truncate">
+                        {session.subject?.name || session.topic}
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {session.course?.code || "Course"} • {session.startTime}
+                        -{session.endTime}
+                        {" • Manual + IP verified"}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      {alreadyMarked ? (
+                        <Badge
+                          variant="outline"
+                          className="border-success/30 bg-success/10 text-success"
+                        >
+                          Marked
+                        </Badge>
+                      ) : (
+                        <Button
+                          size="sm"
+                          onClick={() => markAttendanceMutation.mutate(session)}
+                          disabled={
+                            isMarkingCurrent || markAttendanceMutation.isPending
+                          }
+                          className="h-9 px-4"
+                        >
+                          {isMarkingCurrent ? (
+                            <>
+                              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                              Marking
+                            </>
+                          ) : (
+                            "Mark Now"
+                          )}
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground text-center py-4">
+              No active sessions are open for check-in right now.
+            </p>
+          )}
+        </CardContent>
+      </Card>
 
       <div className="grid gap-3 md:grid-cols-3 motion-stagger">
         <Card className="app-card bg-card/80 border-border/70">

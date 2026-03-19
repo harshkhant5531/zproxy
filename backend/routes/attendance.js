@@ -2,13 +2,6 @@ const express = require("express");
 const { body, validationResult } = require("express-validator");
 const prisma = require("../prisma");
 const authMiddleware = require("../middleware/auth");
-const {
-  haversineDistanceMeters,
-  validateStudentGeofence,
-} = require("../utils/geofence");
-const {
-  getGeofenceSecuritySettings,
-} = require("../utils/geofenceSecuritySettings");
 const { requireRole } = authMiddleware;
 
 const router = express.Router();
@@ -36,24 +29,6 @@ const getClientIp = (req) => {
   );
 };
 
-const LOCATION_DECIMALS = 6;
-
-const parseStoredLocation = (locationValue) => {
-  if (!locationValue || typeof locationValue !== "string") return null;
-  const [latRaw, lngRaw] = locationValue.split(",").map((part) => part?.trim());
-  const lat = Number(latRaw);
-  const lng = Number(lngRaw);
-  if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
-  return { latitude: lat, longitude: lng };
-};
-
-const formatLocation = (lat, lng) => {
-  const latValue = Number(lat);
-  const lngValue = Number(lng);
-  if (!Number.isFinite(latValue) || !Number.isFinite(lngValue)) return null;
-  return `${latValue.toFixed(LOCATION_DECIMALS)},${lngValue.toFixed(LOCATION_DECIMALS)}`;
-};
-
 const normalizeDeviceFingerprint = (value) => {
   if (!value || typeof value !== "string") return null;
   const compact = value.trim().toLowerCase();
@@ -67,73 +42,6 @@ const appendNotes = (existingNotes, tags = []) => {
   return existingNotes ? `${existingNotes} ${suffix}` : suffix;
 };
 
-const buildGeoRiskTags = async ({
-  req,
-  sessionId,
-  studentId,
-  lat,
-  lng,
-  locationString,
-}) => {
-  const tags = [];
-
-  if (typeof req.body?.locationMeta?.isMocked === "boolean") {
-    if (req.body.locationMeta.isMocked) {
-      tags.push("[GEO_RISK:MOCK_LOCATION_SIGNAL]");
-    }
-  } else {
-    tags.push("[GEO_INFO:MOCK_SIGNAL_UNAVAILABLE]");
-  }
-
-  const lastAttendance = await prisma.attendance.findFirst({
-    where: { studentId },
-    orderBy: { timestamp: "desc" },
-    select: {
-      id: true,
-      timestamp: true,
-      location: true,
-    },
-  });
-
-  if (lastAttendance?.location && lastAttendance?.timestamp) {
-    const previousLocation = parseStoredLocation(lastAttendance.location);
-    if (previousLocation) {
-      const distanceMeters = haversineDistanceMeters(previousLocation, {
-        latitude: Number(lat),
-        longitude: Number(lng),
-      });
-
-      const deltaSeconds =
-        (Date.now() - new Date(lastAttendance.timestamp).getTime()) / 1000;
-
-      if (Number.isFinite(deltaSeconds) && deltaSeconds > 0) {
-        const speedMetersPerSecond = distanceMeters / deltaSeconds;
-        if (speedMetersPerSecond > 120) {
-          tags.push(
-            `[GEO_RISK:IMPOSSIBLE_JUMP:${Math.round(speedMetersPerSecond)}mps]`,
-          );
-        }
-      }
-    }
-  }
-
-  if (locationString) {
-    const identicalLocationCount = await prisma.attendance.count({
-      where: {
-        sessionId,
-        studentId: { not: studentId },
-        location: locationString,
-      },
-    });
-
-    if (identicalLocationCount >= 2) {
-      tags.push(`[GEO_RISK:COORD_CLUSTER:others=${identicalLocationCount}]`);
-    }
-  }
-
-  return tags;
-};
-
 const logAttendanceAttempt = async ({
   req,
   userId,
@@ -141,7 +49,7 @@ const logAttendanceAttempt = async ({
   attemptType,
   decision,
   reason,
-  geofence,
+  security,
 }) => {
   try {
     await prisma.auditLog.create({
@@ -155,9 +63,9 @@ const logAttendanceAttempt = async ({
         details: {
           decision,
           reason,
-          geofence,
-          locationMeta: req.body?.locationMeta || null,
-          locationCapturedAt: req.body?.locationCapturedAt || null,
+          security,
+          deviceInfo: normalizeDeviceFingerprint(req.body?.deviceInfo),
+          resolvedClientIp: getClientIp(req),
           timestamp: new Date().toISOString(),
         },
       },
@@ -259,7 +167,7 @@ router.get(
       sessionId: null,
       decision: "rejected",
       reason: "unknown",
-      geofence: null,
+      security: null,
     };
 
     try {
@@ -757,7 +665,7 @@ router.post(
       sessionId: null,
       decision: "rejected",
       reason: "unknown",
-      geofence: null,
+      security: null,
     };
 
     try {
@@ -770,7 +678,6 @@ router.post(
       }
 
       const { sessionId, status, notes } = req.body;
-      const geofenceSecuritySettings = getGeofenceSecuritySettings();
 
       // Find session
       const session = await prisma.session.findUnique({
@@ -859,45 +766,6 @@ router.post(
         throw error;
       }
 
-      // Enforce faculty-centered geofence for student attendance.
-      let geofenceResult = null;
-      if (req.user.role === "student") {
-        if (
-          geofenceSecuritySettings.blockMockLocation &&
-          req.body?.locationMeta?.isMocked === true
-        ) {
-          const error = new Error(
-            "Mocked location signal detected. Disable fake GPS or developer mock location and retry.",
-          );
-          error.statusCode = 403;
-          error.decisionReason = "mock_location_detected";
-          throw error;
-        }
-
-        geofenceResult = validateStudentGeofence(
-          session,
-          req.body.lat,
-          req.body.lng,
-          req.body.accuracy,
-          {
-            capturedAt: req.body.locationCapturedAt,
-            locationMeta: req.body.locationMeta,
-          },
-        );
-
-        auditContext.geofence = {
-          decisionReason: geofenceResult.decisionReason,
-          distanceMeters: geofenceResult.distanceMeters,
-          rawDistanceMeters: geofenceResult.rawDistanceMeters,
-          toleranceMeters: geofenceResult.toleranceMeters,
-          retryBandMeters: geofenceResult.retryBandMeters,
-          radiusMeters: geofenceResult.radiusMeters,
-          reportedAccuracyMeters: geofenceResult.reportedAccuracyMeters,
-          locationAgeMs: geofenceResult.locationAgeMs,
-          maxLocationAgeMs: geofenceResult.maxLocationAgeMs,
-        };
-      }
-
       // ─── Proxy Detection ────────────────────────────────────────────────
       let finalStatus = status || "present";
       let finalNotes = notes || null;
@@ -905,34 +773,14 @@ router.post(
       const normalizedDeviceInfo = normalizeDeviceFingerprint(
         req.body.deviceInfo,
       );
-      const locationString =
-        req.body.lat && req.body.lng
-          ? formatLocation(req.body.lat, req.body.lng)
-          : req.body.location;
 
-      if (
-        req.user.role === "student" &&
-        geofenceSecuritySettings.requireDeviceFingerprint &&
-        !normalizedDeviceInfo
-      ) {
+      if (req.user.role === "student" && !normalizedDeviceInfo) {
         const error = new Error(
           "Device integrity metadata is required to mark attendance.",
         );
         error.statusCode = 400;
         error.decisionReason = "missing_device_fingerprint";
         throw error;
-      }
-
-      if (req.user.role === "student" && locationString) {
-        const geoRiskTags = await buildGeoRiskTags({
-          req,
-          sessionId,
-          studentId,
-          lat: req.body.lat,
-          lng: req.body.lng,
-          locationString,
-        });
-        finalNotes = appendNotes(finalNotes, geoRiskTags);
       }
 
       if (clientIp && req.user.role === "student") {
@@ -947,42 +795,13 @@ router.post(
             })
           : null;
 
-        if (geofenceSecuritySettings.strictProxyMode && sameDeviceAnyRecord) {
+        if (sameDeviceAnyRecord) {
           const error = new Error(
             "Potential proxy detected: device fingerprint already used by another student in this session.",
           );
           error.statusCode = 409;
           error.decisionReason = "proxy_same_device_session";
           throw error;
-        }
-
-        if (
-          geofenceSecuritySettings.blockDuplicateLocationReplay &&
-          locationString
-        ) {
-          const strictWindowStart = new Date(
-            Date.now() -
-              geofenceSecuritySettings.duplicateLocationReplayWindowSeconds *
-                1000,
-          );
-          const sameLocationRecent = await prisma.attendance.findFirst({
-            where: {
-              sessionId,
-              studentId: { not: studentId },
-              location: locationString,
-              timestamp: { gte: strictWindowStart },
-            },
-            select: { id: true, studentId: true },
-          });
-
-          if (sameLocationRecent) {
-            const error = new Error(
-              "Potential proxy detected: identical coordinates were used by another student moments ago.",
-            );
-            error.statusCode = 409;
-            error.decisionReason = "proxy_identical_location_replay";
-            throw error;
-          }
         }
 
         const sameIpRecords = await prisma.attendance.findMany({
@@ -1040,7 +859,6 @@ router.post(
           studentId,
           status: finalStatus,
           notes: finalNotes,
-          location: locationString,
           ipAddress: clientIp,
           deviceInfo: normalizedDeviceInfo,
         },
@@ -1074,7 +892,7 @@ router.post(
         attemptType: auditContext.attemptType,
         decision: auditContext.decision,
         reason: auditContext.reason,
-        geofence: auditContext.geofence,
+        security: auditContext.security,
       });
 
       res.status(201).json({
@@ -1084,19 +902,6 @@ router.post(
       });
     } catch (error) {
       auditContext.reason = error.decisionReason || error.message || "rejected";
-      auditContext.geofence = {
-        ...(auditContext.geofence || {}),
-        decisionReason: error.decisionReason,
-        distanceMeters: error.distanceMeters,
-        rawDistanceMeters: error.rawDistanceMeters,
-        toleranceMeters: error.toleranceMeters,
-        retryBandMeters: error.retryBandMeters,
-        radiusMeters: error.radiusMeters,
-        reportedAccuracyMeters: error.reportedAccuracyMeters,
-        maxAcceptableAccuracyMeters: error.maxAcceptableAccuracyMeters,
-        locationAgeMs: error.locationAgeMs,
-        maxLocationAgeMs: error.maxLocationAgeMs,
-      };
       await logAttendanceAttempt({
         req,
         userId: req.user.id,
@@ -1104,7 +909,7 @@ router.post(
         attemptType: auditContext.attemptType,
         decision: auditContext.decision,
         reason: auditContext.reason,
-        geofence: auditContext.geofence,
+        security: auditContext.security,
       });
       next(error);
     }
