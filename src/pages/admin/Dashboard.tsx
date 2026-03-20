@@ -144,39 +144,31 @@ export default function AdminDashboard() {
       </div>
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="">
-          <StatCard
-            title="Total Students"
-            value={studentsData?.length.toString() || "0"}
-            icon={Users}
-            className=""
-          />
-        </div>
-        <div className="">
-          <StatCard
-            title="Staff Faculty"
-            value={facultyData?.length.toString() || "0"}
-            icon={ShieldAlert}
-            className=""
-          />
-        </div>
-        <div className="">
-          <StatCard
-            title="Active Courses"
-            value={coursesData?.length.toString() || "0"}
-            subtitle={`${deptData?.length || 0} sectors`}
-            icon={BookOpen}
-            className="bg-card border border-border shadow-sm"
-          />
-        </div>
-        <div className="">
-          <StatCard
-            title="Avg Attendance"
-            value={`${avgAttendance}%`}
-            icon={TrendingUp}
-            className="bg-card border border-border shadow-sm"
-          />
-        </div>
+        <StatCard
+          title="Total Students"
+          value={studentsData?.length.toString() || "0"}
+          icon={Users}
+          className="h-full"
+        />
+        <StatCard
+          title="Staff Faculty"
+          value={facultyData?.length.toString() || "0"}
+          icon={ShieldAlert}
+          className="h-full"
+        />
+        <StatCard
+          title="Active Courses"
+          value={coursesData?.length.toString() || "0"}
+          subtitle={`${deptData?.length || 0} sectors`}
+          icon={BookOpen}
+          className="h-full bg-card border border-border shadow-sm"
+        />
+        <StatCard
+          title="Avg Attendance"
+          value={`${avgAttendance}%`}
+          icon={TrendingUp}
+          className="h-full bg-card border border-border shadow-sm"
+        />
       </div>
 
       <div className="grid gap-8 lg:grid-cols-2">
