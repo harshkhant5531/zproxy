@@ -105,7 +105,7 @@ export default function AdminDashboard() {
 
   if (isLoading) {
     return (
-      <div className="app-page min-h-[60vh] flex items-center justify-center">
+      <div className="min-h-[60vh] flex items-center justify-center">
         <div className="flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-3">
           <Loader2 className="h-4 w-4 animate-spin text-primary" />
           <span className="text-sm text-muted-foreground">
@@ -117,50 +117,29 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="app-page">
-      <div className="app-page-header">
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <h1 className="page-header-title">Institutional Overview</h1>
-          <p className="page-header-sub">
-            Global System Metrics // Admin Portal
+          <h1 className="text-2xl font-bold tracking-tight">Institutional Overview</h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            Global system metrics for admin operations
           </p>
         </div>
-        <Badge
-          variant="outline"
-          className="rounded-full border-primary/30 bg-primary/10 text-primary px-3 py-1 text-[10px] uppercase tracking-[0.12em]"
-        >
-          Central Analytics
-        </Badge>
-      </div>
-
-      <section className="rounded-xl border border-border/70 bg-card px-4 py-3 sm:px-5">
-        <div className="grid gap-3 md:grid-cols-3">
-          <div className="rounded-md border border-border/70 bg-background px-3 py-2">
-            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
-              Risk Students
-            </p>
-            <p className="text-xl font-semibold text-foreground mt-1">
-              {shortageStudents.length}
-            </p>
-          </div>
-          <div className="rounded-md border border-border/70 bg-background px-3 py-2">
-            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
-              Departments
-            </p>
-            <p className="text-xl font-semibold text-foreground mt-1">
-              {deptData?.length || 0}
-            </p>
-          </div>
-          <div className="rounded-md border border-border/70 bg-background px-3 py-2">
-            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
-              Global Attendance
-            </p>
-            <p className="text-xl font-semibold text-foreground mt-1">
-              {avgAttendance}%
-            </p>
-          </div>
+        <div className="flex items-center gap-2">
+          <Badge
+            variant="outline"
+            className="rounded-full border-primary/30 bg-primary/10 text-primary px-3 py-1 text-[10px] uppercase tracking-[0.12em]"
+          >
+            Central Analytics
+          </Badge>
+          <Badge
+            variant="outline"
+            className="rounded-full border-warning/30 bg-warning/10 text-warning px-3 py-1 text-[10px] uppercase tracking-[0.12em]"
+          >
+            Risk Students: {shortageStudents.length}
+          </Badge>
         </div>
-      </section>
+      </div>
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <div className="motion-page-enter" style={{ animationDelay: "30ms" }}>
@@ -168,7 +147,7 @@ export default function AdminDashboard() {
             title="Total Students"
             value={studentsData?.length.toString() || "0"}
             icon={Users}
-            className="app-card"
+            className=""
           />
         </div>
         <div className="motion-page-enter" style={{ animationDelay: "90ms" }}>
@@ -176,14 +155,14 @@ export default function AdminDashboard() {
             title="Staff Faculty"
             value={facultyData?.length.toString() || "0"}
             icon={ShieldAlert}
-            className="app-card"
+            className=""
           />
         </div>
         <div className="motion-page-enter" style={{ animationDelay: "150ms" }}>
           <StatCard
             title="Active Courses"
             value={coursesData?.length.toString() || "0"}
-            subtitle={`${deptData?.length || 0} SECTORS`}
+            subtitle={`${deptData?.length || 0} sectors`}
             icon={BookOpen}
             className="bg-card border border-border shadow-sm"
           />
@@ -199,11 +178,8 @@ export default function AdminDashboard() {
       </div>
 
       <div className="grid gap-8 lg:grid-cols-2">
-        <Card
-          variant="elevated"
-          className="app-card motion-surface overflow-hidden group"
-        >
-          <CardHeader className="card-header-muted px-6 py-4">
+        <Card className="overflow-hidden group">
+          <CardHeader className="border-b bg-muted/40 px-6 py-4">
             <CardTitle className="text-sm font-semibold text-foreground">
               Department Attendance
             </CardTitle>
@@ -251,11 +227,8 @@ export default function AdminDashboard() {
           </CardContent>
         </Card>
 
-        <Card
-          variant="elevated"
-          className="app-card motion-surface overflow-hidden group"
-        >
-          <CardHeader className="card-header-muted px-6 py-4">
+        <Card className="overflow-hidden group">
+          <CardHeader className="border-b bg-muted/40 px-6 py-4">
             <div className="flex items-center justify-between">
               <CardTitle className="text-sm font-semibold text-foreground flex items-center gap-2">
                 <AlertTriangle className="h-4 w-4 text-destructive" /> Shortage
@@ -333,7 +306,7 @@ export default function AdminDashboard() {
         {deptData?.map((dept: any, i: number) => (
           <Card
             key={dept.department}
-            className="app-card hover:scale-[1.01] transition-all duration-300 group overflow-hidden motion-page-enter motion-surface"
+            className="hover:scale-[1.01] transition-all duration-300 group overflow-hidden motion-page-enter"
             style={{ animationDelay: `${60 + i * 45}ms` }}
           >
             <CardContent className="p-5 relative">

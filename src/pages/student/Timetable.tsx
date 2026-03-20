@@ -65,7 +65,7 @@ export default function StudentTimetable() {
 
   if (isLoading) {
     return (
-      <div className="app-page min-h-[60vh] flex items-center justify-center">
+      <div className="min-h-[60vh] flex items-center justify-center">
         <div className="flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-3">
           <Loader2 className="h-4 w-4 animate-spin text-primary" />
           <span className="text-sm text-muted-foreground">
@@ -77,14 +77,14 @@ export default function StudentTimetable() {
   }
 
   return (
-    <div className="app-page">
+    <div className="space-y-6">
       {/* Header */}
-      <div className="app-page-header">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <h1 className="page-header-title flex items-center gap-2">
+          <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
             <Calendar className="h-6 w-6 text-primary" /> Academic Schedule
           </h1>
-          <p className="page-header-sub">
+          <p className="text-sm text-muted-foreground mt-1">
             {user?.profile?.fullName || user?.username} &mdash; Current Semester
           </p>
         </div>
@@ -103,10 +103,9 @@ export default function StudentTimetable() {
 
       {/* Timetable grid */}
       <Card
-        variant="elevated"
-        className="app-card motion-surface overflow-hidden"
+                className="app-card overflow-hidden"
       >
-        <CardHeader className="card-header-muted py-4 px-6">
+        <CardHeader className="border-b bg-muted/40 px-6 py-4">
           <CardTitle className="text-sm font-semibold text-foreground">
             Weekly Matrix
           </CardTitle>
@@ -168,7 +167,7 @@ export default function StudentTimetable() {
                     >
                       {session ? (
                         <div
-                          className={`h-full rounded-lg border p-3 text-sm flex flex-col gap-2.5 motion-surface ${colorClass}`}
+                          className={`h-full rounded-lg border p-3 text-sm flex flex-col gap-2.5 ${colorClass}`}
                         >
                           <div className="flex items-start justify-between gap-1">
                             <p className="font-bold text-xs leading-snug line-clamp-2 text-foreground">

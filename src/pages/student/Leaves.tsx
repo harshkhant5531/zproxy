@@ -77,7 +77,7 @@ export default function LeaveManagement() {
 
   if (isLoading) {
     return (
-      <div className="app-page min-h-[60vh] flex items-center justify-center">
+      <div className="min-h-[60vh] flex items-center justify-center">
         <div className="flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-3">
           <Loader2 className="h-4 w-4 animate-spin text-primary" />
           <span className="text-sm text-muted-foreground">
@@ -89,11 +89,11 @@ export default function LeaveManagement() {
   }
 
   return (
-    <div className="app-page">
-      <div className="app-page-header">
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <h1 className="page-header-title">Leave Requests</h1>
-          <p className="page-header-sub">
+          <h1 className="text-2xl font-bold tracking-tight">Leave Requests</h1>
+          <p className="text-sm text-muted-foreground mt-1">
             Submit and track your leave requests
           </p>
           {createLeaveMutation.isPending && (
@@ -132,8 +132,7 @@ export default function LeaveManagement() {
 
       {showForm && (
         <Card
-          variant="glass"
-          className="app-card border-primary/20 motion-slide-up"
+                    className="app-card border-primary/20 motion-slide-up"
         >
           <CardHeader className="pb-3 px-6">
             <CardTitle className="text-sm font-bold text-primary uppercase tracking-widest">
@@ -224,8 +223,7 @@ export default function LeaveManagement() {
       )}
 
       <Card
-        variant="elevated"
-        className="app-card overflow-hidden motion-slide-up"
+                className="app-card overflow-hidden motion-slide-up"
       >
         <CardHeader className="pb-3 px-6">
           <CardTitle className="text-sm font-bold text-foreground/90 flex items-center gap-2 uppercase tracking-widest">

@@ -65,7 +65,7 @@ export function AppLayout() {
             </div>
           </header>
           <main className="flex-1 px-3 py-4 sm:px-5 sm:py-5 lg:px-7 lg:py-7 overflow-auto overflow-x-hidden relative isolate">
-            <div className="app-main-shell p-1 sm:p-2 lg:p-3">
+            <div className="w-full max-w-[1320px] mx-auto p-1 sm:p-2 lg:p-3">
               <Outlet />
             </div>
           </main>

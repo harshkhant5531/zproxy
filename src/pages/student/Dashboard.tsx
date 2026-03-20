@@ -187,7 +187,7 @@ export default function StudentDashboard() {
 
   if (isLoading) {
     return (
-      <div className="app-page min-h-[60vh] flex items-center justify-center">
+      <div className="min-h-[60vh] flex items-center justify-center">
         <div className="flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-3">
           <Loader2 className="h-4 w-4 animate-spin text-primary" />
           <span className="text-sm text-muted-foreground">
@@ -199,11 +199,11 @@ export default function StudentDashboard() {
   }
 
   return (
-    <div className="app-page">
-      <div className="app-page-header">
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <h1 className="page-header-title">Student Dashboard</h1>
-          <p className="page-header-sub">
+          <h1 className="text-2xl font-bold tracking-tight">Student Dashboard</h1>
+          <p className="text-sm text-muted-foreground mt-1">
             {user?.profile?.fullName || user?.username}
             {user?.profile?.enrollmentNumber
               ? ` (${user.profile.enrollmentNumber})`
@@ -219,10 +219,9 @@ export default function StudentDashboard() {
       </div>
 
       <Card
-        variant="elevated"
-        className="app-card motion-slide-up overflow-hidden"
+                className="app-card motion-slide-up overflow-hidden"
       >
-        <CardHeader className="card-header-muted py-4 px-6">
+        <CardHeader className="border-b bg-muted/40 px-6 py-4">
           <CardTitle className="text-sm font-semibold text-foreground flex items-center gap-2">
             <MapPin className="h-4 w-4 text-primary" /> Mark Attendance
           </CardTitle>
@@ -364,11 +363,10 @@ export default function StudentDashboard() {
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card
-          variant="elevated"
-          className="app-card motion-slide-up"
+                    className="app-card motion-slide-up"
           style={{ animationDelay: "280ms" }}
         >
-          <CardHeader className="card-header-muted py-4 px-6">
+          <CardHeader className="border-b bg-muted/40 px-6 py-4">
             <CardTitle className="text-sm font-semibold text-foreground">
               This Week's Attendance
             </CardTitle>
@@ -422,11 +420,10 @@ export default function StudentDashboard() {
         </Card>
 
         <Card
-          variant="elevated"
-          className="app-card motion-slide-up"
+                    className="app-card motion-slide-up"
           style={{ animationDelay: "280ms" }}
         >
-          <CardHeader className="card-header-muted py-4 px-6">
+          <CardHeader className="border-b bg-muted/40 px-6 py-4">
             <CardTitle className="text-sm font-semibold text-foreground">
               Attendance by Course
             </CardTitle>
@@ -460,8 +457,8 @@ export default function StudentDashboard() {
         </Card>
       </div>
 
-      <Card variant="elevated" className="app-card motion-surface">
-        <CardHeader className="card-header-muted py-4 px-6">
+      <Card className="app-card">
+        <CardHeader className="border-b bg-muted/40 px-6 py-4">
           <CardTitle className="text-sm font-semibold text-foreground">
             Recent Attendance Log
           </CardTitle>

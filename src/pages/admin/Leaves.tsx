@@ -117,7 +117,7 @@ export default function AdminLeaves() {
 
   if (isLoading) {
     return (
-      <div className="app-page min-h-[60vh] flex items-center justify-center">
+      <div className="min-h-[60vh] flex items-center justify-center">
         <div className="flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-3">
           <Loader2 className="h-4 w-4 animate-spin text-primary" />
           <span className="text-sm text-muted-foreground">
@@ -129,11 +129,11 @@ export default function AdminLeaves() {
   }
 
   return (
-    <div className="app-page">
-      <div className="app-page-header">
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <h1 className="page-header-title">Leave Approvals</h1>
-          <p className="page-header-sub">
+          <h1 className="text-2xl font-bold tracking-tight">Leave Approvals</h1>
+          <p className="text-sm text-muted-foreground mt-1">
             {leaves.length} {statusFilter === "all" ? "Total" : statusFilter}{" "}
             Applications
           </p>
@@ -194,8 +194,7 @@ export default function AdminLeaves() {
 
       {leaves.length === 0 ? (
         <Card
-          variant="glass"
-          className="bg-card border border-border shadow-sm"
+                    className="bg-card border border-border shadow-sm"
         >
           <CardContent className="py-16 text-center">
             <div className="flex flex-col items-center gap-3">
@@ -214,10 +213,9 @@ export default function AdminLeaves() {
         </Card>
       ) : (
         <Card
-          variant="elevated"
-          className="bg-card border border-border shadow-sm motion-surface overflow-hidden"
+                    className="bg-card border border-border shadow-sm overflow-hidden"
         >
-          <CardHeader className="card-header-muted py-4">
+          <CardHeader className="border-b bg-muted/40 px-4 py-4">
             <div className="flex items-center justify-between">
               <CardTitle className="text-sm font-semibold text-foreground flex items-center gap-2">
                 <FileText className="h-4 w-4 text-primary" />

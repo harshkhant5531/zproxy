@@ -137,7 +137,7 @@ const Index = () => {
 
   if (loading) {
     return (
-      <div className="app-page min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-3">
           <Loader2 className="h-4 w-4 animate-spin text-primary" />
           <span className="text-sm text-muted-foreground">
@@ -234,8 +234,7 @@ const Index = () => {
                   ].map((item) => (
                     <Card
                       key={item.label}
-                      variant="glass"
-                      className="px-4 py-3 motion-surface"
+                      className="px-4 py-3"
                     >
                       <item.icon className="h-4 w-4 text-primary mb-2" />
                       <p className="text-sm font-semibold">{item.label}</p>
@@ -249,10 +248,7 @@ const Index = () => {
             </section>
 
             <section className="flex items-center">
-              <Card
-                variant="elevated"
-                className="w-full rounded-3xl border-border/80 bg-card motion-fade-scale"
-              >
+              <Card className="w-full rounded-3xl border-border/80 bg-card motion-fade-scale">
                 <CardHeader className="space-y-3 pb-2">
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-2xl tracking-tight">

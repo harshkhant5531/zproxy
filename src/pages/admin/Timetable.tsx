@@ -225,7 +225,7 @@ export default function Timetable() {
 
   if (isLoading) {
     return (
-      <div className="app-page min-h-[60vh] flex items-center justify-center">
+      <div className="min-h-[60vh] flex items-center justify-center">
         <div className="flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-3">
           <Loader2 className="h-4 w-4 animate-spin text-primary" />
           <span className="text-sm text-muted-foreground">
@@ -238,13 +238,13 @@ export default function Timetable() {
 
   return (
     <>
-      <div className="app-page">
-        <div className="app-page-header">
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div>
-            <h1 className="page-header-title flex items-center gap-2">
+            <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
               <Calendar className="h-5 w-5 text-primary" /> Timetable Management
             </h1>
-            <p className="page-header-sub">Create and manage class schedules</p>
+            <p className="text-sm text-muted-foreground mt-1">Create and manage class schedules</p>
             {(createMutation.isPending || deleteMutation.isPending) && (
               <div className="mt-2 inline-flex items-center gap-2 rounded-md border border-primary/20 bg-primary/10 px-2.5 py-1 text-xs text-primary">
                 <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -262,7 +262,7 @@ export default function Timetable() {
           </Badge>
         </div>
 
-        <Card variant="glass" className="app-card">
+        <Card className="">
           <CardContent className="p-4">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
               <div className="relative flex-1 max-w-lg">
@@ -307,8 +307,8 @@ export default function Timetable() {
           </CardContent>
         </Card>
 
-        <Card variant="elevated" className="app-card overflow-x-auto">
-          <CardHeader className="card-header-muted py-4 px-6">
+        <Card className="app-card overflow-x-auto">
+          <CardHeader className="border-b bg-muted/40 px-6 py-4">
             <CardTitle className="text-sm font-semibold text-foreground">
               Weekly Matrix
             </CardTitle>

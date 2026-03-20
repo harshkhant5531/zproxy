@@ -209,7 +209,7 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="app-page space-y-6">
+    <div className="space-y-6">
       <section className="relative overflow-hidden rounded-2xl border border-border bg-card p-6 shadow-sm motion-page-enter">
         <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="flex items-start gap-5">
@@ -269,8 +269,7 @@ export default function ProfilePage() {
 
           <div className="grid gap-3 sm:grid-cols-3 lg:w-[28rem] motion-stagger">
             <Card
-              variant="glass"
-              className="app-card bg-muted/20 shadow-none motion-surface"
+                            className="app-card bg-muted/20 shadow-none"
             >
               <CardContent className="p-4">
                 <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
@@ -282,8 +281,7 @@ export default function ProfilePage() {
               </CardContent>
             </Card>
             <Card
-              variant="glass"
-              className="app-card bg-muted/20 shadow-none motion-surface"
+                            className="app-card bg-muted/20 shadow-none"
             >
               <CardContent className="p-4">
                 <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
@@ -297,8 +295,7 @@ export default function ProfilePage() {
               </CardContent>
             </Card>
             <Card
-              variant="glass"
-              className="app-card bg-muted/20 shadow-none motion-surface"
+                            className="app-card bg-muted/20 shadow-none"
             >
               <CardContent className="p-4">
                 <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
@@ -639,7 +636,7 @@ export default function ProfilePage() {
                 </div>
               </div>
               <Separator className="bg-border" />
-              <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 motion-surface">
+              <div className="rounded-xl border border-primary/20 bg-primary/5 p-4">
                 <p className="text-[10px] font-bold uppercase tracking-wider text-primary">
                   Account Guidance
                 </p>

@@ -165,86 +165,6 @@
 }
 
 /* ─────────────────────────────────────────────────────────────────────────── */
-/*  FLAT CARD SYSTEM (no glassmorphism)                                        */
-/* ─────────────────────────────────────────────────────────────────────────── */
-
-.app-card {
-  @apply bg-card border border-border/80 rounded-xl shadow-sm;
-  transition:
-    box-shadow 240ms ease,
-    transform 240ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.app-card:hover {
-  box-shadow: 0 10px 24px rgba(20, 30, 70, 0.09);
-  transform: translateY(0);
-}
-
-.dark .app-card:hover {
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
-}
-
-/* Keep glass-card as alias for migration compat — no blur */
-.glass-card {
-  @apply app-card;
-}
-
-/* ─────────────────────────────────────────────────────────────────────────── */
-/*  TYPOGRAPHY HELPERS                                                          */
-/* ─────────────────────────────────────────────────────────────────────────── */
-
-.page-header-title {
-  @apply text-2xl font-extrabold tracking-tight text-foreground;
-}
-
-.page-header-sub {
-  @apply text-sm text-muted-foreground mt-1;
-}
-
-.app-kicker {
-  @apply text-xs font-semibold uppercase tracking-widest text-muted-foreground;
-}
-
-.app-caption {
-  @apply text-xs text-muted-foreground;
-}
-
-.app-body-copy {
-  @apply text-sm leading-relaxed text-muted-foreground;
-}
-
-.grad-text {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-cyan-400;
-}
-
-/* ─────────────────────────────────────────────────────────────────────────── */
-/*  LAYOUT PRIMITIVES                                                           */
-/* ─────────────────────────────────────────────────────────────────────────── */
-
-.app-main-shell {
-  @apply w-full max-w-[1320px] mx-auto;
-}
-
-.app-page {
-  @apply space-y-6 relative;
-  animation: app-page-enter 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-.app-page-header {
-  @apply flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4;
-  animation: slide-in-left 360ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-.app-surface {
-  @apply app-card;
-}
-
-/* Card header variant */
-.card-header-muted {
-  @apply bg-muted/40 border-b border-border px-6 py-4;
-}
-
-/* ─────────────────────────────────────────────────────────────────────────── */
 /*  ANIMATION KEYFRAMES                                                         */
 /* ─────────────────────────────────────────────────────────────────────────── */
 
@@ -458,22 +378,6 @@
   animation: stat-enter 400ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-/* Card hover lift & transition */
-.motion-surface {
-  transition:
-    transform 180ms ease,
-    box-shadow 180ms ease;
-}
-
-.motion-surface:hover {
-  transform: none;
-  box-shadow: none;
-}
-
-.dark .motion-surface:hover {
-  box-shadow: none;
-}
-
 /* Panel enter (faster, for revealed sub-sections) */
 .motion-panel-enter {
   animation: app-page-enter 280ms cubic-bezier(0.16, 1, 0.3, 1) both;
@@ -601,32 +505,18 @@
   animation-delay: 280ms;
 }
 
-/* Table row stagger — apply className="motion-table-stagger" to <Table> */
+/* Table row stagger */
 .motion-table-stagger tbody tr {
   opacity: 0;
   animation: app-page-enter 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
-.motion-table-stagger tbody tr:nth-child(1) {
-  animation-delay: 40ms;
-}
-.motion-table-stagger tbody tr:nth-child(2) {
-  animation-delay: 80ms;
-}
-.motion-table-stagger tbody tr:nth-child(3) {
-  animation-delay: 120ms;
-}
-.motion-table-stagger tbody tr:nth-child(4) {
-  animation-delay: 160ms;
-}
-.motion-table-stagger tbody tr:nth-child(5) {
-  animation-delay: 200ms;
-}
-.motion-table-stagger tbody tr:nth-child(6) {
-  animation-delay: 240ms;
-}
-.motion-table-stagger tbody tr:nth-child(n + 7) {
-  animation-delay: 280ms;
-}
+.motion-table-stagger tbody tr:nth-child(1) { animation-delay: 40ms; }
+.motion-table-stagger tbody tr:nth-child(2) { animation-delay: 80ms; }
+.motion-table-stagger tbody tr:nth-child(3) { animation-delay: 120ms; }
+.motion-table-stagger tbody tr:nth-child(4) { animation-delay: 160ms; }
+.motion-table-stagger tbody tr:nth-child(5) { animation-delay: 200ms; }
+.motion-table-stagger tbody tr:nth-child(6) { animation-delay: 240ms; }
+.motion-table-stagger tbody tr:nth-child(n + 7) { animation-delay: 280ms; }
 
 /* Stat card stagger (used in dashboard grids) */
 .stat-card-enter {
@@ -656,14 +546,8 @@
 /* ─────────────────────────────────────────────────────────────────────────── */
 
 @media (max-width: 640px) {
-  .app-page {
-    @apply space-y-4;
-  }
-  .app-page-header {
-    @apply gap-3;
-  }
   .page-header-title {
-    @apply text-xl;
+    font-size: 1.25rem;
   }
 }
 
@@ -699,16 +583,14 @@
     transform: none !important;
   }
 
-  .motion-surface,
   .motion-press,
-  .motion-icon-hover,
-  .app-card {
+  .motion-icon-hover {
     transition: none !important;
   }
 }
 
 /* ─────────────────────────────────────────────────────────────────────────── */
-/*  TABLE READABILITY (legacy hardcoded shades override)                       */
+/*  TABLE READABILITY                                                           */
 /* ─────────────────────────────────────────────────────────────────────────── */
 
 :root :where(table) .text-slate-100,
@@ -728,26 +610,6 @@
 
 :root :where(table) .border-slate-800 {
   border-color: hsl(var(--border) / 0.8);
-}
-
-/* ─────────────────────────────────────────────────────────────────────────── */
-/*  MISC LEGACY COMPAT                                                          */
-/* ─────────────────────────────────────────────────────────────────────────── */
-
-/* Remove old aura glow (no-op now) */
-.aura-glow {
-  box-shadow: none;
-}
-.aura-glow:hover {
-  box-shadow: none;
-}
-.aura-text-glow {
-  text-shadow: none;
-}
-
-/* glass-panel → flat border panel */
-.glass-panel {
-  @apply bg-card border border-border shadow-sm;
 }
 
 .italic {

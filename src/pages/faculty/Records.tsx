@@ -66,7 +66,7 @@ export default function AttendanceRecords() {
 
   if (isLoading) {
     return (
-      <div className="app-page min-h-[60vh] flex items-center justify-center">
+      <div className="min-h-[60vh] flex items-center justify-center">
         <div className="flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-3">
           <Loader2 className="h-4 w-4 animate-spin text-primary" />
           <span className="text-sm text-muted-foreground">
@@ -78,10 +78,10 @@ export default function AttendanceRecords() {
   }
 
   return (
-    <div className="app-page">
-      <div className="app-page-header">
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <h1 className="page-header-title">Attendance History</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Attendance History</h1>
           <p className="page-header-sub flex items-center gap-2 mt-1">
             <Calendar className="h-4 w-4 text-primary/70" /> Records and audit
             logs
@@ -115,10 +115,9 @@ export default function AttendanceRecords() {
       </div>
 
       <Card
-        variant="elevated"
-        className="app-card overflow-hidden motion-fade-scale"
+                className="app-card overflow-hidden motion-fade-scale"
       >
-        <CardHeader className="card-header-muted py-4 px-6">
+        <CardHeader className="border-b bg-muted/40 px-6 py-4">
           <CardTitle className="text-sm font-semibold text-foreground">
             Session Ledger
           </CardTitle>

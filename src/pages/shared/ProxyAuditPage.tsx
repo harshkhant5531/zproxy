@@ -213,7 +213,7 @@ export default function ProxyAuditPage() {
 
   if (isLoading) {
     return (
-      <div className="app-page min-h-[60vh] flex items-center justify-center">
+      <div className="min-h-[60vh] flex items-center justify-center">
         <div className="flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-3">
           <Loader2 className="h-4 w-4 animate-spin text-primary" />
           <span className="text-sm text-muted-foreground">
@@ -226,10 +226,9 @@ export default function ProxyAuditPage() {
 
   if (error)
     return (
-      <div className="app-page flex items-center justify-center">
+      <div className="flex items-center justify-center">
         <Card
-          variant="elevated"
-          className="bg-destructive/10 border-destructive/20 w-full max-w-md"
+                    className="bg-destructive/10 border-destructive/20 w-full max-w-md"
         >
           <CardContent className="p-5 sm:p-6">
             <p className="text-destructive">Error loading proxy audit data</p>
@@ -242,14 +241,14 @@ export default function ProxyAuditPage() {
   const records = auditData?.records || [];
 
   return (
-    <div className="app-page">
+    <div className="space-y-6">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         className="mb-1"
       >
-        <div className="app-page-header mb-5">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-5">
           <div>
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground flex items-center gap-2">
               <AlertTriangle className="w-6 h-6 sm:w-7 sm:h-7 text-warning" />
@@ -404,7 +403,7 @@ export default function ProxyAuditPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
           >
-            <Card variant="elevated" className="bg-card border-border">
+            <Card className="bg-card border-border">
               <CardHeader>
                 <CardTitle className="text-foreground flex items-center gap-2">
                   <TrendingUp className="w-5 h-5 text-info" />
@@ -472,7 +471,7 @@ export default function ProxyAuditPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
           >
-            <Card variant="elevated" className="bg-card border-border">
+            <Card className="bg-card border-border">
               <CardHeader>
                 <CardTitle className="text-foreground flex items-center gap-2">
                   <Clock className="w-5 h-5 text-info" />
@@ -519,7 +518,7 @@ export default function ProxyAuditPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
             >
-              <Card variant="elevated" className="bg-card border-border">
+              <Card className="bg-card border-border">
                 <CardHeader>
                   <CardTitle className="text-foreground flex items-center gap-2">
                     <TrendingUp className="w-5 h-5 text-info" />
@@ -557,7 +556,7 @@ export default function ProxyAuditPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7 }}
           >
-            <Card variant="elevated" className="bg-card border-border">
+            <Card className="bg-card border-border">
               <CardHeader>
                 <CardTitle className="text-foreground flex items-center gap-2">
                   <Network className="w-5 h-5 text-info" />
@@ -602,7 +601,7 @@ export default function ProxyAuditPage() {
           transition={{ delay: 0.8 }}
           className="mb-8"
         >
-          <Card variant="elevated" className="bg-card border-border">
+          <Card className="bg-card border-border">
             <CardHeader>
               <CardTitle className="text-foreground flex items-center gap-2">
                 <Network className="w-5 h-5 text-info" />
@@ -647,7 +646,7 @@ export default function ProxyAuditPage() {
             transition={{ delay: 0.9 }}
             className="mb-8"
           >
-            <Card variant="elevated" className="bg-card border-border">
+            <Card className="bg-card border-border">
               <CardHeader>
                 <CardTitle className="text-foreground flex items-center gap-2">
                   <Smartphone className="w-5 h-5 text-success" />
@@ -694,7 +693,7 @@ export default function ProxyAuditPage() {
             transition={{ delay: 1.0 }}
             className="mb-8"
           >
-            <Card variant="elevated" className="bg-card border-border">
+            <Card className="bg-card border-border">
               <CardHeader>
                 <CardTitle className="text-foreground flex items-center gap-2">
                   <Users className="w-5 h-5 text-info" />
@@ -722,7 +721,7 @@ export default function ProxyAuditPage() {
           transition={{ delay: 1.1 }}
           className="mb-8"
         >
-          <Card variant="elevated" className="bg-card border-border">
+          <Card className="bg-card border-border">
             <CardHeader>
               <CardTitle className="text-foreground flex items-center gap-2">
                 <Activity className="w-5 h-5 text-destructive" />
@@ -775,7 +774,7 @@ export default function ProxyAuditPage() {
           transition={{ delay: 1.2 }}
           className="mb-8"
         >
-          <Card variant="elevated" className="bg-card border-border">
+          <Card className="bg-card border-border">
             <CardHeader>
               <CardTitle className="text-foreground flex items-center gap-2">
                 <Users className="w-5 h-5 text-info" />
@@ -819,7 +818,7 @@ export default function ProxyAuditPage() {
           transition={{ delay: 1.3 }}
           className="mb-8"
         >
-          <Card variant="elevated" className="bg-card border-border">
+          <Card className="bg-card border-border">
             <CardHeader>
               <CardTitle className="text-foreground flex items-center justify-between">
                 <div className="flex items-center gap-2">
