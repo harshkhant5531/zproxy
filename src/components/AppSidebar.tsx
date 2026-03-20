@@ -165,7 +165,7 @@ export function AppSidebar() {
                   return (
                     <SidebarMenuItem
                       key={item.url}
-                      style={{ animationDelay: `${idx * 25}ms` }}
+                      
                     >
                       <SidebarMenuButton asChild tooltip={item.title}>
                         <NavLink

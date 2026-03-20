@@ -226,7 +226,7 @@ export default function LiveSession() {
               {session?.subject?.name || session?.course?.code} —{" "}
               {session?.topic}
             </h1>
-            <p className="page-header-sub flex items-center gap-2">
+            <p className="text-sm text-muted-foreground mt-1">
               <Clock className="h-3 w-3 text-primary/70" />
               {session?.date &&
                 format(new Date(session.date), "MMMM dd, yyyy")}{" "}
@@ -264,7 +264,7 @@ export default function LiveSession() {
                   size="sm"
                   onClick={() => endSessionMutation.mutate()}
                   disabled={endSessionMutation.isPending}
-                  className="font-bold uppercase tracking-widest shadow-sm motion-press"
+                  className="font-bold uppercase tracking-widest shadow-sm"
                 >
                   {endSessionMutation.isPending ? (
                     <>
@@ -282,7 +282,7 @@ export default function LiveSession() {
                 variant="outline"
                 size="sm"
                 onClick={copyAbsenteeReport}
-                className="border-emerald-500/50 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/10 font-bold uppercase tracking-widest motion-press"
+                className="border-emerald-500/50 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/10 font-bold uppercase tracking-widest"
               >
                 <RefreshCw className="mr-2 h-4 w-4" /> Copy Export
               </Button>
@@ -290,7 +290,7 @@ export default function LiveSession() {
           </div>
         </div>
 
-        <section className="relative overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/10 via-background to-background shadow-sm motion-slide-up">
+        <section className="relative overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/10 via-background to-background shadow-sm">
           <div className="pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full bg-primary/10 blur-3xl" />
           <div className="pointer-events-none absolute -left-20 bottom-0 h-40 w-40 rounded-full bg-primary/5 blur-3xl" />
 
@@ -371,7 +371,7 @@ export default function LiveSession() {
 
         {isCompleted && (
           <Card
-                        className="border-border bg-card shadow-sm motion-slide-up"
+                        className="border-border bg-card shadow-sm"
           >
             <CardHeader className="border-b border-border/50 pb-3">
               <CardTitle className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">
@@ -407,7 +407,7 @@ export default function LiveSession() {
         {/* ─── Proxy Suspects Alert ─────────────────────────────────────────── */}
         {proxyRecords.length > 0 && (
           <Card
-                        className="border-destructive/30 bg-destructive/5 shadow-sm overflow-hidden motion-slide-up"
+                        className="border-destructive/30 bg-destructive/5 shadow-sm overflow-hidden"
           >
             <CardHeader className="pb-2 px-6 pt-4 border-b border-destructive/20 bg-destructive/10">
               <CardTitle className="text-[11px] font-bold text-destructive uppercase tracking-widest flex items-center gap-2">
@@ -462,7 +462,7 @@ export default function LiveSession() {
 
         {showOverride && !isCompleted && (
           <Card
-                        className="bg-card border-primary/20 border shadow-md motion-slide-up"
+                        className="bg-card border-primary/20 border shadow-md"
           >
             <CardHeader>
               <CardTitle className="text-sm font-black text-foreground uppercase tracking-widest">
@@ -505,7 +505,7 @@ export default function LiveSession() {
                 <Button
                   onClick={handleManualOverride}
                   disabled={overrideMutation.isPending}
-                  className="bg-primary text-primary-foreground font-bold uppercase tracking-widest px-8 h-12 rounded-xl motion-press"
+                  className="bg-primary text-primary-foreground font-bold uppercase tracking-widest px-8 h-12 rounded-xl"
                 >
                   {overrideMutation.isPending ? (
                     <>
@@ -522,7 +522,7 @@ export default function LiveSession() {
         )}
 
         <Card
-                    className="border-border bg-card shadow-sm overflow-hidden motion-slide-up"
+                    className="border-border bg-card shadow-sm overflow-hidden"
         >
           <CardHeader className="border-b border-border px-6 py-4 bg-muted/30">
             <CardTitle className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">

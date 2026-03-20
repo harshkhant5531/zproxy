@@ -142,7 +142,7 @@ export default function AdminDashboard() {
       </div>
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="motion-page-enter" style={{ animationDelay: "30ms" }}>
+        <div className="" >
           <StatCard
             title="Total Students"
             value={studentsData?.length.toString() || "0"}
@@ -150,7 +150,7 @@ export default function AdminDashboard() {
             className=""
           />
         </div>
-        <div className="motion-page-enter" style={{ animationDelay: "90ms" }}>
+        <div className="" >
           <StatCard
             title="Staff Faculty"
             value={facultyData?.length.toString() || "0"}
@@ -158,7 +158,7 @@ export default function AdminDashboard() {
             className=""
           />
         </div>
-        <div className="motion-page-enter" style={{ animationDelay: "150ms" }}>
+        <div className="" >
           <StatCard
             title="Active Courses"
             value={coursesData?.length.toString() || "0"}
@@ -167,7 +167,7 @@ export default function AdminDashboard() {
             className="bg-card border border-border shadow-sm"
           />
         </div>
-        <div className="motion-page-enter" style={{ animationDelay: "210ms" }}>
+        <div className="" >
           <StatCard
             title="Avg Attendance"
             value={`${avgAttendance}%`}
@@ -262,8 +262,8 @@ export default function AdminDashboard() {
                 return (
                   <div
                     key={s.id}
-                    className="flex items-center justify-between rounded-xl bg-muted/30 border border-border/60 p-4 hover:border-destructive/30 transition-all hover:bg-muted/40 motion-page-enter"
-                    style={{ animationDelay: `${40 + i * 55}ms` }}
+                    className="flex items-center justify-between rounded-xl bg-muted/30 border border-border/60 p-4 hover:border-destructive/30 transition-all hover:bg-muted/40"
+                    
                   >
                     <div>
                       <p className="text-sm font-semibold text-foreground">
@@ -306,8 +306,8 @@ export default function AdminDashboard() {
         {deptData?.map((dept: any, i: number) => (
           <Card
             key={dept.department}
-            className="hover:scale-[1.01] transition-all duration-300 group overflow-hidden motion-page-enter"
-            style={{ animationDelay: `${60 + i * 45}ms` }}
+            className="hover:scale-[1.01] transition-all duration-300 group overflow-hidden"
+            
           >
             <CardContent className="p-5 relative">
               <div className="absolute top-0 right-0 w-20 h-20 bg-primary/5 rounded-full blur-2xl -mr-6 -mt-6 group-hover:bg-primary/10 transition-colors pointer-events-none" />

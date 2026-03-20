@@ -134,12 +134,12 @@ export default function CreateSession() {
       </div>
 
       <Card
-                className="bg-card border border-border shadow-sm relative overflow-hidden motion-fade-scale"
-        style={{ animationDelay: "100ms" }}
+                className="bg-card border border-border shadow-sm relative overflow-hidden"
+        
       >
         <CardContent className="p-8 space-y-8 relative">
           {step >= 1 && (
-            <div className="space-y-3 motion-slide-up">
+            <div className="space-y-3">
               <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em] ml-1">
                 Subject Module
               </Label>
@@ -178,8 +178,8 @@ export default function CreateSession() {
 
           {step >= 2 && subjectId && (
             <div
-              className="space-y-5 motion-slide-up"
-              style={{ animationDelay: "40ms" }}
+              className="space-y-5"
+              
             >
               <div className="space-y-4">
                 <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em] ml-1">
@@ -264,7 +264,7 @@ export default function CreateSession() {
           )}
 
           {step === 3 && topic && (
-            <div className="space-y-4 motion-fade-scale text-center pt-4">
+            <div className="space-y-4 text-center pt-4">
               <div className="p-4 bg-primary/5 border border-primary/20 rounded-xl text-left space-y-1 mb-4">
                 <p className="text-[10px] font-black text-primary uppercase tracking-[0.25em] text-center mb-3">
                   Ready for Deployment
@@ -306,7 +306,7 @@ export default function CreateSession() {
               </div>
               <Button
                 size="lg"
-                className="w-full h-14 font-semibold bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm hover:shadow-md transition-shadow motion-press"
+                className="w-full h-14 font-semibold bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm hover:shadow-md transition-shadow"
                 onClick={handleGenerate}
                 disabled={createSessionMutation.isPending}
               >

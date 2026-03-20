@@ -5,22 +5,31 @@ import { useAuth } from "@/contexts/AuthContext";
 import { authAPI } from "@/lib/api";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/components/ui/alert";
 import { toast } from "sonner";
 import {
   AlertTriangle,
-  BadgeCheck,
   Building2,
   IdCard,
   KeyRound,
   Mail,
   Save,
   ShieldCheck,
-  Sparkles,
   UserCircle2,
 } from "lucide-react";
 
@@ -115,30 +124,11 @@ export default function ProfilePage() {
     }));
   }, [user]);
 
-  const roleMeta = useMemo(() => {
-    if (!user) {
-      return { label: "User", accent: "text-primary", subtitle: "" };
-    }
-
-    switch (user.role) {
-      case "admin":
-        return {
-          label: "Admin Control",
-          accent: "text-warning dark:text-warning",
-          subtitle: "Platform governance, policy, and operational control",
-        };
-      case "faculty":
-        return {
-          label: "Faculty Identity",
-          accent: "text-primary",
-          subtitle: "Teaching profile, department context, and access data",
-        };
-      default:
-        return {
-          label: "Student Identity",
-          accent: "text-emerald-600 dark:text-emerald-400",
-          subtitle: "Academic record, profile details, and security controls",
-        };
+  const roleLabel = useMemo(() => {
+    switch (user?.role) {
+      case "admin": return "Administrator";
+      case "faculty": return "Faculty";
+      default: return "Student";
     }
   }, [user]);
 
@@ -179,7 +169,6 @@ export default function ProfilePage() {
       toast.error("New password must be at least 6 characters.");
       return;
     }
-
     setIsSavingPassword(true);
     try {
       await authAPI.updatePassword(
@@ -187,328 +176,193 @@ export default function ProfilePage() {
         passwordForm.newPassword,
       );
       await refreshUser();
-      setPasswordForm({
-        currentPassword: "",
-        newPassword: "",
-        confirmPassword: "",
-      });
+      setPasswordForm({ currentPassword: "", newPassword: "", confirmPassword: "" });
       toast.success(
         forcedPasswordChange
-          ? "Default password replaced. Your account is now secure."
+          ? "Default password replaced successfully."
           : "Password updated successfully.",
       );
     } catch (error: any) {
-      const detail =
+      toast.error(
         error.response?.data?.errors?.[0]?.msg ||
-        error.response?.data?.message ||
-        "Failed to update password.";
-      toast.error(detail);
+          error.response?.data?.message ||
+          "Failed to update password.",
+      );
     } finally {
       setIsSavingPassword(false);
     }
   };
 
   return (
-    <div className="space-y-6">
-      <section className="relative overflow-hidden rounded-2xl border border-border bg-card p-6 shadow-sm motion-page-enter">
-        <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-          <div className="flex items-start gap-5">
-            <div className="flex h-24 w-24 items-center justify-center rounded-2xl border border-primary/20 bg-primary/5 text-3xl font-bold text-primary shadow-inner">
-              {user.avatar ? (
-                <img
-                  src={user.avatar}
-                  alt={user.profile?.fullName || user.username}
-                  className="h-full w-full rounded-2xl object-cover"
-                />
-              ) : (
-                getInitials(user.profile?.fullName || user.username)
-              )}
-            </div>
-            <div className="space-y-4">
-              <div className="flex flex-wrap items-center gap-2">
-                <Badge className="rounded-md bg-primary/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-primary shadow-none border border-primary/20 hover:bg-primary/15">
-                  <Sparkles className="mr-1.5 h-3 w-3" /> {roleMeta.label}
-                </Badge>
-                <Badge
-                  variant="outline"
-                  className="rounded-md border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400"
-                >
-                  <BadgeCheck className="mr-1.5 h-3 w-3" />{" "}
-                  {user.status || "active"}
-                </Badge>
-                {user.requiresPasswordChange && (
-                  <Badge
-                    variant="outline"
-                    className="rounded-md border-amber-500/20 bg-amber-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400"
-                  >
-                    <AlertTriangle className="mr-1.5 h-3 w-3" /> Action Required
-                  </Badge>
+    <div className="space-y-6 p-6">
+      {/* Profile Header */}
+      <Card>
+        <CardContent className="pt-6">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+            <div className="flex items-center gap-4">
+              <div className="flex h-16 w-16 items-center justify-center rounded-full border bg-muted text-xl font-semibold">
+                {user.avatar ? (
+                  <img
+                    src={user.avatar}
+                    alt={user.profile?.fullName || user.username}
+                    className="h-full w-full rounded-full object-cover"
+                  />
+                ) : (
+                  getInitials(user.profile?.fullName || user.username)
                 )}
               </div>
               <div>
-                <h1 className="text-3xl font-bold tracking-tight text-foreground">
+                <h1 className="text-xl font-semibold">
                   {user.profile?.fullName || user.username}
                 </h1>
-                <p className={`mt-1 text-sm font-medium ${roleMeta.accent}`}>
-                  {roleMeta.subtitle}
-                </p>
-              </div>
-              <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
-                <span className="inline-flex items-center gap-2 rounded-lg border border-border bg-muted/30 px-3 py-1.5">
-                  <Mail className="h-3.5 w-3.5 text-primary" /> {user.email}
-                </span>
-                {user.profile?.department && (
-                  <span className="inline-flex items-center gap-2 rounded-lg border border-border bg-muted/30 px-3 py-1.5">
-                    <Building2 className="h-3.5 w-3.5 text-primary" />{" "}
-                    {user.profile.department}
-                  </span>
-                )}
+                <div className="mt-1 flex flex-wrap items-center gap-2">
+                  <Badge variant="secondary">{roleLabel}</Badge>
+                  <Badge variant="outline">{user.status || "active"}</Badge>
+                  {user.requiresPasswordChange && (
+                    <Badge variant="destructive">Password Required</Badge>
+                  )}
+                </div>
               </div>
             </div>
+            <div className="flex flex-wrap gap-2 text-sm text-muted-foreground">
+              <div className="flex items-center gap-2">
+                <Mail className="h-4 w-4" />
+                {user.email}
+              </div>
+              {user.profile?.department && (
+                <div className="flex items-center gap-2">
+                  <Building2 className="h-4 w-4" />
+                  {user.profile.department}
+                </div>
+              )}
+            </div>
           </div>
+        </CardContent>
+      </Card>
 
-          <div className="grid gap-3 sm:grid-cols-3 lg:w-[28rem] motion-stagger">
-            <Card
-                            className="app-card bg-muted/20 shadow-none"
-            >
-              <CardContent className="p-4">
-                <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                  Username
-                </p>
-                <p className="mt-2 text-sm font-semibold text-foreground">
-                  {user.username}
-                </p>
-              </CardContent>
-            </Card>
-            <Card
-                            className="app-card bg-muted/20 shadow-none"
-            >
-              <CardContent className="p-4">
-                <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                  Identifier
-                </p>
-                <p className="mt-2 text-sm font-semibold text-foreground">
-                  {user.profile?.enrollmentNumber ||
-                    user.profile?.employeeId ||
-                    `ID-${user.id}`}
-                </p>
-              </CardContent>
-            </Card>
-            <Card
-                            className="app-card bg-muted/20 shadow-none"
-            >
-              <CardContent className="p-4">
-                <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                  Security
-                </p>
-                <p className="mt-2 text-sm font-semibold text-foreground">
-                  {user.requiresPasswordChange ? "Action Needed" : "Secure"}
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
+      {/* Forced Password Change Alert */}
       {forcedPasswordChange && (
-        <section className="rounded-[1.75rem] border border-warning/30 bg-[linear-gradient(135deg,rgba(254,243,199,0.9),rgba(255,251,235,0.9))] p-5 shadow-[0_20px_70px_-45px_rgba(245,158,11,0.8)] dark:bg-warning/10">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-start gap-3">
-              <div className="mt-0.5 flex h-10 w-10 items-center justify-center rounded-2xl bg-warning/15 text-warning dark:text-warning">
-                <ShieldCheck className="h-5 w-5" />
-              </div>
-              <div>
-                <p className="text-sm font-black uppercase tracking-[0.16em] text-warning dark:text-warning/90">
-                  Password change required
-                </p>
-                <p className="mt-1 text-sm text-warning/90 dark:text-warning/80">
-                  This account is still using the seeded default password.
-                  Replace it now before using the rest of the system.
-                </p>
-              </div>
-            </div>
-            <Badge className="rounded-full bg-warning px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-white shadow-none hover:bg-warning">
-              student123 detected
-            </Badge>
-          </div>
-        </section>
+        <Alert variant="destructive">
+          <AlertTriangle className="h-4 w-4" />
+          <AlertTitle>Action Required</AlertTitle>
+          <AlertDescription>
+            Your account uses the default password. Please change it below before
+            accessing other features.
+          </AlertDescription>
+        </Alert>
       )}
 
       <div className="grid gap-6 xl:grid-cols-[1.3fr_0.9fr]">
-        <Card
-          className="app-card overflow-hidden motion-slide-up"
-          style={{ animationDelay: "150ms" }}
-        >
-          <CardHeader className="border-b border-border bg-muted/30">
-            <CardTitle className="flex items-center gap-3 text-lg font-bold tracking-tight">
-              <UserCircle2 className="h-5 w-5 text-primary" /> Profile Details
+        {/* Profile Details */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-base">
+              <UserCircle2 className="h-4 w-4 text-primary" />
+              Profile Details
             </CardTitle>
+            <CardDescription>Update your personal information</CardDescription>
           </CardHeader>
-          <CardContent className="p-6">
-            <form onSubmit={handleSaveProfile} className="space-y-6">
-              <div className="grid gap-5 md:grid-cols-2">
+          <CardContent>
+            <form onSubmit={handleSaveProfile} className="space-y-4">
+              <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">
-                    Full Name
-                  </Label>
+                  <Label>Full Name</Label>
                   <Input
                     value={profileForm.fullName}
-                    onChange={(event) =>
-                      handleProfileField("fullName", event.target.value)
-                    }
-                    className="h-11 rounded-xl border-border/70 bg-background/80"
+                    onChange={(e) => handleProfileField("fullName", e.target.value)}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">
-                    Username
-                  </Label>
+                  <Label>Username</Label>
                   <Input
                     value={profileForm.username}
-                    onChange={(event) =>
-                      handleProfileField("username", event.target.value)
-                    }
-                    className="h-11 rounded-xl border-border/70 bg-background/80"
+                    onChange={(e) => handleProfileField("username", e.target.value)}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">
-                    Email
-                  </Label>
+                  <Label>Email</Label>
                   <Input
                     type="email"
                     value={profileForm.email}
-                    onChange={(event) =>
-                      handleProfileField("email", event.target.value)
-                    }
-                    className="h-11 rounded-xl border-border/70 bg-background/80"
+                    onChange={(e) => handleProfileField("email", e.target.value)}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">
-                    Phone
-                  </Label>
+                  <Label>Phone</Label>
                   <Input
                     value={profileForm.phone}
-                    onChange={(event) =>
-                      handleProfileField("phone", event.target.value)
-                    }
-                    className="h-11 rounded-xl border-border/70 bg-background/80"
+                    onChange={(e) => handleProfileField("phone", e.target.value)}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">
-                    Department
-                  </Label>
+                  <Label>Department</Label>
                   <Input
                     value={profileForm.department}
-                    onChange={(event) =>
-                      handleProfileField("department", event.target.value)
-                    }
-                    className="h-11 rounded-xl border-border/70 bg-background/80"
+                    onChange={(e) => handleProfileField("department", e.target.value)}
                   />
                 </div>
                 {user.role === "faculty" && (
-                  <div className="space-y-2">
-                    <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">
-                      Designation
-                    </Label>
-                    <Input
-                      value={profileForm.designation}
-                      onChange={(event) =>
-                        handleProfileField("designation", event.target.value)
-                      }
-                      className="h-11 rounded-xl border-border/70 bg-background/80"
-                    />
-                  </div>
-                )}
-                {user.role === "faculty" && (
-                  <div className="space-y-2">
-                    <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">
-                      Qualification
-                    </Label>
-                    <Input
-                      value={profileForm.qualification}
-                      onChange={(event) =>
-                        handleProfileField("qualification", event.target.value)
-                      }
-                      className="h-11 rounded-xl border-border/70 bg-background/80"
-                    />
-                  </div>
-                )}
-                {user.role === "faculty" && (
-                  <div className="space-y-2 md:col-span-2">
-                    <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">
-                      Office Hours
-                    </Label>
-                    <Input
-                      value={profileForm.officeHours}
-                      onChange={(event) =>
-                        handleProfileField("officeHours", event.target.value)
-                      }
-                      className="h-11 rounded-xl border-border/70 bg-background/80"
-                    />
-                  </div>
+                  <>
+                    <div className="space-y-2">
+                      <Label>Designation</Label>
+                      <Input
+                        value={profileForm.designation}
+                        onChange={(e) => handleProfileField("designation", e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Qualification</Label>
+                      <Input
+                        value={profileForm.qualification}
+                        onChange={(e) => handleProfileField("qualification", e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2 md:col-span-2">
+                      <Label>Office Hours</Label>
+                      <Input
+                        value={profileForm.officeHours}
+                        onChange={(e) => handleProfileField("officeHours", e.target.value)}
+                        placeholder="e.g. Mon-Fri, 10am–12pm"
+                      />
+                    </div>
+                  </>
                 )}
                 {user.role === "student" && (
-                  <div className="space-y-2">
-                    <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">
-                      Parent Phone
-                    </Label>
-                    <Input
-                      value={profileForm.parentPhone}
-                      onChange={(event) =>
-                        handleProfileField("parentPhone", event.target.value)
-                      }
-                      className="h-11 rounded-xl border-border/70 bg-background/80"
-                    />
-                  </div>
-                )}
-                {user.role === "student" && (
-                  <div className="space-y-2">
-                    <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">
-                      Parent Email
-                    </Label>
-                    <Input
-                      type="email"
-                      value={profileForm.parentEmail}
-                      onChange={(event) =>
-                        handleProfileField("parentEmail", event.target.value)
-                      }
-                      className="h-12 rounded-2xl border-border/70 bg-background/80"
-                    />
-                  </div>
+                  <>
+                    <div className="space-y-2">
+                      <Label>Parent Phone</Label>
+                      <Input
+                        value={profileForm.parentPhone}
+                        onChange={(e) => handleProfileField("parentPhone", e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Parent Email</Label>
+                      <Input
+                        type="email"
+                        value={profileForm.parentEmail}
+                        onChange={(e) => handleProfileField("parentEmail", e.target.value)}
+                      />
+                    </div>
+                  </>
                 )}
                 <div className="space-y-2 md:col-span-2">
-                  <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">
-                    Address
-                  </Label>
+                  <Label>Address</Label>
                   <Input
                     value={profileForm.address}
-                    onChange={(event) =>
-                      handleProfileField("address", event.target.value)
-                    }
-                    className="h-11 rounded-xl border-border/70 bg-background/80"
+                    onChange={(e) => handleProfileField("address", e.target.value)}
                   />
                 </div>
                 <div className="space-y-2 md:col-span-2">
-                  <Label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                    Bio
-                  </Label>
+                  <Label>Bio</Label>
                   <Textarea
                     value={profileForm.bio}
-                    onChange={(event) =>
-                      handleProfileField("bio", event.target.value)
-                    }
-                    className="min-h-[120px] rounded-xl border-border bg-muted/10 px-4 py-3 focus:bg-background transition-colors"
+                    onChange={(e) => handleProfileField("bio", e.target.value)}
+                    className="min-h-[100px]"
                   />
                 </div>
               </div>
-              <Button
-                type="submit"
-                disabled={isSavingProfile}
-                className="h-11 rounded-lg px-6 text-sm font-bold shadow-sm motion-press"
-              >
+              <Button type="submit" disabled={isSavingProfile}>
                 <Save className="mr-2 h-4 w-4" />
                 {isSavingProfile ? "Saving..." : "Save Profile"}
               </Button>
@@ -517,81 +371,47 @@ export default function ProfilePage() {
         </Card>
 
         <div className="space-y-6">
-          <Card
-            className="app-card overflow-hidden motion-slide-up"
-            style={{ animationDelay: "200ms" }}
-          >
-            <CardHeader className="border-b border-border bg-muted/30">
-              <CardTitle className="flex items-center gap-3 text-lg font-bold tracking-tight">
-                <KeyRound className="h-5 w-5 text-amber-500" /> Security
-                Settings
+          {/* Security Settings */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-base">
+                <KeyRound className="h-4 w-4 text-primary" />
+                Security Settings
               </CardTitle>
+              <CardDescription>Change your account password</CardDescription>
             </CardHeader>
-            <CardContent className="p-6">
-              <form onSubmit={handleChangePassword} className="space-y-5">
-                <div className="rounded-[1.5rem] border border-primary/15 bg-primary/8 p-4">
-                  <p className="text-[10px] font-black uppercase tracking-[0.16em] text-primary">
-                    Security Policy
-                  </p>
-                  <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                    {forcedPasswordChange
-                      ? "Your account is blocked from normal navigation until the default password is replaced."
-                      : "Update your password regularly and avoid reusing institutional credentials elsewhere."}
-                  </p>
-                </div>
-
+            <CardContent>
+              <form onSubmit={handleChangePassword} className="space-y-4">
                 {!isGoogleUser && (
                   <div className="space-y-2">
-                    <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">
-                      Current Password
-                    </Label>
+                    <Label>Current Password</Label>
                     <Input
                       type="password"
                       value={passwordForm.currentPassword}
-                      onChange={(event) =>
-                        handlePasswordField(
-                          "currentPassword",
-                          event.target.value,
-                        )
-                      }
-                      className="h-12 rounded-2xl border-border/70 bg-background/80"
+                      onChange={(e) => handlePasswordField("currentPassword", e.target.value)}
                       required
                     />
                   </div>
                 )}
                 <div className="space-y-2">
-                  <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">
-                    New Password
-                  </Label>
+                  <Label>New Password</Label>
                   <Input
                     type="password"
                     value={passwordForm.newPassword}
-                    onChange={(event) =>
-                      handlePasswordField("newPassword", event.target.value)
-                    }
-                    className="h-12 rounded-2xl border-border/70 bg-background/80"
+                    onChange={(e) => handlePasswordField("newPassword", e.target.value)}
                     required
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">
-                    Confirm New Password
-                  </Label>
+                  <Label>Confirm New Password</Label>
                   <Input
                     type="password"
                     value={passwordForm.confirmPassword}
-                    onChange={(event) =>
-                      handlePasswordField("confirmPassword", event.target.value)
-                    }
-                    className="h-12 rounded-2xl border-border/70 bg-background/80"
+                    onChange={(e) => handlePasswordField("confirmPassword", e.target.value)}
                     required
                   />
                 </div>
-                <Button
-                  type="submit"
-                  disabled={isSavingPassword}
-                  className="h-11 w-full rounded-xl text-sm font-semibold uppercase tracking-[0.08em] shadow-lg shadow-success/20"
-                >
+                <Button type="submit" disabled={isSavingPassword} className="w-full">
                   <ShieldCheck className="mr-2 h-4 w-4" />
                   {isSavingPassword ? "Updating..." : "Update Password"}
                 </Button>
@@ -599,52 +419,36 @@ export default function ProfilePage() {
             </CardContent>
           </Card>
 
-          <Card
-            className="app-card motion-slide-up"
-            style={{ animationDelay: "250ms" }}
-          >
-            <CardHeader className="pb-3 px-6 pt-6">
-              <CardTitle className="flex items-center gap-3 text-lg font-bold tracking-tight">
-                <IdCard className="h-5 w-5 text-primary" /> Identity Snapshot
+          {/* Identity Snapshot */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-base">
+                <IdCard className="h-4 w-4 text-primary" />
+                Identity Summary
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4 text-sm px-6 pb-6">
-              <div className="space-y-2">
-                <div className="flex items-center justify-between gap-3 rounded-lg border border-border bg-muted/20 px-4 py-2.5">
-                  <span className="text-muted-foreground font-medium">
-                    Role
-                  </span>
-                  <span className="font-bold capitalize text-primary">
-                    {user.role}
-                  </span>
+            <CardContent className="space-y-3">
+              {[
+                { label: "Role", value: user.role },
+                { label: "Department", value: user.profile?.department || "Not set" },
+                { label: "Phone", value: user.profile?.phone || "Not set" },
+                {
+                  label: "ID",
+                  value:
+                    user.profile?.enrollmentNumber ||
+                    user.profile?.employeeId ||
+                    `ID-${user.id}`,
+                },
+              ].map(({ label, value }) => (
+                <div key={label} className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">{label}</span>
+                  <span className="text-sm font-medium">{value}</span>
                 </div>
-                <div className="flex items-center justify-between gap-3 rounded-lg border border-border bg-muted/20 px-4 py-2.5">
-                  <span className="text-muted-foreground font-medium">
-                    Department
-                  </span>
-                  <span className="font-bold text-foreground">
-                    {user.profile?.department || "Not set"}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between gap-3 rounded-lg border border-border bg-muted/20 px-4 py-2.5">
-                  <span className="text-muted-foreground font-medium">
-                    Phone
-                  </span>
-                  <span className="font-bold text-foreground">
-                    {user.profile?.phone || "Not set"}
-                  </span>
-                </div>
-              </div>
-              <Separator className="bg-border" />
-              <div className="rounded-xl border border-primary/20 bg-primary/5 p-4">
-                <p className="text-[10px] font-bold uppercase tracking-wider text-primary">
-                  Account Guidance
-                </p>
-                <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                  Keep contact and department details up to date for leave
-                  approvals, timetable mapping, and institutional notifications.
-                </p>
-              </div>
+              ))}
+              <Separator />
+              <p className="text-xs text-muted-foreground">
+                Keep your details up to date for notifications and leave approvals.
+              </p>
             </CardContent>
           </Card>
         </div>

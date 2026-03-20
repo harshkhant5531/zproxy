@@ -132,7 +132,7 @@ export default function LeaveManagement() {
 
       {showForm && (
         <Card
-                    className="app-card border-primary/20 motion-slide-up"
+                    className="app-card border-primary/20"
         >
           <CardHeader className="pb-3 px-6">
             <CardTitle className="text-sm font-bold text-primary uppercase tracking-widest">
@@ -223,7 +223,7 @@ export default function LeaveManagement() {
       )}
 
       <Card
-                className="app-card overflow-hidden motion-slide-up"
+                className="app-card overflow-hidden"
       >
         <CardHeader className="pb-3 px-6">
           <CardTitle className="text-sm font-bold text-foreground/90 flex items-center gap-2 uppercase tracking-widest">

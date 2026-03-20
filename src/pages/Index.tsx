@@ -199,7 +199,7 @@ const Index = () => {
           </header>
 
           <div className="mt-5 grid flex-1 grid-cols-1 gap-5 lg:grid-cols-[1.15fr_0.85fr]">
-            <section className="rounded-3xl border border-border/70 bg-card/70 p-6 sm:p-8 lg:p-10 backdrop-blur motion-fade-scale">
+            <section className="rounded-3xl border border-border/70 bg-card/70 p-6 sm:p-8 lg:p-10 backdrop-blur">
               <div className="max-w-2xl">
                 <Badge className="mb-4 rounded-full bg-primary/15 text-primary border border-primary/25">
                   <Sparkles className="mr-1 h-3.5 w-3.5" /> Attendance Portal
@@ -248,7 +248,7 @@ const Index = () => {
             </section>
 
             <section className="flex items-center">
-              <Card className="w-full rounded-3xl border-border/80 bg-card motion-fade-scale">
+              <Card className="w-full rounded-3xl border-border/80 bg-card">
                 <CardHeader className="space-y-3 pb-2">
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-2xl tracking-tight">
@@ -342,7 +342,7 @@ const Index = () => {
                   <CardFooter className="flex flex-col gap-4 pt-2">
                     <Button
                       type="submit"
-                      className="w-full font-semibold h-11 rounded-xl text-sm shadow-sm hover:shadow-md transition-shadow motion-press"
+                      className="w-full font-semibold h-11 rounded-xl text-sm shadow-sm hover:shadow-md transition-shadow"
                       disabled={isSubmitting}
                     >
                       {isSubmitting ? (
