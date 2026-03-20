@@ -89,7 +89,7 @@ export default function FacultyDashboard() {
 
   if (isLoading) {
     return (
-      <div className="app-page min-h-[60vh] flex items-center justify-center">
+      <div className="min-h-[60vh] flex items-center justify-center">
         <div className="flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-3">
           <Loader2 className="h-4 w-4 animate-spin text-primary" />
           <span className="text-sm text-muted-foreground">
@@ -101,10 +101,10 @@ export default function FacultyDashboard() {
   }
 
   return (
-    <div className="app-page">
-      <div className="app-page-header">
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <h1 className="page-header-title">Faculty Dashboard</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Faculty Dashboard</h1>
           <p className="page-header-sub flex items-center gap-2 mt-1.5 font-medium">
             <span className="h-2 w-2 rounded-full bg-primary" />
             Signed in as {user?.profile?.fullName || user?.username}
@@ -202,10 +202,9 @@ export default function FacultyDashboard() {
 
       {/* Today's Sessions */}
       <Card
-        variant="elevated"
-        className="app-card motion-surface overflow-hidden"
+                className="app-card overflow-hidden"
       >
-        <CardHeader className="card-header-muted">
+        <CardHeader className="border-b bg-muted/40 px-6 py-4">
           <CardTitle className="text-sm font-semibold text-foreground flex items-center gap-2">
             <Clock className="h-4 w-4 text-primary" /> Today's Schedule
           </CardTitle>
@@ -273,7 +272,7 @@ export default function FacultyDashboard() {
       </Card>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card variant="elevated" className="app-card">
+        <Card className="">
           <CardHeader className="bg-muted/30 border-b border-border px-6 py-4">
             <CardTitle className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">
               Performance Metrics // Attainment
@@ -324,7 +323,7 @@ export default function FacultyDashboard() {
           </CardContent>
         </Card>
 
-        <Card variant="elevated" className="app-card">
+        <Card className="">
           <CardHeader className="bg-muted/30 border-b border-border px-6 py-4">
             <CardTitle className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">
               Telemetry Feed // Recent Activity

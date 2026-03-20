@@ -24,7 +24,7 @@ export function StatCard({
   return (
     <Card
       className={cn(
-        "app-card stat-card-enter motion-surface group relative overflow-hidden",
+        "relative overflow-hidden group transition-all duration-300 hover:shadow-md",
         className,
       )}
     >
@@ -35,7 +35,7 @@ export function StatCard({
             <p className="text-[10px] uppercase tracking-[0.12em] font-semibold text-muted-foreground truncate">
               {title}
             </p>
-            <p className="text-3xl font-bold tracking-tight text-foreground motion-stat leading-none">
+            <p className="text-3xl font-bold tracking-tight text-foreground leading-none">
               {value}
             </p>
             {subtitle && (
@@ -62,7 +62,7 @@ export function StatCard({
           </div>
           <div
             className={cn(
-              "rounded-2xl bg-primary/10 dark:bg-primary/15 p-3 border border-primary/20 flex-shrink-0 transition-all duration-300 group-hover:bg-primary/20 group-hover:scale-110",
+              "rounded-xl bg-primary/10 dark:bg-primary/15 p-3 border border-primary/20 flex-shrink-0 transition-all duration-300 group-hover:bg-primary/20 group-hover:scale-110",
               iconClassName,
             )}
           >

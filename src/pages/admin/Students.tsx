@@ -226,14 +226,14 @@ export default function StudentManagement() {
   const students = Array.isArray(userData) ? userData : [];
 
   return (
-    <div className="app-page">
-      <div className="app-page-header">
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <h1 className="page-header-title flex items-center gap-2">
+          <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
             <Shield className="h-6 w-6 text-primary" />
             Student Registry
           </h1>
-          <p className="page-header-sub">
+          <p className="text-sm text-muted-foreground mt-1">
             {isLoading
               ? "Loading student records..."
               : `${students.length} student records`}
@@ -256,11 +256,8 @@ export default function StudentManagement() {
         </div>
       </div>
 
-      <Card
-        variant="elevated"
-        className="bg-card border border-border shadow-sm motion-surface overflow-hidden"
-      >
-        <CardHeader className="card-header-muted pb-4">
+      <Card className="bg-card border shadow-sm overflow-hidden">
+        <CardHeader className="border-b bg-muted/40 px-6 py-4 pb-4">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="relative w-full md:max-w-md group">
               {isFetching ? (

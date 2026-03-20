@@ -37,7 +37,7 @@ export default function ShortageAlerts() {
 
   if (isUsersLoading || isAttLoading) {
     return (
-      <div className="app-page min-h-[60vh] flex items-center justify-center">
+      <div className="min-h-[60vh] flex items-center justify-center">
         <div className="flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-3">
           <Loader2 className="h-4 w-4 animate-spin text-primary" />
           <span className="text-sm text-muted-foreground">
@@ -71,14 +71,14 @@ export default function ShortageAlerts() {
     .sort((a, b) => a.attendance - b.attendance);
 
   return (
-    <div className="app-page">
-      <div className="app-page-header">
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <h1 className="page-header-title flex items-center gap-2">
+          <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
             <ShieldAlert className="h-5 w-5 text-destructive" /> Attendance
             Alerts
           </h1>
-          <p className="page-header-sub">
+          <p className="text-sm text-muted-foreground mt-1">
             Monitor students below attendance threshold
           </p>
         </div>
@@ -88,8 +88,7 @@ export default function ShortageAlerts() {
       </div>
 
       <Card
-        variant="elevated"
-        className="app-card border-destructive/25 overflow-hidden relative"
+                className="app-card border-destructive/25 overflow-hidden relative"
       >
         <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-rose-600 to-transparent" />
         <CardContent className="p-0">

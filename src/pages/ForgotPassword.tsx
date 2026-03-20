@@ -60,14 +60,14 @@ export default function ForgotPassword() {
 
       <div className="relative z-10 mx-auto flex min-h-screen max-w-6xl items-center justify-center px-6 py-10">
         <div className="grid w-full gap-8 lg:grid-cols-[1.2fr_0.9fr]">
-          <div className="hidden rounded-[2rem] border border-border/50 bg-white/60 p-10 shadow-2xl lg:block">
+          <div className="hidden rounded-[2rem] border border-border/50 bg-card p-10 shadow-2xl lg:block">
             <div className="mb-10 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-4 py-2 text-[11px] font-black uppercase tracking-[0.18em] text-primary">
               <Sparkles className="h-3.5 w-3.5" /> Account Recovery
             </div>
-            <h1 className="max-w-xl text-5xl font-black leading-[1.02] tracking-[-0.04em] text-slate-950">
+            <h1 className="max-w-xl text-5xl font-black leading-[1.02] tracking-[-0.04em] text-foreground">
               Reset access without breaking the rest of your workflow.
             </h1>
-            <p className="mt-5 max-w-xl text-base leading-7 text-slate-600">
+            <p className="mt-5 max-w-xl text-base leading-7 text-muted-foreground">
               Generate a secure reset link, hand it off, and get the account
               back into a healthy state quickly. The experience is optimized for
               the institutional light theme first.
@@ -81,21 +81,18 @@ export default function ForgotPassword() {
               ].map(([title, subtitle]) => (
                 <div
                   key={title}
-                  className="rounded-2xl border border-slate-200 bg-white/80 p-5 shadow-sm"
+                  className="rounded-2xl border bg-card p-5 shadow-sm"
                 >
-                  <p className="text-sm font-black uppercase tracking-[0.12em] text-slate-900">
+                  <p className="text-sm font-black uppercase tracking-[0.12em] text-foreground">
                     {title}
                   </p>
-                  <p className="mt-1 text-sm text-slate-600">{subtitle}</p>
+                  <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>
                 </div>
               ))}
             </div>
           </div>
 
-          <Card
-            variant="elevated"
-            className="border border-border/60 bg-card/85 shadow-2xl"
-          >
+          <Card className="border border-border/60 bg-card shadow-2xl">
             <CardHeader className="space-y-3 pb-3">
               <Link
                 to="/login"
@@ -146,7 +143,7 @@ export default function ForgotPassword() {
                       <p className="text-[11px] font-black uppercase tracking-[0.16em] text-emerald-600">
                         Reset Link Ready
                       </p>
-                      <p className="mt-1 text-sm text-slate-700 dark:text-slate-300">
+                      <p className="mt-1 text-sm text-muted-foreground">
                         {expiresIn
                           ? `Valid for ${expiresIn}.`
                           : "Use this link to reset the password."}
@@ -154,7 +151,7 @@ export default function ForgotPassword() {
                     </div>
                     <Link2 className="mt-0.5 h-4 w-4 text-emerald-600" />
                   </div>
-                  <div className="rounded-2xl border border-success/20 bg-white/80 p-4 text-xs leading-6 text-slate-700 shadow-sm dark:bg-background/70 dark:text-slate-200 break-all">
+                  <div className="rounded-2xl border border-success/20 bg-background p-4 text-xs leading-6 text-foreground shadow-sm break-all">
                     {resetUrl}
                   </div>
                   <div className="flex gap-3">

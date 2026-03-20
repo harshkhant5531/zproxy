@@ -133,7 +133,7 @@ export default function Analytics() {
 
   if (isPerfLoading || isSessionsLoading) {
     return (
-      <div className="app-page min-h-[60vh] flex items-center justify-center">
+      <div className="min-h-[60vh] flex items-center justify-center">
         <div className="flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-3">
           <Loader2 className="h-4 w-4 animate-spin text-primary" />
           <span className="text-sm text-muted-foreground">
@@ -145,15 +145,15 @@ export default function Analytics() {
   }
 
   return (
-    <div className="app-page">
-      <div className="app-page-header">
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <h1 className="page-header-title">Analytics Overview</h1>
-          <p className="page-header-sub">
+          <h1 className="text-2xl font-bold tracking-tight">Analytics Overview</h1>
+          <p className="text-sm text-muted-foreground mt-1">
             Live analytics for course outcomes and engagement
           </p>
         </div>
-        <Card variant="glass" className="motion-surface px-6 py-3 rounded-xl">
+        <Card className="motion-surface px-6 py-3 rounded-xl">
           <CardContent className="p-0 flex flex-col items-end">
             <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">
               Performance Index
@@ -167,7 +167,7 @@ export default function Analytics() {
       </div>
 
       <div className="grid gap-3 md:grid-cols-4">
-        <Card variant="glass" className="border border-border/70 bg-card/70">
+        <Card className="border border-border/70 bg-card/70">
           <CardContent className="p-4">
             <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
               Completed Sessions
@@ -177,7 +177,7 @@ export default function Analytics() {
             </p>
           </CardContent>
         </Card>
-        <Card variant="glass" className="border border-border/70 bg-card/70">
+        <Card className="border border-border/70 bg-card/70">
           <CardContent className="p-4">
             <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
               Completion Rate
@@ -187,7 +187,7 @@ export default function Analytics() {
             </p>
           </CardContent>
         </Card>
-        <Card variant="glass" className="border border-border/70 bg-card/70">
+        <Card className="border border-border/70 bg-card/70">
           <CardContent className="p-4">
             <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
               Avg Present Rate
@@ -197,7 +197,7 @@ export default function Analytics() {
             </p>
           </CardContent>
         </Card>
-        <Card variant="glass" className="border border-border/70 bg-card/70">
+        <Card className="border border-border/70 bg-card/70">
           <CardContent className="p-4">
             <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
               Tracked Students
@@ -211,8 +211,7 @@ export default function Analytics() {
 
       <div className="grid gap-8 lg:grid-cols-2">
         <Card
-          variant="elevated"
-          className="bg-card border border-border shadow-sm motion-surface overflow-hidden group"
+                    className="bg-card border border-border shadow-sm overflow-hidden group"
         >
           <CardHeader className="bg-muted/30 border-b border-border px-6 py-4">
             <CardTitle className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
@@ -260,8 +259,7 @@ export default function Analytics() {
         </Card>
 
         <Card
-          variant="elevated"
-          className="bg-card border border-border shadow-sm motion-surface overflow-hidden group"
+                    className="bg-card border border-border shadow-sm overflow-hidden group"
         >
           <CardHeader className="bg-muted/30 border-b border-border px-6 py-4">
             <CardTitle className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
@@ -300,8 +298,7 @@ export default function Analytics() {
         </Card>
 
         <Card
-          variant="elevated"
-          className="bg-card border border-border shadow-sm motion-surface lg:col-span-2 overflow-hidden"
+                    className="bg-card border border-border shadow-sm lg:col-span-2 overflow-hidden"
         >
           <CardHeader className="bg-muted/30 border-b border-border px-8 py-5 flex flex-row items-center justify-between">
             <CardTitle className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">

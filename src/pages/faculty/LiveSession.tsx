@@ -206,7 +206,7 @@ export default function LiveSession() {
 
   if (isSessionLoading || !session) {
     return (
-      <div className="app-page min-h-[60vh] flex items-center justify-center">
+      <div className="min-h-[60vh] flex items-center justify-center">
         <div className="flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-3">
           <Loader2 className="h-4 w-4 animate-spin text-primary" />
           <span className="text-sm text-muted-foreground">
@@ -219,10 +219,10 @@ export default function LiveSession() {
 
   return (
     <>
-      <div className="app-page space-y-6">
-        <div className="app-page-header">
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div>
-            <h1 className="page-header-title">
+            <h1 className="text-2xl font-bold tracking-tight">
               {session?.subject?.name || session?.course?.code} —{" "}
               {session?.topic}
             </h1>
@@ -371,8 +371,7 @@ export default function LiveSession() {
 
         {isCompleted && (
           <Card
-            variant="elevated"
-            className="border-border bg-card shadow-sm motion-slide-up"
+                        className="border-border bg-card shadow-sm motion-slide-up"
           >
             <CardHeader className="border-b border-border/50 pb-3">
               <CardTitle className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">
@@ -408,8 +407,7 @@ export default function LiveSession() {
         {/* ─── Proxy Suspects Alert ─────────────────────────────────────────── */}
         {proxyRecords.length > 0 && (
           <Card
-            variant="elevated"
-            className="border-destructive/30 bg-destructive/5 shadow-sm overflow-hidden motion-slide-up"
+                        className="border-destructive/30 bg-destructive/5 shadow-sm overflow-hidden motion-slide-up"
           >
             <CardHeader className="pb-2 px-6 pt-4 border-b border-destructive/20 bg-destructive/10">
               <CardTitle className="text-[11px] font-bold text-destructive uppercase tracking-widest flex items-center gap-2">
@@ -464,8 +462,7 @@ export default function LiveSession() {
 
         {showOverride && !isCompleted && (
           <Card
-            variant="elevated"
-            className="bg-card border-primary/20 border shadow-md motion-slide-up"
+                        className="bg-card border-primary/20 border shadow-md motion-slide-up"
           >
             <CardHeader>
               <CardTitle className="text-sm font-black text-foreground uppercase tracking-widest">
@@ -525,8 +522,7 @@ export default function LiveSession() {
         )}
 
         <Card
-          variant="elevated"
-          className="border-border bg-card shadow-sm overflow-hidden motion-slide-up"
+                    className="border-border bg-card shadow-sm overflow-hidden motion-slide-up"
         >
           <CardHeader className="border-b border-border px-6 py-4 bg-muted/30">
             <CardTitle className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">

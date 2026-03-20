@@ -178,7 +178,7 @@ export default function CourseManagement() {
 
   if (isLoading) {
     return (
-      <div className="app-page min-h-[60vh] flex items-center justify-center">
+      <div className="min-h-[60vh] flex items-center justify-center">
         <div className="flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-3">
           <Loader2 className="h-4 w-4 animate-spin text-primary" />
           <span className="text-sm text-muted-foreground">
@@ -190,14 +190,14 @@ export default function CourseManagement() {
   }
 
   return (
-    <div className="app-page">
-      <div className="app-page-header">
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <h1 className="page-header-title flex items-center gap-2">
+          <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
             <BookOpen className="h-5 w-5 text-primary" />
             Course Management
           </h1>
-          <p className="page-header-sub">
+          <p className="text-sm text-muted-foreground mt-1">
             Manage courses and subject assignments
           </p>
         </div>
@@ -350,8 +350,7 @@ export default function CourseManagement() {
       </div>
 
       <Card
-        variant="elevated"
-        className="bg-card/75 border-border/60 shadow-2xl overflow-hidden"
+                className="bg-card/75 border-border/60 shadow-2xl overflow-hidden"
       >
         <CardContent className="p-0">
           <Table>
