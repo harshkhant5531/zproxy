@@ -48,6 +48,27 @@ import {
 import { toast } from "sonner";
 
 const DAY_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const ATTENDANCE_EARLY_WINDOW_MINUTES = 10;
+const ATTENDANCE_LATE_GRACE_MINUTES = 10;
+
+const parseClockTimeToMinutes = (value?: string | null): number | null => {
+  if (!value) return null;
+  const match = value.match(/^(\d{1,2}):(\d{2})/);
+  if (!match) return null;
+  const hours = Number.parseInt(match[1], 10);
+  const minutes = Number.parseInt(match[2], 10);
+  if (
+    Number.isNaN(hours) ||
+    Number.isNaN(minutes) ||
+    hours < 0 ||
+    hours > 23 ||
+    minutes < 0 ||
+    minutes > 59
+  ) {
+    return null;
+  }
+  return hours * 60 + minutes;
+};
 
 export default function StudentDashboard() {
   const { user } = useAuth();
@@ -125,8 +146,22 @@ export default function StudentDashboard() {
         deviceInfo,
       });
     },
-    onSuccess: () => {
-      toast.success("Attendance marked successfully");
+    onSuccess: (resp: any) => {
+      const attendance = resp?.data?.data?.attendance;
+      const wasProxyFlagged =
+        attendance?.status === "absent" &&
+        typeof attendance?.notes === "string" &&
+        attendance.notes.includes("[PROXY_");
+
+      if (wasProxyFlagged) {
+        toast.error("Attendance flagged for security review", {
+          description:
+            "Check-in was recorded as absent due to a proxy-risk signal.",
+        });
+      } else {
+        toast.success("Attendance marked successfully");
+      }
+
       queryClient.invalidateQueries({
         queryKey: ["student", "attendance-logs"],
       });
@@ -138,17 +173,70 @@ export default function StudentDashboard() {
       });
     },
     onError: (error: any) => {
-      if (error?.response?.status === 409) {
+      const reason = error?.response?.data?.reason;
+      const message = error?.response?.data?.message;
+
+      if (reason === "duplicate_attendance") {
         toast.info("Attendance already marked for this session");
         return;
       }
-      toast.error(
-        error?.response?.data?.message || "Failed to mark attendance",
-      );
+
+      if (reason === "proxy_same_device_session") {
+        toast.error("Attendance blocked by security checks", {
+          description:
+            "This device fingerprint was already used by another student in this session.",
+        });
+        return;
+      }
+
+      if (reason === "session_not_started") {
+        toast.info(message || "Check-in has not opened yet for this session.");
+        return;
+      }
+
+      if (
+        reason === "session_checkin_window_closed" ||
+        reason === "session_closed" ||
+        reason === "attendance_not_on_session_day"
+      ) {
+        toast.error(message || "Check-in window is closed for this session.");
+        return;
+      }
+
+      if (reason === "missing_device_fingerprint") {
+        toast.error("Device verification data is missing. Refresh and retry.");
+        return;
+      }
+
+      if (reason === "outside_campus_wifi") {
+        toast.error("Connect to campus WiFi to mark attendance", {
+          description:
+            message ||
+            "Attendance check-in is allowed only from the approved campus network.",
+        });
+        return;
+      }
+
+      toast.error(message || "Failed to mark attendance");
     },
   });
 
   const now = new Date();
+  const nowMinutes = now.getHours() * 60 + now.getMinutes();
+  const openSessions = activeSessions.filter((session: any) => {
+    if (session?.status === "completed") return false;
+
+    const startMinutes = parseClockTimeToMinutes(session?.startTime);
+    const endMinutes = parseClockTimeToMinutes(session?.endTime);
+
+    if (startMinutes === null || endMinutes === null) return true;
+
+    return (
+      nowMinutes >= startMinutes - ATTENDANCE_EARLY_WINDOW_MINUTES &&
+      nowMinutes <= endMinutes + ATTENDANCE_LATE_GRACE_MINUTES
+    );
+  });
+
   const weekStart = startOfWeek(now, { weekStartsOn: 1 });
   const weekEnd = endOfWeek(now, { weekStartsOn: 1 });
 
@@ -231,16 +319,16 @@ export default function StudentDashboard() {
             Mark Attendance
           </CardTitle>
           <CardDescription>
-            {activeSessions.length > 0
-              ? `${activeSessions.length} active session(s) open for check-in`
+            {openSessions.length > 0
+              ? `${openSessions.length} active session(s) open for check-in`
               : "No active sessions right now"}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
-          {activeSessions.length > 0 ? (
-            activeSessions.map((session: any) => {
+          {openSessions.length > 0 ? (
+            openSessions.map((session: any) => {
               const alreadyMarked = records.some(
-                (r: any) => r.sessionId === session.id,
+                (r: any) => Number(r.sessionId) === Number(session.id),
               );
               const isMarkingCurrent =
                 markAttendanceMutation.isPending &&
@@ -299,24 +387,28 @@ export default function StudentDashboard() {
           title="Overall Attendance"
           value={`${attendanceStats?.attendanceRate || 0}%`}
           icon={GraduationCap}
+          className="h-full"
         />
         <StatCard
           title="This Week"
           value={weeklyData.reduce((a, d) => a + d.present, 0).toString()}
           subtitle={`of ${weeklyData.reduce((a, d) => a + d.total, 0)} classes`}
           icon={CalendarCheck}
+          className="h-full"
         />
         <StatCard
           title="Total Present"
           value={attendanceStats?.presentCount?.toString() || "0"}
           subtitle="This semester"
           icon={Clock}
+          className="h-full"
         />
         <StatCard
           title="Flagged Courses"
           value={flaggedCourses.length.toString()}
           subtitle="Below 75%"
           icon={TrendingUp}
+          className="h-full"
         />
       </div>
 
