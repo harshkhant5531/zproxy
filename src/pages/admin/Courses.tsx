@@ -190,7 +190,7 @@ export default function CourseManagement() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
@@ -349,9 +349,7 @@ export default function CourseManagement() {
         />
       </div>
 
-      <Card
-                className="bg-card/75 border-border/60 shadow-2xl overflow-hidden"
-      >
+      <Card className="bg-card/75 border-border/60 shadow-2xl overflow-hidden">
         <CardContent className="p-0">
           <Table>
             <TableHeader className="bg-muted/35 dark:bg-muted/20">

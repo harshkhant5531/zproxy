@@ -97,11 +97,13 @@ export default function CreateSession() {
   }
 
   return (
-    <div className="space-y-6 max-w-2xl mx-auto">
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 text-center sm:text-left">
+    <div className="space-y-6 p-6">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Create Session</h1>
-          <p className="text-sm text-muted-foreground mt-1">Set up a live attendance session</p>
+          <p className="text-sm text-muted-foreground mt-1">
+            Set up a live attendance session
+          </p>
           {createSessionMutation.isPending && (
             <div className="mt-2 inline-flex items-center gap-2 rounded-md border border-primary/20 bg-primary/10 px-2.5 py-1 text-xs text-primary">
               <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -133,10 +135,7 @@ export default function CreateSession() {
         ))}
       </div>
 
-      <Card
-                className="bg-card border border-border shadow-sm relative overflow-hidden"
-        
-      >
+      <Card className="bg-card border border-border shadow-sm relative overflow-hidden">
         <CardContent className="p-8 space-y-8 relative">
           {step >= 1 && (
             <div className="space-y-3">
@@ -177,10 +176,7 @@ export default function CreateSession() {
           )}
 
           {step >= 2 && subjectId && (
-            <div
-              className="space-y-5"
-              
-            >
+            <div className="space-y-5">
               <div className="space-y-4">
                 <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em] ml-1">
                   Target Batches

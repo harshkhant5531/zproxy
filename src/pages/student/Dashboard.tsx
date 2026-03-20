@@ -89,17 +89,25 @@ export default function StudentDashboard() {
   const { data: activeSessionsData, isLoading: isSessionsLoading } = useQuery({
     queryKey: ["student", "active-sessions", user?.id],
     queryFn: async () => {
-      const resp = await sessionsAPI.getSessions({ timetableOnly: true, limit: 30 });
+      const resp = await sessionsAPI.getSessions({
+        timetableOnly: true,
+        limit: 30,
+      });
       return resp.data.data.sessions || [];
     },
     enabled: !!user?.id,
   });
 
-  const isLoading = isStatsLoading || isLogsLoading || isCoursesLoading || isSessionsLoading;
+  const isLoading =
+    isStatsLoading || isLogsLoading || isCoursesLoading || isSessionsLoading;
 
-  const records: any[] = Array.isArray(attendanceRecords) ? attendanceRecords : [];
+  const records: any[] = Array.isArray(attendanceRecords)
+    ? attendanceRecords
+    : [];
   const courses: any[] = Array.isArray(coursesData) ? coursesData : [];
-  const activeSessions: any[] = Array.isArray(activeSessionsData) ? activeSessionsData : [];
+  const activeSessions: any[] = Array.isArray(activeSessionsData)
+    ? activeSessionsData
+    : [];
 
   const markAttendanceMutation = useMutation({
     mutationFn: async (session: any) => {
@@ -108,21 +116,35 @@ export default function StudentDashboard() {
         navigator.platform,
         navigator.language,
         Intl.DateTimeFormat().resolvedOptions().timeZone,
-      ].filter(Boolean).join(" | ").slice(0, 180);
-      return attendanceAPI.markAttendance({ sessionId: session.id, deviceInfo });
+      ]
+        .filter(Boolean)
+        .join(" | ")
+        .slice(0, 180);
+      return attendanceAPI.markAttendance({
+        sessionId: session.id,
+        deviceInfo,
+      });
     },
     onSuccess: () => {
       toast.success("Attendance marked successfully");
-      queryClient.invalidateQueries({ queryKey: ["student", "attendance-logs"] });
-      queryClient.invalidateQueries({ queryKey: ["student", "attendance-stats"] });
-      queryClient.invalidateQueries({ queryKey: ["student", "active-sessions"] });
+      queryClient.invalidateQueries({
+        queryKey: ["student", "attendance-logs"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["student", "attendance-stats"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["student", "active-sessions"],
+      });
     },
     onError: (error: any) => {
       if (error?.response?.status === 409) {
         toast.info("Attendance already marked for this session");
         return;
       }
-      toast.error(error?.response?.data?.message || "Failed to mark attendance");
+      toast.error(
+        error?.response?.data?.message || "Failed to mark attendance",
+      );
     },
   });
 
@@ -139,16 +161,24 @@ export default function StudentDashboard() {
           isWithinInterval(date, { start: weekStart, end: weekEnd }) &&
           date.getDay() === (idx + 1) % 7
         );
-      } catch { return false; }
+      } catch {
+        return false;
+      }
     });
-    const present = dayRecords.filter((r: any) => r.status === "present").length;
+    const present = dayRecords.filter(
+      (r: any) => r.status === "present",
+    ).length;
     return { day, present, total: dayRecords.length };
   });
 
   const courseAttendanceData = courses.map((course: any) => {
-    const courseRecords = records.filter((r: any) => r.session?.courseId === course.id);
+    const courseRecords = records.filter(
+      (r: any) => r.session?.courseId === course.id,
+    );
     const total = courseRecords.length;
-    const present = courseRecords.filter((r: any) => r.status === "present").length;
+    const present = courseRecords.filter(
+      (r: any) => r.status === "present",
+    ).length;
     const pct = total > 0 ? Math.round((present / total) * 100) : 0;
     return { ...course, attendancePct: pct };
   });
@@ -164,7 +194,9 @@ export default function StudentDashboard() {
         <Card className="px-6 py-4">
           <div className="flex items-center gap-3">
             <Loader2 className="h-4 w-4 animate-spin text-primary" />
-            <span className="text-sm text-muted-foreground">Loading dashboard...</span>
+            <span className="text-sm text-muted-foreground">
+              Loading dashboard...
+            </span>
           </div>
         </Card>
       </div>
@@ -174,12 +206,16 @@ export default function StudentDashboard() {
   return (
     <div className="space-y-6 p-6">
       {/* Header */}
-      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Student Dashboard</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">
+            Student Dashboard
+          </h1>
           <p className="mt-1 text-sm text-muted-foreground">
             {user?.profile?.fullName || user?.username}
-            {user?.profile?.enrollmentNumber ? ` · ${user.profile.enrollmentNumber}` : ""}
+            {user?.profile?.enrollmentNumber
+              ? ` · ${user.profile.enrollmentNumber}`
+              : ""}
           </p>
         </div>
         <Badge variant="outline">
@@ -203,7 +239,9 @@ export default function StudentDashboard() {
         <CardContent className="space-y-3">
           {activeSessions.length > 0 ? (
             activeSessions.map((session: any) => {
-              const alreadyMarked = records.some((r: any) => r.sessionId === session.id);
+              const alreadyMarked = records.some(
+                (r: any) => r.sessionId === session.id,
+              );
               const isMarkingCurrent =
                 markAttendanceMutation.isPending &&
                 markAttendanceMutation.variables?.id === session.id;
@@ -214,9 +252,12 @@ export default function StudentDashboard() {
                   className="flex flex-col items-start justify-between gap-3 rounded-lg border p-4 sm:flex-row sm:items-center"
                 >
                   <div>
-                    <p className="text-sm font-medium">{session.subject?.name || session.topic}</p>
+                    <p className="text-sm font-medium">
+                      {session.subject?.name || session.topic}
+                    </p>
                     <p className="text-xs text-muted-foreground">
-                      {session.course?.code || "Course"} · {session.startTime}–{session.endTime}
+                      {session.course?.code || "Course"} · {session.startTime}–
+                      {session.endTime}
                     </p>
                   </div>
                   <div className="flex shrink-0 items-center gap-2">
@@ -226,10 +267,15 @@ export default function StudentDashboard() {
                       <Button
                         size="sm"
                         onClick={() => markAttendanceMutation.mutate(session)}
-                        disabled={isMarkingCurrent || markAttendanceMutation.isPending}
+                        disabled={
+                          isMarkingCurrent || markAttendanceMutation.isPending
+                        }
                       >
                         {isMarkingCurrent ? (
-                          <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Marking</>
+                          <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />{" "}
+                            Marking
+                          </>
                         ) : (
                           "Mark Now"
                         )}
@@ -304,8 +350,20 @@ export default function StudentDashboard() {
                     fontSize: 12,
                   }}
                 />
-                <Bar dataKey="present" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} barSize={20} name="Present" />
-                <Bar dataKey="total" fill="hsl(var(--muted))" radius={[4, 4, 0, 0]} barSize={20} name="Total" />
+                <Bar
+                  dataKey="present"
+                  fill="hsl(var(--primary))"
+                  radius={[4, 4, 0, 0]}
+                  barSize={20}
+                  name="Present"
+                />
+                <Bar
+                  dataKey="total"
+                  fill="hsl(var(--muted))"
+                  radius={[4, 4, 0, 0]}
+                  barSize={20}
+                  name="Total"
+                />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>

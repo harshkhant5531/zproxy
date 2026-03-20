@@ -95,19 +95,21 @@ export default function ExamPermit() {
   }
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto">
+    <div className="space-y-6 p-6">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
             <Ticket className="h-5 w-5 text-primary" /> Exam Permit
           </h1>
-          <p className="text-sm text-muted-foreground mt-1">Examination access authorization</p>
+          <p className="text-sm text-muted-foreground mt-1">
+            Examination access authorization
+          </p>
         </div>
       </div>
 
       <div className="relative group">
         <Card
-                    className={`relative bg-card border border-border shadow-sm overflow-hidden ${overallEligible ? "border-primary/40" : "border-destructive/40"}`}
+          className={`relative bg-card border border-border shadow-sm overflow-hidden ${overallEligible ? "border-primary/40" : "border-destructive/40"}`}
         >
           {/* HID-like visual element */}
           <div className="absolute top-8 right-8 h-10 w-14 bg-muted/50 rounded-md border border-border pointer-events-none" />

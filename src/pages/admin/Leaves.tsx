@@ -129,7 +129,7 @@ export default function AdminLeaves() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Leave Approvals</h1>
@@ -193,9 +193,7 @@ export default function AdminLeaves() {
       </div>
 
       {leaves.length === 0 ? (
-        <Card
-                    className="bg-card border border-border shadow-sm"
-        >
+        <Card className="bg-card border border-border shadow-sm">
           <CardContent className="py-16 text-center">
             <div className="flex flex-col items-center gap-3">
               <div className="h-14 w-14 rounded-2xl bg-success/10 border border-success/20 flex items-center justify-center">
@@ -212,9 +210,7 @@ export default function AdminLeaves() {
           </CardContent>
         </Card>
       ) : (
-        <Card
-                    className="bg-card border border-border shadow-sm overflow-hidden"
-        >
+        <Card className="bg-card border border-border shadow-sm overflow-hidden">
           <CardHeader className="border-b bg-muted/40 px-4 py-4">
             <div className="flex items-center justify-between">
               <CardTitle className="text-sm font-semibold text-foreground flex items-center gap-2">

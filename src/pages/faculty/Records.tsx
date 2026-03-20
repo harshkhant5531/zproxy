@@ -78,10 +78,12 @@ export default function AttendanceRecords() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Attendance History</h1>
+          <h1 className="text-2xl font-bold tracking-tight">
+            Attendance History
+          </h1>
           <p className="text-sm text-muted-foreground mt-1">
             <Calendar className="h-4 w-4 text-primary/70" /> Records and audit
             logs
@@ -114,9 +116,7 @@ export default function AttendanceRecords() {
         </div>
       </div>
 
-      <Card
-                className="app-card overflow-hidden"
-      >
+      <Card className="app-card overflow-hidden">
         <CardHeader className="border-b bg-muted/40 px-6 py-4">
           <CardTitle className="text-sm font-semibold text-foreground">
             Session Ledger

@@ -79,7 +79,7 @@ export default function ShortageAlerts() {
   return (
     <div className="space-y-6 p-6">
       {/* Header */}
-      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
           <h1 className="flex items-center gap-2 text-2xl font-semibold tracking-tight">
             <ShieldAlert className="h-5 w-5 text-destructive" />
@@ -97,9 +97,21 @@ export default function ShortageAlerts() {
       {/* Threshold Legend */}
       <div className="grid gap-4 sm:grid-cols-3">
         {[
-          { label: "Critical", threshold: "< 50%", variant: "destructive" as const },
-          { label: "High Risk", threshold: "50–65%", variant: "outline" as const },
-          { label: "Moderate", threshold: "65–75%", variant: "secondary" as const },
+          {
+            label: "Critical",
+            threshold: "< 50%",
+            variant: "destructive" as const,
+          },
+          {
+            label: "High Risk",
+            threshold: "50–65%",
+            variant: "outline" as const,
+          },
+          {
+            label: "Moderate",
+            threshold: "65–75%",
+            variant: "secondary" as const,
+          },
         ].map((item) => (
           <Card key={item.label} className="px-4 py-3">
             <div className="flex items-center justify-between">

@@ -219,7 +219,7 @@ export default function LiveSession() {
 
   return (
     <>
-      <div className="space-y-6">
+      <div className="space-y-6 p-6">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold tracking-tight">
@@ -370,9 +370,7 @@ export default function LiveSession() {
         </section>
 
         {isCompleted && (
-          <Card
-                        className="border-border bg-card shadow-sm"
-          >
+          <Card className="border-border bg-card shadow-sm">
             <CardHeader className="border-b border-border/50 pb-3">
               <CardTitle className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">
                 Absentee Roster
@@ -406,9 +404,7 @@ export default function LiveSession() {
 
         {/* ─── Proxy Suspects Alert ─────────────────────────────────────────── */}
         {proxyRecords.length > 0 && (
-          <Card
-                        className="border-destructive/30 bg-destructive/5 shadow-sm overflow-hidden"
-          >
+          <Card className="border-destructive/30 bg-destructive/5 shadow-sm overflow-hidden">
             <CardHeader className="pb-2 px-6 pt-4 border-b border-destructive/20 bg-destructive/10">
               <CardTitle className="text-[11px] font-bold text-destructive uppercase tracking-widest flex items-center gap-2">
                 <AlertTriangle className="h-4 w-4" />
@@ -461,9 +457,7 @@ export default function LiveSession() {
         )}
 
         {showOverride && !isCompleted && (
-          <Card
-                        className="bg-card border-primary/20 border shadow-md"
-          >
+          <Card className="bg-card border-primary/20 border shadow-md">
             <CardHeader>
               <CardTitle className="text-sm font-black text-foreground uppercase tracking-widest">
                 Manual Presence Authentication
@@ -521,9 +515,7 @@ export default function LiveSession() {
           </Card>
         )}
 
-        <Card
-                    className="border-border bg-card shadow-sm overflow-hidden"
-        >
+        <Card className="border-border bg-card shadow-sm overflow-hidden">
           <CardHeader className="border-b border-border px-6 py-4 bg-muted/30">
             <CardTitle className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
               <Users className="h-4 w-4" />
