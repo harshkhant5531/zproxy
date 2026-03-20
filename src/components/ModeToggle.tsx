@@ -29,11 +29,11 @@ export function ModeToggle() {
             <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
 
             <Sun className="h-[1.4rem] w-[1.4rem] transition-all duration-700 
-                rotate-0 scale-100 dark:-rotate-180 dark:scale-0 text-amber-500"
+                rotate-0 scale-100 dark:-rotate-180 dark:scale-0 text-warning"
             />
 
             <Moon className="absolute h-[1.4rem] w-[1.4rem] transition-all duration-700 
-                -rotate-180 scale-0 dark:rotate-0 dark:scale-100 text-blue-400"
+                -rotate-180 scale-0 dark:rotate-0 dark:scale-100 text-info"
             />
 
             <span className="sr-only">Toggle theme</span>

@@ -35,7 +35,7 @@ interface Config {
   icon: LucideIcon;
   title: string;
   subtitle: string;
-  color: "primary" | "emerald" | "destructive" | "amber" | "violet";
+  color: "primary" | "success" | "destructive" | "warning" | "accent";
 }
 
 const CONFIGS: Record<LoaderOperation, Config> = {
@@ -67,7 +67,7 @@ const CONFIGS: Record<LoaderOperation, Config> = {
     icon: Send,
     title: "Submitting Request",
     subtitle: "Forwarding your application to the server…",
-    color: "violet",
+    color: "accent",
   },
   authenticating: {
     icon: LogIn,
@@ -79,13 +79,13 @@ const CONFIGS: Record<LoaderOperation, Config> = {
     icon: FileBarChart,
     title: "Generating Report",
     subtitle: "Aggregating data and building your report…",
-    color: "violet",
+    color: "accent",
   },
   approving: {
     icon: CheckCircle2,
     title: "Approving Request",
     subtitle: "Processing approval and notifying the student…",
-    color: "emerald",
+    color: "success",
   },
   rejecting: {
     icon: XCircle,
@@ -97,7 +97,7 @@ const CONFIGS: Record<LoaderOperation, Config> = {
     icon: UserPlus,
     title: "Enrolling Student",
     subtitle: "Registering student enrollment in the system…",
-    color: "amber",
+    color: "warning",
   },
   refreshing: {
     icon: RefreshCw,
@@ -109,13 +109,13 @@ const CONFIGS: Record<LoaderOperation, Config> = {
     icon: Radio,
     title: "Acquiring Location",
     subtitle: "Requesting GPS permission and locking your current position…",
-    color: "amber",
+    color: "warning",
   },
   "manual-mark": {
     icon: Fingerprint,
     title: "Recording Attendance",
     subtitle: "Submitting your biometric presence to the server…",
-    color: "emerald",
+    color: "success",
   },
   "load-sessions": {
     icon: Radio,
@@ -136,15 +136,15 @@ const COLOR_MAP = {
     title: "text-foreground",
     iconColor: "text-primary",
   },
-  emerald: {
-    ring: "border-emerald-500/25",
-    dot: "bg-emerald-500",
-    bar: "bg-emerald-500",
-    iconBg: "bg-emerald-500/10 border-emerald-500/30",
-    outerDash: "border-emerald-500/40",
-    innerDash: "border-emerald-500/20",
-    title: "text-emerald-500",
-    iconColor: "text-emerald-500",
+  success: {
+    ring: "border-success/25",
+    dot: "bg-success",
+    bar: "bg-success",
+    iconBg: "bg-success/10 border-success/30",
+    outerDash: "border-success/40",
+    innerDash: "border-success/20",
+    title: "text-success",
+    iconColor: "text-success",
   },
   destructive: {
     ring: "border-destructive/25",
@@ -156,25 +156,25 @@ const COLOR_MAP = {
     title: "text-destructive",
     iconColor: "text-destructive",
   },
-  amber: {
-    ring: "border-amber-500/25",
-    dot: "bg-amber-500",
-    bar: "bg-amber-500",
-    iconBg: "bg-amber-500/10 border-amber-500/30",
-    outerDash: "border-amber-500/40",
-    innerDash: "border-amber-500/20",
-    title: "text-amber-500",
-    iconColor: "text-amber-500",
+  warning: {
+    ring: "border-warning/25",
+    dot: "bg-warning",
+    bar: "bg-warning",
+    iconBg: "bg-warning/10 border-warning/30",
+    outerDash: "border-warning/40",
+    innerDash: "border-warning/20",
+    title: "text-warning",
+    iconColor: "text-warning",
   },
-  violet: {
-    ring: "border-violet-500/25",
-    dot: "bg-violet-500",
-    bar: "bg-violet-500",
-    iconBg: "bg-violet-500/10 border-violet-500/30",
-    outerDash: "border-violet-500/40",
-    innerDash: "border-violet-500/20",
-    title: "text-violet-500",
-    iconColor: "text-violet-500",
+  accent: {
+    ring: "border-accent/25",
+    dot: "bg-accent",
+    bar: "bg-accent",
+    iconBg: "bg-accent/10 border-accent/30",
+    outerDash: "border-accent/40",
+    innerDash: "border-accent/20",
+    title: "text-accent",
+    iconColor: "text-accent",
   },
 };
 

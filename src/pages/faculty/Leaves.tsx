@@ -283,7 +283,7 @@ export default function FacultyLeaves() {
                         <div className="flex justify-end gap-2">
                           <Button
                             size="sm"
-                            className="h-8 px-3 bg-success/10 hover:bg-success/20 text-emerald-600 dark:text-emerald-400 border border-success/20 hover:border-success/40 transition-all shadow-none"
+                            className="h-8 px-3 bg-success/10 hover:bg-success/20 text-success border border-success/20 hover:border-success/40 transition-all shadow-none"
                             onClick={() => approveMutation.mutate(leave.id)}
                             disabled={processingLeaveId !== null}
                             title="Approve"

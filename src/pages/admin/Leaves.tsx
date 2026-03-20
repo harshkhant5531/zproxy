@@ -330,7 +330,7 @@ export default function AdminLeaves() {
                             <Button
                               size="sm"
                               variant="outline"
-                              className="h-8 px-3 text-xs font-semibold border-success/30 text-emerald-600 dark:text-emerald-400 hover:bg-success/10 gap-1.5"
+                              className="h-8 px-3 text-xs font-semibold border-success/30 text-success hover:bg-success/10 gap-1.5"
                               onClick={() => approveMutation.mutate(leave.id)}
                               disabled={isProcessing}
                             >

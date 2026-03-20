@@ -282,7 +282,7 @@ export default function LiveSession() {
                 variant="outline"
                 size="sm"
                 onClick={copyAbsenteeReport}
-                className="border-emerald-500/50 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/10 font-bold uppercase tracking-widest"
+                className="border-success/50 text-success hover:bg-success/10 font-bold uppercase tracking-widest"
               >
                 <RefreshCw className="mr-2 h-4 w-4" /> Copy Export
               </Button>
@@ -298,7 +298,7 @@ export default function LiveSession() {
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="flex items-center gap-2">
                 <span
-                  className={`px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-widest ${isCompleted ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" : "bg-primary/10 text-primary"}`}
+                  className={`px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-widest ${isCompleted ? "bg-success/10 text-success" : "bg-primary/10 text-primary"}`}
                 >
                   {isCompleted ? "Concluded" : "Live"}
                 </span>

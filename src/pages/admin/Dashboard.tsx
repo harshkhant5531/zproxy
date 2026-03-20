@@ -290,7 +290,7 @@ export default function AdminDashboard() {
             ) : (
               <div className="flex flex-col items-center justify-center h-full gap-2">
                 <ShieldAlert className="h-8 w-8 opacity-30 text-success" />
-                <p className="text-sm font-medium text-emerald-600 dark:text-emerald-400">
+                <p className="text-sm font-medium text-success">
                   All clear
                 </p>
                 <p className="text-xs text-muted-foreground">

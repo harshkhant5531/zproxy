@@ -162,7 +162,7 @@ const AnimatedTable = ({
             <td className="px-4 py-4 text-foreground font-mono">
               [#{row.studentId}]
             </td>
-            <td className="px-4 py-4 font-bold text-amber-500">
+            <td className="px-4 py-4 font-bold text-warning">
               {row.flaggedCount}
             </td>
             <td className="px-4 py-4 text-foreground font-medium">

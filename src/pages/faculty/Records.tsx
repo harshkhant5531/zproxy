@@ -201,7 +201,7 @@ export default function AttendanceRecords() {
                     </TableCell>
                     <TableCell>
                       <span
-                        className={`text-[9px] px-2 py-0.5 rounded-full font-semibold uppercase tracking-[0.12em] ${s.status === "completed" ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20" : "bg-primary/10 text-primary border border-primary/20"}`}
+                        className={`text-[9px] px-2 py-0.5 rounded-full font-semibold uppercase tracking-[0.12em] ${s.status === "completed" ? "bg-success/10 text-success border border-success/20" : "bg-primary/10 text-primary border border-primary/20"}`}
                       >
                         {s.status || "Live"}
                       </span>
