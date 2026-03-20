@@ -1,7 +1,14 @@
 import { StatCard } from "@/components/StatCard";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 import {
   BarChart,
   Bar,
@@ -89,281 +96,205 @@ export default function FacultyDashboard() {
 
   if (isLoading) {
     return (
-      <div className="min-h-[60vh] flex items-center justify-center">
-        <div className="flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-3">
-          <Loader2 className="h-4 w-4 animate-spin text-primary" />
-          <span className="text-sm text-muted-foreground">
-            Loading dashboard...
-          </span>
-        </div>
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <Card className="px-6 py-4">
+          <div className="flex items-center gap-3">
+            <Loader2 className="h-4 w-4 animate-spin text-primary" />
+            <span className="text-sm text-muted-foreground">
+              Loading dashboard...
+            </span>
+          </div>
+        </Card>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+    <div className="space-y-6 p-6">
+      {/* Page Header */}
+      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Faculty Dashboard</h1>
-          <p className="page-header-sub flex items-center gap-2 mt-1.5 font-medium">
-            <span className="h-2 w-2 rounded-full bg-primary" />
-            Signed in as {user?.profile?.fullName || user?.username}
+          <h1 className="text-2xl font-semibold tracking-tight">
+            Faculty Dashboard
+          </h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Welcome back, {user?.profile?.fullName || user?.username}
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Badge
-            variant="outline"
-            className="rounded-full border-primary/30 bg-primary/10 text-primary px-3 py-1 text-[10px] uppercase tracking-[0.12em]"
-          >
-            Daily Ops
-          </Badge>
+          <Badge variant="secondary">Daily Ops</Badge>
           <Button
-            variant="ghost"
+            variant="outline"
             size="sm"
             onClick={() => navigate("/faculty/records")}
-            className="bg-card border border-border shadow-sm text-muted-foreground hover:text-primary font-bold uppercase text-[10px] tracking-widest px-4 h-9 transition-colors"
           >
-            Audit History <ChevronRight className="ml-2 h-3.5 w-3.5" />
+            Audit History <ChevronRight className="ml-1 h-3.5 w-3.5" />
           </Button>
         </div>
       </div>
 
-      <section className="rounded-xl border border-border/70 bg-card px-4 py-3 sm:px-5">
-        <div className="grid gap-3 md:grid-cols-3">
-          <div className="rounded-md border border-border/70 bg-background px-3 py-2">
-            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
-              Session Completion
-            </p>
-            <p className="text-xl font-semibold text-foreground mt-1">
-              {todaySessions.length > 0
-                ? Math.round((completedToday / todaySessions.length) * 100)
-                : 0}
-              %
-            </p>
-          </div>
-          <div className="rounded-md border border-border/70 bg-background px-3 py-2">
-            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
-              Live Sessions
-            </p>
-            <p className="text-xl font-semibold text-foreground mt-1">
-              {
-                todaySessions.filter((s: any) => s.status !== "completed")
-                  .length
-              }
-            </p>
-          </div>
-          <div className="rounded-md border border-border/70 bg-background px-3 py-2">
-            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
-              Class Average
-            </p>
-            <p className="text-xl font-semibold text-foreground mt-1">
-              {performanceData?.statistics?.classAverage || 0}%
-            </p>
-          </div>
-        </div>
-      </section>
-
+      {/* Quick Stats */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="motion-page-enter" style={{ animationDelay: "30ms" }}>
-          <StatCard
-            title="Today's Sessions"
-            value={todaySessions.length.toString()}
-            subtitle={`${completedToday} completed, ${todaySessions.length - completedToday} upcoming`}
-            icon={CalendarCheck}
-          />
-        </div>
-        <div className="motion-page-enter" style={{ animationDelay: "90ms" }}>
-          <StatCard
-            title="Assigned Subjects"
-            value={subjectsData?.length.toString() || "0"}
-            subtitle="Active academic session"
-            icon={BookOpen}
-          />
-        </div>
-        <div className="motion-page-enter" style={{ animationDelay: "150ms" }}>
-          <StatCard
-            title="Class Average"
-            value={`${performanceData?.statistics?.classAverage || 0}%`}
-            subtitle="Across all active subjects"
-            icon={BarChart3}
-          />
-        </div>
-        <div className="motion-page-enter" style={{ animationDelay: "210ms" }}>
-          <StatCard
-            title="Total Students"
-            value={
-              performanceData?.statistics?.totalStudents?.toString() || "0"
-            }
-            subtitle="Enrolled in assigned modules"
-            icon={Users}
-          />
-        </div>
+        <StatCard
+          title="Today's Sessions"
+          value={todaySessions.length.toString()}
+          subtitle={`${completedToday} completed`}
+          icon={CalendarCheck}
+        />
+        <StatCard
+          title="Assigned Subjects"
+          value={subjectsData?.length?.toString() || "0"}
+          subtitle="Active academic session"
+          icon={BookOpen}
+        />
+        <StatCard
+          title="Class Average"
+          value={`${performanceData?.statistics?.classAverage || 0}%`}
+          subtitle="Across all subjects"
+          icon={BarChart3}
+        />
+        <StatCard
+          title="Total Students"
+          value={
+            performanceData?.statistics?.totalStudents?.toString() || "0"
+          }
+          subtitle="Enrolled students"
+          icon={Users}
+        />
       </div>
 
-      {/* Today's Sessions */}
-      <Card
-                className="app-card overflow-hidden"
-      >
-        <CardHeader className="border-b bg-muted/40 px-6 py-4">
-          <CardTitle className="text-sm font-semibold text-foreground flex items-center gap-2">
-            <Clock className="h-4 w-4 text-primary" /> Today's Schedule
+      {/* Today's Schedule */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-base">
+            <Clock className="h-4 w-4 text-primary" />
+            Today's Schedule
           </CardTitle>
+          <CardDescription>
+            {todaySessions.length} sessions scheduled for today
+          </CardDescription>
         </CardHeader>
-        <CardContent className="p-6 space-y-4">
+        <CardContent className="space-y-3">
           {todaySessions.length > 0 ? (
-            todaySessions.map((session: any, i: number) => (
+            todaySessions.map((session: any) => (
               <div
                 key={session.id}
-                className="flex items-center justify-between rounded-2xl bg-muted/30 border border-border/70 p-5 transition-all hover:bg-muted/40 hover:border-primary/40 group relative overflow-hidden motion-page-enter"
-                style={{ animationDelay: `${50 + i * 60}ms` }}
+                className="flex items-center justify-between rounded-lg border p-4"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/[0.02] to-primary/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
-
-                <div className="space-y-1.5 relative z-10">
-                  <p className="text-sm font-black text-foreground uppercase tracking-tight group-hover:text-primary transition-colors">
+                <div className="space-y-1">
+                  <p className="text-sm font-medium">
                     {session.subject?.name || session.course?.code} —{" "}
                     {session.topic}
                   </p>
-                  <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 text-[10px] text-muted-foreground font-mono">
-                    <span className="flex items-center gap-2 bg-muted/20 px-2 py-0.5 rounded border border-border">
-                      <Clock className="h-3.5 w-3.5 text-primary/70" />
-                      {session.startTime} - {session.endTime}
-                    </span>
-                    <span className="bg-muted/20 px-2 py-0.5 rounded border border-border text-[9px] font-bold">
-                      {session.roomNumber || "OFF-SITE"}
-                    </span>
-                    <span className="text-primary font-bold tracking-tight">
-                      {session.attendanceCount || 0} VERIFIED SIGNALS
-                    </span>
-                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    {session.startTime} – {session.endTime}
+                    {session.roomNumber ? ` · Room ${session.roomNumber}` : ""}
+                    {" · "}
+                    {session.attendanceCount || 0} present
+                  </p>
                 </div>
                 <Button
                   size="sm"
                   variant={
                     session.status === "scheduled" ? "default" : "outline"
                   }
-                  className={
-                    session.status === "scheduled"
-                      ? "bg-primary hover:bg-primary/90 text-primary-foreground font-bold uppercase tracking-widest text-[10px] px-6 h-9 shadow-sm relative z-10 motion-press"
-                      : "bg-card border border-border shadow-sm text-muted-foreground hover:text-foreground font-bold uppercase tracking-widest text-[10px] px-6 h-9 relative z-10 motion-press"
-                  }
                   onClick={() => navigate(`/faculty/session/${session.id}`)}
                 >
                   {session.status === "scheduled" ? (
                     <>
-                      <Play className="mr-2 h-3.5 w-3.5 fill-current" />
-                      Initialize
+                      <Play className="mr-1 h-3.5 w-3.5" />
+                      Start
                     </>
                   ) : (
-                    "Audit"
+                    "View"
                   )}
                 </Button>
               </div>
             ))
           ) : (
-            <div className="text-center py-20 border-2 border-dashed border-border/60 rounded-2xl bg-muted/20">
-              <Clock className="h-16 w-16 text-muted-foreground/10 mx-auto mb-6" />
-              <p className="text-[10px] font-semibold text-muted-foreground/70 uppercase tracking-[0.2em]">
-                No Active Sessions Today
+            <div className="flex flex-col items-center justify-center py-12 text-center">
+              <Clock className="mb-3 h-10 w-10 text-muted-foreground/30" />
+              <p className="text-sm text-muted-foreground">
+                No sessions scheduled for today
               </p>
             </div>
           )}
         </CardContent>
       </Card>
 
+      {/* Charts Row */}
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card className="">
-          <CardHeader className="bg-muted/30 border-b border-border px-6 py-4">
-            <CardTitle className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">
-              Performance Metrics // Attainment
-            </CardTitle>
+        {/* Attainment Chart */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Student Attainment</CardTitle>
+            <CardDescription>Average attendance % per student</CardDescription>
           </CardHeader>
-          <CardContent className="p-6">
-            <ResponsiveContainer width="100%" height={240}>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={220}>
               <BarChart data={attainmentData}>
                 <XAxis
                   dataKey="name"
-                  tick={{
-                    fill: "hsl(var(--muted-foreground))",
-                    fontSize: 10,
-                    fontWeight: 700,
-                  }}
+                  tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }}
                   axisLine={false}
                   tickLine={false}
                 />
                 <YAxis
-                  tick={{
-                    fill: "hsl(var(--muted-foreground))",
-                    fontSize: 10,
-                    fontWeight: 700,
-                  }}
+                  tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }}
                   axisLine={false}
                   tickLine={false}
                   domain={[0, 100]}
                 />
                 <Tooltip
-                  cursor={{ fill: "rgba(var(--primary), 0.05)" }}
                   contentStyle={{
                     background: "hsl(var(--card))",
                     border: "1px solid hsl(var(--border))",
-                    borderRadius: 12,
+                    borderRadius: 6,
                     fontSize: 12,
-                    fontWeight: 700,
-                    boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
                   }}
                 />
                 <Bar
                   dataKey="attainment"
                   fill="hsl(var(--primary))"
                   radius={[4, 4, 0, 0]}
-                  barSize={32}
+                  barSize={28}
                 />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
 
-        <Card className="">
-          <CardHeader className="bg-muted/30 border-b border-border px-6 py-4">
-            <CardTitle className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">
-              Telemetry Feed // Recent Activity
-            </CardTitle>
+        {/* Recent Activity */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Recent Activity</CardTitle>
+            <CardDescription>Latest session updates</CardDescription>
           </CardHeader>
-          <CardContent className="p-4 space-y-2">
+          <CardContent className="space-y-1">
             {recentActivity.length > 0 ? (
               recentActivity.map((item, i) => (
-                <div
-                  key={i}
-                  className="flex items-start gap-4 p-4 rounded-xl border border-border/60 hover:border-border hover:bg-muted/30 transition-all cursor-default group motion-page-enter"
-                  style={{ animationDelay: `${70 + i * 70}ms` }}
-                >
-                  <div className="mt-1.5 h-2 w-2 rounded-full bg-primary shrink-0 group-hover:scale-125 transition-transform" />
-                  <div className="space-y-1">
-                    <p className="text-sm text-foreground font-black uppercase tracking-tight leading-none group-hover:text-primary transition-colors">
-                      {item.text}
-                    </p>
-                    <p className="text-[10px] text-muted-foreground font-mono">
-                      {item.subtext} •{" "}
-                      <span className="text-primary/70">{item.time}</span>
-                    </p>
+                <div key={i}>
+                  <div className="flex items-start gap-3 py-3">
+                    <div className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-primary" />
+                    <div className="space-y-0.5">
+                      <p className="text-sm font-medium">{item.text}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {item.subtext} · {item.time}
+                      </p>
+                    </div>
                   </div>
+                  {i < recentActivity.length - 1 && <Separator />}
                 </div>
               ))
             ) : (
-              <div className="text-center py-10">
-                <p className="text-xs text-muted-foreground">
-                  No recent activity detected
+              <div className="flex items-center justify-center py-10">
+                <p className="text-sm text-muted-foreground">
+                  No recent activity
                 </p>
               </div>
             )}
           </CardContent>
         </Card>
-      </div>
-
-      <div className="text-center pt-4">
-        <p className="text-[9px] text-muted-foreground/30 font-mono uppercase tracking-[0.5em]">
-          Aura Integrity Engine // Central Oversight Terminal
-        </p>
       </div>
     </div>
   );

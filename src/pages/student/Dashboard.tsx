@@ -1,9 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { StatCard } from "@/components/StatCard";
 import { StatusBadge } from "@/components/StatusBadge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
 import {
   Table,
   TableBody,
@@ -12,7 +19,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Progress } from "@/components/ui/progress";
 import {
   BarChart,
   Bar,
@@ -83,25 +89,17 @@ export default function StudentDashboard() {
   const { data: activeSessionsData, isLoading: isSessionsLoading } = useQuery({
     queryKey: ["student", "active-sessions", user?.id],
     queryFn: async () => {
-      const resp = await sessionsAPI.getSessions({
-        timetableOnly: true,
-        limit: 30,
-      });
+      const resp = await sessionsAPI.getSessions({ timetableOnly: true, limit: 30 });
       return resp.data.data.sessions || [];
     },
     enabled: !!user?.id,
   });
 
-  const isLoading =
-    isStatsLoading || isLogsLoading || isCoursesLoading || isSessionsLoading;
+  const isLoading = isStatsLoading || isLogsLoading || isCoursesLoading || isSessionsLoading;
 
-  const records: any[] = Array.isArray(attendanceRecords)
-    ? attendanceRecords
-    : [];
+  const records: any[] = Array.isArray(attendanceRecords) ? attendanceRecords : [];
   const courses: any[] = Array.isArray(coursesData) ? coursesData : [];
-  const activeSessions: any[] = Array.isArray(activeSessionsData)
-    ? activeSessionsData
-    : [];
+  const activeSessions: any[] = Array.isArray(activeSessionsData) ? activeSessionsData : [];
 
   const markAttendanceMutation = useMutation({
     mutationFn: async (session: any) => {
@@ -110,42 +108,26 @@ export default function StudentDashboard() {
         navigator.platform,
         navigator.language,
         Intl.DateTimeFormat().resolvedOptions().timeZone,
-      ]
-        .filter(Boolean)
-        .join(" | ")
-        .slice(0, 180);
-
-      return attendanceAPI.markAttendance({
-        sessionId: session.id,
-        deviceInfo,
-      });
+      ].filter(Boolean).join(" | ").slice(0, 180);
+      return attendanceAPI.markAttendance({ sessionId: session.id, deviceInfo });
     },
     onSuccess: () => {
       toast.success("Attendance marked successfully");
-      queryClient.invalidateQueries({
-        queryKey: ["student", "attendance-logs"],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["student", "attendance-stats"],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["student", "active-sessions"],
-      });
+      queryClient.invalidateQueries({ queryKey: ["student", "attendance-logs"] });
+      queryClient.invalidateQueries({ queryKey: ["student", "attendance-stats"] });
+      queryClient.invalidateQueries({ queryKey: ["student", "active-sessions"] });
     },
     onError: (error: any) => {
       if (error?.response?.status === 409) {
         toast.info("Attendance already marked for this session");
         return;
       }
-      toast.error(
-        error?.response?.data?.message || "Failed to mark attendance",
-      );
+      toast.error(error?.response?.data?.message || "Failed to mark attendance");
     },
   });
 
-  // --- Real weekly attendance chart ---
   const now = new Date();
-  const weekStart = startOfWeek(now, { weekStartsOn: 1 }); // Monday
+  const weekStart = startOfWeek(now, { weekStartsOn: 1 });
   const weekEnd = endOfWeek(now, { weekStartsOn: 1 });
 
   const weeklyData = DAY_LABELS.map((day, idx) => {
@@ -157,25 +139,16 @@ export default function StudentDashboard() {
           isWithinInterval(date, { start: weekStart, end: weekEnd }) &&
           date.getDay() === (idx + 1) % 7
         );
-      } catch {
-        return false;
-      }
+      } catch { return false; }
     });
-    const present = dayRecords.filter(
-      (r: any) => r.status === "present",
-    ).length;
+    const present = dayRecords.filter((r: any) => r.status === "present").length;
     return { day, present, total: dayRecords.length };
   });
 
-  // --- Per-course real attendance ---
   const courseAttendanceData = courses.map((course: any) => {
-    const courseRecords = records.filter(
-      (r: any) => r.session?.courseId === course.id,
-    );
+    const courseRecords = records.filter((r: any) => r.session?.courseId === course.id);
     const total = courseRecords.length;
-    const present = courseRecords.filter(
-      (r: any) => r.status === "present",
-    ).length;
+    const present = courseRecords.filter((r: any) => r.status === "present").length;
     const pct = total > 0 ? Math.round((present / total) * 100) : 0;
     return { ...course, attendancePct: pct };
   });
@@ -187,269 +160,184 @@ export default function StudentDashboard() {
 
   if (isLoading) {
     return (
-      <div className="min-h-[60vh] flex items-center justify-center">
-        <div className="flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-3">
-          <Loader2 className="h-4 w-4 animate-spin text-primary" />
-          <span className="text-sm text-muted-foreground">
-            Loading dashboard...
-          </span>
-        </div>
+      <div className="flex min-h-[60vh] items-center justify-center p-6">
+        <Card className="px-6 py-4">
+          <div className="flex items-center gap-3">
+            <Loader2 className="h-4 w-4 animate-spin text-primary" />
+            <span className="text-sm text-muted-foreground">Loading dashboard...</span>
+          </div>
+        </Card>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+    <div className="space-y-6 p-6">
+      {/* Header */}
+      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Student Dashboard</h1>
-          <p className="text-sm text-muted-foreground mt-1">
+          <h1 className="text-2xl font-semibold tracking-tight">Student Dashboard</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
             {user?.profile?.fullName || user?.username}
-            {user?.profile?.enrollmentNumber
-              ? ` (${user.profile.enrollmentNumber})`
-              : ""}
+            {user?.profile?.enrollmentNumber ? ` · ${user.profile.enrollmentNumber}` : ""}
           </p>
         </div>
-        <Badge
-          variant="outline"
-          className="rounded-full border-primary/30 bg-primary/10 text-primary px-3 py-1 text-[10px] uppercase tracking-[0.12em]"
-        >
-          Weekly View
+        <Badge variant="outline">
+          Week {format(now, "w")} · {format(now, "MMM yyyy")}
         </Badge>
       </div>
 
-      <Card
-                className="app-card motion-slide-up overflow-hidden"
-      >
-        <CardHeader className="border-b bg-muted/40 px-6 py-4">
-          <CardTitle className="text-sm font-semibold text-foreground flex items-center gap-2">
-            <MapPin className="h-4 w-4 text-primary" /> Mark Attendance
+      {/* Mark Attendance */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-base">
+            <MapPin className="h-4 w-4 text-primary" />
+            Mark Attendance
           </CardTitle>
+          <CardDescription>
+            {activeSessions.length > 0
+              ? `${activeSessions.length} active session(s) open for check-in`
+              : "No active sessions right now"}
+          </CardDescription>
         </CardHeader>
-        <CardContent className="p-4 sm:p-5">
+        <CardContent className="space-y-3">
           {activeSessions.length > 0 ? (
-            <div className="space-y-3">
-              {activeSessions.map((session: any) => {
-                const alreadyMarked = records.some(
-                  (r: any) => r.sessionId === session.id,
-                );
-                const isMarkingCurrent =
-                  markAttendanceMutation.isPending &&
-                  markAttendanceMutation.variables?.id === session.id;
+            activeSessions.map((session: any) => {
+              const alreadyMarked = records.some((r: any) => r.sessionId === session.id);
+              const isMarkingCurrent =
+                markAttendanceMutation.isPending &&
+                markAttendanceMutation.variables?.id === session.id;
 
-                return (
-                  <div
-                    key={session.id}
-                    className="rounded-xl border border-border bg-muted/20 p-3 sm:p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
-                  >
-                    <div className="min-w-0">
-                      <p className="text-sm font-semibold text-foreground truncate">
-                        {session.subject?.name || session.topic}
-                      </p>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        {session.course?.code || "Course"} • {session.startTime}
-                        -{session.endTime}
-                        {" • Manual + IP verified"}
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-2 shrink-0">
-                      {alreadyMarked ? (
-                        <Badge
-                          variant="outline"
-                          className="border-success/30 bg-success/10 text-success"
-                        >
-                          Marked
-                        </Badge>
-                      ) : (
-                        <Button
-                          size="sm"
-                          onClick={() => markAttendanceMutation.mutate(session)}
-                          disabled={
-                            isMarkingCurrent || markAttendanceMutation.isPending
-                          }
-                          className="h-9 px-4"
-                        >
-                          {isMarkingCurrent ? (
-                            <>
-                              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                              Marking
-                            </>
-                          ) : (
-                            "Mark Now"
-                          )}
-                        </Button>
-                      )}
-                    </div>
+              return (
+                <div
+                  key={session.id}
+                  className="flex flex-col items-start justify-between gap-3 rounded-lg border p-4 sm:flex-row sm:items-center"
+                >
+                  <div>
+                    <p className="text-sm font-medium">{session.subject?.name || session.topic}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {session.course?.code || "Course"} · {session.startTime}–{session.endTime}
+                    </p>
                   </div>
-                );
-              })}
-            </div>
+                  <div className="flex shrink-0 items-center gap-2">
+                    {alreadyMarked ? (
+                      <Badge variant="secondary">Marked</Badge>
+                    ) : (
+                      <Button
+                        size="sm"
+                        onClick={() => markAttendanceMutation.mutate(session)}
+                        disabled={isMarkingCurrent || markAttendanceMutation.isPending}
+                      >
+                        {isMarkingCurrent ? (
+                          <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Marking</>
+                        ) : (
+                          "Mark Now"
+                        )}
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              );
+            })
           ) : (
-            <p className="text-sm text-muted-foreground text-center py-4">
-              No active sessions are open for check-in right now.
+            <p className="py-4 text-center text-sm text-muted-foreground">
+              No sessions are open for attendance right now.
             </p>
           )}
         </CardContent>
       </Card>
 
-      <section className="rounded-xl border border-border/70 bg-card px-4 py-3 sm:px-5">
-        <div className="grid gap-3 md:grid-cols-3">
-          <div className="rounded-md border border-border/70 bg-background px-3 py-2">
-            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
-              Weekly Present
-            </p>
-            <p className="text-xl font-semibold text-foreground mt-1">
-              {weeklyData.reduce((a, d) => a + d.present, 0)}
-            </p>
-          </div>
-          <div className="rounded-md border border-border/70 bg-background px-3 py-2">
-            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
-              Weekly Sessions
-            </p>
-            <p className="text-xl font-semibold text-foreground mt-1">
-              {weeklyData.reduce((a, d) => a + d.total, 0)}
-            </p>
-          </div>
-          <div className="rounded-md border border-border/70 bg-background px-3 py-2">
-            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
-              Below Threshold
-            </p>
-            <p className="text-xl font-semibold text-foreground mt-1">
-              {flaggedCourses.length}
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 motion-stagger">
-        <div>
-          <StatCard
-            title="Overall Attendance"
-            value={`${attendanceStats?.attendanceRate || 0}%`}
-            icon={GraduationCap}
-            trend={{ value: 0, label: "real-time" }}
-          />
-        </div>
-        <div>
-          <StatCard
-            title="This Week"
-            value={weeklyData.reduce((a, d) => a + d.present, 0).toString()}
-            subtitle={`${weeklyData.reduce((a, d) => a + d.total, 0)} classes this week`}
-            icon={CalendarCheck}
-          />
-        </div>
-        <div>
-          <StatCard
-            title="Total Present"
-            value={attendanceStats?.presentCount?.toString() || "0"}
-            subtitle="Current semester"
-            icon={Clock}
-          />
-        </div>
-        <div>
-          <StatCard
-            title="Flagged Courses"
-            value={flaggedCourses.length.toString()}
-            subtitle="Below 75% attendance"
-            icon={TrendingUp}
-            iconClassName={
-              flaggedCourses.length > 0
-                ? "bg-destructive/10 border-destructive/20"
-                : undefined
-            }
-          />
-        </div>
+      {/* Stat Cards */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <StatCard
+          title="Overall Attendance"
+          value={`${attendanceStats?.attendanceRate || 0}%`}
+          icon={GraduationCap}
+        />
+        <StatCard
+          title="This Week"
+          value={weeklyData.reduce((a, d) => a + d.present, 0).toString()}
+          subtitle={`of ${weeklyData.reduce((a, d) => a + d.total, 0)} classes`}
+          icon={CalendarCheck}
+        />
+        <StatCard
+          title="Total Present"
+          value={attendanceStats?.presentCount?.toString() || "0"}
+          subtitle="This semester"
+          icon={Clock}
+        />
+        <StatCard
+          title="Flagged Courses"
+          value={flaggedCourses.length.toString()}
+          subtitle="Below 75%"
+          icon={TrendingUp}
+        />
       </div>
 
+      {/* Charts Row */}
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card
-                    className="app-card motion-slide-up"
-          style={{ animationDelay: "280ms" }}
-        >
-          <CardHeader className="border-b bg-muted/40 px-6 py-4">
-            <CardTitle className="text-sm font-semibold text-foreground">
-              This Week's Attendance
-            </CardTitle>
+        {/* Weekly Chart */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">This Week's Attendance</CardTitle>
           </CardHeader>
-          <CardContent className="px-6 pb-6 pt-4">
+          <CardContent>
             <ResponsiveContainer width="100%" height={200}>
               <BarChart data={weeklyData}>
                 <XAxis
                   dataKey="day"
-                  tick={{
-                    fill: "hsl(var(--muted-foreground))",
-                    fontSize: 12,
-                  }}
+                  tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }}
                   axisLine={false}
                   tickLine={false}
                 />
                 <YAxis
-                  tick={{
-                    fill: "hsl(var(--muted-foreground))",
-                    fontSize: 12,
-                  }}
+                  tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }}
                   axisLine={false}
                   tickLine={false}
                 />
                 <Tooltip
-                  cursor={{ fill: "hsl(var(--muted) / 0.3)" }}
                   contentStyle={{
                     background: "hsl(var(--card))",
                     border: "1px solid hsl(var(--border))",
-                    borderRadius: 8,
+                    borderRadius: 6,
                     color: "hsl(var(--foreground))",
+                    fontSize: 12,
                   }}
                 />
-                <Bar
-                  dataKey="present"
-                  fill="hsl(var(--primary))"
-                  radius={[4, 4, 0, 0]}
-                  barSize={20}
-                  name="Present"
-                />
-                <Bar
-                  dataKey="total"
-                  fill="hsl(var(--muted))"
-                  radius={[4, 4, 0, 0]}
-                  barSize={20}
-                  name="Total"
-                />
+                <Bar dataKey="present" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} barSize={20} name="Present" />
+                <Bar dataKey="total" fill="hsl(var(--muted))" radius={[4, 4, 0, 0]} barSize={20} name="Total" />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
 
-        <Card
-                    className="app-card motion-slide-up"
-          style={{ animationDelay: "280ms" }}
-        >
-          <CardHeader className="border-b bg-muted/40 px-6 py-4">
-            <CardTitle className="text-sm font-semibold text-foreground">
-              Attendance by Course
-            </CardTitle>
+        {/* Course Attendance */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Attendance by Course</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3 px-6 pb-6 pt-4 max-h-[260px] overflow-y-auto">
-            {courseAttendanceData.map((course: any, i: number) => (
-              <div
-                key={course.id}
-                className="space-y-1.5 motion-slide-up"
-                style={{ animationDelay: `${300 + i * 50}ms` }}
-              >
+          <CardContent className="space-y-4 max-h-[260px] overflow-y-auto">
+            {courseAttendanceData.map((course: any) => (
+              <div key={course.id} className="space-y-1">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="font-medium text-foreground font-mono tracking-tight">
+                  <span className="font-medium">
                     {course.code} — {course.name}
                   </span>
                   <span
-                    className={`font-bold font-mono ${course.attendancePct < 75 ? "text-destructive" : "text-primary"}`}
+                    className={
+                      course.attendancePct < 75
+                        ? "font-semibold text-destructive"
+                        : "font-semibold text-primary"
+                    }
                   >
                     {course.attendancePct}%
                   </span>
                 </div>
-                <Progress value={course.attendancePct} className="h-1.5" />
+                <Progress value={course.attendancePct} className="h-2" />
               </div>
             ))}
             {courseAttendanceData.length === 0 && (
-              <p className="text-sm text-muted-foreground text-center py-8">
+              <p className="py-8 text-center text-sm text-muted-foreground">
                 No enrolled courses found
               </p>
             )}
@@ -457,62 +345,47 @@ export default function StudentDashboard() {
         </Card>
       </div>
 
-      <Card className="app-card">
-        <CardHeader className="border-b bg-muted/40 px-6 py-4">
-          <CardTitle className="text-sm font-semibold text-foreground">
-            Recent Attendance Log
-          </CardTitle>
+      {/* Recent Logs */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Recent Attendance Log</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
-          <div className="overflow-hidden">
-            <Table className="motion-table-stagger">
-              <TableHeader>
-                <TableRow className="border-border/40 hover:bg-transparent">
-                  <TableHead className="text-muted-foreground/60 font-semibold text-[10px] uppercase tracking-widest h-11 pl-6">
-                    Date
-                  </TableHead>
-                  <TableHead className="text-muted-foreground/60 font-semibold text-[10px] uppercase tracking-widest h-11">
-                    Course
-                  </TableHead>
-                  <TableHead className="text-muted-foreground/60 font-semibold text-[10px] uppercase tracking-widest h-11">
-                    Topic
-                  </TableHead>
-                  <TableHead className="text-muted-foreground/60 font-semibold text-[10px] uppercase tracking-widest h-11 pr-6">
-                    Status
-                  </TableHead>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Date</TableHead>
+                <TableHead>Course</TableHead>
+                <TableHead>Topic</TableHead>
+                <TableHead>Status</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {recentLogs.map((log: any) => (
+                <TableRow key={log.id}>
+                  <TableCell className="text-sm text-muted-foreground">
+                    {log.session?.date
+                      ? format(parseISO(log.session.date), "MMM dd, yyyy")
+                      : "—"}
+                  </TableCell>
+                  <TableCell className="text-sm font-medium">
+                    {log.session?.course?.code || "N/A"}
+                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground">
+                    {log.session?.topic}
+                  </TableCell>
+                  <TableCell>
+                    <StatusBadge status={log.status} />
+                  </TableCell>
                 </TableRow>
-              </TableHeader>
-              <TableBody>
-                {recentLogs.map((log: any, i: number) => (
-                  <TableRow
-                    key={log.id}
-                    className="border-border/30 hover:bg-muted/20 transition-colors motion-page-enter"
-                    style={{ animationDelay: `${60 + i * 35}ms` }}
-                  >
-                    <TableCell className="text-xs text-muted-foreground font-mono pl-6">
-                      {log.session?.date
-                        ? format(parseISO(log.session.date), "MMM dd, yyyy")
-                        : "—"}
-                    </TableCell>
-                    <TableCell className="text-sm font-semibold text-foreground uppercase tracking-tight">
-                      {log.session?.course?.code || "N/A"}
-                    </TableCell>
-                    <TableCell className="text-sm text-muted-foreground">
-                      {log.session?.topic}
-                    </TableCell>
-                    <TableCell className="pr-6">
-                      <StatusBadge status={log.status} />
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-            {recentLogs.length === 0 && (
-              <p className="text-sm text-muted-foreground text-center py-12">
-                No recent logs found
-              </p>
-            )}
-          </div>
+              ))}
+            </TableBody>
+          </Table>
+          {recentLogs.length === 0 && (
+            <p className="py-12 text-center text-sm text-muted-foreground">
+              No recent logs found
+            </p>
+          )}
         </CardContent>
       </Card>
     </div>

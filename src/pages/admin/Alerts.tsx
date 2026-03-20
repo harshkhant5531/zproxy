@@ -1,5 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
   Table,
   TableBody,
@@ -8,8 +16,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Mail, ShieldAlert, Loader2 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { reportsAPI, usersAPI } from "@/lib/api";
@@ -37,18 +43,19 @@ export default function ShortageAlerts() {
 
   if (isUsersLoading || isAttLoading) {
     return (
-      <div className="min-h-[60vh] flex items-center justify-center">
-        <div className="flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-3">
-          <Loader2 className="h-4 w-4 animate-spin text-primary" />
-          <span className="text-sm text-muted-foreground">
-            Loading alerts...
-          </span>
-        </div>
+      <div className="flex min-h-[60vh] items-center justify-center p-6">
+        <Card className="px-6 py-4">
+          <div className="flex items-center gap-3">
+            <Loader2 className="h-4 w-4 animate-spin text-primary" />
+            <span className="text-sm text-muted-foreground">
+              Loading alerts...
+            </span>
+          </div>
+        </Card>
       </div>
     );
   }
 
-  // Calculate shortage students client-side for dynamic thresholding
   const students = Array.isArray(usersData) ? usersData : [];
   const reports = Array.isArray(attendanceData) ? attendanceData : [];
 
@@ -60,7 +67,6 @@ export default function ShortageAlerts() {
         (r) => r.status === "present",
       ).length;
       const attendance = total > 0 ? (present / total) * 100 : 0;
-
       return {
         ...s,
         attendance: parseFloat(attendance.toFixed(1)),
@@ -71,127 +77,125 @@ export default function ShortageAlerts() {
     .sort((a, b) => a.attendance - b.attendance);
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+    <div className="space-y-6 p-6">
+      {/* Header */}
+      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
-            <ShieldAlert className="h-5 w-5 text-destructive" /> Attendance
-            Alerts
+          <h1 className="flex items-center gap-2 text-2xl font-semibold tracking-tight">
+            <ShieldAlert className="h-5 w-5 text-destructive" />
+            Attendance Alerts
           </h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Monitor students below attendance threshold
+          <p className="mt-1 text-sm text-muted-foreground">
+            Students below the 75% attendance threshold
           </p>
         </div>
-        <Badge className="rounded-full bg-destructive/10 text-destructive border border-destructive/20 px-3 py-1 text-[10px] uppercase tracking-[0.12em]">
+        <Badge variant="destructive">
           {shortageStudents.length} Students Flagged
         </Badge>
       </div>
 
-      <Card
-                className="app-card border-destructive/25 overflow-hidden relative"
-      >
-        <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-rose-600 to-transparent" />
+      {/* Threshold Legend */}
+      <div className="grid gap-4 sm:grid-cols-3">
+        {[
+          { label: "Critical", threshold: "< 50%", variant: "destructive" as const },
+          { label: "High Risk", threshold: "50–65%", variant: "outline" as const },
+          { label: "Moderate", threshold: "65–75%", variant: "secondary" as const },
+        ].map((item) => (
+          <Card key={item.label} className="px-4 py-3">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium">{item.label}</span>
+              <Badge variant={item.variant}>{item.threshold}</Badge>
+            </div>
+          </Card>
+        ))}
+      </div>
+
+      {/* Alerts Table */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Flagged Students</CardTitle>
+          <CardDescription>
+            {shortageStudents.length} students require intervention
+          </CardDescription>
+        </CardHeader>
         <CardContent className="p-0">
           <Table>
-            <TableHeader className="bg-muted/35 dark:bg-muted/20">
-              <TableRow className="border-border/60 hover:bg-transparent">
-                <TableHead className="text-muted-foreground font-semibold text-[10px] uppercase tracking-[0.12em] h-11 pl-6">
-                  Student Information
-                </TableHead>
-                <TableHead className="text-muted-foreground font-semibold text-[10px] uppercase tracking-[0.12em] h-11">
-                  Department
-                </TableHead>
-                <TableHead className="text-muted-foreground font-semibold text-[10px] uppercase tracking-[0.12em] h-11">
-                  Attendance Rate
-                </TableHead>
-                <TableHead className="text-muted-foreground font-semibold text-[10px] uppercase tracking-[0.12em] h-11">
-                  Status
-                </TableHead>
-                <TableHead className="text-muted-foreground font-semibold text-[10px] uppercase tracking-[0.12em] h-11">
-                  Parent Contacts
-                </TableHead>
-                <TableHead className="text-muted-foreground font-semibold text-[10px] uppercase tracking-[0.12em] h-11 text-right pr-6">
-                  Actions
-                </TableHead>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Student</TableHead>
+                <TableHead>Department</TableHead>
+                <TableHead>Attendance</TableHead>
+                <TableHead>Severity</TableHead>
+                <TableHead>Contact</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {shortageStudents.map((s: any) => {
                 const severity =
                   s.attendance < 50
-                    ? "CRITICAL"
+                    ? "Critical"
                     : s.attendance < 65
-                      ? "HIGH"
-                      : "MODERATE";
-                const severityColor =
-                  severity === "CRITICAL"
-                    ? "text-destructive bg-destructive/10 border-destructive/20"
-                    : severity === "HIGH"
-                      ? "text-warning bg-warning/10 border-warning/20"
-                      : "text-warning bg-warning/10 border-warning/20";
+                      ? "High"
+                      : "Moderate";
+                const badgeVariant =
+                  s.attendance < 50 ? "destructive" : "secondary";
 
                 return (
-                  <TableRow
-                    key={s.id}
-                    className="border-border/50 hover:bg-destructive/10 transition-colors"
-                  >
-                    <TableCell className="pl-6">
-                      <p className="font-bold text-sm text-foreground">
+                  <TableRow key={s.id}>
+                    <TableCell>
+                      <p className="font-medium text-sm">
                         {s.studentProfile?.fullName || s.username}
                       </p>
-                      <p className="text-[10px] text-muted-foreground">
-                        ID: {s.studentProfile?.enrollmentNumber || s.id}
+                      <p className="text-xs text-muted-foreground">
+                        {s.studentProfile?.enrollmentNumber || s.email}
                       </p>
                     </TableCell>
-                    <TableCell className="text-xs text-foreground/85 font-medium">
-                      {s.studentProfile?.department || "N/A"}
-                      <span className="block text-[10px] text-muted-foreground font-bold">
-                        Semester: {s.studentProfile?.currentSemester || 1}
-                      </span>
+                    <TableCell>
+                      <p className="text-sm">
+                        {s.studentProfile?.department || "—"}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        Sem {s.studentProfile?.currentSemester || 1}
+                      </p>
                     </TableCell>
                     <TableCell>
-                      <span className="font-black text-sm text-destructive font-mono tracking-tighter shadow-rose-500/40 drop-shadow-sm">
+                      <span className="font-semibold text-destructive">
                         {s.attendance}%
                       </span>
                     </TableCell>
                     <TableCell>
-                      <span
-                        className={`text-[9px] px-2 py-0.5 rounded-full border font-semibold tracking-[0.12em] ${severityColor}`}
-                      >
-                        {severity}
-                      </span>
+                      <Badge variant={badgeVariant}>{severity}</Badge>
                     </TableCell>
                     <TableCell>
-                      <p className="text-[10px] text-muted-foreground font-mono">
-                        {s.studentProfile?.parentPhone || "NO CONTACT"}
+                      <p className="text-xs text-muted-foreground">
+                        {s.studentProfile?.parentPhone || "—"}
                       </p>
-                      <p className="text-[10px] text-muted-foreground/85 italic truncate max-w-[150px]">
-                        {s.studentProfile?.parentEmail || "NO EMAIL"}
+                      <p className="text-xs text-muted-foreground">
+                        {s.studentProfile?.parentEmail || "—"}
                       </p>
                     </TableCell>
-                    <TableCell className="text-right pr-6">
-                      <div className="flex gap-1 justify-end">
+                    <TableCell className="text-right">
+                      <div className="flex justify-end gap-1">
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-9 w-9 text-muted-foreground hover:text-primary"
+                          className="h-8 w-8"
                           onClick={() =>
-                            toast.info(
-                              `Email reminder queued for ${s.username}`,
-                            )
+                            toast.info(`Email sent to ${s.username}`)
                           }
                         >
-                          <Mail className="h-3.5 w-3.5" />
+                          <Mail className="h-4 w-4" />
                         </Button>
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-9 w-9 text-muted-foreground/80 hover:text-destructive"
+                          className="h-8 w-8 text-destructive hover:text-destructive"
                           onClick={() =>
-                            toast.error(`Escalation flag added for ${s.id}`)
+                            toast.error(`Escalated: ${s.username}`)
                           }
                         >
-                          <ShieldAlert className="h-3.5 w-3.5" />
+                          <ShieldAlert className="h-4 w-4" />
                         </Button>
                       </div>
                     </TableCell>
@@ -202,7 +206,7 @@ export default function ShortageAlerts() {
                 <TableRow>
                   <TableCell
                     colSpan={6}
-                    className="h-32 text-center text-muted-foreground italic font-mono uppercase tracking-[0.5em] text-[10px]"
+                    className="h-32 text-center text-muted-foreground"
                   >
                     No attendance risks detected
                   </TableCell>
@@ -212,32 +216,6 @@ export default function ShortageAlerts() {
           </Table>
         </CardContent>
       </Card>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4">
-        {[
-          {
-            label: "Critical Threshold",
-            value: "50%",
-            color: "bg-destructive",
-          },
-          { label: "High Sensitivity", value: "65%", color: "bg-warning" },
-          { label: "Watchlist Target", value: "75%", color: "bg-warning" },
-        ].map((item) => (
-          <div
-            key={item.label}
-            className="app-card p-3 rounded-lg flex items-center justify-between"
-          >
-            <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-[0.12em]">
-              {item.label}
-            </span>
-            <span
-              className={`text-xs font-semibold ${item.color.replace("bg-", "text-")} font-mono`}
-            >
-              {item.value}
-            </span>
-          </div>
-        ))}
-      </div>
     </div>
   );
 }

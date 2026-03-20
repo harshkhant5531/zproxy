@@ -136,7 +136,7 @@ export default function Reports() {
         </Badge>
       </div>
 
-      <Card className="app-card">
+      <Card className="">
         <CardHeader className="border-b bg-muted/40 px-6 py-4">
           <CardTitle className="text-sm font-semibold text-foreground">
             Configuration Engine

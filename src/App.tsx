@@ -40,7 +40,7 @@ const AppContent = () => {
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-background text-foreground motion-page-enter">
+      <div className="flex h-screen items-center justify-center bg-background text-foreground">
         <div className="flex flex-col items-center gap-4">
           <div className="relative h-14 w-14 flex items-center justify-center">
             <div className="absolute inset-0 rounded-full border border-primary/25 motion-orbit" />

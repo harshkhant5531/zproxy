@@ -63,7 +63,7 @@ const AnimatedStatCard = ({
 }) => (
   <Card
     className={cn(
-      "overflow-hidden border border-border bg-card motion-slide-up group transition-all duration-300",
+      "overflow-hidden border border-border bg-card group transition-all duration-300",
       "hover:border-primary/30",
     )}
     style={{ animationDelay: `${delay}s` }}
@@ -126,10 +126,10 @@ const AnimatedTable = ({
   delay?: number;
 }) => (
   <div
-    className="overflow-x-auto motion-slide-up"
+    className="overflow-x-auto"
     style={{ animationDelay: `${delay}s` }}
   >
-    <table className="w-full min-w-[680px] text-sm motion-table-stagger">
+    <table className="w-full min-w-[680px] text-sm">
       <thead>
         <tr className="border-b border-border bg-muted/40">
           <th className="text-left px-4 py-3 font-semibold text-foreground">
@@ -323,7 +323,7 @@ export default function ProxyAuditPage() {
       </motion.div>
 
       {/* Summary Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4 motion-stagger">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
         <AnimatedStatCard
           title="Total Flagged"
           value={analytics.summary?.totalFlagged || 0}
@@ -359,7 +359,7 @@ export default function ProxyAuditPage() {
       </div>
 
       {/* Extended Stats Row */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 motion-stagger">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <AnimatedStatCard
           title="High Risk"
           value={analytics.summary?.highRiskCount || 0}

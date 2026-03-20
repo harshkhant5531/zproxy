@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -6,102 +6,72 @@
 
 @layer base {
   :root {
-    /* Royal minimal: ivory canvas + cobalt accents */
-    --background: 42 35% 97%;
-    --foreground: 223 33% 14%;
-
+    --background: 0 0% 100%;
+    --foreground: 224 71.4% 4.1%;
     --card: 0 0% 100%;
-    --card-foreground: 223 33% 14%;
-
+    --card-foreground: 224 71.4% 4.1%;
     --popover: 0 0% 100%;
-    --popover-foreground: 223 33% 14%;
-
-    --primary: 226 74% 42%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 42 28% 92%;
-    --secondary-foreground: 223 31% 18%;
-
-    --muted: 42 22% 92%;
-    --muted-foreground: 223 13% 38%;
-
-    --accent: 43 52% 88%;
-    --accent-foreground: 223 31% 18%;
-
-    --destructive: 0 78% 56%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 222 20% 82%;
-    --input: 222 20% 82%;
-    --ring: 226 74% 42%;
-
-    --radius: 0.75rem;
-
-    /* Semantic */
-    --success: 150 58% 35%;
-    --success-foreground: 210 40% 98%;
-    --warning: 39 92% 48%;
-    --warning-foreground: 223 33% 14%;
-    --info: 204 83% 44%;
-    --info-foreground: 210 40% 98%;
-
-    /* Sidebar */
-    --sidebar-background: 40 30% 95%;
-    --sidebar-foreground: 223 25% 20%;
-    --sidebar-primary: 226 74% 42%;
-    --sidebar-primary-foreground: 220 100% 98%;
-    --sidebar-accent: 42 34% 91%;
-    --sidebar-accent-foreground: 223 25% 20%;
-    --sidebar-border: 40 20% 84%;
-    --sidebar-ring: 226 74% 42%;
+    --popover-foreground: 224 71.4% 4.1%;
+    --primary: 220.9 39.3% 11%;
+    --primary-foreground: 210 20% 98%;
+    --secondary: 220 14.3% 95.9%;
+    --secondary-foreground: 220.9 39.3% 11%;
+    --muted: 220 14.3% 95.9%;
+    --muted-foreground: 220 8.9% 46.1%;
+    --accent: 220 14.3% 95.9%;
+    --accent-foreground: 220.9 39.3% 11%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 20% 98%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 224 71.4% 4.1%;
+    --radius: 0.5rem;
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
   .dark {
-    --background: 224 32% 8%;
-    --foreground: 42 22% 92%;
-
-    --card: 223 24% 12%;
-    --card-foreground: 42 22% 92%;
-
-    --popover: 223 24% 12%;
-    --popover-foreground: 42 22% 92%;
-
-    --primary: 221 86% 65%;
-    --primary-foreground: 224 29% 8%;
-
-    --secondary: 220 19% 17%;
-    --secondary-foreground: 42 22% 92%;
-
-    --muted: 220 19% 16%;
-    --muted-foreground: 40 12% 69%;
-
-    --accent: 220 20% 19%;
-    --accent-foreground: 42 22% 92%;
-
-    --destructive: 0 70% 56%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 222 16% 25%;
-    --input: 222 16% 25%;
-    --ring: 221 86% 65%;
-
-    /* Semantic */
-    --success: 150 58% 45%;
-    --success-foreground: 222 28% 8%;
-    --warning: 40 88% 58%;
-    --warning-foreground: 222 28% 8%;
-    --info: 204 84% 56%;
-    --info-foreground: 222 28% 8%;
-
-    /* Sidebar */
-    --sidebar-background: 223 26% 10%;
-    --sidebar-foreground: 42 20% 90%;
-    --sidebar-primary: 221 86% 65%;
-    --sidebar-primary-foreground: 223 25% 10%;
-    --sidebar-accent: 220 19% 16%;
-    --sidebar-accent-foreground: 42 20% 90%;
-    --sidebar-border: 221 18% 20%;
-    --sidebar-ring: 221 86% 65%;
+    --background: 224 71.4% 4.1%;
+    --foreground: 210 20% 98%;
+    --card: 224 71.4% 4.1%;
+    --card-foreground: 210 20% 98%;
+    --popover: 224 71.4% 4.1%;
+    --popover-foreground: 210 20% 98%;
+    --primary: 210 20% 98%;
+    --primary-foreground: 220.9 39.3% 11%;
+    --secondary: 215 27.9% 16.9%;
+    --secondary-foreground: 210 20% 98%;
+    --muted: 215 27.9% 16.9%;
+    --muted-foreground: 217.9 10.6% 64.9%;
+    --accent: 215 27.9% 16.9%;
+    --accent-foreground: 210 20% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 20% 98%;
+    --border: 215 27.9% 16.9%;
+    --input: 215 27.9% 16.9%;
+    --ring: 216 12.2% 83.9%;
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
 
@@ -109,509 +79,24 @@
   * {
     @apply border-border;
   }
-
   body {
     @apply bg-background text-foreground;
-    font-family: "Manrope", sans-serif;
+    font-family: "Inter", sans-serif;
     -webkit-font-smoothing: antialiased;
-    letter-spacing: -0.012em;
-    background-image:
-      radial-gradient(
-        circle at 6% 12%,
-        hsl(var(--primary) / 0.1),
-        transparent 30%
-      ),
-      radial-gradient(
-        circle at 92% 80%,
-        hsl(var(--accent) / 0.55),
-        transparent 34%
-      ),
-      linear-gradient(
-        180deg,
-        hsl(var(--background)) 0%,
-        hsl(var(--background)) 100%
-      );
-    background-attachment: fixed;
-  }
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    @apply font-bold tracking-tight;
-  }
-
-  .font-mono {
-    font-family: "IBM Plex Mono", monospace;
   }
 }
 
-/* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 4px;
+  height: 4px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
   background: hsl(var(--border));
-  border-radius: 3px;
+  border-radius: 2px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--primary) / 0.5);
-}
-
-/* ─────────────────────────────────────────────────────────────────────────── */
-/*  ANIMATION KEYFRAMES                                                         */
-/* ─────────────────────────────────────────────────────────────────────────── */
-
-/* Page / section enter — slight Y + scale spring */
-@keyframes app-page-enter {
-  from {
-    opacity: 0;
-    transform: translateY(14px) scale(0.985);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-/* Slide in from left (headers, hero content) */
-@keyframes slide-in-left {
-  from {
-    opacity: 0;
-    transform: translateX(-18px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-/* Slide up (step reveals, drawers, confirmations) */
-@keyframes slide-up {
-  from {
-    opacity: 0;
-    transform: translateY(18px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Fade + scale in (dialogs, summary panels) */
-@keyframes fade-scale {
-  from {
-    opacity: 0;
-    transform: scale(0.93);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-/* Stat card value entry */
-@keyframes stat-enter {
-  from {
-    opacity: 0;
-    transform: translateY(10px) scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-/* Pulse breathe for icons / live indicators */
-@keyframes breathe {
-  0%,
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.75;
-    transform: scale(1.04);
-  }
-}
-
-/* Live blink */
-@keyframes live-blink {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.2;
-  }
-}
-
-/* Orbit / spin */
-@keyframes orbit {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-@keyframes orbit-ccw {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(-360deg);
-  }
-}
-
-/* ── Skeleton shimmer */
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-
-/* ── Ring expand (loader) */
-@keyframes ring-expand {
-  0% {
-    transform: scale(1);
-    opacity: 0.55;
-  }
-  100% {
-    transform: scale(2.8);
-    opacity: 0;
-  }
-}
-
-/* ── Bouncing dots */
-@keyframes dot-bounce {
-  0%,
-  80%,
-  100% {
-    transform: translateY(0);
-    opacity: 0.3;
-  }
-  40% {
-    transform: translateY(-6px);
-    opacity: 1;
-  }
-}
-
-/* ── Indeterminate progress */
-@keyframes indeterminate {
-  0% {
-    transform: translateX(-100%) scaleX(0.4);
-  }
-  50% {
-    transform: translateX(60%) scaleX(0.9);
-  }
-  100% {
-    transform: translateX(160%) scaleX(0.4);
-  }
-}
-
-/* ── Success ripple */
-@keyframes success-ripple {
-  from {
-    transform: scale(0.6);
-    opacity: 0.7;
-  }
-  to {
-    transform: scale(3.5);
-    opacity: 0;
-  }
-}
-
-/* ── Step connector line draw */
-@keyframes line-draw {
-  from {
-    transform: scaleX(0);
-    transform-origin: left;
-  }
-  to {
-    transform: scaleX(1);
-    transform-origin: left;
-  }
-}
-
-/* ── Float (icons, decorative) */
-@keyframes float-y {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-8px);
-  }
-}
-
-/* ─────────────────────────────────────────────────────────────────────────── */
-/*  ANIMATION UTILITY CLASSES                                                   */
-/* ─────────────────────────────────────────────────────────────────────────── */
-
-.motion-page-enter {
-  animation: app-page-enter 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-.motion-slide-left {
-  animation: slide-in-left 360ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-.motion-slide-up {
-  animation: slide-up 350ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-.motion-fade-scale {
-  animation: fade-scale 300ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-.motion-stat {
-  animation: stat-enter 400ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-/* Panel enter (faster, for revealed sub-sections) */
-.motion-panel-enter {
-  animation: app-page-enter 280ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-/* Button press scale */
-.motion-press {
-  transition: transform 100ms ease;
-}
-.motion-press:active {
-  transform: scale(0.97);
-}
-
-/* Icon hover nudge */
-.motion-icon-hover {
-  transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-.motion-icon-hover:hover {
-  transform: translateY(-1px) scale(1.1);
-}
-
-/* Breathe */
-.motion-breathe {
-  animation: breathe 3s ease-in-out infinite;
-}
-
-/* Float */
-.motion-float {
-  animation: float-y 4s ease-in-out infinite;
-}
-
-.motion-float-delayed {
-  animation: float-y 4.8s ease-in-out 0.5s infinite;
-}
-
-/* Orbit */
-.motion-orbit {
-  animation: orbit 2.2s linear infinite;
-}
-.motion-orbit-slow {
-  animation: orbit-ccw 5s linear infinite;
-}
-
-/* Animate aura pulse (legacy compat) */
-.animate-aura-pulse {
-  animation: breathe 3s ease-in-out infinite;
-}
-
-/* Live blink */
-.animate-live-blink {
-  animation: live-blink 1.8s ease-in-out infinite;
-}
-
-/* Skeleton shimmer */
-.animate-shimmer {
-  background: linear-gradient(
-    90deg,
-    hsl(var(--muted)) 25%,
-    hsl(var(--accent)) 50%,
-    hsl(var(--muted)) 75%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 1.5s ease-in-out infinite;
-}
-
-/* Ring expand (loader) */
-.animate-ring-pulse {
-  animation: ring-expand 1.1s ease-out infinite;
-}
-
-/* Bouncing dot */
-.animate-bounce-dot {
-  animation: dot-bounce 0.7s ease-in-out infinite;
-}
-
-/* Indeterminate progress */
-.animate-progress-indeterminate {
-  width: 45%;
-  transform-origin: left;
-  animation: indeterminate 1.1s ease-in-out infinite;
-}
-
-/* Success ripple */
-.animate-success-ripple {
-  animation: success-ripple 1.2s ease-out forwards;
-}
-.animate-success-ripple-late {
-  animation: success-ripple 1.2s ease-out 0.3s forwards;
-}
-
-/* Rotate CW / CCW */
-.animate-rotate-cw {
-  animation: orbit 0.8s linear infinite;
-}
-.animate-rotate-ccw {
-  animation: orbit-ccw 1.3s linear infinite;
-}
-
-/* Step connector draw-in */
-.animate-line-draw {
-  animation: line-draw 500ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-/* ─────────────────────────────────────────────────────────────────────────── */
-/*  STAGGER UTILITIES                                                           */
-/* ─────────────────────────────────────────────────────────────────────────── */
-
-/* Wrap direct children in a stagger; each child gets motion-page-enter */
-.motion-stagger > * {
-  animation: app-page-enter 360ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-.motion-stagger > *:nth-child(1) {
-  animation-delay: 0ms;
-}
-.motion-stagger > *:nth-child(2) {
-  animation-delay: 70ms;
-}
-.motion-stagger > *:nth-child(3) {
-  animation-delay: 140ms;
-}
-.motion-stagger > *:nth-child(4) {
-  animation-delay: 210ms;
-}
-.motion-stagger > *:nth-child(n + 5) {
-  animation-delay: 280ms;
-}
-
-/* Table row stagger */
-.motion-table-stagger tbody tr {
-  opacity: 0;
-  animation: app-page-enter 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-.motion-table-stagger tbody tr:nth-child(1) { animation-delay: 40ms; }
-.motion-table-stagger tbody tr:nth-child(2) { animation-delay: 80ms; }
-.motion-table-stagger tbody tr:nth-child(3) { animation-delay: 120ms; }
-.motion-table-stagger tbody tr:nth-child(4) { animation-delay: 160ms; }
-.motion-table-stagger tbody tr:nth-child(5) { animation-delay: 200ms; }
-.motion-table-stagger tbody tr:nth-child(6) { animation-delay: 240ms; }
-.motion-table-stagger tbody tr:nth-child(n + 7) { animation-delay: 280ms; }
-
-/* Stat card stagger (used in dashboard grids) */
-.stat-card-enter {
-  animation: stat-enter 400ms cubic-bezier(0.16, 1, 0.3, 1) both;
-  will-change: transform, opacity;
-}
-
-.grid > .stat-card-enter:nth-child(1),
-.grid > *:nth-child(1) .stat-card-enter {
-  animation-delay: 0ms;
-}
-.grid > .stat-card-enter:nth-child(2),
-.grid > *:nth-child(2) .stat-card-enter {
-  animation-delay: 80ms;
-}
-.grid > .stat-card-enter:nth-child(3),
-.grid > *:nth-child(3) .stat-card-enter {
-  animation-delay: 160ms;
-}
-.grid > .stat-card-enter:nth-child(4),
-.grid > *:nth-child(4) .stat-card-enter {
-  animation-delay: 240ms;
-}
-
-/* ─────────────────────────────────────────────────────────────────────────── */
-/*  RESPONSIVE TUNING                                                           */
-/* ─────────────────────────────────────────────────────────────────────────── */
-
-@media (max-width: 640px) {
-  .page-header-title {
-    font-size: 1.25rem;
-  }
-}
-
-/* ─────────────────────────────────────────────────────────────────────────── */
-/*  RESPECT reduced-motion                                                      */
-/* ─────────────────────────────────────────────────────────────────────────── */
-
-@media (prefers-reduced-motion: reduce) {
-  .motion-page-enter,
-  .motion-slide-left,
-  .motion-slide-up,
-  .motion-fade-scale,
-  .motion-stat,
-  .motion-panel-enter,
-  .motion-float,
-  .motion-float-delayed,
-  .motion-breathe,
-  .motion-orbit,
-  .motion-orbit-slow,
-  .motion-stagger > *,
-  .stat-card-enter,
-  .motion-table-stagger tbody tr,
-  .animate-ring-pulse,
-  .animate-bounce-dot,
-  .animate-progress-indeterminate,
-  .animate-success-ripple,
-  .animate-success-ripple-late,
-  .animate-aura-pulse,
-  .animate-live-blink,
-  .animate-line-draw {
-    animation: none !important;
-    opacity: 1 !important;
-    transform: none !important;
-  }
-
-  .motion-press,
-  .motion-icon-hover {
-    transition: none !important;
-  }
-}
-
-/* ─────────────────────────────────────────────────────────────────────────── */
-/*  TABLE READABILITY                                                           */
-/* ─────────────────────────────────────────────────────────────────────────── */
-
-:root :where(table) .text-slate-100,
-:root :where(table) .text-slate-200,
-:root :where(table) .text-slate-300 {
-  color: hsl(var(--foreground));
-}
-
-:root :where(table) .text-slate-400,
-:root :where(table) .text-slate-500 {
-  color: hsl(var(--muted-foreground));
-}
-
-:root :where(table) .bg-slate-950\/40 {
-  background-color: hsl(var(--muted) / 0.5);
-}
-
-:root :where(table) .border-slate-800 {
-  border-color: hsl(var(--border) / 0.8);
-}
-
-.italic {
-  font-style: normal !important;
+  background: hsl(var(--muted-foreground) / 0.5);
 }

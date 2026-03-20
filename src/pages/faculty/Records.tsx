@@ -82,7 +82,7 @@ export default function AttendanceRecords() {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Attendance History</h1>
-          <p className="page-header-sub flex items-center gap-2 mt-1">
+          <p className="text-sm text-muted-foreground mt-1">
             <Calendar className="h-4 w-4 text-primary/70" /> Records and audit
             logs
           </p>
@@ -107,7 +107,7 @@ export default function AttendanceRecords() {
             variant="outline"
             size="sm"
             onClick={handleCopyExport}
-            className="border-primary/20 text-primary motion-press"
+            className="border-primary/20 text-primary"
           >
             Copy Export
           </Button>
@@ -115,7 +115,7 @@ export default function AttendanceRecords() {
       </div>
 
       <Card
-                className="app-card overflow-hidden motion-fade-scale"
+                className="app-card overflow-hidden"
       >
         <CardHeader className="border-b bg-muted/40 px-6 py-4">
           <CardTitle className="text-sm font-semibold text-foreground">

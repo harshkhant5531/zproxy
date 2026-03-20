@@ -105,7 +105,7 @@ export default function ExamPermit() {
         </div>
       </div>
 
-      <div className="relative group motion-slide-up">
+      <div className="relative group">
         <Card
                     className={`relative bg-card border border-border shadow-sm overflow-hidden ${overallEligible ? "border-primary/40" : "border-destructive/40"}`}
         >
@@ -213,7 +213,7 @@ export default function ExamPermit() {
                 <Button
                   onClick={handleDownload}
                   size="lg"
-                  className="w-full h-14 text-sm font-bold tracking-widest uppercase bg-primary text-black hover:brightness-110 shadow-sm relative overflow-hidden group/btn motion-press"
+                  className="w-full h-14 text-sm font-bold tracking-widest uppercase bg-primary text-black hover:brightness-110 shadow-sm relative overflow-hidden group/btn"
                 >
                   <Download className="mr-3 h-5 w-5" /> Download Hall Ticket
                 </Button>
