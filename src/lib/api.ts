@@ -123,6 +123,8 @@ export const usersAPI = {
   ) => api.put(`/users/students/${id}/enrollment`, { courseIds, subjectIds }),
 
   deleteUser: (id: string | number) => api.delete(`/users/${id}`),
+
+  getStudents: () => api.get("/users/students"),
 };
 
 // Courses API
@@ -241,7 +243,14 @@ export const timetableAPI = {
 
 // Grades API
 export const gradesAPI = {
-  getGrades: () => api.get("/grades"),
+  getGrades: (params?: Record<string, unknown>) =>
+    api.get("/grades", { params }),
+
+  getGradeReport: (params?: {
+    studentId?: number;
+    semester?: number;
+    year?: number;
+  }) => api.get("/grades/report", { params }),
 
   getGradesByCourse: (courseId: string) =>
     api.get(`/grades/course/${courseId}`),
@@ -281,7 +290,10 @@ export const reportsAPI = {
 
 // Notifications API
 export const notificationsAPI = {
-  getNotifications: () => api.get("/notifications"),
+  getNotifications: (params?: Record<string, unknown>) =>
+    api.get("/notifications", { params }),
+
+  getUnreadCount: () => api.get("/notifications/unread"),
 
   getNotification: (id: string) => api.get(`/notifications/${id}`),
 
@@ -292,7 +304,10 @@ export const notificationsAPI = {
 
   deleteNotification: (id: string) => api.delete(`/notifications/${id}`),
 
-  markAsRead: (id: string) => api.put(`/notifications/${id}/read`),
+  markAsRead: (id: string | number) =>
+    api.put(`/notifications/${id}/read`),
+
+  markAllAsRead: () => api.put("/notifications/read-all"),
 };
 
 export default api;

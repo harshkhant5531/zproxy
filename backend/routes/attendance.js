@@ -42,6 +42,65 @@ const appendNotes = (existingNotes, tags = []) => {
   return existingNotes ? `${existingNotes} ${suffix}` : suffix;
 };
 
+const parseProxyAttendanceDetail = (notes, status) => {
+  const noteStr = notes || "";
+  const signals = [];
+
+  if (noteStr.includes("[PROXY_DETECTED")) {
+    const m = noteStr.match(/sharedWith:(\d+)/);
+    signals.push({
+      code: "PROXY_DETECTED",
+      label: "Strong integrity violation",
+      detail: m
+        ? `Same device fingerprint as student #${m[1]} in this session.`
+        : "Proxy or shared-device pattern detected.",
+    });
+  }
+  if (noteStr.includes("[PROXY_SUSPECT")) {
+    signals.push({
+      code: "PROXY_SUSPECT",
+      label: "Suspicious attendance pattern",
+      detail: "Flagged for manual review.",
+    });
+  }
+  if (noteStr.includes("[AUTO_ABSENT:PROXY")) {
+    signals.push({
+      code: "AUTO_ABSENT_PROXY",
+      label: "Auto-marked absent (proxy rule)",
+      detail: "System applied an automated absent status.",
+    });
+  }
+  const ipShared = noteStr.match(/\[IP_SHARED:count=(\d+)\]/);
+  if (ipShared) {
+    const n = parseInt(ipShared[1], 10);
+    signals.push({
+      code: "SHARED_IP",
+      label: "Shared campus / NAT IP",
+      detail: `${n} other student(s) checked in from this address; common on Wi-Fi, not proof alone.`,
+    });
+  }
+
+  let riskScore = 18;
+  if (noteStr.includes("[PROXY_DETECTED")) riskScore = 88;
+  else if (noteStr.includes("[AUTO_ABSENT:PROXY")) riskScore = 70;
+  else if (noteStr.includes("[PROXY_SUSPECT")) riskScore = 58;
+  if (status === "absent") riskScore = Math.min(100, riskScore + 6);
+  if (ipShared && parseInt(ipShared[1], 10) >= 2) {
+    riskScore = Math.min(100, riskScore + 4);
+  }
+
+  const riskLabel =
+    riskScore >= 80
+      ? "critical"
+      : riskScore >= 60
+        ? "high"
+        : riskScore >= 40
+          ? "moderate"
+          : "low";
+
+  return { signals, riskScore, riskLabel };
+};
+
 const logAttendanceAttempt = async ({
   req,
   userId,
@@ -398,8 +457,9 @@ router.get(
         .sort((a, b) => b.riskPercentage - a.riskPercentage)
         .slice(0, 5);
 
-      // Calculate student risk profiles with anomaly scoring
-      const studentRiskProfiles = Array.from(studentRiskMap.values())
+      // Students with at least one proxy-class flag (exclude IP-only noise from "at risk" rollups)
+      const flaggedStudentProfiles = Array.from(studentRiskMap.values())
+        .filter((s) => s.flaggedCount > 0)
         .map((s) => {
           const flagRate = s.totalCount
             ? (s.flaggedCount / s.totalCount) * 100
@@ -425,8 +485,37 @@ router.get(
                     : "low",
           };
         })
-        .sort((a, b) => b.anomalyScore - a.anomalyScore)
-        .slice(0, 25);
+        .sort((a, b) => b.anomalyScore - a.anomalyScore);
+
+      const profileIds = flaggedStudentProfiles.map((p) => p.studentId);
+      const studentRows =
+        profileIds.length > 0
+          ? await prisma.users.findMany({
+              where: { id: { in: profileIds } },
+              select: {
+                id: true,
+                username: true,
+                studentProfile: {
+                  select: { fullName: true, rollNumber: true },
+                },
+              },
+            })
+          : [];
+      const studentMeta = new Map(studentRows.map((u) => [u.id, u]));
+
+      const namedFlaggedProfiles = flaggedStudentProfiles.map((p) => {
+        const u = studentMeta.get(p.studentId);
+        return {
+          ...p,
+          studentName:
+            u?.studentProfile?.fullName ||
+            u?.username ||
+            `Student #${p.studentId}`,
+          rollNumber: u?.studentProfile?.rollNumber ?? null,
+        };
+      });
+
+      const studentRiskProfiles = namedFlaggedProfiles.slice(0, 25);
 
       // Device risk analysis
       const deviceRiskAnalysis = Array.from(devicePatterns.values())
@@ -526,31 +615,18 @@ router.get(
         (r.notes || "").includes("[PROXY_"),
       ).length;
       const allTotalCount = allRecordsForStats.length;
-      const detectionAccuracy =
+      const flagRatePercent =
         allTotalCount > 0
           ? Math.round((allFlaggedCount / allTotalCount) * 100)
           : 0;
 
       const flaggedRecords = records.map((row) => {
-        const note = row.notes || "";
-        let riskScore = 25;
-        if (note.includes("[PROXY_DETECTED")) riskScore += 50;
-        if (note.includes("[PROXY_SUSPECT")) riskScore += 35;
-        if (note.includes("[AUTO_ABSENT:PROXY")) riskScore += 20;
-        if (row.status === "absent") riskScore += 10;
-        riskScore = Math.min(100, riskScore);
-
+        const detail = parseProxyAttendanceDetail(row.notes, row.status);
         return {
           ...row,
-          riskScore,
-          riskLabel:
-            riskScore >= 80
-              ? "critical"
-              : riskScore >= 60
-                ? "high"
-                : riskScore >= 40
-                  ? "moderate"
-                  : "low",
+          riskScore: detail.riskScore,
+          riskLabel: detail.riskLabel,
+          proxyDetail: { signals: detail.signals },
         };
       });
 
@@ -568,18 +644,19 @@ router.get(
             summary: {
               totalFlagged: total,
               totalAttendance: allTotalCount,
-              detectionAccuracy,
-              uniqueStudentsAtRisk: studentRiskProfiles.length,
-              criticalRiskCount: studentRiskProfiles.filter(
+              flagRatePercent,
+              detectionAccuracy: flagRatePercent,
+              uniqueStudentsAtRisk: flaggedStudentProfiles.length,
+              criticalRiskCount: flaggedStudentProfiles.filter(
                 (s) => s.riskLevel === "critical",
               ).length,
-              highRiskCount: studentRiskProfiles.filter(
+              highRiskCount: flaggedStudentProfiles.filter(
                 (s) => s.riskLevel === "high",
               ).length,
-              moderateRiskCount: studentRiskProfiles.filter(
+              moderateRiskCount: flaggedStudentProfiles.filter(
                 (s) => s.riskLevel === "moderate",
               ).length,
-              lowRiskCount: studentRiskProfiles.filter(
+              lowRiskCount: flaggedStudentProfiles.filter(
                 (s) => s.riskLevel === "low",
               ).length,
             },

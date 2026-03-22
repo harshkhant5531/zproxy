@@ -186,7 +186,7 @@ const Index = () => {
               </div>
               <div>
                 <p className="text-sm font-semibold tracking-tight">
-                  Aura Grid
+                  Aura Integrity
                 </p>
               </div>
             </div>

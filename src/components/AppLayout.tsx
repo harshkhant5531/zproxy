@@ -23,6 +23,9 @@ function getPageTitle(pathname: string): string {
     alerts: "Attendance Alerts",
     new: "New Session",
     profile: "Profile",
+    grades: "Grades",
+    notifications: "Notifications",
+    "proxy-audit": "Proxy audit",
   };
   return (
     titles[last] ||

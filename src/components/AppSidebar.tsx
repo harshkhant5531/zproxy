@@ -16,6 +16,8 @@ import {
   LogOut,
   Shield,
   UserCircle2,
+  Bell,
+  Award,
 } from "lucide-react";
 import { Role } from "@/lib/types";
 import { useAuth } from "@/contexts/AuthContext";
@@ -57,6 +59,8 @@ const studentSections: MenuSection[] = [
       { title: "Timetable", url: "/student/timetable", icon: Calendar },
       { title: "Leave Requests", url: "/student/leaves", icon: FileText },
       { title: "Exam Permit", url: "/student/permit", icon: Ticket },
+      { title: "Grades", url: "/student/grades", icon: Award },
+      { title: "Notifications", url: "/notifications", icon: Bell },
     ],
   },
   {
@@ -79,6 +83,8 @@ const facultySections: MenuSection[] = [
       { title: "Proxy Audit", url: "/faculty/proxy-audit", icon: Network },
       { title: "Timetable", url: "/faculty/timetable", icon: Calendar },
       { title: "Analytics", url: "/faculty/analytics", icon: BarChart3 },
+      { title: "Grades", url: "/faculty/grades", icon: Award },
+      { title: "Notifications", url: "/notifications", icon: Bell },
     ],
   },
   {
@@ -100,6 +106,8 @@ const adminSections: MenuSection[] = [
       { title: "Reports", url: "/admin/reports", icon: FileBarChart },
       { title: "Alerts", url: "/admin/alerts", icon: AlertTriangle },
       { title: "Proxy Audit", url: "/admin/proxy-audit", icon: Network },
+      { title: "Grades", url: "/admin/grades", icon: Award },
+      { title: "Notifications", url: "/notifications", icon: Bell },
     ],
   },
   {
@@ -137,7 +145,7 @@ export function AppSidebar() {
             </div>
             <div>
               <h1 className="text-sm font-bold tracking-tight text-sidebar-foreground leading-none">
-                Aura Royal
+                Aura Integrity
               </h1>
               <p className="text-[10px] text-sidebar-foreground/70 mt-0.5 uppercase tracking-[0.12em]">
                 {config.label}

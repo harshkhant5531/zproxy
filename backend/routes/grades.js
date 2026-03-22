@@ -72,6 +72,79 @@ router.get("/", authMiddleware, async (req, res, next) => {
   }
 });
 
+// @route   GET /api/grades/report
+// @desc    Get student grade report (must be before /:id)
+// @access  Student, Admin, Faculty
+router.get("/report", authMiddleware, async (req, res, next) => {
+  try {
+    const { studentId, semester, year } = req.query;
+
+    let targetStudentId = req.user.id;
+    if (studentId) {
+      targetStudentId = parseInt(studentId);
+
+      if (req.user.role !== "admin" && req.user.role !== "faculty") {
+        const error = new Error("Forbidden");
+        error.statusCode = 403;
+        throw error;
+      }
+    } else if (req.user.role === "admin" || req.user.role === "faculty") {
+      const error = new Error("Student ID is required");
+      error.statusCode = 400;
+      throw error;
+    }
+
+    const where = { studentId: targetStudentId };
+    if (semester) where.semester = parseInt(semester);
+    if (year) where.year = parseInt(year);
+
+    const grades = await prisma.grade.findMany({
+      where,
+      include: {
+        course: true,
+        subject: true,
+      },
+      orderBy: { semester: "asc", year: "asc", subjectId: "asc" },
+    });
+
+    const totalSubjects = grades.length;
+    const totalMarksObtained = grades.reduce(
+      (sum, grade) => sum + grade.marksObtained,
+      0,
+    );
+    const totalMarks = grades.reduce((sum, grade) => sum + grade.totalMarks, 0);
+    const averagePercentage =
+      totalMarks > 0 ? (totalMarksObtained / totalMarks) * 100 : 0;
+
+    const groupedGrades = {};
+    grades.forEach((grade) => {
+      const key = `${grade.year}_${grade.semester}`;
+      if (!groupedGrades[key]) {
+        groupedGrades[key] = {
+          year: grade.year,
+          semester: grade.semester,
+          grades: [],
+        };
+      }
+      groupedGrades[key].grades.push(grade);
+    });
+
+    res.json({
+      success: true,
+      data: {
+        studentId: targetStudentId,
+        totalSubjects,
+        totalMarksObtained,
+        totalMarks,
+        averagePercentage: parseFloat(averagePercentage.toFixed(2)),
+        groupedGrades: Object.values(groupedGrades),
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
 // @route   GET /api/grades/:id
 // @desc    Get grade by ID
 // @access  Admin, Faculty, Student
@@ -182,6 +255,12 @@ router.post(
       if (!course) {
         const error = new Error("Course not found");
         error.statusCode = 404;
+        throw error;
+      }
+
+      if (req.user.role === "faculty" && course.facultyId !== req.user.id) {
+        const error = new Error("You can only record grades for your own courses");
+        error.statusCode = 403;
         throw error;
       }
 
@@ -398,83 +477,6 @@ router.delete("/:id", authMiddleware, async (req, res, next) => {
     res.json({
       success: true,
       message: "Grade deleted successfully",
-    });
-  } catch (error) {
-    next(error);
-  }
-});
-
-// @route   GET /api/grades/report
-// @desc    Get student grade report
-// @access  Student, Admin, Faculty
-router.get("/report", authMiddleware, async (req, res, next) => {
-  try {
-    const { studentId, semester, year } = req.query;
-
-    // Determine which student's report to show
-    let targetStudentId = req.user.id;
-    if (studentId) {
-      targetStudentId = parseInt(studentId);
-
-      // Check if user has access to view other student's report
-      if (req.user.role !== "admin" && req.user.role !== "faculty") {
-        const error = new Error("Forbidden");
-        error.statusCode = 403;
-        throw error;
-      }
-    } else if (req.user.role === "admin" || req.user.role === "faculty") {
-      const error = new Error("Student ID is required");
-      error.statusCode = 400;
-      throw error;
-    }
-
-    const where = { studentId: targetStudentId };
-    if (semester) where.semester = parseInt(semester);
-    if (year) where.year = parseInt(year);
-
-    const grades = await prisma.grade.findMany({
-      where,
-      include: {
-        course: true,
-        subject: true,
-      },
-      orderBy: { semester: "asc", year: "asc", subjectId: "asc" },
-    });
-
-    // Calculate statistics
-    const totalSubjects = grades.length;
-    const totalMarksObtained = grades.reduce(
-      (sum, grade) => sum + grade.marksObtained,
-      0,
-    );
-    const totalMarks = grades.reduce((sum, grade) => sum + grade.totalMarks, 0);
-    const averagePercentage =
-      totalMarks > 0 ? (totalMarksObtained / totalMarks) * 100 : 0;
-
-    // Group grades by semester and year
-    const groupedGrades = {};
-    grades.forEach((grade) => {
-      const key = `${grade.year}_${grade.semester}`;
-      if (!groupedGrades[key]) {
-        groupedGrades[key] = {
-          year: grade.year,
-          semester: grade.semester,
-          grades: [],
-        };
-      }
-      groupedGrades[key].grades.push(grade);
-    });
-
-    res.json({
-      success: true,
-      data: {
-        studentId: targetStudentId,
-        totalSubjects,
-        totalMarksObtained,
-        totalMarks,
-        averagePercentage: parseFloat(averagePercentage.toFixed(2)),
-        groupedGrades: Object.values(groupedGrades),
-      },
     });
   } catch (error) {
     next(error);
