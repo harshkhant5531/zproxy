@@ -145,10 +145,12 @@ export default function Analytics() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Analytics Overview</h1>
+          <h1 className="text-2xl font-bold tracking-tight">
+            Analytics Overview
+          </h1>
           <p className="text-sm text-muted-foreground mt-1">
             Live analytics for course outcomes and engagement
           </p>
@@ -210,9 +212,7 @@ export default function Analytics() {
       </div>
 
       <div className="grid gap-8 lg:grid-cols-2">
-        <Card
-                    className="bg-card border border-border shadow-sm overflow-hidden group"
-        >
+        <Card className="bg-card border border-border shadow-sm overflow-hidden group">
           <CardHeader className="bg-muted/30 border-b border-border px-6 py-4">
             <CardTitle className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
               Top Performance Distribution
@@ -258,9 +258,7 @@ export default function Analytics() {
           </CardContent>
         </Card>
 
-        <Card
-                    className="bg-card border border-border shadow-sm overflow-hidden group"
-        >
+        <Card className="bg-card border border-border shadow-sm overflow-hidden group">
           <CardHeader className="bg-muted/30 border-b border-border px-6 py-4">
             <CardTitle className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
               Engagement Vector Map
@@ -297,9 +295,7 @@ export default function Analytics() {
           </CardContent>
         </Card>
 
-        <Card
-                    className="bg-card border border-border shadow-sm lg:col-span-2 overflow-hidden"
-        >
+        <Card className="bg-card border border-border shadow-sm lg:col-span-2 overflow-hidden">
           <CardHeader className="bg-muted/30 border-b border-border px-8 py-5 flex flex-row items-center justify-between">
             <CardTitle className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
               Attendance Telemetry Trend

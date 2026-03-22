@@ -89,7 +89,7 @@ export default function LeaveManagement() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Leave Requests</h1>
@@ -131,9 +131,7 @@ export default function LeaveManagement() {
       </div>
 
       {showForm && (
-        <Card
-                    className="app-card border-primary/20"
-        >
+        <Card className="app-card border-primary/20">
           <CardHeader className="pb-3 px-6">
             <CardTitle className="text-sm font-bold text-primary uppercase tracking-widest">
               Request Details
@@ -222,9 +220,7 @@ export default function LeaveManagement() {
         </Card>
       )}
 
-      <Card
-                className="app-card overflow-hidden"
-      >
+      <Card className="app-card overflow-hidden">
         <CardHeader className="pb-3 px-6">
           <CardTitle className="text-sm font-bold text-foreground/90 flex items-center gap-2 uppercase tracking-widest">
             <FileText className="h-4 w-4 text-primary" /> Request History

@@ -55,7 +55,7 @@ export default function ForgotPassword() {
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute inset-0 opacity-[0.06] [background-image:linear-gradient(hsl(var(--primary)/0.12)_1px,transparent_1px),linear-gradient(90deg,hsl(var(--primary)/0.12)_1px,transparent_1px)] [background-size:30px_30px]" />
         <div className="absolute top-[-10%] left-[-5%] h-[30rem] w-[30rem] rounded-full bg-primary/10 blur-3xl" />
-        <div className="absolute bottom-[-10%] right-[-5%] h-[24rem] w-[24rem] rounded-full bg-sky-300/20 blur-3xl" />
+        <div className="absolute bottom-[-10%] right-[-5%] h-[24rem] w-[24rem] rounded-full bg-info/20 blur-3xl" />
       </div>
 
       <div className="relative z-10 mx-auto flex min-h-screen max-w-6xl items-center justify-center px-6 py-10">
@@ -140,7 +140,7 @@ export default function ForgotPassword() {
                 <div className="mt-6 space-y-4 rounded-3xl border border-success/25 bg-success/10 p-5">
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <p className="text-[11px] font-black uppercase tracking-[0.16em] text-emerald-600">
+                      <p className="text-[11px] font-black uppercase tracking-[0.16em] text-success">
                         Reset Link Ready
                       </p>
                       <p className="mt-1 text-sm text-muted-foreground">
@@ -149,7 +149,7 @@ export default function ForgotPassword() {
                           : "Use this link to reset the password."}
                       </p>
                     </div>
-                    <Link2 className="mt-0.5 h-4 w-4 text-emerald-600" />
+                    <Link2 className="mt-0.5 h-4 w-4 text-success" />
                   </div>
                   <div className="rounded-2xl border border-success/20 bg-background p-4 text-xs leading-6 text-foreground shadow-sm break-all">
                     {resetUrl}

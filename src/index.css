@@ -28,6 +28,8 @@
     --radius: 0.5rem;
     --success: 142 71% 45%;
     --success-foreground: 0 0% 100%;
+    --info: 195 90% 45%;
+    --info-foreground: 210 20% 98%;
     --warning: 38 92% 50%;
     --warning-foreground: 0 0% 100%;
     --sidebar-background: 0 0% 98%;
@@ -62,6 +64,8 @@
     --ring: 216 12.2% 83.9%;
     --success: 142 71% 45%;
     --success-foreground: 0 0% 100%;
+    --info: 195 90% 45%;
+    --info-foreground: 210 20% 98%;
     --warning: 38 92% 50%;
     --warning-foreground: 0 0% 100%;
     --sidebar-background: 240 5.9% 10%;
@@ -99,4 +103,95 @@
 }
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--muted-foreground) / 0.5);
+}
+
+html,
+body {
+  background: hsl(var(--background));
+}
+
+::selection {
+  background: hsl(var(--primary) / 0.22);
+  color: hsl(var(--foreground));
+}
+
+/* Scoped scrollbar utility (used by some pages) */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--border)) transparent;
+}
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: hsl(var(--border));
+  border-radius: 2px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+}
+
+/* Small motion helpers used by the app loader + theme toggle */
+@keyframes aura-orbit {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes aura-float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.motion-orbit {
+  animation: aura-orbit 8s linear infinite;
+}
+.motion-orbit-slow {
+  animation: aura-orbit 16s linear infinite;
+}
+.motion-float {
+  animation: aura-float 2.6s ease-in-out infinite;
+}
+
+/* "Aura" glow used on the theme toggle */
+.aura-glow {
+  box-shadow:
+    0 0 0 1px hsl(var(--border) / 0.55),
+    0 0 24px hsl(var(--primary) / 0.25);
+}
+
+/* Adds a premium gradient sheen to selected cards */
+.app-card {
+  position: relative;
+  isolation: isolate;
+}
+.app-card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background:
+    radial-gradient(640px circle at 18% -8%, hsl(var(--primary) / 0.18), transparent 45%),
+    radial-gradient(520px circle at 100% 0%, hsl(var(--ring) / 0.10), transparent 55%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-orbit,
+  .motion-orbit-slow,
+  .motion-float {
+    animation: none !important;
+  }
 }

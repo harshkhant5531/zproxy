@@ -117,10 +117,12 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Institutional Overview</h1>
+          <h1 className="text-2xl font-bold tracking-tight">
+            Institutional Overview
+          </h1>
           <p className="text-sm text-muted-foreground mt-1">
             Global system metrics for admin operations
           </p>
@@ -142,39 +144,31 @@ export default function AdminDashboard() {
       </div>
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="" >
-          <StatCard
-            title="Total Students"
-            value={studentsData?.length.toString() || "0"}
-            icon={Users}
-            className=""
-          />
-        </div>
-        <div className="" >
-          <StatCard
-            title="Staff Faculty"
-            value={facultyData?.length.toString() || "0"}
-            icon={ShieldAlert}
-            className=""
-          />
-        </div>
-        <div className="" >
-          <StatCard
-            title="Active Courses"
-            value={coursesData?.length.toString() || "0"}
-            subtitle={`${deptData?.length || 0} sectors`}
-            icon={BookOpen}
-            className="bg-card border border-border shadow-sm"
-          />
-        </div>
-        <div className="" >
-          <StatCard
-            title="Avg Attendance"
-            value={`${avgAttendance}%`}
-            icon={TrendingUp}
-            className="bg-card border border-border shadow-sm"
-          />
-        </div>
+        <StatCard
+          title="Total Students"
+          value={studentsData?.length.toString() || "0"}
+          icon={Users}
+          className="h-full"
+        />
+        <StatCard
+          title="Staff Faculty"
+          value={facultyData?.length.toString() || "0"}
+          icon={ShieldAlert}
+          className="h-full"
+        />
+        <StatCard
+          title="Active Courses"
+          value={coursesData?.length.toString() || "0"}
+          subtitle={`${deptData?.length || 0} sectors`}
+          icon={BookOpen}
+          className="h-full bg-card border border-border shadow-sm"
+        />
+        <StatCard
+          title="Avg Attendance"
+          value={`${avgAttendance}%`}
+          icon={TrendingUp}
+          className="h-full bg-card border border-border shadow-sm"
+        />
       </div>
 
       <div className="grid gap-8 lg:grid-cols-2">
@@ -263,7 +257,6 @@ export default function AdminDashboard() {
                   <div
                     key={s.id}
                     className="flex items-center justify-between rounded-xl bg-muted/30 border border-border/60 p-4 hover:border-destructive/30 transition-all hover:bg-muted/40"
-                    
                   >
                     <div>
                       <p className="text-sm font-semibold text-foreground">
@@ -290,9 +283,7 @@ export default function AdminDashboard() {
             ) : (
               <div className="flex flex-col items-center justify-center h-full gap-2">
                 <ShieldAlert className="h-8 w-8 opacity-30 text-success" />
-                <p className="text-sm font-medium text-emerald-600 dark:text-emerald-400">
-                  All clear
-                </p>
+                <p className="text-sm font-medium text-success">All clear</p>
                 <p className="text-xs text-muted-foreground">
                   No attendance shortages detected
                 </p>
@@ -307,7 +298,6 @@ export default function AdminDashboard() {
           <Card
             key={dept.department}
             className="hover:scale-[1.01] transition-all duration-300 group overflow-hidden"
-            
           >
             <CardContent className="p-5 relative">
               <div className="absolute top-0 right-0 w-20 h-20 bg-primary/5 rounded-full blur-2xl -mr-6 -mt-6 group-hover:bg-primary/10 transition-colors pointer-events-none" />

@@ -77,7 +77,7 @@ export default function StudentTimetable() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
@@ -102,9 +102,7 @@ export default function StudentTimetable() {
       </div>
 
       {/* Timetable grid */}
-      <Card
-                className="app-card overflow-hidden"
-      >
+      <Card className="app-card overflow-hidden">
         <CardHeader className="border-b bg-muted/40 px-6 py-4">
           <CardTitle className="text-sm font-semibold text-foreground">
             Weekly Matrix

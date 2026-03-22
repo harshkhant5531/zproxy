@@ -129,7 +129,7 @@ export default function AdminLeaves() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Leave Approvals</h1>
@@ -193,9 +193,7 @@ export default function AdminLeaves() {
       </div>
 
       {leaves.length === 0 ? (
-        <Card
-                    className="bg-card border border-border shadow-sm"
-        >
+        <Card className="bg-card border border-border shadow-sm">
           <CardContent className="py-16 text-center">
             <div className="flex flex-col items-center gap-3">
               <div className="h-14 w-14 rounded-2xl bg-success/10 border border-success/20 flex items-center justify-center">
@@ -212,9 +210,7 @@ export default function AdminLeaves() {
           </CardContent>
         </Card>
       ) : (
-        <Card
-                    className="bg-card border border-border shadow-sm overflow-hidden"
-        >
+        <Card className="bg-card border border-border shadow-sm overflow-hidden">
           <CardHeader className="border-b bg-muted/40 px-4 py-4">
             <div className="flex items-center justify-between">
               <CardTitle className="text-sm font-semibold text-foreground flex items-center gap-2">
@@ -330,7 +326,7 @@ export default function AdminLeaves() {
                             <Button
                               size="sm"
                               variant="outline"
-                              className="h-8 px-3 text-xs font-semibold border-success/30 text-emerald-600 dark:text-emerald-400 hover:bg-success/10 gap-1.5"
+                              className="h-8 px-3 text-xs font-semibold border-success/30 text-success hover:bg-success/10 gap-1.5"
                               onClick={() => approveMutation.mutate(leave.id)}
                               disabled={isProcessing}
                             >

@@ -109,7 +109,7 @@ export default function FacultyLeaves() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Leave Requests</h1>
@@ -158,9 +158,7 @@ export default function FacultyLeaves() {
       </div>
 
       {leaves.length === 0 ? (
-        <Card
-                    className="bg-card border border-border shadow-sm"
-        >
+        <Card className="bg-card border border-border shadow-sm">
           <CardContent className="py-16 text-center">
             <div className="flex flex-col items-center gap-3">
               <div className="h-14 w-14 rounded-2xl bg-success/10 border border-success/20 flex items-center justify-center">
@@ -176,9 +174,7 @@ export default function FacultyLeaves() {
           </CardContent>
         </Card>
       ) : (
-        <Card
-                    className="bg-card border border-border shadow-sm overflow-hidden"
-        >
+        <Card className="bg-card border border-border shadow-sm overflow-hidden">
           <CardHeader className="border-b bg-muted/40 px-4 py-4">
             <div className="flex items-center justify-between">
               <CardTitle className="text-sm font-semibold text-foreground flex items-center gap-2">
@@ -283,7 +279,7 @@ export default function FacultyLeaves() {
                         <div className="flex justify-end gap-2">
                           <Button
                             size="sm"
-                            className="h-8 px-3 bg-success/10 hover:bg-success/20 text-emerald-600 dark:text-emerald-400 border border-success/20 hover:border-success/40 transition-all shadow-none"
+                            className="h-8 px-3 bg-success/10 hover:bg-success/20 text-success border border-success/20 hover:border-success/40 transition-all shadow-none"
                             onClick={() => approveMutation.mutate(leave.id)}
                             disabled={processingLeaveId !== null}
                             title="Approve"

@@ -48,6 +48,27 @@ import {
 import { toast } from "sonner";
 
 const DAY_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const ATTENDANCE_EARLY_WINDOW_MINUTES = 10;
+const ATTENDANCE_LATE_GRACE_MINUTES = 10;
+
+const parseClockTimeToMinutes = (value?: string | null): number | null => {
+  if (!value) return null;
+  const match = value.match(/^(\d{1,2}):(\d{2})/);
+  if (!match) return null;
+  const hours = Number.parseInt(match[1], 10);
+  const minutes = Number.parseInt(match[2], 10);
+  if (
+    Number.isNaN(hours) ||
+    Number.isNaN(minutes) ||
+    hours < 0 ||
+    hours > 23 ||
+    minutes < 0 ||
+    minutes > 59
+  ) {
+    return null;
+  }
+  return hours * 60 + minutes;
+};
 
 export default function StudentDashboard() {
   const { user } = useAuth();
@@ -89,17 +110,25 @@ export default function StudentDashboard() {
   const { data: activeSessionsData, isLoading: isSessionsLoading } = useQuery({
     queryKey: ["student", "active-sessions", user?.id],
     queryFn: async () => {
-      const resp = await sessionsAPI.getSessions({ timetableOnly: true, limit: 30 });
+      const resp = await sessionsAPI.getSessions({
+        timetableOnly: true,
+        limit: 30,
+      });
       return resp.data.data.sessions || [];
     },
     enabled: !!user?.id,
   });
 
-  const isLoading = isStatsLoading || isLogsLoading || isCoursesLoading || isSessionsLoading;
+  const isLoading =
+    isStatsLoading || isLogsLoading || isCoursesLoading || isSessionsLoading;
 
-  const records: any[] = Array.isArray(attendanceRecords) ? attendanceRecords : [];
+  const records: any[] = Array.isArray(attendanceRecords)
+    ? attendanceRecords
+    : [];
   const courses: any[] = Array.isArray(coursesData) ? coursesData : [];
-  const activeSessions: any[] = Array.isArray(activeSessionsData) ? activeSessionsData : [];
+  const activeSessions: any[] = Array.isArray(activeSessionsData)
+    ? activeSessionsData
+    : [];
 
   const markAttendanceMutation = useMutation({
     mutationFn: async (session: any) => {
@@ -108,25 +137,106 @@ export default function StudentDashboard() {
         navigator.platform,
         navigator.language,
         Intl.DateTimeFormat().resolvedOptions().timeZone,
-      ].filter(Boolean).join(" | ").slice(0, 180);
-      return attendanceAPI.markAttendance({ sessionId: session.id, deviceInfo });
+      ]
+        .filter(Boolean)
+        .join(" | ")
+        .slice(0, 180);
+      return attendanceAPI.markAttendance({
+        sessionId: session.id,
+        deviceInfo,
+      });
     },
-    onSuccess: () => {
-      toast.success("Attendance marked successfully");
-      queryClient.invalidateQueries({ queryKey: ["student", "attendance-logs"] });
-      queryClient.invalidateQueries({ queryKey: ["student", "attendance-stats"] });
-      queryClient.invalidateQueries({ queryKey: ["student", "active-sessions"] });
+    onSuccess: (resp: any) => {
+      const attendance = resp?.data?.data?.attendance;
+      const wasProxyFlagged =
+        attendance?.status === "absent" &&
+        typeof attendance?.notes === "string" &&
+        attendance.notes.includes("[PROXY_");
+
+      if (wasProxyFlagged) {
+        toast.error("Attendance flagged for security review", {
+          description:
+            "Check-in was recorded as absent due to a proxy-risk signal.",
+        });
+      } else {
+        toast.success("Attendance marked successfully");
+      }
+
+      queryClient.invalidateQueries({
+        queryKey: ["student", "attendance-logs"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["student", "attendance-stats"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["student", "active-sessions"],
+      });
     },
     onError: (error: any) => {
-      if (error?.response?.status === 409) {
+      const reason = error?.response?.data?.reason;
+      const message = error?.response?.data?.message;
+
+      if (reason === "duplicate_attendance") {
         toast.info("Attendance already marked for this session");
         return;
       }
-      toast.error(error?.response?.data?.message || "Failed to mark attendance");
+
+      if (reason === "proxy_same_device_session") {
+        toast.error("Attendance blocked by security checks", {
+          description:
+            "This device fingerprint was already used by another student in this session.",
+        });
+        return;
+      }
+
+      if (reason === "session_not_started") {
+        toast.info(message || "Check-in has not opened yet for this session.");
+        return;
+      }
+
+      if (
+        reason === "session_checkin_window_closed" ||
+        reason === "session_closed" ||
+        reason === "attendance_not_on_session_day"
+      ) {
+        toast.error(message || "Check-in window is closed for this session.");
+        return;
+      }
+
+      if (reason === "missing_device_fingerprint") {
+        toast.error("Device verification data is missing. Refresh and retry.");
+        return;
+      }
+
+      if (reason === "outside_campus_wifi") {
+        toast.error("Connect to campus WiFi to mark attendance", {
+          description:
+            message ||
+            "Attendance check-in is allowed only from the approved campus network.",
+        });
+        return;
+      }
+
+      toast.error(message || "Failed to mark attendance");
     },
   });
 
   const now = new Date();
+  const nowMinutes = now.getHours() * 60 + now.getMinutes();
+  const openSessions = activeSessions.filter((session: any) => {
+    if (session?.status === "completed") return false;
+
+    const startMinutes = parseClockTimeToMinutes(session?.startTime);
+    const endMinutes = parseClockTimeToMinutes(session?.endTime);
+
+    if (startMinutes === null || endMinutes === null) return true;
+
+    return (
+      nowMinutes >= startMinutes - ATTENDANCE_EARLY_WINDOW_MINUTES &&
+      nowMinutes <= endMinutes + ATTENDANCE_LATE_GRACE_MINUTES
+    );
+  });
+
   const weekStart = startOfWeek(now, { weekStartsOn: 1 });
   const weekEnd = endOfWeek(now, { weekStartsOn: 1 });
 
@@ -139,16 +249,24 @@ export default function StudentDashboard() {
           isWithinInterval(date, { start: weekStart, end: weekEnd }) &&
           date.getDay() === (idx + 1) % 7
         );
-      } catch { return false; }
+      } catch {
+        return false;
+      }
     });
-    const present = dayRecords.filter((r: any) => r.status === "present").length;
+    const present = dayRecords.filter(
+      (r: any) => r.status === "present",
+    ).length;
     return { day, present, total: dayRecords.length };
   });
 
   const courseAttendanceData = courses.map((course: any) => {
-    const courseRecords = records.filter((r: any) => r.session?.courseId === course.id);
+    const courseRecords = records.filter(
+      (r: any) => r.session?.courseId === course.id,
+    );
     const total = courseRecords.length;
-    const present = courseRecords.filter((r: any) => r.status === "present").length;
+    const present = courseRecords.filter(
+      (r: any) => r.status === "present",
+    ).length;
     const pct = total > 0 ? Math.round((present / total) * 100) : 0;
     return { ...course, attendancePct: pct };
   });
@@ -164,7 +282,9 @@ export default function StudentDashboard() {
         <Card className="px-6 py-4">
           <div className="flex items-center gap-3">
             <Loader2 className="h-4 w-4 animate-spin text-primary" />
-            <span className="text-sm text-muted-foreground">Loading dashboard...</span>
+            <span className="text-sm text-muted-foreground">
+              Loading dashboard...
+            </span>
           </div>
         </Card>
       </div>
@@ -174,12 +294,16 @@ export default function StudentDashboard() {
   return (
     <div className="space-y-6 p-6">
       {/* Header */}
-      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Student Dashboard</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">
+            Student Dashboard
+          </h1>
           <p className="mt-1 text-sm text-muted-foreground">
             {user?.profile?.fullName || user?.username}
-            {user?.profile?.enrollmentNumber ? ` · ${user.profile.enrollmentNumber}` : ""}
+            {user?.profile?.enrollmentNumber
+              ? ` · ${user.profile.enrollmentNumber}`
+              : ""}
           </p>
         </div>
         <Badge variant="outline">
@@ -198,12 +322,17 @@ export default function StudentDashboard() {
             {activeSessions.length > 0
               ? `${activeSessions.length} session(s) open for check-in (within scheduled time)`
               : "No check-in windows are open right now. Sessions appear here only during class time (with a short grace period)."}
+            {openSessions.length > 0
+              ? `${openSessions.length} active session(s) open for check-in`
+              : "No active sessions right now"}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
-          {activeSessions.length > 0 ? (
-            activeSessions.map((session: any) => {
-              const alreadyMarked = records.some((r: any) => r.sessionId === session.id);
+          {openSessions.length > 0 ? (
+            openSessions.map((session: any) => {
+              const alreadyMarked = records.some(
+                (r: any) => Number(r.sessionId) === Number(session.id),
+              );
               const isMarkingCurrent =
                 markAttendanceMutation.isPending &&
                 markAttendanceMutation.variables?.id === session.id;
@@ -214,9 +343,12 @@ export default function StudentDashboard() {
                   className="flex flex-col items-start justify-between gap-3 rounded-lg border p-4 sm:flex-row sm:items-center"
                 >
                   <div>
-                    <p className="text-sm font-medium">{session.subject?.name || session.topic}</p>
+                    <p className="text-sm font-medium">
+                      {session.subject?.name || session.topic}
+                    </p>
                     <p className="text-xs text-muted-foreground">
-                      {session.course?.code || "Course"} · {session.startTime}–{session.endTime}
+                      {session.course?.code || "Course"} · {session.startTime}–
+                      {session.endTime}
                     </p>
                   </div>
                   <div className="flex shrink-0 items-center gap-2">
@@ -226,10 +358,15 @@ export default function StudentDashboard() {
                       <Button
                         size="sm"
                         onClick={() => markAttendanceMutation.mutate(session)}
-                        disabled={isMarkingCurrent || markAttendanceMutation.isPending}
+                        disabled={
+                          isMarkingCurrent || markAttendanceMutation.isPending
+                        }
                       >
                         {isMarkingCurrent ? (
-                          <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Marking</>
+                          <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />{" "}
+                            Marking
+                          </>
                         ) : (
                           "Mark Now"
                         )}
@@ -253,24 +390,28 @@ export default function StudentDashboard() {
           title="Overall Attendance"
           value={`${attendanceStats?.attendanceRate || 0}%`}
           icon={GraduationCap}
+          className="h-full"
         />
         <StatCard
           title="This Week"
           value={weeklyData.reduce((a, d) => a + d.present, 0).toString()}
           subtitle={`of ${weeklyData.reduce((a, d) => a + d.total, 0)} classes`}
           icon={CalendarCheck}
+          className="h-full"
         />
         <StatCard
           title="Total Present"
           value={attendanceStats?.presentCount?.toString() || "0"}
           subtitle="This semester"
           icon={Clock}
+          className="h-full"
         />
         <StatCard
           title="Flagged Courses"
           value={flaggedCourses.length.toString()}
           subtitle="Below 75%"
           icon={TrendingUp}
+          className="h-full"
         />
       </div>
 
@@ -304,8 +445,20 @@ export default function StudentDashboard() {
                     fontSize: 12,
                   }}
                 />
-                <Bar dataKey="present" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} barSize={20} name="Present" />
-                <Bar dataKey="total" fill="hsl(var(--muted))" radius={[4, 4, 0, 0]} barSize={20} name="Total" />
+                <Bar
+                  dataKey="present"
+                  fill="hsl(var(--primary))"
+                  radius={[4, 4, 0, 0]}
+                  barSize={20}
+                  name="Present"
+                />
+                <Bar
+                  dataKey="total"
+                  fill="hsl(var(--muted))"
+                  radius={[4, 4, 0, 0]}
+                  barSize={20}
+                  name="Total"
+                />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>

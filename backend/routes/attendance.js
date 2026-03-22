@@ -38,6 +38,178 @@ const normalizeDeviceFingerprint = (value) => {
   return compact.length > 0 ? compact.slice(0, 180) : null;
 };
 
+const parseClockTimeToMinutes = (value) => {
+  if (!value || typeof value !== "string") return null;
+  const match = value.match(/^(\d{1,2}):(\d{2})/);
+  if (!match) return null;
+  const hours = Number.parseInt(match[1], 10);
+  const minutes = Number.parseInt(match[2], 10);
+  if (
+    Number.isNaN(hours) ||
+    Number.isNaN(minutes) ||
+    hours < 0 ||
+    hours > 23 ||
+    minutes < 0 ||
+    minutes > 59
+  ) {
+    return null;
+  }
+  return hours * 60 + minutes;
+};
+
+const ipV4ToNumber = (ip) => {
+  if (!ip || typeof ip !== "string") return null;
+  const octets = ip.split(".");
+  if (octets.length !== 4) return null;
+  const values = octets.map((part) => Number.parseInt(part, 10));
+  if (values.some((v) => Number.isNaN(v) || v < 0 || v > 255)) return null;
+  return (
+    ((values[0] << 24) >>> 0) +
+    ((values[1] << 16) >>> 0) +
+    ((values[2] << 8) >>> 0) +
+    (values[3] >>> 0)
+  );
+};
+
+const numberToIpV4 = (value) => {
+  const safe = Number(value) >>> 0;
+  return [
+    (safe >>> 24) & 255,
+    (safe >>> 16) & 255,
+    (safe >>> 8) & 255,
+    safe & 255,
+  ].join(".");
+};
+
+const buildCidrFromIp = (ip, prefixLength) => {
+  const ipNumber = ipV4ToNumber(ip);
+  if (ipNumber === null) return null;
+
+  const parsedPrefix = Number.parseInt(String(prefixLength), 10);
+  const prefix =
+    Number.isNaN(parsedPrefix) || parsedPrefix < 0 || parsedPrefix > 32
+      ? 24
+      : parsedPrefix;
+
+  const mask = prefix === 0 ? 0 : (0xffffffff << (32 - prefix)) >>> 0;
+  const networkNumber = ipNumber & mask;
+  return `${numberToIpV4(networkNumber)}/${prefix}`;
+};
+
+const parseAllowedCampusCidrs = () => {
+  const raw = String(process.env.CAMPUS_WIFI_CIDRS || "")
+    .split(",")
+    .map((entry) => entry.trim())
+    .filter(Boolean);
+
+  const normalized = raw
+    .map((entry) => {
+      if (entry.includes("/")) return entry;
+      return /^\d+\.\d+\.\d+\.\d+$/.test(entry) ? `${entry}/32` : entry;
+    })
+    .filter((entry) => entry.includes("/"));
+
+  // Fallback: infer campus subnet from configured network IP.
+  if (normalized.length === 0) {
+    const inferredSource =
+      process.env.VITE_NETWORK_IP || process.env.FRONTEND_URL || "";
+    const match = String(inferredSource).match(/(\d+\.\d+\.\d+\.\d+)/);
+    if (match && ipV4ToNumber(match[1]) !== null) {
+      const fallbackPrefix =
+        process.env.CAMPUS_WIFI_FALLBACK_PREFIX ||
+        process.env.CAMPUS_WIFI_PREFIX ||
+        "24";
+      const inferredCidr = buildCidrFromIp(match[1], fallbackPrefix);
+      if (inferredCidr) return [inferredCidr];
+    }
+  }
+
+  return normalized;
+};
+
+const isIpInCidr = (ip, cidr) => {
+  const [networkIp, prefixLengthRaw] = String(cidr || "").split("/");
+  const prefixLength = Number.parseInt(prefixLengthRaw, 10);
+  const ipNumber = ipV4ToNumber(ip);
+  const networkNumber = ipV4ToNumber(networkIp);
+
+  if (
+    ipNumber === null ||
+    networkNumber === null ||
+    Number.isNaN(prefixLength) ||
+    prefixLength < 0 ||
+    prefixLength > 32
+  ) {
+    return false;
+  }
+
+  const mask =
+    prefixLength === 0 ? 0 : (0xffffffff << (32 - prefixLength)) >>> 0;
+  return (ipNumber & mask) === (networkNumber & mask);
+};
+
+const evaluateCampusWifiAccess = (clientIp) => {
+  const normalized = normalizeIp(clientIp);
+
+  if (!normalized) {
+    return {
+      allowed: false,
+      normalizedIp: null,
+      matchedCidr: null,
+      allowlist: [],
+      reason: "missing_client_ip",
+    };
+  }
+
+  // Allow localhost during development only.
+  if (process.env.NODE_ENV !== "production" && normalized === "127.0.0.1") {
+    return {
+      allowed: true,
+      normalizedIp: normalized,
+      matchedCidr: "dev-localhost-bypass",
+      allowlist: [],
+      reason: "dev_localhost_bypass",
+    };
+  }
+
+  // IPv6 is not currently supported in campus allowlist matching.
+  if (!/^\d+\.\d+\.\d+\.\d+$/.test(normalized)) {
+    return {
+      allowed: false,
+      normalizedIp: normalized,
+      matchedCidr: null,
+      allowlist: [],
+      reason: "unsupported_ip_family",
+    };
+  }
+
+  const cidrs = parseAllowedCampusCidrs();
+  if (cidrs.length === 0) {
+    return {
+      allowed: false,
+      normalizedIp: normalized,
+      matchedCidr: null,
+      allowlist: [],
+      reason: "empty_allowlist",
+    };
+  }
+
+  const matchedCidr =
+    cidrs.find((cidr) => isIpInCidr(normalized, cidr)) || null;
+
+  return {
+    allowed: Boolean(matchedCidr),
+    normalizedIp: normalized,
+    matchedCidr,
+    allowlist: cidrs,
+    reason: matchedCidr ? "matched_allowlist" : "outside_allowlist",
+  };
+};
+
+const isAllowedCampusWifiIp = (clientIp) => {
+  return evaluateCampusWifiAccess(clientIp).allowed;
+};
+
 const appendNotes = (existingNotes, tags = []) => {
   const cleanTags = tags.filter(Boolean);
   if (!cleanTags.length) return existingNotes || null;
@@ -682,6 +854,42 @@ router.get(
   },
 );
 
+// @route   GET /api/attendance/network-check
+// @desc    Diagnose campus WiFi allowlist matching for current request IP
+// @access  Admin
+router.get(
+  "/network-check",
+  authMiddleware,
+  requireRole(["admin"]),
+  async (req, res, next) => {
+    try {
+      const detectedIp = getClientIp(req);
+      const check = evaluateCampusWifiAccess(detectedIp);
+
+      res.json({
+        success: true,
+        data: {
+          detectedIp: check.normalizedIp,
+          isAllowed: check.allowed,
+          matchedCidr: check.matchedCidr,
+          reason: check.reason,
+          allowlist: {
+            total: check.allowlist.length,
+            preview: check.allowlist.slice(0, 20),
+          },
+          proxyHeaders: {
+            cfConnectingIp: req.headers["cf-connecting-ip"] || null,
+            xRealIp: req.headers["x-real-ip"] || null,
+            xForwardedFor: req.headers["x-forwarded-for"] || null,
+          },
+        },
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
 // @route   GET /api/attendance/:id
 // @desc    Get attendance record by ID
 // @access  Admin, Faculty, Student
@@ -758,10 +966,18 @@ router.post(
       }
 
       const { sessionId, status, notes } = req.body;
+      const parsedSessionId = Number.parseInt(String(sessionId), 10);
+
+      if (!Number.isFinite(parsedSessionId)) {
+        const error = new Error("Session ID is required");
+        error.statusCode = 400;
+        error.reasonCode = "invalid_session_id";
+        throw error;
+      }
 
       // Find session
       const session = await prisma.session.findUnique({
-        where: { id: sessionId },
+        where: { id: parsedSessionId },
         include: {
           course: { include: { students: true } },
         },
@@ -770,6 +986,7 @@ router.post(
       if (!session) {
         const error = new Error("Session not found");
         error.statusCode = 404;
+        error.reasonCode = "session_not_found";
         throw error;
       }
 
@@ -785,7 +1002,67 @@ router.post(
         studentId = reqStudentId;
       }
 
-      auditContext.sessionId = Number(sessionId) || null;
+      auditContext.sessionId = parsedSessionId;
+
+      // Student self check-in must happen during a valid live window.
+      if (req.user.role === "student") {
+        if (session.status === "completed") {
+          const error = new Error(
+            "This session is closed. Attendance can no longer be marked.",
+          );
+          error.statusCode = 403;
+          error.reasonCode = "session_closed";
+          throw error;
+        }
+
+        const now = new Date();
+        const sessionDate = new Date(session.date);
+        const isSameLocalDate =
+          now.getFullYear() === sessionDate.getFullYear() &&
+          now.getMonth() === sessionDate.getMonth() &&
+          now.getDate() === sessionDate.getDate();
+
+        if (!isSameLocalDate) {
+          const error = new Error(
+            "Attendance can only be marked on the scheduled session date.",
+          );
+          error.statusCode = 403;
+          error.reasonCode = "attendance_not_on_session_day";
+          throw error;
+        }
+
+        const startMinutes = parseClockTimeToMinutes(session.startTime);
+        const endMinutes = parseClockTimeToMinutes(session.endTime);
+        const nowMinutes = now.getHours() * 60 + now.getMinutes();
+        const earlyWindowMinutes = 10;
+        const lateGraceMinutes = 10;
+
+        if (
+          startMinutes !== null &&
+          endMinutes !== null &&
+          nowMinutes < startMinutes - earlyWindowMinutes
+        ) {
+          const error = new Error(
+            "Check-in has not opened yet for this session.",
+          );
+          error.statusCode = 403;
+          error.reasonCode = "session_not_started";
+          throw error;
+        }
+
+        if (
+          startMinutes !== null &&
+          endMinutes !== null &&
+          nowMinutes > endMinutes + lateGraceMinutes
+        ) {
+          const error = new Error(
+            "Check-in window has ended for this session.",
+          );
+          error.statusCode = 403;
+          error.reasonCode = "session_checkin_window_closed";
+          throw error;
+        }
+      }
 
       // Check if student is enrolled in the course
       const isEnrolledInCourse = session.course.students.some(
@@ -795,6 +1072,7 @@ router.post(
       if (!isEnrolledInCourse) {
         const error = new Error("Student is not enrolled in this course");
         error.statusCode = 400;
+        error.reasonCode = "student_not_enrolled_course";
         throw error;
       }
 
@@ -815,6 +1093,7 @@ router.post(
           if (!isEnrolledInSubject) {
             const error = new Error("Student is not enrolled in this subject");
             error.statusCode = 400;
+            error.reasonCode = "student_not_enrolled_subject";
             throw error;
           }
         }
@@ -827,6 +1106,7 @@ router.post(
               `This session is restricted to batch(es): ${session.batches.join(", ")}. Your batch (${studentBatch || "unknown"}) is not included.`,
             );
             error.statusCode = 403;
+            error.reasonCode = "student_batch_not_allowed";
             throw error;
           }
         }
@@ -847,6 +1127,7 @@ router.post(
       if (existingAttendance) {
         const error = new Error("Attendance record already exists");
         error.statusCode = 409;
+        error.reasonCode = "duplicate_attendance";
         throw error;
       }
 
@@ -863,7 +1144,19 @@ router.post(
           "Device integrity metadata is required to mark attendance.",
         );
         error.statusCode = 400;
+        error.reasonCode = "missing_device_fingerprint";
         error.decisionReason = "missing_device_fingerprint";
+        throw error;
+      }
+
+      if (req.user.role === "student" && !isAllowedCampusWifiIp(clientIp)) {
+        const detectedIp = clientIp || "unknown";
+        const error = new Error(
+          `Attendance can only be marked from the approved campus WiFi network. Detected IP: ${detectedIp}`,
+        );
+        error.statusCode = 403;
+        error.reasonCode = "outside_campus_wifi";
+        error.decisionReason = "outside_campus_wifi";
         throw error;
       }
 
@@ -884,6 +1177,7 @@ router.post(
             "Potential proxy detected: device fingerprint already used by another student in this session.",
           );
           error.statusCode = 409;
+          error.reasonCode = "proxy_same_device_session";
           error.decisionReason = "proxy_same_device_session";
           throw error;
         }
@@ -972,7 +1266,7 @@ router.post(
       await logAttendanceAttempt({
         req,
         userId: req.user.id,
-        sessionId,
+        sessionId: parsedSessionId,
         attemptType: auditContext.attemptType,
         decision: auditContext.decision,
         reason: auditContext.reason,
@@ -985,7 +1279,8 @@ router.post(
         data: { attendance },
       });
     } catch (error) {
-      auditContext.reason = error.decisionReason || error.message || "rejected";
+      auditContext.reason =
+        error.reasonCode || error.decisionReason || error.message || "rejected";
       await logAttendanceAttempt({
         req,
         userId: req.user.id,

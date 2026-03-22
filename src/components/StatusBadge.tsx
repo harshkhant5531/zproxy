@@ -6,35 +6,35 @@ const statusConfig = {
   present: {
     label: "Present",
     className:
-      "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
-    dot: "bg-emerald-500",
+      "bg-success/10 text-success border-success/20",
+    dot: "bg-success",
   },
   late: {
     label: "Late",
     className:
-      "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
-    dot: "bg-amber-500",
+      "bg-warning/10 text-warning border-warning/20",
+    dot: "bg-warning",
   },
   absent: {
     label: "Absent",
-    className: "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20",
-    dot: "bg-red-500",
+    className: "bg-destructive/10 text-destructive border-destructive/20",
+    dot: "bg-destructive",
   },
   pending: {
     label: "Pending",
-    className: "bg-sky-500/10 text-sky-600 dark:text-sky-400 border-sky-500/20",
-    dot: "bg-sky-500",
+    className: "bg-info/10 text-info border-info/20",
+    dot: "bg-info",
   },
   approved: {
     label: "Approved",
     className:
-      "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
-    dot: "bg-emerald-500",
+      "bg-success/10 text-success border-success/20",
+    dot: "bg-success",
   },
   rejected: {
     label: "Rejected",
-    className: "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20",
-    dot: "bg-red-500",
+    className: "bg-destructive/10 text-destructive border-destructive/20",
+    dot: "bg-destructive",
   },
 };
 

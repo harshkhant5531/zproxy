@@ -44,7 +44,7 @@ export function AppLayout() {
         <AppSidebar />
         <div className="flex flex-1 flex-col overflow-hidden">
           {/* Top Header */}
-          <header className="sticky top-0 z-20 flex h-14 items-center gap-3 border-b bg-background px-4">
+          <header className="sticky top-0 z-20 flex h-14 items-center gap-3 border-b border-border/60 bg-background/80 px-4 backdrop-blur">
             <SidebarTrigger />
             <Separator orientation="vertical" className="h-5" />
             <h1 className="text-sm font-medium text-foreground">{pageTitle}</h1>

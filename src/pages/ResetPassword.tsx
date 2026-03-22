@@ -142,7 +142,7 @@ export default function ResetPassword() {
               </form>
             ) : (
               <div className="rounded-3xl border border-success/25 bg-success/10 p-6">
-                <p className="text-base font-semibold text-emerald-600">
+                <p className="text-base font-semibold text-success">
                   Password reset completed successfully.
                 </p>
                 <p className="mt-2 text-sm text-muted-foreground">

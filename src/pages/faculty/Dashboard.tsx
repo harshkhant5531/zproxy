@@ -112,7 +112,7 @@ export default function FacultyDashboard() {
   return (
     <div className="space-y-6 p-6">
       {/* Page Header */}
-      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">
             Faculty Dashboard
@@ -140,26 +140,28 @@ export default function FacultyDashboard() {
           value={todaySessions.length.toString()}
           subtitle={`${completedToday} completed`}
           icon={CalendarCheck}
+          className="h-full"
         />
         <StatCard
           title="Assigned Subjects"
           value={subjectsData?.length?.toString() || "0"}
           subtitle="Active academic session"
           icon={BookOpen}
+          className="h-full"
         />
         <StatCard
           title="Class Average"
           value={`${performanceData?.statistics?.classAverage || 0}%`}
           subtitle="Across all subjects"
           icon={BarChart3}
+          className="h-full"
         />
         <StatCard
           title="Total Students"
-          value={
-            performanceData?.statistics?.totalStudents?.toString() || "0"
-          }
+          value={performanceData?.statistics?.totalStudents?.toString() || "0"}
           subtitle="Enrolled students"
           icon={Users}
+          className="h-full"
         />
       </div>
 

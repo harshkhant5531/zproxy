@@ -135,7 +135,7 @@ export function AppSidebar() {
   return (
     <Sidebar
       collapsible="icon"
-      className="border-r border-sidebar-border/80 bg-sidebar"
+      className="border-r border-sidebar-border/70 bg-sidebar/80 backdrop-blur"
     >
       <SidebarHeader className="p-3 pb-2">
         {!collapsed ? (
@@ -234,7 +234,7 @@ export function AppSidebar() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-6 w-6 text-sidebar-foreground/70 hover:text-rose-500 hover:bg-rose-500/10 transition-colors flex-shrink-0"
+                className="h-6 w-6 text-sidebar-foreground/70 hover:text-destructive hover:bg-destructive/10 transition-colors flex-shrink-0"
                 onClick={() => logout()}
                 title="Sign out"
               >
@@ -246,7 +246,7 @@ export function AppSidebar() {
           <Button
             variant="ghost"
             size="icon"
-            className="h-9 w-9 mx-auto text-sidebar-foreground/70 hover:text-rose-500 hover:bg-rose-500/10 transition-colors"
+            className="h-9 w-9 mx-auto text-sidebar-foreground/70 hover:text-destructive hover:bg-destructive/10 transition-colors"
             onClick={() => logout()}
             title="Sign out"
           >

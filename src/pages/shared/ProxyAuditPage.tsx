@@ -127,10 +127,7 @@ const AnimatedTable = ({
   data: any[];
   delay?: number;
 }) => (
-  <div
-    className="overflow-x-auto"
-    style={{ animationDelay: `${delay}s` }}
-  >
+  <div className="overflow-x-auto" style={{ animationDelay: `${delay}s` }}>
     <table className="w-full min-w-[680px] text-sm">
       <thead>
         <tr className="border-b border-border bg-muted/40">
@@ -170,7 +167,7 @@ const AnimatedTable = ({
                 {row.rollNumber ? ` · ${row.rollNumber}` : ""}
               </div>
             </td>
-            <td className="px-4 py-4 font-bold text-amber-500">
+            <td className="px-4 py-4 font-bold text-warning">
               {row.flaggedCount}
             </td>
             <td className="px-4 py-4 text-foreground font-medium">
@@ -239,9 +236,7 @@ export default function ProxyAuditPage() {
   if (error)
     return (
       <div className="flex items-center justify-center">
-        <Card
-                    className="bg-destructive/10 border-destructive/20 w-full max-w-md"
-        >
+        <Card className="bg-destructive/10 border-destructive/20 w-full max-w-md">
           <CardContent className="p-5 sm:p-6">
             <p className="text-destructive">Error loading proxy audit data</p>
           </CardContent>
@@ -253,7 +248,7 @@ export default function ProxyAuditPage() {
   const records = auditData?.records || [];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0 }}
