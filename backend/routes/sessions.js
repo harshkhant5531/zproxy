@@ -5,6 +5,9 @@ const authMiddleware = require("../middleware/auth");
 const { requireRole } = authMiddleware;
 
 const router = express.Router();
+const {
+  isStudentCheckInWindowOpen,
+} = require("../utils/sessionAttendanceWindow");
 
 // @route   GET /api/sessions
 // @desc    Get all sessions
@@ -56,13 +59,22 @@ router.get("/", authMiddleware, async (req, res, next) => {
       where.status = { not: "completed" };
     }
 
-    const skip = (page - 1) * limit;
+    const parsedLimit = parseInt(limit);
+    const parsedPage = parseInt(page);
+    const skip = (parsedPage - 1) * parsedLimit;
 
-    const [sessions, total] = await Promise.all([
-      prisma.session.findMany({
+    const studentTimetableMode =
+      req.query.timetableOnly === "true" && req.user.role === "student";
+
+    let sessions;
+    let total;
+
+    if (studentTimetableMode) {
+      const wideTake = Math.min(200, Math.max(parsedLimit * 6, 60));
+      const candidates = await prisma.session.findMany({
         where,
-        skip,
-        take: parseInt(limit),
+        skip: 0,
+        take: wideTake,
         include: {
           course: {
             select: { id: true, name: true, code: true },
@@ -77,22 +89,50 @@ router.get("/", authMiddleware, async (req, res, next) => {
           subject: {
             select: { id: true, name: true },
           },
-          // attendanceRecords removed from list for performance
         },
         orderBy: { date: "desc" },
-      }),
-      prisma.session.count({ where }),
-    ]);
+      });
+      const openOnly = candidates.filter(isStudentCheckInWindowOpen);
+      total = openOnly.length;
+      sessions = openOnly.slice(skip, skip + parsedLimit);
+    } else {
+      const result = await Promise.all([
+        prisma.session.findMany({
+          where,
+          skip,
+          take: parsedLimit,
+          include: {
+            course: {
+              select: { id: true, name: true, code: true },
+            },
+            faculty: {
+              select: {
+                id: true,
+                username: true,
+                facultyProfile: { select: { fullName: true } },
+              },
+            },
+            subject: {
+              select: { id: true, name: true },
+            },
+          },
+          orderBy: { date: "desc" },
+        }),
+        prisma.session.count({ where }),
+      ]);
+      sessions = result[0];
+      total = result[1];
+    }
 
     res.json({
       success: true,
       data: {
         sessions: sessions.map((s) => s),
         pagination: {
-          page: parseInt(page),
-          limit: parseInt(limit),
+          page: parsedPage,
+          limit: parsedLimit,
           total,
-          pages: Math.ceil(total / limit),
+          pages: Math.ceil(total / parsedLimit) || 1,
         },
       },
     });
