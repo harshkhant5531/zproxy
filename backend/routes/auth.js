@@ -217,12 +217,23 @@ router.post(
         throw error;
       }
 
-      const { email, password } = req.body;
+      const emailRaw = req.body.email;
+      const email =
+        typeof emailRaw === "string" ? emailRaw.trim().toLowerCase() : "";
+      const { password } = req.body;
       console.log(`[AUTH] Login attempt for: ${email}`);
+
+      if (!email) {
+        const error = new Error("Please provide a valid email");
+        error.statusCode = 400;
+        throw error;
+      }
 
       // Find user
       const user = await prisma.users.findFirst({
-        where: { email },
+        where: {
+          email: { equals: email },
+        },
         include: {
           adminProfile: true,
           facultyProfile: true,
