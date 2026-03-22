@@ -83,6 +83,11 @@ for (const origin of configuredOrigins) {
   }
 }
 
+const renderServiceOrigin = normalizeOrigin(process.env.RENDER_EXTERNAL_URL);
+if (renderServiceOrigin) {
+  allowedOrigins.add(renderServiceOrigin);
+}
+
 const isPrivateNetworkOrigin = (origin) => {
   try {
     const parsed = new URL(origin);
@@ -105,10 +110,23 @@ const allowPrivateNetworkOrigins =
 const allowVercelPreviewOrigins =
   process.env.CORS_ALLOW_VERCEL_PREVIEW_ORIGINS !== "false";
 
+const allowRenderHostedOrigins =
+  process.env.CORS_ALLOW_RENDER_HOSTED !== "false";
+
 const isVercelPreviewOrigin = (origin) => {
   try {
     const parsed = new URL(origin);
     return /\.vercel\.app$/i.test(parsed.hostname);
+  } catch {
+    return false;
+  }
+};
+
+/** Static sites on Render use *.onrender.com; allow them when API is on Render unless opted out. */
+const isRenderHostedOrigin = (origin) => {
+  try {
+    const parsed = new URL(origin);
+    return /\.onrender\.com$/i.test(parsed.hostname);
   } catch {
     return false;
   }
@@ -128,6 +146,7 @@ app.use(
         allowedOrigins.has(normalizedOrigin) ||
         isWildcardAllowed ||
         (allowVercelPreviewOrigins && isVercelPreviewOrigin(origin)) ||
+        (allowRenderHostedOrigins && isRenderHostedOrigin(origin)) ||
         (allowPrivateNetworkOrigins && isPrivateNetworkOrigin(origin))
       ) {
         callback(null, true);
