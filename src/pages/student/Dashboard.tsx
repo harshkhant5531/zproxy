@@ -319,6 +319,9 @@ export default function StudentDashboard() {
             Mark Attendance
           </CardTitle>
           <CardDescription>
+            {activeSessions.length > 0
+              ? `${activeSessions.length} session(s) open for check-in (within scheduled time)`
+              : "No check-in windows are open right now. Sessions appear here only during class time (with a short grace period)."}
             {openSessions.length > 0
               ? `${openSessions.length} active session(s) open for check-in`
               : "No active sessions right now"}

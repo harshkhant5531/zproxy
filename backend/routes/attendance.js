@@ -3,6 +3,9 @@ const { body, validationResult } = require("express-validator");
 const prisma = require("../prisma");
 const authMiddleware = require("../middleware/auth");
 const { requireRole } = authMiddleware;
+const {
+  assertStudentCheckInWindowOpen,
+} = require("../utils/sessionAttendanceWindow");
 
 const router = express.Router();
 
@@ -1107,6 +1110,10 @@ router.post(
             throw error;
           }
         }
+      }
+
+      if (req.user.role === "student") {
+        assertStudentCheckInWindowOpen(session);
       }
 
       // Check if attendance already exists
