@@ -34,6 +34,9 @@ import FacultyManagement from "./pages/admin/FacultyManagement";
 import Timetable from "./pages/admin/Timetable";
 import Reports from "./pages/admin/Reports";
 import ShortageAlerts from "./pages/admin/Alerts";
+import NotificationsPage from "./pages/shared/NotificationsPage";
+import StudentGrades from "./pages/student/Grades";
+import GradesStaffPage from "./pages/shared/GradesStaffPage";
 
 const AppContent = () => {
   const { user, loading } = useAuth();
@@ -47,7 +50,7 @@ const AppContent = () => {
             <div className="absolute inset-[8px] rounded-full border border-primary/30 border-dashed motion-orbit-slow" />
             <div className="h-4 w-4 rounded-full bg-primary motion-float" />
           </div>
-          <p className="text-sm font-medium">Initializing Engine...</p>
+          <p className="text-sm font-medium">Loading Aura Integrity…</p>
         </div>
       </div>
     );
@@ -68,12 +71,14 @@ const AppContent = () => {
       <Route element={<ProtectedRoute />}>
         <Route element={<AppLayout />}>
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/notifications" element={<NotificationsPage />} />
           {/* Student Routes */}
           <Route element={<ProtectedRoute allowedRoles={["student"]} />}>
             <Route path="/student/dashboard" element={<StudentDashboard />} />
             <Route path="/student/timetable" element={<StudentTimetable />} />
             <Route path="/student/leaves" element={<Leaves />} />
             <Route path="/student/permit" element={<ExamPermit />} />
+            <Route path="/student/grades" element={<StudentGrades />} />
           </Route>
 
           {/* Faculty Routes */}
@@ -86,6 +91,7 @@ const AppContent = () => {
             <Route path="/faculty/proxy-audit" element={<ProxyAuditPage />} />
             <Route path="/faculty/timetable" element={<FacultyTimetable />} />
             <Route path="/faculty/leaves" element={<FacultyLeaves />} />
+            <Route path="/faculty/grades" element={<GradesStaffPage />} />
           </Route>
 
           {/* Admin Routes */}
@@ -99,6 +105,7 @@ const AppContent = () => {
             <Route path="/admin/reports" element={<Reports />} />
             <Route path="/admin/alerts" element={<ShortageAlerts />} />
             <Route path="/admin/proxy-audit" element={<ProxyAuditPage />} />
+            <Route path="/admin/grades" element={<GradesStaffPage />} />
           </Route>
         </Route>
       </Route>

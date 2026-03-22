@@ -2,8 +2,6 @@
 import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
-  LineChart,
-  Line,
   BarChart,
   Bar,
   XAxis,
@@ -12,9 +10,6 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-  ScatterChart,
-  Scatter,
-  Cell,
   ComposedChart,
   Area,
   AreaChart,
@@ -28,7 +23,6 @@ import {
   Clock,
   Smartphone,
   Filter,
-  Download,
   Eye,
   EyeOff,
   Loader2,
@@ -45,6 +39,14 @@ import { Badge } from "@/components/ui/badge";
 import { attendanceAPI } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
+import { Separator } from "@/components/ui/separator";
 
 const AnimatedStatCard = ({
   title,
@@ -130,7 +132,7 @@ const AnimatedTable = ({
       <thead>
         <tr className="border-b border-border bg-muted/40">
           <th className="text-left px-4 py-3 font-semibold text-foreground">
-            Student
+            Student / ID
           </th>
           <th className="text-left px-4 py-3 font-semibold text-foreground">
             Flagged
@@ -156,8 +158,14 @@ const AnimatedTable = ({
             className="border-b border-border hover:bg-muted/40 transition-colors"
             style={{ "--row-index": idx } as any}
           >
-            <td className="px-4 py-4 text-foreground font-mono">
-              [#{row.studentId}]
+            <td className="px-4 py-4 text-foreground">
+              <div className="font-medium">
+                {row.studentName || `Student #${row.studentId}`}
+              </div>
+              <div className="text-xs text-muted-foreground font-mono">
+                #{row.studentId}
+                {row.rollNumber ? ` · ${row.rollNumber}` : ""}
+              </div>
             </td>
             <td className="px-4 py-4 font-bold text-warning">
               {row.flaggedCount}
@@ -194,6 +202,10 @@ export default function ProxyAuditPage() {
     to: "",
   });
   const [showFilters, setShowFilters] = useState(false);
+  const [detailRecord, setDetailRecord] = useState<Record<
+    string,
+    unknown
+  > | null>(null);
 
   const {
     data: auditData,
@@ -328,9 +340,9 @@ export default function ProxyAuditPage() {
           delay={0}
         />
         <AnimatedStatCard
-          title="Detection Rate"
-          value={`${analytics.summary?.detectionAccuracy || 0}%`}
-          subtitle="Of all attendance"
+          title="Proxy flag rate"
+          value={`${analytics.summary?.flagRatePercent ?? analytics.summary?.detectionAccuracy ?? 0}%`}
+          subtitle="Attendance with proxy-class flags"
           icon={TrendingUp}
           color="border-warning bg-warning"
           delay={0.07}
@@ -857,7 +869,9 @@ export default function ProxyAuditPage() {
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 1.3 + idx * 0.03 }}
-                        className="border-b border-border hover:bg-muted/40"
+                        className="border-b border-border hover:bg-muted/40 cursor-pointer"
+                        onClick={() => setDetailRecord(record)}
+                        title="View integrity detail"
                       >
                         <td className="px-4 py-2 text-foreground">
                           {record.student?.studentProfile?.fullName ||
@@ -912,6 +926,125 @@ export default function ProxyAuditPage() {
           ? new Date(analytics.generatedAt).toLocaleString()
           : "N/A"}
       </motion.div>
+
+      <Sheet
+        open={!!detailRecord}
+        onOpenChange={(open) => {
+          if (!open) setDetailRecord(null);
+        }}
+      >
+        <SheetContent className="w-full sm:max-w-lg border-border bg-background overflow-y-auto">
+          <SheetHeader>
+            <SheetTitle>Integrity detail</SheetTitle>
+            <SheetDescription>
+              How this attendance was scored and which signals fired.
+            </SheetDescription>
+          </SheetHeader>
+          {detailRecord && (
+            <div className="mt-6 space-y-4 text-sm">
+              <div>
+                <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                  Student
+                </p>
+                <p className="text-foreground font-medium mt-1">
+                  {(detailRecord.student as any)?.studentProfile?.fullName ||
+                    (detailRecord.student as any)?.username}
+                </p>
+                <p className="text-xs text-muted-foreground font-mono mt-0.5">
+                  ID {(detailRecord.student as any)?.id}
+                </p>
+              </div>
+              <Separator />
+              <div>
+                <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                  Session
+                </p>
+                <p className="text-foreground mt-1">
+                  {(detailRecord.session as any)?.topic}
+                </p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {(detailRecord.session as any)?.course?.code}{" "}
+                  {(detailRecord.session as any)?.subject?.name
+                    ? `· ${(detailRecord.session as any).subject.name}`
+                    : ""}
+                </p>
+              </div>
+              <Separator />
+              <div className="flex flex-wrap gap-2 items-center">
+                <span className="text-xs text-muted-foreground">Risk:</span>
+                <RiskLevelBadge level={String(detailRecord.riskLabel)} />
+                <span className="text-xs font-semibold text-warning/90">
+                  Score {String(detailRecord.riskScore)}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  Status: {String(detailRecord.status)}
+                </span>
+              </div>
+              <div>
+                <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground mb-2">
+                  Signals
+                </p>
+                <ul className="space-y-2">
+                  {(
+                    (detailRecord.proxyDetail as { signals?: { code: string; label: string; detail: string }[] })
+                      ?.signals || []
+                  ).map((s) => (
+                    <li
+                      key={s.code + s.label}
+                      className="rounded-lg border border-border bg-muted/30 px-3 py-2"
+                    >
+                      <p className="font-medium text-foreground text-xs">
+                        {s.label}
+                      </p>
+                      <p className="text-muted-foreground text-xs mt-1 leading-relaxed">
+                        {s.detail}
+                      </p>
+                    </li>
+                  ))}
+                  {!(
+                    (detailRecord.proxyDetail as { signals?: unknown[] })
+                      ?.signals || []
+                  ).length && (
+                    <li className="text-muted-foreground text-xs">
+                      No structured signals; see raw notes below.
+                    </li>
+                  )}
+                </ul>
+              </div>
+              <div>
+                <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground mb-1">
+                  Raw notes
+                </p>
+                <pre className="text-xs bg-muted/40 border border-border rounded-md p-3 whitespace-pre-wrap break-words font-mono text-muted-foreground">
+                  {String(detailRecord.notes || "—")}
+                </pre>
+              </div>
+              <div className="text-xs text-muted-foreground space-y-1">
+                <p>
+                  IP:{" "}
+                  <span className="font-mono text-foreground">
+                    {String(detailRecord.ipAddress || "—")}
+                  </span>
+                </p>
+                <p>
+                  Device:{" "}
+                  <span className="font-mono text-foreground break-all">
+                    {String(detailRecord.deviceInfo || "—")}
+                  </span>
+                </p>
+                <p>
+                  Time:{" "}
+                  {detailRecord.timestamp
+                    ? new Date(
+                        detailRecord.timestamp as string,
+                      ).toLocaleString()
+                    : "—"}
+                </p>
+              </div>
+            </div>
+          )}
+        </SheetContent>
+      </Sheet>
     </div>
   );
 }

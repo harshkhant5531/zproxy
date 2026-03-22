@@ -5,6 +5,45 @@ const authMiddleware = require("../middleware/auth");
 
 const router = express.Router();
 
+const audienceWhere = (req) => {
+  if (req.user.role === "student") {
+    return {
+      OR: [
+        { userId: req.user.id },
+        { course: { students: { some: { id: req.user.id } } } },
+      ],
+    };
+  }
+  if (req.user.role === "faculty") {
+    return {
+      OR: [
+        { userId: req.user.id },
+        { course: { facultyId: req.user.id } },
+      ],
+    };
+  }
+  return {};
+};
+
+async function notificationVisibleToUser(req, notification) {
+  if (req.user.role === "admin") return true;
+  if (!notification.userId) return true;
+  if (notification.userId === req.user.id) return true;
+  if (!notification.courseId) return false;
+
+  const course = await prisma.course.findUnique({
+    where: { id: notification.courseId },
+    include: {
+      students: { where: { id: req.user.id }, select: { id: true } },
+    },
+  });
+  if (!course) return false;
+  if (req.user.role === "faculty" && course.facultyId === req.user.id)
+    return true;
+  if (req.user.role === "student" && course.students.length > 0) return true;
+  return false;
+}
+
 // @route   GET /api/notifications
 // @desc    Get notifications for user
 // @access  Admin, Faculty, Student
@@ -12,15 +51,9 @@ router.get("/", authMiddleware, async (req, res, next) => {
   try {
     const { type, priority, isRead, page = 1, limit = 10 } = req.query;
 
-    const where = {};
-
-    // For students and faculty, show their notifications
-    if (req.user.role === "student" || req.user.role === "faculty") {
-      where.OR = [
-        { userId: req.user.id },
-        { course: { students: { some: { id: req.user.id } } } },
-      ];
-    }
+    const where = {
+      ...audienceWhere(req),
+    };
 
     if (type) where.type = type;
     if (priority) where.priority = priority;
@@ -59,6 +92,55 @@ router.get("/", authMiddleware, async (req, res, next) => {
   }
 });
 
+// @route   GET /api/notifications/unread
+// @desc    Get unread notification count (must be before /:id)
+// @access  Admin, Faculty, Student
+router.get("/unread", authMiddleware, async (req, res, next) => {
+  try {
+    const where = {
+      ...audienceWhere(req),
+      isRead: false,
+    };
+
+    const count = await prisma.notification.count({ where });
+
+    res.json({
+      success: true,
+      data: {
+        unreadCount: count,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// @route   PUT /api/notifications/read-all
+// @desc    Mark all notifications as read (must be before /:id routes)
+// @access  Admin, Faculty, Student
+router.put("/read-all", authMiddleware, async (req, res, next) => {
+  try {
+    const where = {
+      ...audienceWhere(req),
+      isRead: false,
+    };
+
+    await prisma.notification.updateMany({
+      where,
+      data: {
+        isRead: true,
+      },
+    });
+
+    res.json({
+      success: true,
+      message: "All notifications marked as read",
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
 // @route   GET /api/notifications/:id
 // @desc    Get notification by ID
 // @access  Admin, Faculty, Student
@@ -78,10 +160,8 @@ router.get("/:id", authMiddleware, async (req, res, next) => {
       throw error;
     }
 
-    // Check if user has access
-    if (!notification.userId) {
-      // Global notification - accessible to everyone
-    } else if (notification.userId !== req.user.id) {
+    const visible = await notificationVisibleToUser(req, notification);
+    if (!visible) {
       const error = new Error("Forbidden");
       error.statusCode = 403;
       throw error;
@@ -261,10 +341,8 @@ router.put("/:id/read", authMiddleware, async (req, res, next) => {
       throw error;
     }
 
-    // Check if user has access
-    if (!notification.userId) {
-      // Global notification - accessible to everyone
-    } else if (notification.userId !== req.user.id) {
+    const visible = await notificationVisibleToUser(req, notification);
+    if (!visible) {
       const error = new Error("Forbidden");
       error.statusCode = 403;
       throw error;
@@ -283,72 +361,6 @@ router.put("/:id/read", authMiddleware, async (req, res, next) => {
       success: true,
       message: "Notification marked as read",
       data: { notification: updatedNotification },
-    });
-  } catch (error) {
-    next(error);
-  }
-});
-
-// @route   PUT /api/notifications/read-all
-// @desc    Mark all notifications as read
-// @access  Admin, Faculty, Student
-router.put("/read-all", authMiddleware, async (req, res, next) => {
-  try {
-    const where = {};
-
-    // For students and faculty, mark their notifications as read
-    if (req.user.role === "student" || req.user.role === "faculty") {
-      where.OR = [
-        { userId: req.user.id },
-        { course: { students: { some: { id: req.user.id } } } },
-      ];
-    }
-
-    await prisma.notification.updateMany({
-      where: {
-        ...where,
-        isRead: false,
-      },
-      data: {
-        isRead: true,
-      },
-    });
-
-    res.json({
-      success: true,
-      message: "All notifications marked as read",
-    });
-  } catch (error) {
-    next(error);
-  }
-});
-
-// @route   GET /api/notifications/unread
-// @desc    Get unread notification count
-// @access  Admin, Faculty, Student
-router.get("/unread", authMiddleware, async (req, res, next) => {
-  try {
-    const where = {};
-
-    // For students and faculty, count their unread notifications
-    if (req.user.role === "student" || req.user.role === "faculty") {
-      where.OR = [
-        { userId: req.user.id },
-        { course: { students: { some: { id: req.user.id } } } },
-      ];
-    }
-
-    where.isRead = false;
-
-    const count = await prisma.notification.count({
-      where,
-    });
-
-    res.json({
-      success: true,
-      data: {
-        unreadCount: count,
-      },
     });
   } catch (error) {
     next(error);
