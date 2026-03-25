@@ -211,6 +211,7 @@ export default function ProxyAuditPage() {
     data: auditData,
     isLoading,
     error,
+    refetch,
   } = useQuery({
     queryKey: ["proxy-audit", filters],
     queryFn: async () => {
@@ -239,6 +240,15 @@ export default function ProxyAuditPage() {
         <Card className="bg-destructive/10 border-destructive/20 w-full max-w-md">
           <CardContent className="p-5 sm:p-6">
             <p className="text-destructive">Error loading proxy audit data</p>
+            <div className="mt-4 flex gap-3 justify-end">
+              <Button
+                variant="destructive"
+                onClick={() => refetch()}
+                className="font-bold uppercase tracking-widest"
+              >
+                Retry
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -869,8 +879,17 @@ export default function ProxyAuditPage() {
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 1.3 + idx * 0.03 }}
-                        className="border-b border-border hover:bg-muted/40 cursor-pointer"
+                        role="button"
+                        tabIndex={0}
+                        aria-label="View integrity detail"
+                        className="border-b border-border hover:bg-muted/40 cursor-pointer focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                         onClick={() => setDetailRecord(record)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            setDetailRecord(record);
+                          }
+                        }}
                         title="View integrity detail"
                       >
                         <td className="px-4 py-2 text-foreground">

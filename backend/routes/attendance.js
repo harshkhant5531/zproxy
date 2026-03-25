@@ -19,16 +19,31 @@ const normalizeIp = (value) => {
 };
 
 const getClientIp = (req) => {
+  // Prefer Express's resolved IP since it already respects `trust proxy`.
+  const resolved = normalizeIp(req.ip);
+  if (resolved) return resolved;
+
+  // Fallback for environments where req.ip isn't populated as expected.
   const xff = req.headers["x-forwarded-for"];
   const forwarded = Array.isArray(xff) ? xff[0] : xff;
-  const firstForwarded =
-    typeof forwarded === "string" ? forwarded.split(",")[0] : null;
+  const forwardedList =
+    typeof forwarded === "string"
+      ? forwarded
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean)
+      : [];
+
+  // For XFF, the left-most value is usually the original client.
+  // We still try a small set of candidates to reduce ordering differences.
+  const xffCandidate =
+    forwardedList[0] || forwardedList[forwardedList.length - 1] || null;
 
   return (
     normalizeIp(req.headers["cf-connecting-ip"]) ||
     normalizeIp(req.headers["x-real-ip"]) ||
-    normalizeIp(firstForwarded) ||
-    normalizeIp(req.ip)
+    normalizeIp(xffCandidate) ||
+    null
   );
 };
 
@@ -1127,7 +1142,7 @@ router.post(
                 studentId: { not: studentId },
                 deviceInfo: normalizedDeviceInfo,
               },
-              select: { id: true, studentId: true, notes: true },
+              select: { id: true, studentId: true, notes: true, timestamp: true },
             })
           : null;
 
@@ -1139,13 +1154,30 @@ router.post(
               `[PROXY_DETECTED:sharedWith:${sameDeviceAnyRecord.studentId}:WILDCARD_BYPASS]`,
             ]);
           } else {
-            const error = new Error(
-              "Potential proxy detected: device fingerprint already used by another student in this session.",
+            // Don't hard-block on first shared fingerprint match.
+            // Also apply time-window suppression so old fingerprints don't instantly
+            // create suspicion (common with shared lab devices).
+            const windowMinutes = Number.parseInt(
+              String(process.env.PROXY_SHARED_DEVICE_WINDOW_MINUTES || "15"),
+              10,
             );
-            error.statusCode = 409;
-            error.reasonCode = "proxy_same_device_session";
-            error.decisionReason = "proxy_same_device_session";
-            throw error;
+            const windowMs =
+              (Number.isFinite(windowMinutes) ? windowMinutes : 15) *
+              60 *
+              1000;
+
+            const anyDeviceTs = sameDeviceAnyRecord.timestamp
+              ? new Date(sameDeviceAnyRecord.timestamp).getTime()
+              : null;
+            const withinTimeWindow =
+              anyDeviceTs !== null &&
+              Math.abs(Date.now() - anyDeviceTs) <= windowMs;
+
+            if (withinTimeWindow) {
+              finalNotes = appendNotes(finalNotes, [
+                `[PROXY_SUSPECT:sharedWith:${sameDeviceAnyRecord.studentId}:SAME_DEVICE_FINGERPRINT]`,
+              ]);
+            }
           }
         }
 
@@ -1155,7 +1187,13 @@ router.post(
             studentId: { not: studentId },
             ipAddress: clientIp,
           },
-          select: { id: true, studentId: true, notes: true, deviceInfo: true },
+          select: {
+            id: true,
+            studentId: true,
+            notes: true,
+            deviceInfo: true,
+            timestamp: true,
+          },
         });
 
         if (sameIpRecords.length > 0) {
@@ -1168,24 +1206,61 @@ router.post(
             : null;
 
           if (sameDeviceRecord) {
-            // Same IP + same device = strong proxy signal
-            finalStatus = "absent";
-            finalNotes = appendNotes(finalNotes, [
-              `[PROXY_DETECTED:sharedWith:${sameDeviceRecord.studentId}:SAME_DEVICE]`,
-            ]);
+            // Same IP + same device:
+            // - first-time / low cluster size: mark as suspect only (avoid retroactive false positives)
+            // - larger cluster size: escalate to detected and mark absent
+            const windowMinutes = Number.parseInt(
+              String(process.env.PROXY_SHARED_DEVICE_WINDOW_MINUTES || "15"),
+              10,
+            );
+            const windowMs =
+              (Number.isFinite(windowMinutes) ? windowMinutes : 15) *
+              60 *
+              1000;
 
-            // Retroactively flag the earlier record too
-            const prevNotes = sameDeviceRecord.notes || "";
-            if (!prevNotes.includes("[PROXY_")) {
-              await prisma.attendance.update({
-                where: { id: sameDeviceRecord.id },
-                data: {
-                  status: "absent",
-                  notes: appendNotes(prevNotes, [
-                    `[PROXY_DETECTED:sharedWith:${studentId}:SAME_DEVICE]`,
-                  ]),
-                },
-              });
+            const nowMs = Date.now();
+            const sameDeviceTs = sameDeviceRecord.timestamp
+              ? new Date(sameDeviceRecord.timestamp).getTime()
+              : null;
+            const withinTimeWindow =
+              sameDeviceTs !== null && Math.abs(nowMs - sameDeviceTs) <= windowMs;
+
+            const timeDeltaMinutes =
+              sameDeviceTs !== null
+                ? Math.round(Math.abs(nowMs - sameDeviceTs) / 60000)
+                : null;
+
+            const shouldEscalate = sameIpRecords.length >= 2 && withinTimeWindow;
+
+            if (shouldEscalate) {
+              finalStatus = "absent";
+              finalNotes = appendNotes(finalNotes, [
+                `[PROXY_DETECTED:sharedWith:${sameDeviceRecord.studentId}:SAME_DEVICE]`,
+              ]);
+
+              // Retroactively flag the earlier record too
+              const prevNotes = sameDeviceRecord.notes || "";
+              if (!prevNotes.includes("[PROXY_")) {
+                await prisma.attendance.update({
+                  where: { id: sameDeviceRecord.id },
+                  data: {
+                    status: "absent",
+                    notes: appendNotes(prevNotes, [
+                      `[PROXY_DETECTED:sharedWith:${studentId}:SAME_DEVICE]`,
+                    ]),
+                  },
+                });
+              }
+            } else {
+              // Only one previous record on this IP so far.
+              // This is common on campus NAT / shared Wi-Fi.
+              finalNotes = appendNotes(finalNotes, [
+                `[PROXY_SUSPECT:sharedWith:${sameDeviceRecord.studentId}:SAME_DEVICE]`,
+                `[IP_SHARED:count=${sameIpRecords.length}]`,
+                timeDeltaMinutes !== null
+                  ? `[PROXY_TIME_GAP_MINUTES=${timeDeltaMinutes}:WINDOW=${windowMinutes}]`
+                  : null,
+              ]);
             }
           } else {
             // Same IP but different device — likely campus WiFi (shared NAT)
