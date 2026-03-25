@@ -1119,7 +1119,7 @@ router.post(
         throw error;
       }
 
-      if (clientIp && req.user.role === "student" && process.env.CAMPUS_WIFI_CIDRS !== "*") {
+      if (clientIp && req.user.role === "student") {
         const sameDeviceAnyRecord = normalizedDeviceInfo
           ? await prisma.attendance.findFirst({
               where: {
@@ -1132,13 +1132,21 @@ router.post(
           : null;
 
         if (sameDeviceAnyRecord) {
-          const error = new Error(
-            "Potential proxy detected: device fingerprint already used by another student in this session.",
-          );
-          error.statusCode = 409;
-          error.reasonCode = "proxy_same_device_session";
-          error.decisionReason = "proxy_same_device_session";
-          throw error;
+          if (process.env.CAMPUS_WIFI_CIDRS === "*") {
+            // In dev/wildcard mode, we flag but don't block
+            finalStatus = "absent";
+            finalNotes = appendNotes(finalNotes, [
+              `[PROXY_DETECTED:sharedWith:${sameDeviceAnyRecord.studentId}:WILDCARD_BYPASS]`,
+            ]);
+          } else {
+            const error = new Error(
+              "Potential proxy detected: device fingerprint already used by another student in this session.",
+            );
+            error.statusCode = 409;
+            error.reasonCode = "proxy_same_device_session";
+            error.decisionReason = "proxy_same_device_session";
+            throw error;
+          }
         }
 
         const sameIpRecords = await prisma.attendance.findMany({
