@@ -46,6 +46,7 @@ import {
   parseISO,
 } from "date-fns";
 import { toast } from "sonner";
+import { parseProxyNotes } from "@/lib/proxyNotes";
 
 const DAY_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const ATTENDANCE_EARLY_WINDOW_MINUTES = 10;
@@ -194,22 +195,20 @@ export default function StudentDashboard() {
     onSuccess: (resp: any) => {
       const attendance = resp?.data?.data?.attendance;
       const notes: string = typeof attendance?.notes === "string" ? attendance.notes : "";
-      const hasProxySignal = notes.includes("[PROXY_");
-      const hasDetected = notes.includes("[PROXY_DETECTED");
-      const hasSuspect = notes.includes("[PROXY_SUSPECT");
+      const proxy = parseProxyNotes(notes);
 
-      if (hasProxySignal && attendance?.status === "absent") {
+      if (proxy.signal !== "none" && attendance?.status === "absent") {
         toast.error(
-          hasDetected
+          proxy.detected
             ? "Marked absent due to strong proxy signal"
             : "Marked absent due to integrity flags",
           {
-            description: hasDetected
+            description: proxy.detected
               ? "This check-in matched a high-confidence proxy pattern."
               : "This check-in matched an integrity flag for manual review.",
           },
         );
-      } else if (hasProxySignal && hasSuspect && attendance?.status === "present") {
+      } else if (proxy.signal === "suspect" && attendance?.status === "present") {
         toast.warning("Flagged for manual review", {
           description:
             "Your check-in matched a proxy-suspect pattern. Faculty will review before final decisions.",
@@ -588,12 +587,10 @@ export default function StudentDashboard() {
                       <StatusBadge status={log.status} />
                       {(() => {
                         const notes = typeof log?.notes === "string" ? log.notes : "";
-                        const hasDetected = notes.includes("[PROXY_DETECTED");
-                        const hasSuspect = notes.includes("[PROXY_SUSPECT");
+                        const proxy = parseProxyNotes(notes);
+                        if (proxy.signal === "none") return null;
 
-                        if (!hasDetected && !hasSuspect) return null;
-
-                        if (hasDetected) {
+                        if (proxy.signal === "detected") {
                           return (
                             <Badge
                               variant="destructive"
