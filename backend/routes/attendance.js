@@ -207,6 +207,10 @@ const evaluateCampusWifiAccess = (clientIp) => {
 };
 
 const isAllowedCampusWifiIp = (clientIp) => {
+  // Check for explicit bypass wildcard in env
+  if (process.env.CAMPUS_WIFI_CIDRS === "*") {
+    return true;
+  }
   return evaluateCampusWifiAccess(clientIp).allowed;
 };
 
