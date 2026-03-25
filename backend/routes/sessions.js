@@ -27,9 +27,43 @@ router.get("/", authMiddleware, async (req, res, next) => {
 
     // Filter based on user role
     if (req.user.role === "student") {
-      where.course = {
-        students: { some: { id: req.user.id } },
-      };
+      const userWithProfile = await prisma.users.findUnique({
+        where: { id: req.user.id },
+        include: {
+          studentProfile: true,
+          studentSubjects: { select: { id: true } },
+        },
+      });
+
+      if (!userWithProfile) {
+        const error = new Error("Student profile not found");
+        error.statusCode = 404;
+        throw error;
+      }
+
+      const enrolledSubjectIds = userWithProfile.studentSubjects.map((s) => s.id);
+      const studentBatch = userWithProfile.studentProfile?.batch || "___NO_BATCH___";
+
+      // Filter: Enrolled in course AND (subject matches OR no subject) AND (batch matches OR no batch restriction)
+      where.AND = [
+        {
+          course: {
+            students: { some: { id: req.user.id } },
+          },
+        },
+        {
+          OR: [
+            { subjectId: null },
+            { subjectId: { in: enrolledSubjectIds } },
+          ],
+        },
+        {
+          OR: [
+            { batches: { equals: [] } },
+            { batches: { has: studentBatch } },
+          ],
+        },
+      ];
     } else if (req.user.role === "faculty") {
       where.facultyId = req.user.id;
     }
@@ -92,9 +126,11 @@ router.get("/", authMiddleware, async (req, res, next) => {
         },
         orderBy: { date: "desc" },
       });
-      const openOnly = candidates.filter(isStudentCheckInWindowOpen);
-      total = openOnly.length;
-      sessions = openOnly.slice(skip, skip + parsedLimit);
+      // Return all candidates for today. The frontend dashboard will handle 
+      // the 'Mark Now' window visualization based on local time.
+      // This solves the 'session not visible' issue caused by server/client clock drift.
+      total = candidates.length;
+      sessions = candidates.slice(skip, skip + parsedLimit);
     } else {
       const result = await Promise.all([
         prisma.session.findMany({
