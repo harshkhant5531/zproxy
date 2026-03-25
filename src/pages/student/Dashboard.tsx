@@ -132,15 +132,60 @@ export default function StudentDashboard() {
 
   const markAttendanceMutation = useMutation({
     mutationFn: async (session: any) => {
-      const deviceInfo = [
+      // Stable per-browser fingerprint to avoid false proxy matches
+      // when two different users have similar UA/platform/timezone values.
+      const fpKey = "zproxy_fingerprint_v1";
+      let stableFpId: string | null = null;
+
+      try {
+        stableFpId = localStorage.getItem(fpKey);
+      } catch {
+        // ignore
+      }
+
+      if (!stableFpId) {
+        try {
+          stableFpId = sessionStorage.getItem(fpKey);
+        } catch {
+          // ignore
+        }
+      }
+
+      if (!stableFpId) {
+        // crypto.randomUUID is stable but may be unavailable in some environments.
+        const newId =
+          globalThis.crypto?.randomUUID
+            ? globalThis.crypto.randomUUID()
+            : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+        stableFpId = newId;
+
+        // Persist where possible; if both are blocked, detection still works but
+        // will degrade to a per-request fingerprint (worst-case false positives).
+        try {
+          localStorage.setItem(fpKey, stableFpId);
+        } catch {
+          try {
+            sessionStorage.setItem(fpKey, stableFpId);
+          } catch {
+            // ignore
+          }
+        }
+      }
+
+      const deviceInfoParts = [
+        stableFpId,
         navigator.userAgent,
         navigator.platform,
         navigator.language,
+        (navigator.languages || []).join(","),
         Intl.DateTimeFormat().resolvedOptions().timeZone,
-      ]
-        .filter(Boolean)
-        .join(" | ")
-        .slice(0, 180);
+        typeof screen !== "undefined" ? `${screen.width}x${screen.height}` : null,
+        typeof navigator.hardwareConcurrency === "number"
+          ? String(navigator.hardwareConcurrency)
+          : null,
+      ].filter(Boolean);
+
+      const deviceInfo = deviceInfoParts.join(" | ").slice(0, 180);
       return attendanceAPI.markAttendance({
         sessionId: session.id,
         deviceInfo,
@@ -148,15 +193,26 @@ export default function StudentDashboard() {
     },
     onSuccess: (resp: any) => {
       const attendance = resp?.data?.data?.attendance;
-      const wasProxyFlagged =
-        attendance?.status === "absent" &&
-        typeof attendance?.notes === "string" &&
-        attendance.notes.includes("[PROXY_");
+      const notes: string = typeof attendance?.notes === "string" ? attendance.notes : "";
+      const hasProxySignal = notes.includes("[PROXY_");
+      const hasDetected = notes.includes("[PROXY_DETECTED");
+      const hasSuspect = notes.includes("[PROXY_SUSPECT");
 
-      if (wasProxyFlagged) {
-        toast.error("Attendance flagged for security review", {
+      if (hasProxySignal && attendance?.status === "absent") {
+        toast.error(
+          hasDetected
+            ? "Marked absent due to strong proxy signal"
+            : "Marked absent due to integrity flags",
+          {
+            description: hasDetected
+              ? "This check-in matched a high-confidence proxy pattern."
+              : "This check-in matched an integrity flag for manual review.",
+          },
+        );
+      } else if (hasProxySignal && hasSuspect && attendance?.status === "present") {
+        toast.warning("Flagged for manual review", {
           description:
-            "Check-in was recorded as absent due to a proxy-risk signal.",
+            "Your check-in matched a proxy-suspect pattern. Faculty will review before final decisions.",
         });
       } else {
         toast.success("Attendance marked successfully");
@@ -528,7 +584,38 @@ export default function StudentDashboard() {
                     {log.session?.topic}
                   </TableCell>
                   <TableCell>
-                    <StatusBadge status={log.status} />
+                    <div className="flex flex-wrap items-center gap-2">
+                      <StatusBadge status={log.status} />
+                      {(() => {
+                        const notes = typeof log?.notes === "string" ? log.notes : "";
+                        const hasDetected = notes.includes("[PROXY_DETECTED");
+                        const hasSuspect = notes.includes("[PROXY_SUSPECT");
+
+                        if (!hasDetected && !hasSuspect) return null;
+
+                        if (hasDetected) {
+                          return (
+                            <Badge
+                              variant="destructive"
+                              className="font-mono"
+                              title={notes}
+                            >
+                              Proxy Detected
+                            </Badge>
+                          );
+                        }
+
+                        return (
+                          <Badge
+                            variant="secondary"
+                            className="font-mono"
+                            title={notes}
+                          >
+                            Proxy Suspect
+                          </Badge>
+                        );
+                      })()}
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}

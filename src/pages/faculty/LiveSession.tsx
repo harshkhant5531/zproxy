@@ -408,8 +408,7 @@ export default function LiveSession() {
             <CardHeader className="pb-2 px-6 pt-4 border-b border-destructive/20 bg-destructive/10">
               <CardTitle className="text-[11px] font-bold text-destructive uppercase tracking-widest flex items-center gap-2">
                 <AlertTriangle className="h-4 w-4" />
-                {proxyRecords.length} Violation Detected
-                {proxyRecords.length > 1 ? "s" : ""}
+                {proxyRecords.length} Proxy Signals
               </CardTitle>
             </CardHeader>
             <CardContent className="px-6 py-4">
@@ -419,6 +418,9 @@ export default function LiveSession() {
               </p>
               <div className="space-y-2.5">
                 {proxyRecords.map((log: any) => {
+                  const isDetected = String(log?.notes || "").includes(
+                    "[PROXY_DETECTED",
+                  );
                   const sharedWithId = parseProxyFlag(log.notes);
                   const sharedRecord = attendanceData?.find(
                     (a: any) => a.studentId === sharedWithId,
@@ -446,7 +448,7 @@ export default function LiveSession() {
                         </p>
                       </div>
                       <span className="text-[9px] font-black text-warning bg-warning/10 border border-warning/20 px-2 py-0.5 rounded uppercase tracking-wider shrink-0">
-                        Violation
+                        {isDetected ? "Auto-absent" : "Suspect"}
                       </span>
                     </div>
                   );
