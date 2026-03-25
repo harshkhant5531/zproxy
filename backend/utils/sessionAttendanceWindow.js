@@ -11,14 +11,19 @@ const closeGraceMs = () =>
   Number(process.env.ATTENDANCE_CLOSE_GRACE_MINUTES || 30) * 60 * 1000;
 
 function combineSessionDateAndTime(sessionDate, timeStr) {
+  // Use the session date but override hours/minutes in IST.
+  // We format the date to a string in Asia/Kolkata to extract the base date components.
   const d = new Date(sessionDate);
+  const istDateStr = d.toLocaleDateString("en-CA", {
+    timeZone: "Asia/Kolkata",
+  }); // YYYY-MM-DD
   const parts = String(timeStr || "0:0").trim().split(":");
-  const hh = parseInt(parts[0], 10);
-  const mm = parseInt(parts[1], 10) || 0;
-  const hours = Number.isFinite(hh) ? hh : 0;
-  const minutes = Number.isFinite(mm) ? mm : 0;
-  d.setHours(hours, minutes, 0, 0);
-  return d.getTime();
+  const hh = String(parts[0]).padStart(2, "0");
+  const mm = String(parts[1] || "0").padStart(2, "0");
+
+  // Create a new date string that represents this time IN IST
+  // Then parse it. Since we want the result in epoch MS.
+  return new Date(`${istDateStr}T${hh}:${mm}:00+05:30`).getTime();
 }
 
 function sessionStartEndMs(session) {

@@ -1006,61 +1006,19 @@ router.post(
 
       // Student self check-in must happen during a valid live window.
       if (req.user.role === "student") {
-        if (session.status === "completed") {
-          const error = new Error(
-            "This session is closed. Attendance can no longer be marked.",
-          );
-          error.statusCode = 403;
-          error.reasonCode = "session_closed";
-          throw error;
-        }
-
-        const now = new Date();
-        const sessionDate = new Date(session.date);
-        const isSameLocalDate =
-          now.getFullYear() === sessionDate.getFullYear() &&
-          now.getMonth() === sessionDate.getMonth() &&
-          now.getDate() === sessionDate.getDate();
-
-        if (!isSameLocalDate) {
-          const error = new Error(
-            "Attendance can only be marked on the scheduled session date.",
-          );
-          error.statusCode = 403;
-          error.reasonCode = "attendance_not_on_session_day";
-          throw error;
-        }
-
-        const startMinutes = parseClockTimeToMinutes(session.startTime);
-        const endMinutes = parseClockTimeToMinutes(session.endTime);
-        const nowMinutes = now.getHours() * 60 + now.getMinutes();
-        const earlyWindowMinutes = 10;
-        const lateGraceMinutes = 10;
-
-        if (
-          startMinutes !== null &&
-          endMinutes !== null &&
-          nowMinutes < startMinutes - earlyWindowMinutes
-        ) {
-          const error = new Error(
-            "Check-in has not opened yet for this session.",
-          );
-          error.statusCode = 403;
-          error.reasonCode = "session_not_started";
-          throw error;
-        }
-
-        if (
-          startMinutes !== null &&
-          endMinutes !== null &&
-          nowMinutes > endMinutes + lateGraceMinutes
-        ) {
-          const error = new Error(
-            "Check-in window has ended for this session.",
-          );
-          error.statusCode = 403;
-          error.reasonCode = "session_checkin_window_closed";
-          throw error;
+        try {
+          // Use the utility function which is now timezone-aware
+          assertStudentCheckInWindowOpen(session);
+        } catch (err) {
+          // Keep the reason code logic for the frontend
+          if (err.message.includes("closed") || err.message.includes("finalized")) {
+            err.reasonCode = "session_closed";
+          } else if (err.message.includes("not opened")) {
+            err.reasonCode = "session_not_started";
+          } else if (err.message.includes("closed")) {
+            err.reasonCode = "session_checkin_window_closed";
+          }
+          throw err;
         }
       }
 
@@ -1112,9 +1070,6 @@ router.post(
         }
       }
 
-      if (req.user.role === "student") {
-        assertStudentCheckInWindowOpen(session);
-      }
 
       // Check if attendance already exists
       const existingAttendance = await prisma.attendance.findFirst({
