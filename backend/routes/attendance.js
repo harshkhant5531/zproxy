@@ -1119,7 +1119,7 @@ router.post(
         throw error;
       }
 
-      if (clientIp && req.user.role === "student") {
+      if (clientIp && req.user.role === "student" && process.env.CAMPUS_WIFI_CIDRS !== "*") {
         const sameDeviceAnyRecord = normalizedDeviceInfo
           ? await prisma.attendance.findFirst({
               where: {
