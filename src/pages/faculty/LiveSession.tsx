@@ -22,6 +22,8 @@ import {
   UserPlus,
   Loader2,
   RefreshCw,
+  KeyRound,
+  Copy,
 } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -43,6 +45,7 @@ export default function LiveSession() {
     null,
   );
   const [codeLoading, setCodeLoading] = useState(false);
+  const [secondsLeft, setSecondsLeft] = useState<number>(0);
 
   const { data: sessionData, isLoading: isSessionLoading } = useQuery({
     queryKey: ["session", id],
@@ -228,6 +231,57 @@ export default function LiveSession() {
     }
   };
 
+  const handleCopyCode = async () => {
+    if (!attendanceCode) return;
+    try {
+      await navigator.clipboard.writeText(attendanceCode);
+      toast.success("Attendance code copied");
+    } catch {
+      toast.error("Unable to copy attendance code");
+    }
+  };
+
+  useEffect(() => {
+    if (!id || isCompleted) return;
+
+    let mounted = true;
+    const fetchCurrentCode = async () => {
+      try {
+        const resp = await sessionsAPI.getAttendanceCode(id);
+        const code = resp?.data?.code || null;
+        const expiryRaw = resp?.data?.expiry;
+        setAttendanceCode(code);
+        setAttendanceCodeExpiry(expiryRaw ? new Date(expiryRaw) : null);
+      } catch {
+        if (mounted) {
+          setAttendanceCode(null);
+          setAttendanceCodeExpiry(null);
+        }
+      }
+    };
+
+    fetchCurrentCode();
+    return () => {
+      mounted = false;
+    };
+  }, [id, isCompleted]);
+
+  useEffect(() => {
+    if (!attendanceCodeExpiry) {
+      setSecondsLeft(0);
+      return;
+    }
+
+    const tick = () => {
+      const left = Math.max(0, differenceInSeconds(attendanceCodeExpiry, new Date()));
+      setSecondsLeft(left);
+    };
+
+    tick();
+    const timer = window.setInterval(tick, 1000);
+    return () => window.clearInterval(timer);
+  }, [attendanceCodeExpiry]);
+
   if (isSessionLoading || !session) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
@@ -392,6 +446,66 @@ export default function LiveSession() {
             </div>
           </div>
         </section>
+
+        {!isCompleted && (
+          <Card className="overflow-hidden border-primary/25 bg-gradient-to-br from-primary/10 via-background to-background shadow-sm">
+            <CardHeader className="border-b border-primary/15">
+              <CardTitle className="flex items-center gap-2 text-sm font-semibold">
+                <KeyRound className="h-4 w-4 text-primary" />
+                One-Time Attendance Code
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4 p-5">
+              <div className="rounded-xl border border-primary/20 bg-background/90 p-4">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                  Current Live Code
+                </p>
+                <div className="mt-2 flex flex-wrap items-center gap-3">
+                  <code className="rounded-md border border-primary/25 bg-primary/10 px-3 py-1.5 text-2xl font-black tracking-[0.35em] text-primary">
+                    {attendanceCode || "------"}
+                  </code>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-8"
+                    onClick={handleCopyCode}
+                    disabled={!attendanceCode}
+                  >
+                    <Copy className="mr-2 h-3.5 w-3.5" />
+                    Copy
+                  </Button>
+                </div>
+                <p className="mt-3 text-xs text-muted-foreground">
+                  {attendanceCode && attendanceCodeExpiry
+                    ? secondsLeft > 0
+                      ? `Expires in ${Math.floor(secondsLeft / 60)}m ${secondsLeft % 60}s`
+                      : "Code expired. Generate a fresh code."
+                    : "No active code yet. Generate one before students mark attendance."}
+                </p>
+              </div>
+
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <p className="text-xs text-muted-foreground">
+                  Show this code to students during live class.
+                </p>
+                <Button
+                  onClick={handleGenerateCode}
+                  disabled={codeLoading}
+                  className="min-w-36"
+                >
+                  {codeLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Generating...
+                    </>
+                  ) : (
+                    "Generate Code"
+                  )}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {isCompleted && (
           <Card className="border-border bg-card shadow-sm">

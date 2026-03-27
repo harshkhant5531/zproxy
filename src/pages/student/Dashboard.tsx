@@ -34,6 +34,7 @@ import {
   TrendingUp,
   MapPin,
   Loader2,
+  Sparkles,
 } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/AuthContext";
@@ -48,6 +49,7 @@ import {
 import { toast } from "sonner";
 import { parseProxyNotes } from "@/lib/proxyNotes";
 import { useState } from "react";
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 
 const DAY_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const ATTENDANCE_EARLY_WINDOW_MINUTES = 10;
@@ -119,6 +121,8 @@ export default function StudentDashboard() {
       return resp.data.data.sessions || [];
     },
     enabled: !!user?.id,
+    refetchInterval: 15000,
+    refetchIntervalInBackground: true,
   });
 
   const isLoading =
@@ -406,53 +410,77 @@ export default function StudentDashboard() {
               return (
                 <div
                   key={session.id}
-                  className="flex flex-col items-start justify-between gap-3 rounded-lg border p-4 sm:flex-row sm:items-center"
+                  className="overflow-hidden rounded-xl border border-primary/20 bg-gradient-to-r from-primary/5 via-background to-background"
                 >
-                  <div>
-                    <p className="text-sm font-medium">
-                      {session.subject?.name || session.topic}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {session.course?.code || "Course"} · {session.startTime}–
-                      {session.endTime}
-                    </p>
-                  </div>
-                  <div className="flex flex-col gap-2 items-end">
-                    <input
-                      type="text"
-                      placeholder="Attendance Code"
-                      className="input input-bordered input-sm w-32"
-                      value={codeInputs[session.id] || ""}
-                      onChange={(e) =>
-                        setCodeInputs({
-                          ...codeInputs,
-                          [session.id]: e.target.value,
-                        })
-                      }
-                      disabled={alreadyMarked}
-                    />
-                    {alreadyMarked ? (
-                      <Badge variant="secondary">Marked</Badge>
-                    ) : (
-                      <Button
-                        size="sm"
-                        onClick={() => markAttendanceMutation.mutate(session)}
-                        disabled={
-                          isMarkingCurrent ||
-                          markAttendanceMutation.isPending ||
-                          !(codeInputs[session.id] || "").trim()
-                        }
-                      >
-                        {isMarkingCurrent ? (
-                          <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />{" "}
-                            Marking
-                          </>
-                        ) : (
-                          "Mark Now"
-                        )}
-                      </Button>
-                    )}
+                  <div className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="space-y-1.5">
+                      <div className="flex items-center gap-2">
+                        <span className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-primary/25 bg-primary/10">
+                          <Sparkles className="h-3.5 w-3.5 text-primary" />
+                        </span>
+                        <p className="text-sm font-semibold">
+                          {session.subject?.name || session.topic}
+                        </p>
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        {session.course?.code || "Course"} · {session.startTime}
+                        –{session.endTime}
+                      </p>
+                    </div>
+
+                    <div className="w-full sm:w-auto">
+                      {alreadyMarked ? (
+                        <div className="flex items-center justify-end gap-2">
+                          <Badge variant="secondary">Marked</Badge>
+                        </div>
+                      ) : (
+                        <div className="flex flex-col items-start gap-3 sm:items-end">
+                          <div className="space-y-1">
+                            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                              Enter One-Time Code
+                            </p>
+                            <InputOTP
+                              maxLength={6}
+                              value={codeInputs[session.id] || ""}
+                              onChange={(value) =>
+                                setCodeInputs({
+                                  ...codeInputs,
+                                  [session.id]: value.replace(/\D/g, "").slice(0, 6),
+                                })
+                              }
+                            >
+                              <InputOTPGroup>
+                                <InputOTPSlot index={0} />
+                                <InputOTPSlot index={1} />
+                                <InputOTPSlot index={2} />
+                                <InputOTPSlot index={3} />
+                                <InputOTPSlot index={4} />
+                                <InputOTPSlot index={5} />
+                              </InputOTPGroup>
+                            </InputOTP>
+                          </div>
+
+                          <Button
+                            size="sm"
+                            onClick={() => markAttendanceMutation.mutate(session)}
+                            disabled={
+                              isMarkingCurrent ||
+                              markAttendanceMutation.isPending ||
+                              (codeInputs[session.id] || "").trim().length !== 6
+                            }
+                            className="min-w-28"
+                          >
+                            {isMarkingCurrent ? (
+                              <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Marking
+                              </>
+                            ) : (
+                              "Mark Now"
+                            )}
+                          </Button>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               );
