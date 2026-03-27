@@ -47,6 +47,14 @@ export default function LiveSession() {
   const [codeLoading, setCodeLoading] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState<number>(0);
 
+  const extractAttendanceCodePayload = (resp: any) => {
+    const payload = resp?.data?.data ?? resp?.data ?? {};
+    return {
+      code: payload?.code || null,
+      expiry: payload?.expiry || null,
+    };
+  };
+
   const { data: sessionData, isLoading: isSessionLoading } = useQuery({
     queryKey: ["session", id],
     queryFn: async () => {
@@ -219,9 +227,10 @@ export default function LiveSession() {
     setCodeLoading(true);
     try {
       const resp = await sessionsAPI.generateAttendanceCode(id!);
-      setAttendanceCode(resp.data.code);
+      const { code, expiry } = extractAttendanceCodePayload(resp);
+      setAttendanceCode(code);
       setAttendanceCodeExpiry(
-        resp.data.expiry ? new Date(resp.data.expiry) : null,
+        expiry ? new Date(expiry) : null,
       );
       toast.success("Attendance code generated");
     } catch (err: any) {
@@ -248,10 +257,10 @@ export default function LiveSession() {
     const fetchCurrentCode = async () => {
       try {
         const resp = await sessionsAPI.getAttendanceCode(id);
-        const code = resp?.data?.code || null;
-        const expiryRaw = resp?.data?.expiry;
+        if (!mounted) return;
+        const { code, expiry } = extractAttendanceCodePayload(resp);
         setAttendanceCode(code);
-        setAttendanceCodeExpiry(expiryRaw ? new Date(expiryRaw) : null);
+        setAttendanceCodeExpiry(expiry ? new Date(expiry) : null);
       } catch {
         if (mounted) {
           setAttendanceCode(null);
@@ -261,8 +270,10 @@ export default function LiveSession() {
     };
 
     fetchCurrentCode();
+    const refreshTimer = window.setInterval(fetchCurrentCode, 5000);
     return () => {
       mounted = false;
+      window.clearInterval(refreshTimer);
     };
   }, [id, isCompleted]);
 
