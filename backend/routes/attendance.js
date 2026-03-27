@@ -1022,6 +1022,43 @@ router.post(
       }
 
       auditContext.sessionId = parsedSessionId;
+      auditContext.attemptType = "attendance_code";
+
+      const clientIp = getClientIp(req);
+      const normalizedDeviceInfo = normalizeDeviceFingerprint(
+        req.body?.deviceInfo,
+      );
+
+      if (req.user.role === "student" && !normalizedDeviceInfo) {
+        const error = new Error("Device verification data is missing.");
+        error.statusCode = 400;
+        error.reasonCode = "missing_device_fingerprint";
+        throw error;
+      }
+
+      if (req.user.role === "student") {
+        const networkCheck = evaluateCampusWifiAccess(clientIp);
+        auditContext.security = {
+          network: networkCheck,
+          hasDeviceFingerprint: Boolean(normalizedDeviceInfo),
+        };
+
+        if (!networkCheck.allowed) {
+          const error = new Error(
+            "Attendance check-in is allowed only from approved campus WiFi.",
+          );
+          error.statusCode = 403;
+          error.reasonCode = "outside_campus_wifi";
+          throw error;
+        }
+      }
+
+      const finalStatus =
+        typeof status === "string" && status.trim() ? status.trim() : "present";
+      const finalNotes =
+        typeof notes === "string" && notes.trim().length > 0
+          ? notes.trim()
+          : null;
 
       // Student self check-in must happen during a valid live window.
       if (req.user.role === "student") {
@@ -1095,7 +1132,7 @@ router.post(
       // Check if attendance already exists
       const existingAttendance = await prisma.attendance.findFirst({
         where: {
-          sessionId,
+          sessionId: parsedSessionId,
           studentId,
         },
       });
@@ -1140,7 +1177,7 @@ router.post(
       // Create attendance record
       const attendance = await prisma.attendance.create({
         data: {
-          sessionId,
+          sessionId: parsedSessionId,
           studentId,
           status: finalStatus,
           notes: finalNotes,
@@ -1161,7 +1198,7 @@ router.post(
 
       // Update attendance count in session
       await prisma.session.update({
-        where: { id: sessionId },
+        where: { id: parsedSessionId },
         data: {
           attendanceCount: { increment: 1 },
         },

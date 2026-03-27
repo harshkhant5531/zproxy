@@ -111,7 +111,11 @@ export default function StudentDashboard() {
     enabled: !!user?.id,
   });
 
-  const { data: activeSessionsData, isLoading: isSessionsLoading } = useQuery({
+  const {
+    data: activeSessionsData,
+    isLoading: isSessionsLoading,
+    dataUpdatedAt: sessionsUpdatedAt,
+  } = useQuery({
     queryKey: ["student", "active-sessions", user?.id],
     queryFn: async () => {
       const resp = await sessionsAPI.getSessions({
@@ -392,9 +396,18 @@ export default function StudentDashboard() {
             {activeSessions.length > 0
               ? `${activeSessions.length} session(s) open for check-in (within scheduled time)`
               : "No check-in windows are open right now. Sessions appear here only during class time (with a short grace period)."}
+            <br />
             {openSessions.length > 0
               ? `${openSessions.length} active session(s) open for check-in`
               : "No active sessions right now"}
+            {sessionsUpdatedAt > 0 && (
+              <>
+                <br />
+                <span className="text-[11px] text-muted-foreground/80">
+                  Last updated: {format(new Date(sessionsUpdatedAt), "hh:mm:ss a")}
+                </span>
+              </>
+            )}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">

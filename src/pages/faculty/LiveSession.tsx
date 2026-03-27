@@ -46,6 +46,7 @@ export default function LiveSession() {
   );
   const [codeLoading, setCodeLoading] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState<number>(0);
+  const [codeLastUpdatedAt, setCodeLastUpdatedAt] = useState<number | null>(null);
 
   const extractAttendanceCodePayload = (resp: any) => {
     const payload = resp?.data?.data ?? resp?.data ?? {};
@@ -232,6 +233,7 @@ export default function LiveSession() {
       setAttendanceCodeExpiry(
         expiry ? new Date(expiry) : null,
       );
+      setCodeLastUpdatedAt(Date.now());
       toast.success("Attendance code generated");
     } catch (err: any) {
       toast.error(err.response?.data?.message || "Failed to generate code");
@@ -261,10 +263,12 @@ export default function LiveSession() {
         const { code, expiry } = extractAttendanceCodePayload(resp);
         setAttendanceCode(code);
         setAttendanceCodeExpiry(expiry ? new Date(expiry) : null);
+        setCodeLastUpdatedAt(Date.now());
       } catch {
         if (mounted) {
           setAttendanceCode(null);
           setAttendanceCodeExpiry(null);
+          setCodeLastUpdatedAt(Date.now());
         }
       }
     };
@@ -493,6 +497,12 @@ export default function LiveSession() {
                       : "Code expired. Generate a fresh code."
                     : "No active code yet. Generate one before students mark attendance."}
                 </p>
+                {codeLastUpdatedAt && (
+                  <p className="mt-1 text-[11px] text-muted-foreground/80">
+                    Last updated:{" "}
+                    {format(new Date(codeLastUpdatedAt), "hh:mm:ss a")}
+                  </p>
+                )}
               </div>
 
               <div className="flex flex-wrap items-center justify-between gap-3">
