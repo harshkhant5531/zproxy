@@ -1030,7 +1030,10 @@ router.post(
           assertStudentCheckInWindowOpen(session);
         } catch (err) {
           // Keep the reason code logic for the frontend
-          if (err.message.includes("closed") || err.message.includes("finalized")) {
+          if (
+            err.message.includes("closed") ||
+            err.message.includes("finalized")
+          ) {
             err.reasonCode = "session_closed";
           } else if (err.message.includes("not opened")) {
             err.reasonCode = "session_not_started";
@@ -1089,7 +1092,6 @@ router.post(
         }
       }
 
-
       // Check if attendance already exists
       const existingAttendance = await prisma.attendance.findFirst({
         where: {
@@ -1105,172 +1107,35 @@ router.post(
         throw error;
       }
 
-      // ─── Proxy Detection ────────────────────────────────────────────────
-      let finalStatus = status || "present";
-      let finalNotes = notes || null;
-      const clientIp = getClientIp(req);
-      const normalizedDeviceInfo = normalizeDeviceFingerprint(
-        req.body.deviceInfo,
-      );
-
-      if (req.user.role === "student" && !normalizedDeviceInfo) {
-        const error = new Error(
-          "Device integrity metadata is required to mark attendance.",
-        );
-        error.statusCode = 400;
-        error.reasonCode = "missing_device_fingerprint";
-        error.decisionReason = "missing_device_fingerprint";
-        throw error;
-      }
-
-      if (req.user.role === "student" && !isAllowedCampusWifiIp(clientIp)) {
-        const detectedIp = clientIp || "unknown";
-        const error = new Error(
-          `Attendance can only be marked from the approved campus WiFi network. Detected IP: ${detectedIp}`,
-        );
-        error.statusCode = 403;
-        error.reasonCode = "outside_campus_wifi";
-        error.decisionReason = "outside_campus_wifi";
-        throw error;
-      }
-
-      if (clientIp && req.user.role === "student") {
-        const sameDeviceAnyRecord = normalizedDeviceInfo
-          ? await prisma.attendance.findFirst({
-              where: {
-                sessionId,
-                studentId: { not: studentId },
-                deviceInfo: normalizedDeviceInfo,
-              },
-              select: { id: true, studentId: true, notes: true, timestamp: true },
-            })
-          : null;
-
-        if (sameDeviceAnyRecord) {
-          if (process.env.CAMPUS_WIFI_CIDRS === "*") {
-            // In dev/wildcard mode, we flag but don't block
-            finalStatus = "absent";
-            finalNotes = appendNotes(finalNotes, [
-              `[PROXY_DETECTED:sharedWith:${sameDeviceAnyRecord.studentId}:WILDCARD_BYPASS]`,
-            ]);
-          } else {
-            // Don't hard-block on first shared fingerprint match.
-            // Also apply time-window suppression so old fingerprints don't instantly
-            // create suspicion (common with shared lab devices).
-            const windowMinutes = Number.parseInt(
-              String(process.env.PROXY_SHARED_DEVICE_WINDOW_MINUTES || "15"),
-              10,
-            );
-            const windowMs =
-              (Number.isFinite(windowMinutes) ? windowMinutes : 15) *
-              60 *
-              1000;
-
-            const anyDeviceTs = sameDeviceAnyRecord.timestamp
-              ? new Date(sameDeviceAnyRecord.timestamp).getTime()
-              : null;
-            const withinTimeWindow =
-              anyDeviceTs !== null &&
-              Math.abs(Date.now() - anyDeviceTs) <= windowMs;
-
-            if (withinTimeWindow) {
-              finalNotes = appendNotes(finalNotes, [
-                `[PROXY_SUSPECT:sharedWith:${sameDeviceAnyRecord.studentId}:SAME_DEVICE_FINGERPRINT]`,
-              ]);
-            }
-          }
+      // ─── One-Time Attendance Code Validation ─────────────────────────────
+      if (req.user.role === "student") {
+        const { attendanceCode } = req.body;
+        if (!attendanceCode) {
+          const error = new Error("Attendance code is required.");
+          error.statusCode = 400;
+          error.reasonCode = "missing_attendance_code";
+          throw error;
         }
-
-        const sameIpRecords = await prisma.attendance.findMany({
-          where: {
-            sessionId,
-            studentId: { not: studentId },
-            ipAddress: clientIp,
-          },
-          select: {
-            id: true,
-            studentId: true,
-            notes: true,
-            deviceInfo: true,
-            timestamp: true,
-          },
-        });
-
-        if (sameIpRecords.length > 0) {
-          // Check for strong proxy signal: same device identifier
-          const deviceInfo = normalizedDeviceInfo || "";
-          const sameDeviceRecord = deviceInfo
-            ? sameIpRecords.find(
-                (r) => r.deviceInfo && r.deviceInfo === deviceInfo,
-              )
-            : null;
-
-          if (sameDeviceRecord) {
-            // Same IP + same device:
-            // - first-time / low cluster size: mark as suspect only (avoid retroactive false positives)
-            // - larger cluster size: escalate to detected and mark absent
-            const windowMinutes = Number.parseInt(
-              String(process.env.PROXY_SHARED_DEVICE_WINDOW_MINUTES || "15"),
-              10,
-            );
-            const windowMs =
-              (Number.isFinite(windowMinutes) ? windowMinutes : 15) *
-              60 *
-              1000;
-
-            const nowMs = Date.now();
-            const sameDeviceTs = sameDeviceRecord.timestamp
-              ? new Date(sameDeviceRecord.timestamp).getTime()
-              : null;
-            const withinTimeWindow =
-              sameDeviceTs !== null && Math.abs(nowMs - sameDeviceTs) <= windowMs;
-
-            const timeDeltaMinutes =
-              sameDeviceTs !== null
-                ? Math.round(Math.abs(nowMs - sameDeviceTs) / 60000)
-                : null;
-
-            const shouldEscalate = sameIpRecords.length >= 2 && withinTimeWindow;
-
-            if (shouldEscalate) {
-              finalStatus = "absent";
-              finalNotes = appendNotes(finalNotes, [
-                `[PROXY_DETECTED:sharedWith:${sameDeviceRecord.studentId}:SAME_DEVICE]`,
-              ]);
-
-              // Retroactively flag the earlier record too
-              const prevNotes = sameDeviceRecord.notes || "";
-              if (!prevNotes.includes("[PROXY_")) {
-                await prisma.attendance.update({
-                  where: { id: sameDeviceRecord.id },
-                  data: {
-                    status: "absent",
-                    notes: appendNotes(prevNotes, [
-                      `[PROXY_DETECTED:sharedWith:${studentId}:SAME_DEVICE]`,
-                    ]),
-                  },
-                });
-              }
-            } else {
-              // Only one previous record on this IP so far.
-              // This is common on campus NAT / shared Wi-Fi.
-              finalNotes = appendNotes(finalNotes, [
-                `[PROXY_SUSPECT:sharedWith:${sameDeviceRecord.studentId}:SAME_DEVICE]`,
-                `[IP_SHARED:count=${sameIpRecords.length}]`,
-                timeDeltaMinutes !== null
-                  ? `[PROXY_TIME_GAP_MINUTES=${timeDeltaMinutes}:WINDOW=${windowMinutes}]`
-                  : null,
-              ]);
-            }
-          } else {
-            // Same IP but different device — likely campus WiFi (shared NAT)
-            // Add informational tag but do NOT change status
-            finalNotes = appendNotes(finalNotes, [
-              `[IP_SHARED:count=${sameIpRecords.length}]`,
-            ]);
-          }
+        if (!session.attendanceCode || !session.attendanceCodeExpiry) {
+          const error = new Error(
+            "Attendance code is not set for this session.",
+          );
+          error.statusCode = 400;
+          error.reasonCode = "attendance_code_not_set";
+          throw error;
+        }
+        const now = new Date();
+        if (
+          session.attendanceCode !== attendanceCode ||
+          now > session.attendanceCodeExpiry
+        ) {
+          const error = new Error("Invalid or expired attendance code.");
+          error.statusCode = 403;
+          error.reasonCode = "invalid_or_expired_attendance_code";
+          throw error;
         }
       }
+      // ─────────────────────────────────────────────────────────────────────
 
       // Create attendance record
       const attendance = await prisma.attendance.create({
