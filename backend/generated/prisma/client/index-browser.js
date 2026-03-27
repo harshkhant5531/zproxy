@@ -132,6 +132,20 @@ exports.Prisma.UsersScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.WebAuthnCredentialScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  credentialId: 'credentialId',
+  publicKey: 'publicKey',
+  counter: 'counter',
+  deviceType: 'deviceType',
+  backedUp: 'backedUp',
+  transports: 'transports',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  lastUsedAt: 'lastUsedAt'
+};
+
 exports.Prisma.AdminProfileScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -218,6 +232,8 @@ exports.Prisma.SessionScalarFieldEnum = {
   status: 'status',
   batches: 'batches',
   attendanceCount: 'attendanceCount',
+  attendanceCode: 'attendanceCode',
+  attendanceCodeExpiry: 'attendanceCodeExpiry',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -365,6 +381,7 @@ exports.Prisma.JsonNullValueFilter = {
 
 exports.Prisma.ModelName = {
   Users: 'Users',
+  WebAuthnCredential: 'WebAuthnCredential',
   AdminProfile: 'AdminProfile',
   FacultyProfile: 'FacultyProfile',
   StudentProfile: 'StudentProfile',

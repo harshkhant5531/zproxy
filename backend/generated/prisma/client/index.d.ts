@@ -19,6 +19,11 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
  */
 export type Users = $Result.DefaultSelection<Prisma.$UsersPayload>
 /**
+ * Model WebAuthnCredential
+ * 
+ */
+export type WebAuthnCredential = $Result.DefaultSelection<Prisma.$WebAuthnCredentialPayload>
+/**
  * Model AdminProfile
  * 
  */
@@ -219,6 +224,16 @@ export class PrismaClient<
     * ```
     */
   get users(): Prisma.UsersDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.webAuthnCredential`: Exposes CRUD operations for the **WebAuthnCredential** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more WebAuthnCredentials
+    * const webAuthnCredentials = await prisma.webAuthnCredential.findMany()
+    * ```
+    */
+  get webAuthnCredential(): Prisma.WebAuthnCredentialDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.adminProfile`: Exposes CRUD operations for the **AdminProfile** model.
@@ -794,6 +809,7 @@ export namespace Prisma {
 
   export const ModelName: {
     Users: 'Users',
+    WebAuthnCredential: 'WebAuthnCredential',
     AdminProfile: 'AdminProfile',
     FacultyProfile: 'FacultyProfile',
     StudentProfile: 'StudentProfile',
@@ -823,7 +839,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "users" | "adminProfile" | "facultyProfile" | "studentProfile" | "course" | "subject" | "session" | "attendance" | "examPermit" | "leaveApplication" | "grade" | "timetable" | "notification" | "report" | "auditLog"
+      modelProps: "users" | "webAuthnCredential" | "adminProfile" | "facultyProfile" | "studentProfile" | "course" | "subject" | "session" | "attendance" | "examPermit" | "leaveApplication" | "grade" | "timetable" | "notification" | "report" | "auditLog"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -898,6 +914,80 @@ export namespace Prisma {
           count: {
             args: Prisma.UsersCountArgs<ExtArgs>
             result: $Utils.Optional<UsersCountAggregateOutputType> | number
+          }
+        }
+      }
+      WebAuthnCredential: {
+        payload: Prisma.$WebAuthnCredentialPayload<ExtArgs>
+        fields: Prisma.WebAuthnCredentialFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.WebAuthnCredentialFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WebAuthnCredentialPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.WebAuthnCredentialFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WebAuthnCredentialPayload>
+          }
+          findFirst: {
+            args: Prisma.WebAuthnCredentialFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WebAuthnCredentialPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.WebAuthnCredentialFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WebAuthnCredentialPayload>
+          }
+          findMany: {
+            args: Prisma.WebAuthnCredentialFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WebAuthnCredentialPayload>[]
+          }
+          create: {
+            args: Prisma.WebAuthnCredentialCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WebAuthnCredentialPayload>
+          }
+          createMany: {
+            args: Prisma.WebAuthnCredentialCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.WebAuthnCredentialCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WebAuthnCredentialPayload>[]
+          }
+          delete: {
+            args: Prisma.WebAuthnCredentialDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WebAuthnCredentialPayload>
+          }
+          update: {
+            args: Prisma.WebAuthnCredentialUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WebAuthnCredentialPayload>
+          }
+          deleteMany: {
+            args: Prisma.WebAuthnCredentialDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.WebAuthnCredentialUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.WebAuthnCredentialUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WebAuthnCredentialPayload>[]
+          }
+          upsert: {
+            args: Prisma.WebAuthnCredentialUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WebAuthnCredentialPayload>
+          }
+          aggregate: {
+            args: Prisma.WebAuthnCredentialAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateWebAuthnCredential>
+          }
+          groupBy: {
+            args: Prisma.WebAuthnCredentialGroupByArgs<ExtArgs>
+            result: $Utils.Optional<WebAuthnCredentialGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.WebAuthnCredentialCountArgs<ExtArgs>
+            result: $Utils.Optional<WebAuthnCredentialCountAggregateOutputType> | number
           }
         }
       }
@@ -2046,6 +2136,7 @@ export namespace Prisma {
   }
   export type GlobalOmitConfig = {
     users?: UsersOmit
+    webAuthnCredential?: WebAuthnCredentialOmit
     adminProfile?: AdminProfileOmit
     facultyProfile?: FacultyProfileOmit
     studentProfile?: StudentProfileOmit
@@ -2149,6 +2240,7 @@ export namespace Prisma {
     notifications: number
     reports: number
     auditLogs: number
+    webauthnCredentials: number
     timetableEntries: number
     facultyCourses: number
     facultySubjects: number
@@ -2166,6 +2258,7 @@ export namespace Prisma {
     notifications?: boolean | UsersCountOutputTypeCountNotificationsArgs
     reports?: boolean | UsersCountOutputTypeCountReportsArgs
     auditLogs?: boolean | UsersCountOutputTypeCountAuditLogsArgs
+    webauthnCredentials?: boolean | UsersCountOutputTypeCountWebauthnCredentialsArgs
     timetableEntries?: boolean | UsersCountOutputTypeCountTimetableEntriesArgs
     facultyCourses?: boolean | UsersCountOutputTypeCountFacultyCoursesArgs
     facultySubjects?: boolean | UsersCountOutputTypeCountFacultySubjectsArgs
@@ -2245,6 +2338,13 @@ export namespace Prisma {
    */
   export type UsersCountOutputTypeCountAuditLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: AuditLogWhereInput
+  }
+
+  /**
+   * UsersCountOutputType without action
+   */
+  export type UsersCountOutputTypeCountWebauthnCredentialsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WebAuthnCredentialWhereInput
   }
 
   /**
@@ -2703,6 +2803,7 @@ export namespace Prisma {
     notifications?: boolean | Users$notificationsArgs<ExtArgs>
     reports?: boolean | Users$reportsArgs<ExtArgs>
     auditLogs?: boolean | Users$auditLogsArgs<ExtArgs>
+    webauthnCredentials?: boolean | Users$webauthnCredentialsArgs<ExtArgs>
     timetableEntries?: boolean | Users$timetableEntriesArgs<ExtArgs>
     facultyCourses?: boolean | Users$facultyCoursesArgs<ExtArgs>
     facultySubjects?: boolean | Users$facultySubjectsArgs<ExtArgs>
@@ -2761,6 +2862,7 @@ export namespace Prisma {
     notifications?: boolean | Users$notificationsArgs<ExtArgs>
     reports?: boolean | Users$reportsArgs<ExtArgs>
     auditLogs?: boolean | Users$auditLogsArgs<ExtArgs>
+    webauthnCredentials?: boolean | Users$webauthnCredentialsArgs<ExtArgs>
     timetableEntries?: boolean | Users$timetableEntriesArgs<ExtArgs>
     facultyCourses?: boolean | Users$facultyCoursesArgs<ExtArgs>
     facultySubjects?: boolean | Users$facultySubjectsArgs<ExtArgs>
@@ -2786,6 +2888,7 @@ export namespace Prisma {
       notifications: Prisma.$NotificationPayload<ExtArgs>[]
       reports: Prisma.$ReportPayload<ExtArgs>[]
       auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
+      webauthnCredentials: Prisma.$WebAuthnCredentialPayload<ExtArgs>[]
       timetableEntries: Prisma.$TimetablePayload<ExtArgs>[]
       facultyCourses: Prisma.$CoursePayload<ExtArgs>[]
       facultySubjects: Prisma.$SubjectPayload<ExtArgs>[]
@@ -3208,6 +3311,7 @@ export namespace Prisma {
     notifications<T extends Users$notificationsArgs<ExtArgs> = {}>(args?: Subset<T, Users$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     reports<T extends Users$reportsArgs<ExtArgs> = {}>(args?: Subset<T, Users$reportsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     auditLogs<T extends Users$auditLogsArgs<ExtArgs> = {}>(args?: Subset<T, Users$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    webauthnCredentials<T extends Users$webauthnCredentialsArgs<ExtArgs> = {}>(args?: Subset<T, Users$webauthnCredentialsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WebAuthnCredentialPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     timetableEntries<T extends Users$timetableEntriesArgs<ExtArgs> = {}>(args?: Subset<T, Users$timetableEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TimetablePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     facultyCourses<T extends Users$facultyCoursesArgs<ExtArgs> = {}>(args?: Subset<T, Users$facultyCoursesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CoursePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     facultySubjects<T extends Users$facultySubjectsArgs<ExtArgs> = {}>(args?: Subset<T, Users$facultySubjectsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SubjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -3912,6 +4016,30 @@ export namespace Prisma {
   }
 
   /**
+   * Users.webauthnCredentials
+   */
+  export type Users$webauthnCredentialsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebAuthnCredential
+     */
+    select?: WebAuthnCredentialSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebAuthnCredential
+     */
+    omit?: WebAuthnCredentialOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WebAuthnCredentialInclude<ExtArgs> | null
+    where?: WebAuthnCredentialWhereInput
+    orderBy?: WebAuthnCredentialOrderByWithRelationInput | WebAuthnCredentialOrderByWithRelationInput[]
+    cursor?: WebAuthnCredentialWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: WebAuthnCredentialScalarFieldEnum | WebAuthnCredentialScalarFieldEnum[]
+  }
+
+  /**
    * Users.timetableEntries
    */
   export type Users$timetableEntriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4047,6 +4175,1180 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: UsersInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model WebAuthnCredential
+   */
+
+  export type AggregateWebAuthnCredential = {
+    _count: WebAuthnCredentialCountAggregateOutputType | null
+    _avg: WebAuthnCredentialAvgAggregateOutputType | null
+    _sum: WebAuthnCredentialSumAggregateOutputType | null
+    _min: WebAuthnCredentialMinAggregateOutputType | null
+    _max: WebAuthnCredentialMaxAggregateOutputType | null
+  }
+
+  export type WebAuthnCredentialAvgAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    counter: number | null
+  }
+
+  export type WebAuthnCredentialSumAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    counter: number | null
+  }
+
+  export type WebAuthnCredentialMinAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    credentialId: string | null
+    publicKey: string | null
+    counter: number | null
+    deviceType: string | null
+    backedUp: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    lastUsedAt: Date | null
+  }
+
+  export type WebAuthnCredentialMaxAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    credentialId: string | null
+    publicKey: string | null
+    counter: number | null
+    deviceType: string | null
+    backedUp: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    lastUsedAt: Date | null
+  }
+
+  export type WebAuthnCredentialCountAggregateOutputType = {
+    id: number
+    userId: number
+    credentialId: number
+    publicKey: number
+    counter: number
+    deviceType: number
+    backedUp: number
+    transports: number
+    createdAt: number
+    updatedAt: number
+    lastUsedAt: number
+    _all: number
+  }
+
+
+  export type WebAuthnCredentialAvgAggregateInputType = {
+    id?: true
+    userId?: true
+    counter?: true
+  }
+
+  export type WebAuthnCredentialSumAggregateInputType = {
+    id?: true
+    userId?: true
+    counter?: true
+  }
+
+  export type WebAuthnCredentialMinAggregateInputType = {
+    id?: true
+    userId?: true
+    credentialId?: true
+    publicKey?: true
+    counter?: true
+    deviceType?: true
+    backedUp?: true
+    createdAt?: true
+    updatedAt?: true
+    lastUsedAt?: true
+  }
+
+  export type WebAuthnCredentialMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    credentialId?: true
+    publicKey?: true
+    counter?: true
+    deviceType?: true
+    backedUp?: true
+    createdAt?: true
+    updatedAt?: true
+    lastUsedAt?: true
+  }
+
+  export type WebAuthnCredentialCountAggregateInputType = {
+    id?: true
+    userId?: true
+    credentialId?: true
+    publicKey?: true
+    counter?: true
+    deviceType?: true
+    backedUp?: true
+    transports?: true
+    createdAt?: true
+    updatedAt?: true
+    lastUsedAt?: true
+    _all?: true
+  }
+
+  export type WebAuthnCredentialAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which WebAuthnCredential to aggregate.
+     */
+    where?: WebAuthnCredentialWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WebAuthnCredentials to fetch.
+     */
+    orderBy?: WebAuthnCredentialOrderByWithRelationInput | WebAuthnCredentialOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: WebAuthnCredentialWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WebAuthnCredentials from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WebAuthnCredentials.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned WebAuthnCredentials
+    **/
+    _count?: true | WebAuthnCredentialCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: WebAuthnCredentialAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: WebAuthnCredentialSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: WebAuthnCredentialMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: WebAuthnCredentialMaxAggregateInputType
+  }
+
+  export type GetWebAuthnCredentialAggregateType<T extends WebAuthnCredentialAggregateArgs> = {
+        [P in keyof T & keyof AggregateWebAuthnCredential]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateWebAuthnCredential[P]>
+      : GetScalarType<T[P], AggregateWebAuthnCredential[P]>
+  }
+
+
+
+
+  export type WebAuthnCredentialGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WebAuthnCredentialWhereInput
+    orderBy?: WebAuthnCredentialOrderByWithAggregationInput | WebAuthnCredentialOrderByWithAggregationInput[]
+    by: WebAuthnCredentialScalarFieldEnum[] | WebAuthnCredentialScalarFieldEnum
+    having?: WebAuthnCredentialScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: WebAuthnCredentialCountAggregateInputType | true
+    _avg?: WebAuthnCredentialAvgAggregateInputType
+    _sum?: WebAuthnCredentialSumAggregateInputType
+    _min?: WebAuthnCredentialMinAggregateInputType
+    _max?: WebAuthnCredentialMaxAggregateInputType
+  }
+
+  export type WebAuthnCredentialGroupByOutputType = {
+    id: number
+    userId: number
+    credentialId: string
+    publicKey: string
+    counter: number
+    deviceType: string | null
+    backedUp: boolean
+    transports: string[]
+    createdAt: Date
+    updatedAt: Date
+    lastUsedAt: Date | null
+    _count: WebAuthnCredentialCountAggregateOutputType | null
+    _avg: WebAuthnCredentialAvgAggregateOutputType | null
+    _sum: WebAuthnCredentialSumAggregateOutputType | null
+    _min: WebAuthnCredentialMinAggregateOutputType | null
+    _max: WebAuthnCredentialMaxAggregateOutputType | null
+  }
+
+  type GetWebAuthnCredentialGroupByPayload<T extends WebAuthnCredentialGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<WebAuthnCredentialGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof WebAuthnCredentialGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], WebAuthnCredentialGroupByOutputType[P]>
+            : GetScalarType<T[P], WebAuthnCredentialGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type WebAuthnCredentialSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    credentialId?: boolean
+    publicKey?: boolean
+    counter?: boolean
+    deviceType?: boolean
+    backedUp?: boolean
+    transports?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    lastUsedAt?: boolean
+    user?: boolean | UsersDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["webAuthnCredential"]>
+
+  export type WebAuthnCredentialSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    credentialId?: boolean
+    publicKey?: boolean
+    counter?: boolean
+    deviceType?: boolean
+    backedUp?: boolean
+    transports?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    lastUsedAt?: boolean
+    user?: boolean | UsersDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["webAuthnCredential"]>
+
+  export type WebAuthnCredentialSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    credentialId?: boolean
+    publicKey?: boolean
+    counter?: boolean
+    deviceType?: boolean
+    backedUp?: boolean
+    transports?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    lastUsedAt?: boolean
+    user?: boolean | UsersDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["webAuthnCredential"]>
+
+  export type WebAuthnCredentialSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    credentialId?: boolean
+    publicKey?: boolean
+    counter?: boolean
+    deviceType?: boolean
+    backedUp?: boolean
+    transports?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    lastUsedAt?: boolean
+  }
+
+  export type WebAuthnCredentialOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "credentialId" | "publicKey" | "counter" | "deviceType" | "backedUp" | "transports" | "createdAt" | "updatedAt" | "lastUsedAt", ExtArgs["result"]["webAuthnCredential"]>
+  export type WebAuthnCredentialInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UsersDefaultArgs<ExtArgs>
+  }
+  export type WebAuthnCredentialIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UsersDefaultArgs<ExtArgs>
+  }
+  export type WebAuthnCredentialIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UsersDefaultArgs<ExtArgs>
+  }
+
+  export type $WebAuthnCredentialPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "WebAuthnCredential"
+    objects: {
+      user: Prisma.$UsersPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      userId: number
+      credentialId: string
+      publicKey: string
+      counter: number
+      deviceType: string | null
+      backedUp: boolean
+      transports: string[]
+      createdAt: Date
+      updatedAt: Date
+      lastUsedAt: Date | null
+    }, ExtArgs["result"]["webAuthnCredential"]>
+    composites: {}
+  }
+
+  type WebAuthnCredentialGetPayload<S extends boolean | null | undefined | WebAuthnCredentialDefaultArgs> = $Result.GetResult<Prisma.$WebAuthnCredentialPayload, S>
+
+  type WebAuthnCredentialCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<WebAuthnCredentialFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: WebAuthnCredentialCountAggregateInputType | true
+    }
+
+  export interface WebAuthnCredentialDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['WebAuthnCredential'], meta: { name: 'WebAuthnCredential' } }
+    /**
+     * Find zero or one WebAuthnCredential that matches the filter.
+     * @param {WebAuthnCredentialFindUniqueArgs} args - Arguments to find a WebAuthnCredential
+     * @example
+     * // Get one WebAuthnCredential
+     * const webAuthnCredential = await prisma.webAuthnCredential.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends WebAuthnCredentialFindUniqueArgs>(args: SelectSubset<T, WebAuthnCredentialFindUniqueArgs<ExtArgs>>): Prisma__WebAuthnCredentialClient<$Result.GetResult<Prisma.$WebAuthnCredentialPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one WebAuthnCredential that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {WebAuthnCredentialFindUniqueOrThrowArgs} args - Arguments to find a WebAuthnCredential
+     * @example
+     * // Get one WebAuthnCredential
+     * const webAuthnCredential = await prisma.webAuthnCredential.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends WebAuthnCredentialFindUniqueOrThrowArgs>(args: SelectSubset<T, WebAuthnCredentialFindUniqueOrThrowArgs<ExtArgs>>): Prisma__WebAuthnCredentialClient<$Result.GetResult<Prisma.$WebAuthnCredentialPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first WebAuthnCredential that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WebAuthnCredentialFindFirstArgs} args - Arguments to find a WebAuthnCredential
+     * @example
+     * // Get one WebAuthnCredential
+     * const webAuthnCredential = await prisma.webAuthnCredential.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends WebAuthnCredentialFindFirstArgs>(args?: SelectSubset<T, WebAuthnCredentialFindFirstArgs<ExtArgs>>): Prisma__WebAuthnCredentialClient<$Result.GetResult<Prisma.$WebAuthnCredentialPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first WebAuthnCredential that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WebAuthnCredentialFindFirstOrThrowArgs} args - Arguments to find a WebAuthnCredential
+     * @example
+     * // Get one WebAuthnCredential
+     * const webAuthnCredential = await prisma.webAuthnCredential.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends WebAuthnCredentialFindFirstOrThrowArgs>(args?: SelectSubset<T, WebAuthnCredentialFindFirstOrThrowArgs<ExtArgs>>): Prisma__WebAuthnCredentialClient<$Result.GetResult<Prisma.$WebAuthnCredentialPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more WebAuthnCredentials that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WebAuthnCredentialFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all WebAuthnCredentials
+     * const webAuthnCredentials = await prisma.webAuthnCredential.findMany()
+     * 
+     * // Get first 10 WebAuthnCredentials
+     * const webAuthnCredentials = await prisma.webAuthnCredential.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const webAuthnCredentialWithIdOnly = await prisma.webAuthnCredential.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends WebAuthnCredentialFindManyArgs>(args?: SelectSubset<T, WebAuthnCredentialFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WebAuthnCredentialPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a WebAuthnCredential.
+     * @param {WebAuthnCredentialCreateArgs} args - Arguments to create a WebAuthnCredential.
+     * @example
+     * // Create one WebAuthnCredential
+     * const WebAuthnCredential = await prisma.webAuthnCredential.create({
+     *   data: {
+     *     // ... data to create a WebAuthnCredential
+     *   }
+     * })
+     * 
+     */
+    create<T extends WebAuthnCredentialCreateArgs>(args: SelectSubset<T, WebAuthnCredentialCreateArgs<ExtArgs>>): Prisma__WebAuthnCredentialClient<$Result.GetResult<Prisma.$WebAuthnCredentialPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many WebAuthnCredentials.
+     * @param {WebAuthnCredentialCreateManyArgs} args - Arguments to create many WebAuthnCredentials.
+     * @example
+     * // Create many WebAuthnCredentials
+     * const webAuthnCredential = await prisma.webAuthnCredential.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends WebAuthnCredentialCreateManyArgs>(args?: SelectSubset<T, WebAuthnCredentialCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many WebAuthnCredentials and returns the data saved in the database.
+     * @param {WebAuthnCredentialCreateManyAndReturnArgs} args - Arguments to create many WebAuthnCredentials.
+     * @example
+     * // Create many WebAuthnCredentials
+     * const webAuthnCredential = await prisma.webAuthnCredential.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many WebAuthnCredentials and only return the `id`
+     * const webAuthnCredentialWithIdOnly = await prisma.webAuthnCredential.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends WebAuthnCredentialCreateManyAndReturnArgs>(args?: SelectSubset<T, WebAuthnCredentialCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WebAuthnCredentialPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a WebAuthnCredential.
+     * @param {WebAuthnCredentialDeleteArgs} args - Arguments to delete one WebAuthnCredential.
+     * @example
+     * // Delete one WebAuthnCredential
+     * const WebAuthnCredential = await prisma.webAuthnCredential.delete({
+     *   where: {
+     *     // ... filter to delete one WebAuthnCredential
+     *   }
+     * })
+     * 
+     */
+    delete<T extends WebAuthnCredentialDeleteArgs>(args: SelectSubset<T, WebAuthnCredentialDeleteArgs<ExtArgs>>): Prisma__WebAuthnCredentialClient<$Result.GetResult<Prisma.$WebAuthnCredentialPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one WebAuthnCredential.
+     * @param {WebAuthnCredentialUpdateArgs} args - Arguments to update one WebAuthnCredential.
+     * @example
+     * // Update one WebAuthnCredential
+     * const webAuthnCredential = await prisma.webAuthnCredential.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends WebAuthnCredentialUpdateArgs>(args: SelectSubset<T, WebAuthnCredentialUpdateArgs<ExtArgs>>): Prisma__WebAuthnCredentialClient<$Result.GetResult<Prisma.$WebAuthnCredentialPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more WebAuthnCredentials.
+     * @param {WebAuthnCredentialDeleteManyArgs} args - Arguments to filter WebAuthnCredentials to delete.
+     * @example
+     * // Delete a few WebAuthnCredentials
+     * const { count } = await prisma.webAuthnCredential.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends WebAuthnCredentialDeleteManyArgs>(args?: SelectSubset<T, WebAuthnCredentialDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more WebAuthnCredentials.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WebAuthnCredentialUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many WebAuthnCredentials
+     * const webAuthnCredential = await prisma.webAuthnCredential.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends WebAuthnCredentialUpdateManyArgs>(args: SelectSubset<T, WebAuthnCredentialUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more WebAuthnCredentials and returns the data updated in the database.
+     * @param {WebAuthnCredentialUpdateManyAndReturnArgs} args - Arguments to update many WebAuthnCredentials.
+     * @example
+     * // Update many WebAuthnCredentials
+     * const webAuthnCredential = await prisma.webAuthnCredential.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more WebAuthnCredentials and only return the `id`
+     * const webAuthnCredentialWithIdOnly = await prisma.webAuthnCredential.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends WebAuthnCredentialUpdateManyAndReturnArgs>(args: SelectSubset<T, WebAuthnCredentialUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WebAuthnCredentialPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one WebAuthnCredential.
+     * @param {WebAuthnCredentialUpsertArgs} args - Arguments to update or create a WebAuthnCredential.
+     * @example
+     * // Update or create a WebAuthnCredential
+     * const webAuthnCredential = await prisma.webAuthnCredential.upsert({
+     *   create: {
+     *     // ... data to create a WebAuthnCredential
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the WebAuthnCredential we want to update
+     *   }
+     * })
+     */
+    upsert<T extends WebAuthnCredentialUpsertArgs>(args: SelectSubset<T, WebAuthnCredentialUpsertArgs<ExtArgs>>): Prisma__WebAuthnCredentialClient<$Result.GetResult<Prisma.$WebAuthnCredentialPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of WebAuthnCredentials.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WebAuthnCredentialCountArgs} args - Arguments to filter WebAuthnCredentials to count.
+     * @example
+     * // Count the number of WebAuthnCredentials
+     * const count = await prisma.webAuthnCredential.count({
+     *   where: {
+     *     // ... the filter for the WebAuthnCredentials we want to count
+     *   }
+     * })
+    **/
+    count<T extends WebAuthnCredentialCountArgs>(
+      args?: Subset<T, WebAuthnCredentialCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], WebAuthnCredentialCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a WebAuthnCredential.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WebAuthnCredentialAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends WebAuthnCredentialAggregateArgs>(args: Subset<T, WebAuthnCredentialAggregateArgs>): Prisma.PrismaPromise<GetWebAuthnCredentialAggregateType<T>>
+
+    /**
+     * Group by WebAuthnCredential.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WebAuthnCredentialGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends WebAuthnCredentialGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: WebAuthnCredentialGroupByArgs['orderBy'] }
+        : { orderBy?: WebAuthnCredentialGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, WebAuthnCredentialGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetWebAuthnCredentialGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the WebAuthnCredential model
+   */
+  readonly fields: WebAuthnCredentialFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for WebAuthnCredential.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__WebAuthnCredentialClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UsersDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UsersDefaultArgs<ExtArgs>>): Prisma__UsersClient<$Result.GetResult<Prisma.$UsersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the WebAuthnCredential model
+   */
+  interface WebAuthnCredentialFieldRefs {
+    readonly id: FieldRef<"WebAuthnCredential", 'Int'>
+    readonly userId: FieldRef<"WebAuthnCredential", 'Int'>
+    readonly credentialId: FieldRef<"WebAuthnCredential", 'String'>
+    readonly publicKey: FieldRef<"WebAuthnCredential", 'String'>
+    readonly counter: FieldRef<"WebAuthnCredential", 'Int'>
+    readonly deviceType: FieldRef<"WebAuthnCredential", 'String'>
+    readonly backedUp: FieldRef<"WebAuthnCredential", 'Boolean'>
+    readonly transports: FieldRef<"WebAuthnCredential", 'String[]'>
+    readonly createdAt: FieldRef<"WebAuthnCredential", 'DateTime'>
+    readonly updatedAt: FieldRef<"WebAuthnCredential", 'DateTime'>
+    readonly lastUsedAt: FieldRef<"WebAuthnCredential", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * WebAuthnCredential findUnique
+   */
+  export type WebAuthnCredentialFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebAuthnCredential
+     */
+    select?: WebAuthnCredentialSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebAuthnCredential
+     */
+    omit?: WebAuthnCredentialOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WebAuthnCredentialInclude<ExtArgs> | null
+    /**
+     * Filter, which WebAuthnCredential to fetch.
+     */
+    where: WebAuthnCredentialWhereUniqueInput
+  }
+
+  /**
+   * WebAuthnCredential findUniqueOrThrow
+   */
+  export type WebAuthnCredentialFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebAuthnCredential
+     */
+    select?: WebAuthnCredentialSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebAuthnCredential
+     */
+    omit?: WebAuthnCredentialOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WebAuthnCredentialInclude<ExtArgs> | null
+    /**
+     * Filter, which WebAuthnCredential to fetch.
+     */
+    where: WebAuthnCredentialWhereUniqueInput
+  }
+
+  /**
+   * WebAuthnCredential findFirst
+   */
+  export type WebAuthnCredentialFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebAuthnCredential
+     */
+    select?: WebAuthnCredentialSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebAuthnCredential
+     */
+    omit?: WebAuthnCredentialOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WebAuthnCredentialInclude<ExtArgs> | null
+    /**
+     * Filter, which WebAuthnCredential to fetch.
+     */
+    where?: WebAuthnCredentialWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WebAuthnCredentials to fetch.
+     */
+    orderBy?: WebAuthnCredentialOrderByWithRelationInput | WebAuthnCredentialOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for WebAuthnCredentials.
+     */
+    cursor?: WebAuthnCredentialWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WebAuthnCredentials from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WebAuthnCredentials.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of WebAuthnCredentials.
+     */
+    distinct?: WebAuthnCredentialScalarFieldEnum | WebAuthnCredentialScalarFieldEnum[]
+  }
+
+  /**
+   * WebAuthnCredential findFirstOrThrow
+   */
+  export type WebAuthnCredentialFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebAuthnCredential
+     */
+    select?: WebAuthnCredentialSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebAuthnCredential
+     */
+    omit?: WebAuthnCredentialOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WebAuthnCredentialInclude<ExtArgs> | null
+    /**
+     * Filter, which WebAuthnCredential to fetch.
+     */
+    where?: WebAuthnCredentialWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WebAuthnCredentials to fetch.
+     */
+    orderBy?: WebAuthnCredentialOrderByWithRelationInput | WebAuthnCredentialOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for WebAuthnCredentials.
+     */
+    cursor?: WebAuthnCredentialWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WebAuthnCredentials from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WebAuthnCredentials.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of WebAuthnCredentials.
+     */
+    distinct?: WebAuthnCredentialScalarFieldEnum | WebAuthnCredentialScalarFieldEnum[]
+  }
+
+  /**
+   * WebAuthnCredential findMany
+   */
+  export type WebAuthnCredentialFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebAuthnCredential
+     */
+    select?: WebAuthnCredentialSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebAuthnCredential
+     */
+    omit?: WebAuthnCredentialOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WebAuthnCredentialInclude<ExtArgs> | null
+    /**
+     * Filter, which WebAuthnCredentials to fetch.
+     */
+    where?: WebAuthnCredentialWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WebAuthnCredentials to fetch.
+     */
+    orderBy?: WebAuthnCredentialOrderByWithRelationInput | WebAuthnCredentialOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing WebAuthnCredentials.
+     */
+    cursor?: WebAuthnCredentialWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WebAuthnCredentials from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WebAuthnCredentials.
+     */
+    skip?: number
+    distinct?: WebAuthnCredentialScalarFieldEnum | WebAuthnCredentialScalarFieldEnum[]
+  }
+
+  /**
+   * WebAuthnCredential create
+   */
+  export type WebAuthnCredentialCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebAuthnCredential
+     */
+    select?: WebAuthnCredentialSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebAuthnCredential
+     */
+    omit?: WebAuthnCredentialOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WebAuthnCredentialInclude<ExtArgs> | null
+    /**
+     * The data needed to create a WebAuthnCredential.
+     */
+    data: XOR<WebAuthnCredentialCreateInput, WebAuthnCredentialUncheckedCreateInput>
+  }
+
+  /**
+   * WebAuthnCredential createMany
+   */
+  export type WebAuthnCredentialCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many WebAuthnCredentials.
+     */
+    data: WebAuthnCredentialCreateManyInput | WebAuthnCredentialCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * WebAuthnCredential createManyAndReturn
+   */
+  export type WebAuthnCredentialCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebAuthnCredential
+     */
+    select?: WebAuthnCredentialSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebAuthnCredential
+     */
+    omit?: WebAuthnCredentialOmit<ExtArgs> | null
+    /**
+     * The data used to create many WebAuthnCredentials.
+     */
+    data: WebAuthnCredentialCreateManyInput | WebAuthnCredentialCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WebAuthnCredentialIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * WebAuthnCredential update
+   */
+  export type WebAuthnCredentialUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebAuthnCredential
+     */
+    select?: WebAuthnCredentialSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebAuthnCredential
+     */
+    omit?: WebAuthnCredentialOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WebAuthnCredentialInclude<ExtArgs> | null
+    /**
+     * The data needed to update a WebAuthnCredential.
+     */
+    data: XOR<WebAuthnCredentialUpdateInput, WebAuthnCredentialUncheckedUpdateInput>
+    /**
+     * Choose, which WebAuthnCredential to update.
+     */
+    where: WebAuthnCredentialWhereUniqueInput
+  }
+
+  /**
+   * WebAuthnCredential updateMany
+   */
+  export type WebAuthnCredentialUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update WebAuthnCredentials.
+     */
+    data: XOR<WebAuthnCredentialUpdateManyMutationInput, WebAuthnCredentialUncheckedUpdateManyInput>
+    /**
+     * Filter which WebAuthnCredentials to update
+     */
+    where?: WebAuthnCredentialWhereInput
+    /**
+     * Limit how many WebAuthnCredentials to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * WebAuthnCredential updateManyAndReturn
+   */
+  export type WebAuthnCredentialUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebAuthnCredential
+     */
+    select?: WebAuthnCredentialSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebAuthnCredential
+     */
+    omit?: WebAuthnCredentialOmit<ExtArgs> | null
+    /**
+     * The data used to update WebAuthnCredentials.
+     */
+    data: XOR<WebAuthnCredentialUpdateManyMutationInput, WebAuthnCredentialUncheckedUpdateManyInput>
+    /**
+     * Filter which WebAuthnCredentials to update
+     */
+    where?: WebAuthnCredentialWhereInput
+    /**
+     * Limit how many WebAuthnCredentials to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WebAuthnCredentialIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * WebAuthnCredential upsert
+   */
+  export type WebAuthnCredentialUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebAuthnCredential
+     */
+    select?: WebAuthnCredentialSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebAuthnCredential
+     */
+    omit?: WebAuthnCredentialOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WebAuthnCredentialInclude<ExtArgs> | null
+    /**
+     * The filter to search for the WebAuthnCredential to update in case it exists.
+     */
+    where: WebAuthnCredentialWhereUniqueInput
+    /**
+     * In case the WebAuthnCredential found by the `where` argument doesn't exist, create a new WebAuthnCredential with this data.
+     */
+    create: XOR<WebAuthnCredentialCreateInput, WebAuthnCredentialUncheckedCreateInput>
+    /**
+     * In case the WebAuthnCredential was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<WebAuthnCredentialUpdateInput, WebAuthnCredentialUncheckedUpdateInput>
+  }
+
+  /**
+   * WebAuthnCredential delete
+   */
+  export type WebAuthnCredentialDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebAuthnCredential
+     */
+    select?: WebAuthnCredentialSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebAuthnCredential
+     */
+    omit?: WebAuthnCredentialOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WebAuthnCredentialInclude<ExtArgs> | null
+    /**
+     * Filter which WebAuthnCredential to delete.
+     */
+    where: WebAuthnCredentialWhereUniqueInput
+  }
+
+  /**
+   * WebAuthnCredential deleteMany
+   */
+  export type WebAuthnCredentialDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which WebAuthnCredentials to delete
+     */
+    where?: WebAuthnCredentialWhereInput
+    /**
+     * Limit how many WebAuthnCredentials to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * WebAuthnCredential without action
+   */
+  export type WebAuthnCredentialDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebAuthnCredential
+     */
+    select?: WebAuthnCredentialSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebAuthnCredential
+     */
+    omit?: WebAuthnCredentialOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WebAuthnCredentialInclude<ExtArgs> | null
   }
 
 
@@ -10363,6 +11665,8 @@ export namespace Prisma {
     duration: number | null
     status: string | null
     attendanceCount: number | null
+    attendanceCode: string | null
+    attendanceCodeExpiry: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -10381,6 +11685,8 @@ export namespace Prisma {
     duration: number | null
     status: string | null
     attendanceCount: number | null
+    attendanceCode: string | null
+    attendanceCodeExpiry: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -10400,6 +11706,8 @@ export namespace Prisma {
     status: number
     batches: number
     attendanceCount: number
+    attendanceCode: number
+    attendanceCodeExpiry: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -10438,6 +11746,8 @@ export namespace Prisma {
     duration?: true
     status?: true
     attendanceCount?: true
+    attendanceCode?: true
+    attendanceCodeExpiry?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -10456,6 +11766,8 @@ export namespace Prisma {
     duration?: true
     status?: true
     attendanceCount?: true
+    attendanceCode?: true
+    attendanceCodeExpiry?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -10475,6 +11787,8 @@ export namespace Prisma {
     status?: true
     batches?: true
     attendanceCount?: true
+    attendanceCode?: true
+    attendanceCodeExpiry?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -10581,6 +11895,8 @@ export namespace Prisma {
     status: string
     batches: string[]
     attendanceCount: number
+    attendanceCode: string | null
+    attendanceCodeExpiry: Date | null
     createdAt: Date
     updatedAt: Date
     _count: SessionCountAggregateOutputType | null
@@ -10619,6 +11935,8 @@ export namespace Prisma {
     status?: boolean
     batches?: boolean
     attendanceCount?: boolean
+    attendanceCode?: boolean
+    attendanceCodeExpiry?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     course?: boolean | CourseDefaultArgs<ExtArgs>
@@ -10643,6 +11961,8 @@ export namespace Prisma {
     status?: boolean
     batches?: boolean
     attendanceCount?: boolean
+    attendanceCode?: boolean
+    attendanceCodeExpiry?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     course?: boolean | CourseDefaultArgs<ExtArgs>
@@ -10665,6 +11985,8 @@ export namespace Prisma {
     status?: boolean
     batches?: boolean
     attendanceCount?: boolean
+    attendanceCode?: boolean
+    attendanceCodeExpiry?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     course?: boolean | CourseDefaultArgs<ExtArgs>
@@ -10687,11 +12009,13 @@ export namespace Prisma {
     status?: boolean
     batches?: boolean
     attendanceCount?: boolean
+    attendanceCode?: boolean
+    attendanceCodeExpiry?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type SessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "courseId" | "facultyId" | "subjectId" | "topic" | "description" | "sessionType" | "date" | "startTime" | "endTime" | "duration" | "status" | "batches" | "attendanceCount" | "createdAt" | "updatedAt", ExtArgs["result"]["session"]>
+  export type SessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "courseId" | "facultyId" | "subjectId" | "topic" | "description" | "sessionType" | "date" | "startTime" | "endTime" | "duration" | "status" | "batches" | "attendanceCount" | "attendanceCode" | "attendanceCodeExpiry" | "createdAt" | "updatedAt", ExtArgs["result"]["session"]>
   export type SessionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     course?: boolean | CourseDefaultArgs<ExtArgs>
     faculty?: boolean | UsersDefaultArgs<ExtArgs>
@@ -10733,6 +12057,8 @@ export namespace Prisma {
       status: string
       batches: string[]
       attendanceCount: number
+      attendanceCode: string | null
+      attendanceCodeExpiry: Date | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["session"]>
@@ -11176,6 +12502,8 @@ export namespace Prisma {
     readonly status: FieldRef<"Session", 'String'>
     readonly batches: FieldRef<"Session", 'String[]'>
     readonly attendanceCount: FieldRef<"Session", 'Int'>
+    readonly attendanceCode: FieldRef<"Session", 'String'>
+    readonly attendanceCodeExpiry: FieldRef<"Session", 'DateTime'>
     readonly createdAt: FieldRef<"Session", 'DateTime'>
     readonly updatedAt: FieldRef<"Session", 'DateTime'>
   }
@@ -21251,6 +22579,23 @@ export namespace Prisma {
   export type UsersScalarFieldEnum = (typeof UsersScalarFieldEnum)[keyof typeof UsersScalarFieldEnum]
 
 
+  export const WebAuthnCredentialScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    credentialId: 'credentialId',
+    publicKey: 'publicKey',
+    counter: 'counter',
+    deviceType: 'deviceType',
+    backedUp: 'backedUp',
+    transports: 'transports',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    lastUsedAt: 'lastUsedAt'
+  };
+
+  export type WebAuthnCredentialScalarFieldEnum = (typeof WebAuthnCredentialScalarFieldEnum)[keyof typeof WebAuthnCredentialScalarFieldEnum]
+
+
   export const AdminProfileScalarFieldEnum: {
     id: 'id',
     userId: 'userId',
@@ -21352,6 +22697,8 @@ export namespace Prisma {
     status: 'status',
     batches: 'batches',
     attendanceCount: 'attendanceCount',
+    attendanceCode: 'attendanceCode',
+    attendanceCodeExpiry: 'attendanceCodeExpiry',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -21648,6 +22995,7 @@ export namespace Prisma {
     notifications?: NotificationListRelationFilter
     reports?: ReportListRelationFilter
     auditLogs?: AuditLogListRelationFilter
+    webauthnCredentials?: WebAuthnCredentialListRelationFilter
     timetableEntries?: TimetableListRelationFilter
     facultyCourses?: CourseListRelationFilter
     facultySubjects?: SubjectListRelationFilter
@@ -21677,6 +23025,7 @@ export namespace Prisma {
     notifications?: NotificationOrderByRelationAggregateInput
     reports?: ReportOrderByRelationAggregateInput
     auditLogs?: AuditLogOrderByRelationAggregateInput
+    webauthnCredentials?: WebAuthnCredentialOrderByRelationAggregateInput
     timetableEntries?: TimetableOrderByRelationAggregateInput
     facultyCourses?: CourseOrderByRelationAggregateInput
     facultySubjects?: SubjectOrderByRelationAggregateInput
@@ -21709,6 +23058,7 @@ export namespace Prisma {
     notifications?: NotificationListRelationFilter
     reports?: ReportListRelationFilter
     auditLogs?: AuditLogListRelationFilter
+    webauthnCredentials?: WebAuthnCredentialListRelationFilter
     timetableEntries?: TimetableListRelationFilter
     facultyCourses?: CourseListRelationFilter
     facultySubjects?: SubjectListRelationFilter
@@ -21746,6 +23096,93 @@ export namespace Prisma {
     status?: StringWithAggregatesFilter<"Users"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Users"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Users"> | Date | string
+  }
+
+  export type WebAuthnCredentialWhereInput = {
+    AND?: WebAuthnCredentialWhereInput | WebAuthnCredentialWhereInput[]
+    OR?: WebAuthnCredentialWhereInput[]
+    NOT?: WebAuthnCredentialWhereInput | WebAuthnCredentialWhereInput[]
+    id?: IntFilter<"WebAuthnCredential"> | number
+    userId?: IntFilter<"WebAuthnCredential"> | number
+    credentialId?: StringFilter<"WebAuthnCredential"> | string
+    publicKey?: StringFilter<"WebAuthnCredential"> | string
+    counter?: IntFilter<"WebAuthnCredential"> | number
+    deviceType?: StringNullableFilter<"WebAuthnCredential"> | string | null
+    backedUp?: BoolFilter<"WebAuthnCredential"> | boolean
+    transports?: StringNullableListFilter<"WebAuthnCredential">
+    createdAt?: DateTimeFilter<"WebAuthnCredential"> | Date | string
+    updatedAt?: DateTimeFilter<"WebAuthnCredential"> | Date | string
+    lastUsedAt?: DateTimeNullableFilter<"WebAuthnCredential"> | Date | string | null
+    user?: XOR<UsersScalarRelationFilter, UsersWhereInput>
+  }
+
+  export type WebAuthnCredentialOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    credentialId?: SortOrder
+    publicKey?: SortOrder
+    counter?: SortOrder
+    deviceType?: SortOrderInput | SortOrder
+    backedUp?: SortOrder
+    transports?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    lastUsedAt?: SortOrderInput | SortOrder
+    user?: UsersOrderByWithRelationInput
+  }
+
+  export type WebAuthnCredentialWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    credentialId?: string
+    AND?: WebAuthnCredentialWhereInput | WebAuthnCredentialWhereInput[]
+    OR?: WebAuthnCredentialWhereInput[]
+    NOT?: WebAuthnCredentialWhereInput | WebAuthnCredentialWhereInput[]
+    userId?: IntFilter<"WebAuthnCredential"> | number
+    publicKey?: StringFilter<"WebAuthnCredential"> | string
+    counter?: IntFilter<"WebAuthnCredential"> | number
+    deviceType?: StringNullableFilter<"WebAuthnCredential"> | string | null
+    backedUp?: BoolFilter<"WebAuthnCredential"> | boolean
+    transports?: StringNullableListFilter<"WebAuthnCredential">
+    createdAt?: DateTimeFilter<"WebAuthnCredential"> | Date | string
+    updatedAt?: DateTimeFilter<"WebAuthnCredential"> | Date | string
+    lastUsedAt?: DateTimeNullableFilter<"WebAuthnCredential"> | Date | string | null
+    user?: XOR<UsersScalarRelationFilter, UsersWhereInput>
+  }, "id" | "credentialId">
+
+  export type WebAuthnCredentialOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    credentialId?: SortOrder
+    publicKey?: SortOrder
+    counter?: SortOrder
+    deviceType?: SortOrderInput | SortOrder
+    backedUp?: SortOrder
+    transports?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    lastUsedAt?: SortOrderInput | SortOrder
+    _count?: WebAuthnCredentialCountOrderByAggregateInput
+    _avg?: WebAuthnCredentialAvgOrderByAggregateInput
+    _max?: WebAuthnCredentialMaxOrderByAggregateInput
+    _min?: WebAuthnCredentialMinOrderByAggregateInput
+    _sum?: WebAuthnCredentialSumOrderByAggregateInput
+  }
+
+  export type WebAuthnCredentialScalarWhereWithAggregatesInput = {
+    AND?: WebAuthnCredentialScalarWhereWithAggregatesInput | WebAuthnCredentialScalarWhereWithAggregatesInput[]
+    OR?: WebAuthnCredentialScalarWhereWithAggregatesInput[]
+    NOT?: WebAuthnCredentialScalarWhereWithAggregatesInput | WebAuthnCredentialScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"WebAuthnCredential"> | number
+    userId?: IntWithAggregatesFilter<"WebAuthnCredential"> | number
+    credentialId?: StringWithAggregatesFilter<"WebAuthnCredential"> | string
+    publicKey?: StringWithAggregatesFilter<"WebAuthnCredential"> | string
+    counter?: IntWithAggregatesFilter<"WebAuthnCredential"> | number
+    deviceType?: StringNullableWithAggregatesFilter<"WebAuthnCredential"> | string | null
+    backedUp?: BoolWithAggregatesFilter<"WebAuthnCredential"> | boolean
+    transports?: StringNullableListFilter<"WebAuthnCredential">
+    createdAt?: DateTimeWithAggregatesFilter<"WebAuthnCredential"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"WebAuthnCredential"> | Date | string
+    lastUsedAt?: DateTimeNullableWithAggregatesFilter<"WebAuthnCredential"> | Date | string | null
   }
 
   export type AdminProfileWhereInput = {
@@ -22243,6 +23680,8 @@ export namespace Prisma {
     status?: StringFilter<"Session"> | string
     batches?: StringNullableListFilter<"Session">
     attendanceCount?: IntFilter<"Session"> | number
+    attendanceCode?: StringNullableFilter<"Session"> | string | null
+    attendanceCodeExpiry?: DateTimeNullableFilter<"Session"> | Date | string | null
     createdAt?: DateTimeFilter<"Session"> | Date | string
     updatedAt?: DateTimeFilter<"Session"> | Date | string
     course?: XOR<CourseScalarRelationFilter, CourseWhereInput>
@@ -22266,6 +23705,8 @@ export namespace Prisma {
     status?: SortOrder
     batches?: SortOrder
     attendanceCount?: SortOrder
+    attendanceCode?: SortOrderInput | SortOrder
+    attendanceCodeExpiry?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     course?: CourseOrderByWithRelationInput
@@ -22292,6 +23733,8 @@ export namespace Prisma {
     status?: StringFilter<"Session"> | string
     batches?: StringNullableListFilter<"Session">
     attendanceCount?: IntFilter<"Session"> | number
+    attendanceCode?: StringNullableFilter<"Session"> | string | null
+    attendanceCodeExpiry?: DateTimeNullableFilter<"Session"> | Date | string | null
     createdAt?: DateTimeFilter<"Session"> | Date | string
     updatedAt?: DateTimeFilter<"Session"> | Date | string
     course?: XOR<CourseScalarRelationFilter, CourseWhereInput>
@@ -22315,6 +23758,8 @@ export namespace Prisma {
     status?: SortOrder
     batches?: SortOrder
     attendanceCount?: SortOrder
+    attendanceCode?: SortOrderInput | SortOrder
+    attendanceCodeExpiry?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: SessionCountOrderByAggregateInput
@@ -22342,6 +23787,8 @@ export namespace Prisma {
     status?: StringWithAggregatesFilter<"Session"> | string
     batches?: StringNullableListFilter<"Session">
     attendanceCount?: IntWithAggregatesFilter<"Session"> | number
+    attendanceCode?: StringNullableWithAggregatesFilter<"Session"> | string | null
+    attendanceCodeExpiry?: DateTimeNullableWithAggregatesFilter<"Session"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Session"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Session"> | Date | string
   }
@@ -23098,6 +24545,7 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     reports?: ReportCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    webauthnCredentials?: WebAuthnCredentialCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseCreateNestedManyWithoutFacultyInput
     facultySubjects?: SubjectCreateNestedManyWithoutFacultyInput
@@ -23127,6 +24575,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     reports?: ReportUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    webauthnCredentials?: WebAuthnCredentialUncheckedCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableUncheckedCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseUncheckedCreateNestedManyWithoutFacultyInput
     facultySubjects?: SubjectUncheckedCreateNestedManyWithoutFacultyInput
@@ -23155,6 +24604,7 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     reports?: ReportUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    webauthnCredentials?: WebAuthnCredentialUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUpdateManyWithoutFacultyNestedInput
     facultySubjects?: SubjectUpdateManyWithoutFacultyNestedInput
@@ -23184,6 +24634,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     reports?: ReportUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    webauthnCredentials?: WebAuthnCredentialUncheckedUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUncheckedUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUncheckedUpdateManyWithoutFacultyNestedInput
     facultySubjects?: SubjectUncheckedUpdateManyWithoutFacultyNestedInput
@@ -23224,6 +24675,100 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WebAuthnCredentialCreateInput = {
+    credentialId: string
+    publicKey: string
+    counter?: number
+    deviceType?: string | null
+    backedUp?: boolean
+    transports?: WebAuthnCredentialCreatetransportsInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    lastUsedAt?: Date | string | null
+    user: UsersCreateNestedOneWithoutWebauthnCredentialsInput
+  }
+
+  export type WebAuthnCredentialUncheckedCreateInput = {
+    id?: number
+    userId: number
+    credentialId: string
+    publicKey: string
+    counter?: number
+    deviceType?: string | null
+    backedUp?: boolean
+    transports?: WebAuthnCredentialCreatetransportsInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    lastUsedAt?: Date | string | null
+  }
+
+  export type WebAuthnCredentialUpdateInput = {
+    credentialId?: StringFieldUpdateOperationsInput | string
+    publicKey?: StringFieldUpdateOperationsInput | string
+    counter?: IntFieldUpdateOperationsInput | number
+    deviceType?: NullableStringFieldUpdateOperationsInput | string | null
+    backedUp?: BoolFieldUpdateOperationsInput | boolean
+    transports?: WebAuthnCredentialUpdatetransportsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    user?: UsersUpdateOneRequiredWithoutWebauthnCredentialsNestedInput
+  }
+
+  export type WebAuthnCredentialUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    credentialId?: StringFieldUpdateOperationsInput | string
+    publicKey?: StringFieldUpdateOperationsInput | string
+    counter?: IntFieldUpdateOperationsInput | number
+    deviceType?: NullableStringFieldUpdateOperationsInput | string | null
+    backedUp?: BoolFieldUpdateOperationsInput | boolean
+    transports?: WebAuthnCredentialUpdatetransportsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type WebAuthnCredentialCreateManyInput = {
+    id?: number
+    userId: number
+    credentialId: string
+    publicKey: string
+    counter?: number
+    deviceType?: string | null
+    backedUp?: boolean
+    transports?: WebAuthnCredentialCreatetransportsInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    lastUsedAt?: Date | string | null
+  }
+
+  export type WebAuthnCredentialUpdateManyMutationInput = {
+    credentialId?: StringFieldUpdateOperationsInput | string
+    publicKey?: StringFieldUpdateOperationsInput | string
+    counter?: IntFieldUpdateOperationsInput | number
+    deviceType?: NullableStringFieldUpdateOperationsInput | string | null
+    backedUp?: BoolFieldUpdateOperationsInput | boolean
+    transports?: WebAuthnCredentialUpdatetransportsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type WebAuthnCredentialUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    credentialId?: StringFieldUpdateOperationsInput | string
+    publicKey?: StringFieldUpdateOperationsInput | string
+    counter?: IntFieldUpdateOperationsInput | number
+    deviceType?: NullableStringFieldUpdateOperationsInput | string | null
+    backedUp?: BoolFieldUpdateOperationsInput | boolean
+    transports?: WebAuthnCredentialUpdatetransportsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type AdminProfileCreateInput = {
@@ -23757,6 +25302,8 @@ export namespace Prisma {
     status?: string
     batches?: SessionCreatebatchesInput | string[]
     attendanceCount?: number
+    attendanceCode?: string | null
+    attendanceCodeExpiry?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     course: CourseCreateNestedOneWithoutSessionsInput
@@ -23780,6 +25327,8 @@ export namespace Prisma {
     status?: string
     batches?: SessionCreatebatchesInput | string[]
     attendanceCount?: number
+    attendanceCode?: string | null
+    attendanceCodeExpiry?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     attendanceRecords?: AttendanceUncheckedCreateNestedManyWithoutSessionInput
@@ -23796,6 +25345,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     batches?: SessionUpdatebatchesInput | string[]
     attendanceCount?: IntFieldUpdateOperationsInput | number
+    attendanceCode?: NullableStringFieldUpdateOperationsInput | string | null
+    attendanceCodeExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     course?: CourseUpdateOneRequiredWithoutSessionsNestedInput
@@ -23819,6 +25370,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     batches?: SessionUpdatebatchesInput | string[]
     attendanceCount?: IntFieldUpdateOperationsInput | number
+    attendanceCode?: NullableStringFieldUpdateOperationsInput | string | null
+    attendanceCodeExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     attendanceRecords?: AttendanceUncheckedUpdateManyWithoutSessionNestedInput
@@ -23839,6 +25392,8 @@ export namespace Prisma {
     status?: string
     batches?: SessionCreatebatchesInput | string[]
     attendanceCount?: number
+    attendanceCode?: string | null
+    attendanceCodeExpiry?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -23854,6 +25409,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     batches?: SessionUpdatebatchesInput | string[]
     attendanceCount?: IntFieldUpdateOperationsInput | number
+    attendanceCode?: NullableStringFieldUpdateOperationsInput | string | null
+    attendanceCodeExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -23873,6 +25430,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     batches?: SessionUpdatebatchesInput | string[]
     attendanceCount?: IntFieldUpdateOperationsInput | number
+    attendanceCode?: NullableStringFieldUpdateOperationsInput | string | null
+    attendanceCodeExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -24750,6 +26309,12 @@ export namespace Prisma {
     none?: AuditLogWhereInput
   }
 
+  export type WebAuthnCredentialListRelationFilter = {
+    every?: WebAuthnCredentialWhereInput
+    some?: WebAuthnCredentialWhereInput
+    none?: WebAuthnCredentialWhereInput
+  }
+
   export type TimetableListRelationFilter = {
     every?: TimetableWhereInput
     some?: TimetableWhereInput
@@ -24802,6 +26367,10 @@ export namespace Prisma {
   }
 
   export type AuditLogOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type WebAuthnCredentialOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -24927,9 +26496,107 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type StringNullableListFilter<$PrismaModel = never> = {
+    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    has?: string | StringFieldRefInput<$PrismaModel> | null
+    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
+    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
+  }
+
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type UsersScalarRelationFilter = {
     is?: UsersWhereInput
     isNot?: UsersWhereInput
+  }
+
+  export type WebAuthnCredentialCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    credentialId?: SortOrder
+    publicKey?: SortOrder
+    counter?: SortOrder
+    deviceType?: SortOrder
+    backedUp?: SortOrder
+    transports?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    lastUsedAt?: SortOrder
+  }
+
+  export type WebAuthnCredentialAvgOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    counter?: SortOrder
+  }
+
+  export type WebAuthnCredentialMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    credentialId?: SortOrder
+    publicKey?: SortOrder
+    counter?: SortOrder
+    deviceType?: SortOrder
+    backedUp?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    lastUsedAt?: SortOrder
+  }
+
+  export type WebAuthnCredentialMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    credentialId?: SortOrder
+    publicKey?: SortOrder
+    counter?: SortOrder
+    deviceType?: SortOrder
+    backedUp?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    lastUsedAt?: SortOrder
+  }
+
+  export type WebAuthnCredentialSumOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    counter?: SortOrder
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type AdminProfileCountOrderByAggregateInput = {
@@ -24967,17 +26634,6 @@ export namespace Prisma {
   export type AdminProfileSumOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
-  }
-
-  export type DateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
   export type FacultyProfileCountOrderByAggregateInput = {
@@ -25033,20 +26689,6 @@ export namespace Prisma {
   export type FacultyProfileSumOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
-  }
-
-  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type IntNullableFilter<$PrismaModel = never> = {
@@ -25286,14 +26928,6 @@ export namespace Prisma {
     facultyId?: SortOrder
   }
 
-  export type StringNullableListFilter<$PrismaModel = never> = {
-    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    has?: string | StringFieldRefInput<$PrismaModel> | null
-    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
-    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
-    isEmpty?: boolean
-  }
-
   export type SubjectNullableScalarRelationFilter = {
     is?: SubjectWhereInput | null
     isNot?: SubjectWhereInput | null
@@ -25314,6 +26948,8 @@ export namespace Prisma {
     status?: SortOrder
     batches?: SortOrder
     attendanceCount?: SortOrder
+    attendanceCode?: SortOrder
+    attendanceCodeExpiry?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -25341,6 +26977,8 @@ export namespace Prisma {
     duration?: SortOrder
     status?: SortOrder
     attendanceCount?: SortOrder
+    attendanceCode?: SortOrder
+    attendanceCodeExpiry?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -25359,6 +26997,8 @@ export namespace Prisma {
     duration?: SortOrder
     status?: SortOrder
     attendanceCount?: SortOrder
+    attendanceCode?: SortOrder
+    attendanceCodeExpiry?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -25430,11 +27070,6 @@ export namespace Prisma {
     studentId?: SortOrder
   }
 
-  export type BoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
   export type ExamPermitCountOrderByAggregateInput = {
     id?: SortOrder
     studentId?: SortOrder
@@ -25493,14 +27128,6 @@ export namespace Prisma {
     id?: SortOrder
     studentId?: SortOrder
     courseId?: SortOrder
-  }
-
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type LeaveApplicationCountOrderByAggregateInput = {
@@ -25981,6 +27608,13 @@ export namespace Prisma {
     connect?: AuditLogWhereUniqueInput | AuditLogWhereUniqueInput[]
   }
 
+  export type WebAuthnCredentialCreateNestedManyWithoutUserInput = {
+    create?: XOR<WebAuthnCredentialCreateWithoutUserInput, WebAuthnCredentialUncheckedCreateWithoutUserInput> | WebAuthnCredentialCreateWithoutUserInput[] | WebAuthnCredentialUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: WebAuthnCredentialCreateOrConnectWithoutUserInput | WebAuthnCredentialCreateOrConnectWithoutUserInput[]
+    createMany?: WebAuthnCredentialCreateManyUserInputEnvelope
+    connect?: WebAuthnCredentialWhereUniqueInput | WebAuthnCredentialWhereUniqueInput[]
+  }
+
   export type TimetableCreateNestedManyWithoutFacultyInput = {
     create?: XOR<TimetableCreateWithoutFacultyInput, TimetableUncheckedCreateWithoutFacultyInput> | TimetableCreateWithoutFacultyInput[] | TimetableUncheckedCreateWithoutFacultyInput[]
     connectOrCreate?: TimetableCreateOrConnectWithoutFacultyInput | TimetableCreateOrConnectWithoutFacultyInput[]
@@ -26093,6 +27727,13 @@ export namespace Prisma {
     connectOrCreate?: AuditLogCreateOrConnectWithoutUserInput | AuditLogCreateOrConnectWithoutUserInput[]
     createMany?: AuditLogCreateManyUserInputEnvelope
     connect?: AuditLogWhereUniqueInput | AuditLogWhereUniqueInput[]
+  }
+
+  export type WebAuthnCredentialUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<WebAuthnCredentialCreateWithoutUserInput, WebAuthnCredentialUncheckedCreateWithoutUserInput> | WebAuthnCredentialCreateWithoutUserInput[] | WebAuthnCredentialUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: WebAuthnCredentialCreateOrConnectWithoutUserInput | WebAuthnCredentialCreateOrConnectWithoutUserInput[]
+    createMany?: WebAuthnCredentialCreateManyUserInputEnvelope
+    connect?: WebAuthnCredentialWhereUniqueInput | WebAuthnCredentialWhereUniqueInput[]
   }
 
   export type TimetableUncheckedCreateNestedManyWithoutFacultyInput = {
@@ -26294,6 +27935,20 @@ export namespace Prisma {
     update?: AuditLogUpdateWithWhereUniqueWithoutUserInput | AuditLogUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: AuditLogUpdateManyWithWhereWithoutUserInput | AuditLogUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: AuditLogScalarWhereInput | AuditLogScalarWhereInput[]
+  }
+
+  export type WebAuthnCredentialUpdateManyWithoutUserNestedInput = {
+    create?: XOR<WebAuthnCredentialCreateWithoutUserInput, WebAuthnCredentialUncheckedCreateWithoutUserInput> | WebAuthnCredentialCreateWithoutUserInput[] | WebAuthnCredentialUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: WebAuthnCredentialCreateOrConnectWithoutUserInput | WebAuthnCredentialCreateOrConnectWithoutUserInput[]
+    upsert?: WebAuthnCredentialUpsertWithWhereUniqueWithoutUserInput | WebAuthnCredentialUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: WebAuthnCredentialCreateManyUserInputEnvelope
+    set?: WebAuthnCredentialWhereUniqueInput | WebAuthnCredentialWhereUniqueInput[]
+    disconnect?: WebAuthnCredentialWhereUniqueInput | WebAuthnCredentialWhereUniqueInput[]
+    delete?: WebAuthnCredentialWhereUniqueInput | WebAuthnCredentialWhereUniqueInput[]
+    connect?: WebAuthnCredentialWhereUniqueInput | WebAuthnCredentialWhereUniqueInput[]
+    update?: WebAuthnCredentialUpdateWithWhereUniqueWithoutUserInput | WebAuthnCredentialUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: WebAuthnCredentialUpdateManyWithWhereWithoutUserInput | WebAuthnCredentialUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: WebAuthnCredentialScalarWhereInput | WebAuthnCredentialScalarWhereInput[]
   }
 
   export type TimetableUpdateManyWithoutFacultyNestedInput = {
@@ -26528,6 +28183,20 @@ export namespace Prisma {
     deleteMany?: AuditLogScalarWhereInput | AuditLogScalarWhereInput[]
   }
 
+  export type WebAuthnCredentialUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<WebAuthnCredentialCreateWithoutUserInput, WebAuthnCredentialUncheckedCreateWithoutUserInput> | WebAuthnCredentialCreateWithoutUserInput[] | WebAuthnCredentialUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: WebAuthnCredentialCreateOrConnectWithoutUserInput | WebAuthnCredentialCreateOrConnectWithoutUserInput[]
+    upsert?: WebAuthnCredentialUpsertWithWhereUniqueWithoutUserInput | WebAuthnCredentialUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: WebAuthnCredentialCreateManyUserInputEnvelope
+    set?: WebAuthnCredentialWhereUniqueInput | WebAuthnCredentialWhereUniqueInput[]
+    disconnect?: WebAuthnCredentialWhereUniqueInput | WebAuthnCredentialWhereUniqueInput[]
+    delete?: WebAuthnCredentialWhereUniqueInput | WebAuthnCredentialWhereUniqueInput[]
+    connect?: WebAuthnCredentialWhereUniqueInput | WebAuthnCredentialWhereUniqueInput[]
+    update?: WebAuthnCredentialUpdateWithWhereUniqueWithoutUserInput | WebAuthnCredentialUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: WebAuthnCredentialUpdateManyWithWhereWithoutUserInput | WebAuthnCredentialUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: WebAuthnCredentialScalarWhereInput | WebAuthnCredentialScalarWhereInput[]
+  }
+
   export type TimetableUncheckedUpdateManyWithoutFacultyNestedInput = {
     create?: XOR<TimetableCreateWithoutFacultyInput, TimetableUncheckedCreateWithoutFacultyInput> | TimetableCreateWithoutFacultyInput[] | TimetableUncheckedCreateWithoutFacultyInput[]
     connectOrCreate?: TimetableCreateOrConnectWithoutFacultyInput | TimetableCreateOrConnectWithoutFacultyInput[]
@@ -26596,6 +28265,37 @@ export namespace Prisma {
     deleteMany?: SubjectScalarWhereInput | SubjectScalarWhereInput[]
   }
 
+  export type WebAuthnCredentialCreatetransportsInput = {
+    set: string[]
+  }
+
+  export type UsersCreateNestedOneWithoutWebauthnCredentialsInput = {
+    create?: XOR<UsersCreateWithoutWebauthnCredentialsInput, UsersUncheckedCreateWithoutWebauthnCredentialsInput>
+    connectOrCreate?: UsersCreateOrConnectWithoutWebauthnCredentialsInput
+    connect?: UsersWhereUniqueInput
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
+  export type WebAuthnCredentialUpdatetransportsInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
+  export type UsersUpdateOneRequiredWithoutWebauthnCredentialsNestedInput = {
+    create?: XOR<UsersCreateWithoutWebauthnCredentialsInput, UsersUncheckedCreateWithoutWebauthnCredentialsInput>
+    connectOrCreate?: UsersCreateOrConnectWithoutWebauthnCredentialsInput
+    upsert?: UsersUpsertWithoutWebauthnCredentialsInput
+    connect?: UsersWhereUniqueInput
+    update?: XOR<XOR<UsersUpdateToOneWithWhereWithoutWebauthnCredentialsInput, UsersUpdateWithoutWebauthnCredentialsInput>, UsersUncheckedUpdateWithoutWebauthnCredentialsInput>
+  }
+
   export type UsersCreateNestedOneWithoutAdminProfileInput = {
     create?: XOR<UsersCreateWithoutAdminProfileInput, UsersUncheckedCreateWithoutAdminProfileInput>
     connectOrCreate?: UsersCreateOrConnectWithoutAdminProfileInput
@@ -26614,10 +28314,6 @@ export namespace Prisma {
     create?: XOR<UsersCreateWithoutFacultyProfileInput, UsersUncheckedCreateWithoutFacultyProfileInput>
     connectOrCreate?: UsersCreateOrConnectWithoutFacultyProfileInput
     connect?: UsersWhereUniqueInput
-  }
-
-  export type NullableDateTimeFieldUpdateOperationsInput = {
-    set?: Date | string | null
   }
 
   export type UsersUpdateOneRequiredWithoutFacultyProfileNestedInput = {
@@ -27285,10 +28981,6 @@ export namespace Prisma {
     connect?: CourseWhereUniqueInput
   }
 
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
-  }
-
   export type UsersUpdateOneRequiredWithoutExamPermitsNestedInput = {
     create?: XOR<UsersCreateWithoutExamPermitsInput, UsersUncheckedCreateWithoutExamPermitsInput>
     connectOrCreate?: UsersCreateOrConnectWithoutExamPermitsInput
@@ -27615,6 +29307,11 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
@@ -27624,6 +29321,14 @@ export namespace Prisma {
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -27665,19 +29370,6 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
-  }
-
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
   export type NestedJsonNullableFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -27878,6 +29570,8 @@ export namespace Prisma {
     status?: string
     batches?: SessionCreatebatchesInput | string[]
     attendanceCount?: number
+    attendanceCode?: string | null
+    attendanceCodeExpiry?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     course: CourseCreateNestedOneWithoutSessionsInput
@@ -27899,6 +29593,8 @@ export namespace Prisma {
     status?: string
     batches?: SessionCreatebatchesInput | string[]
     attendanceCount?: number
+    attendanceCode?: string | null
+    attendanceCodeExpiry?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     attendanceRecords?: AttendanceUncheckedCreateNestedManyWithoutSessionInput
@@ -28121,6 +29817,41 @@ export namespace Prisma {
 
   export type AuditLogCreateManyUserInputEnvelope = {
     data: AuditLogCreateManyUserInput | AuditLogCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type WebAuthnCredentialCreateWithoutUserInput = {
+    credentialId: string
+    publicKey: string
+    counter?: number
+    deviceType?: string | null
+    backedUp?: boolean
+    transports?: WebAuthnCredentialCreatetransportsInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    lastUsedAt?: Date | string | null
+  }
+
+  export type WebAuthnCredentialUncheckedCreateWithoutUserInput = {
+    id?: number
+    credentialId: string
+    publicKey: string
+    counter?: number
+    deviceType?: string | null
+    backedUp?: boolean
+    transports?: WebAuthnCredentialCreatetransportsInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    lastUsedAt?: Date | string | null
+  }
+
+  export type WebAuthnCredentialCreateOrConnectWithoutUserInput = {
+    where: WebAuthnCredentialWhereUniqueInput
+    create: XOR<WebAuthnCredentialCreateWithoutUserInput, WebAuthnCredentialUncheckedCreateWithoutUserInput>
+  }
+
+  export type WebAuthnCredentialCreateManyUserInputEnvelope = {
+    data: WebAuthnCredentialCreateManyUserInput | WebAuthnCredentialCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -28531,6 +30262,8 @@ export namespace Prisma {
     status?: StringFilter<"Session"> | string
     batches?: StringNullableListFilter<"Session">
     attendanceCount?: IntFilter<"Session"> | number
+    attendanceCode?: StringNullableFilter<"Session"> | string | null
+    attendanceCodeExpiry?: DateTimeNullableFilter<"Session"> | Date | string | null
     createdAt?: DateTimeFilter<"Session"> | Date | string
     updatedAt?: DateTimeFilter<"Session"> | Date | string
   }
@@ -28733,6 +30466,39 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"AuditLog"> | Date | string
   }
 
+  export type WebAuthnCredentialUpsertWithWhereUniqueWithoutUserInput = {
+    where: WebAuthnCredentialWhereUniqueInput
+    update: XOR<WebAuthnCredentialUpdateWithoutUserInput, WebAuthnCredentialUncheckedUpdateWithoutUserInput>
+    create: XOR<WebAuthnCredentialCreateWithoutUserInput, WebAuthnCredentialUncheckedCreateWithoutUserInput>
+  }
+
+  export type WebAuthnCredentialUpdateWithWhereUniqueWithoutUserInput = {
+    where: WebAuthnCredentialWhereUniqueInput
+    data: XOR<WebAuthnCredentialUpdateWithoutUserInput, WebAuthnCredentialUncheckedUpdateWithoutUserInput>
+  }
+
+  export type WebAuthnCredentialUpdateManyWithWhereWithoutUserInput = {
+    where: WebAuthnCredentialScalarWhereInput
+    data: XOR<WebAuthnCredentialUpdateManyMutationInput, WebAuthnCredentialUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type WebAuthnCredentialScalarWhereInput = {
+    AND?: WebAuthnCredentialScalarWhereInput | WebAuthnCredentialScalarWhereInput[]
+    OR?: WebAuthnCredentialScalarWhereInput[]
+    NOT?: WebAuthnCredentialScalarWhereInput | WebAuthnCredentialScalarWhereInput[]
+    id?: IntFilter<"WebAuthnCredential"> | number
+    userId?: IntFilter<"WebAuthnCredential"> | number
+    credentialId?: StringFilter<"WebAuthnCredential"> | string
+    publicKey?: StringFilter<"WebAuthnCredential"> | string
+    counter?: IntFilter<"WebAuthnCredential"> | number
+    deviceType?: StringNullableFilter<"WebAuthnCredential"> | string | null
+    backedUp?: BoolFilter<"WebAuthnCredential"> | boolean
+    transports?: StringNullableListFilter<"WebAuthnCredential">
+    createdAt?: DateTimeFilter<"WebAuthnCredential"> | Date | string
+    updatedAt?: DateTimeFilter<"WebAuthnCredential"> | Date | string
+    lastUsedAt?: DateTimeNullableFilter<"WebAuthnCredential"> | Date | string | null
+  }
+
   export type TimetableUpsertWithWhereUniqueWithoutFacultyInput = {
     where: TimetableWhereUniqueInput
     update: XOR<TimetableUpdateWithoutFacultyInput, TimetableUncheckedUpdateWithoutFacultyInput>
@@ -28866,6 +30632,136 @@ export namespace Prisma {
     data: XOR<SubjectUpdateManyMutationInput, SubjectUncheckedUpdateManyWithoutStudentsInput>
   }
 
+  export type UsersCreateWithoutWebauthnCredentialsInput = {
+    username: string
+    email: string
+    passwordHash: string
+    role: string
+    avatar?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    adminProfile?: AdminProfileCreateNestedOneWithoutUserInput
+    facultyProfile?: FacultyProfileCreateNestedOneWithoutUserInput
+    studentProfile?: StudentProfileCreateNestedOneWithoutUserInput
+    leaveApplications?: LeaveApplicationCreateNestedManyWithoutUserInput
+    approvedLeaves?: LeaveApplicationCreateNestedManyWithoutApproverInput
+    sessions?: SessionCreateNestedManyWithoutFacultyInput
+    attendanceRecords?: AttendanceCreateNestedManyWithoutStudentInput
+    examPermits?: ExamPermitCreateNestedManyWithoutStudentInput
+    grades?: GradeCreateNestedManyWithoutStudentInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    reports?: ReportCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    timetableEntries?: TimetableCreateNestedManyWithoutFacultyInput
+    facultyCourses?: CourseCreateNestedManyWithoutFacultyInput
+    facultySubjects?: SubjectCreateNestedManyWithoutFacultyInput
+    studentCourses?: CourseCreateNestedManyWithoutStudentsInput
+    studentSubjects?: SubjectCreateNestedManyWithoutStudentsInput
+  }
+
+  export type UsersUncheckedCreateWithoutWebauthnCredentialsInput = {
+    id?: number
+    username: string
+    email: string
+    passwordHash: string
+    role: string
+    avatar?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    adminProfile?: AdminProfileUncheckedCreateNestedOneWithoutUserInput
+    facultyProfile?: FacultyProfileUncheckedCreateNestedOneWithoutUserInput
+    studentProfile?: StudentProfileUncheckedCreateNestedOneWithoutUserInput
+    leaveApplications?: LeaveApplicationUncheckedCreateNestedManyWithoutUserInput
+    approvedLeaves?: LeaveApplicationUncheckedCreateNestedManyWithoutApproverInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutFacultyInput
+    attendanceRecords?: AttendanceUncheckedCreateNestedManyWithoutStudentInput
+    examPermits?: ExamPermitUncheckedCreateNestedManyWithoutStudentInput
+    grades?: GradeUncheckedCreateNestedManyWithoutStudentInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    reports?: ReportUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    timetableEntries?: TimetableUncheckedCreateNestedManyWithoutFacultyInput
+    facultyCourses?: CourseUncheckedCreateNestedManyWithoutFacultyInput
+    facultySubjects?: SubjectUncheckedCreateNestedManyWithoutFacultyInput
+    studentCourses?: CourseUncheckedCreateNestedManyWithoutStudentsInput
+    studentSubjects?: SubjectUncheckedCreateNestedManyWithoutStudentsInput
+  }
+
+  export type UsersCreateOrConnectWithoutWebauthnCredentialsInput = {
+    where: UsersWhereUniqueInput
+    create: XOR<UsersCreateWithoutWebauthnCredentialsInput, UsersUncheckedCreateWithoutWebauthnCredentialsInput>
+  }
+
+  export type UsersUpsertWithoutWebauthnCredentialsInput = {
+    update: XOR<UsersUpdateWithoutWebauthnCredentialsInput, UsersUncheckedUpdateWithoutWebauthnCredentialsInput>
+    create: XOR<UsersCreateWithoutWebauthnCredentialsInput, UsersUncheckedCreateWithoutWebauthnCredentialsInput>
+    where?: UsersWhereInput
+  }
+
+  export type UsersUpdateToOneWithWhereWithoutWebauthnCredentialsInput = {
+    where?: UsersWhereInput
+    data: XOR<UsersUpdateWithoutWebauthnCredentialsInput, UsersUncheckedUpdateWithoutWebauthnCredentialsInput>
+  }
+
+  export type UsersUpdateWithoutWebauthnCredentialsInput = {
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    adminProfile?: AdminProfileUpdateOneWithoutUserNestedInput
+    facultyProfile?: FacultyProfileUpdateOneWithoutUserNestedInput
+    studentProfile?: StudentProfileUpdateOneWithoutUserNestedInput
+    leaveApplications?: LeaveApplicationUpdateManyWithoutUserNestedInput
+    approvedLeaves?: LeaveApplicationUpdateManyWithoutApproverNestedInput
+    sessions?: SessionUpdateManyWithoutFacultyNestedInput
+    attendanceRecords?: AttendanceUpdateManyWithoutStudentNestedInput
+    examPermits?: ExamPermitUpdateManyWithoutStudentNestedInput
+    grades?: GradeUpdateManyWithoutStudentNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    reports?: ReportUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    timetableEntries?: TimetableUpdateManyWithoutFacultyNestedInput
+    facultyCourses?: CourseUpdateManyWithoutFacultyNestedInput
+    facultySubjects?: SubjectUpdateManyWithoutFacultyNestedInput
+    studentCourses?: CourseUpdateManyWithoutStudentsNestedInput
+    studentSubjects?: SubjectUpdateManyWithoutStudentsNestedInput
+  }
+
+  export type UsersUncheckedUpdateWithoutWebauthnCredentialsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    adminProfile?: AdminProfileUncheckedUpdateOneWithoutUserNestedInput
+    facultyProfile?: FacultyProfileUncheckedUpdateOneWithoutUserNestedInput
+    studentProfile?: StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+    leaveApplications?: LeaveApplicationUncheckedUpdateManyWithoutUserNestedInput
+    approvedLeaves?: LeaveApplicationUncheckedUpdateManyWithoutApproverNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutFacultyNestedInput
+    attendanceRecords?: AttendanceUncheckedUpdateManyWithoutStudentNestedInput
+    examPermits?: ExamPermitUncheckedUpdateManyWithoutStudentNestedInput
+    grades?: GradeUncheckedUpdateManyWithoutStudentNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    reports?: ReportUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    timetableEntries?: TimetableUncheckedUpdateManyWithoutFacultyNestedInput
+    facultyCourses?: CourseUncheckedUpdateManyWithoutFacultyNestedInput
+    facultySubjects?: SubjectUncheckedUpdateManyWithoutFacultyNestedInput
+    studentCourses?: CourseUncheckedUpdateManyWithoutStudentsNestedInput
+    studentSubjects?: SubjectUncheckedUpdateManyWithoutStudentsNestedInput
+  }
+
   export type UsersCreateWithoutAdminProfileInput = {
     username: string
     email: string
@@ -28886,6 +30782,7 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     reports?: ReportCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    webauthnCredentials?: WebAuthnCredentialCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseCreateNestedManyWithoutFacultyInput
     facultySubjects?: SubjectCreateNestedManyWithoutFacultyInput
@@ -28914,6 +30811,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     reports?: ReportUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    webauthnCredentials?: WebAuthnCredentialUncheckedCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableUncheckedCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseUncheckedCreateNestedManyWithoutFacultyInput
     facultySubjects?: SubjectUncheckedCreateNestedManyWithoutFacultyInput
@@ -28957,6 +30855,7 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     reports?: ReportUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    webauthnCredentials?: WebAuthnCredentialUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUpdateManyWithoutFacultyNestedInput
     facultySubjects?: SubjectUpdateManyWithoutFacultyNestedInput
@@ -28985,6 +30884,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     reports?: ReportUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    webauthnCredentials?: WebAuthnCredentialUncheckedUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUncheckedUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUncheckedUpdateManyWithoutFacultyNestedInput
     facultySubjects?: SubjectUncheckedUpdateManyWithoutFacultyNestedInput
@@ -29012,6 +30912,7 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     reports?: ReportCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    webauthnCredentials?: WebAuthnCredentialCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseCreateNestedManyWithoutFacultyInput
     facultySubjects?: SubjectCreateNestedManyWithoutFacultyInput
@@ -29040,6 +30941,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     reports?: ReportUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    webauthnCredentials?: WebAuthnCredentialUncheckedCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableUncheckedCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseUncheckedCreateNestedManyWithoutFacultyInput
     facultySubjects?: SubjectUncheckedCreateNestedManyWithoutFacultyInput
@@ -29083,6 +30985,7 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     reports?: ReportUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    webauthnCredentials?: WebAuthnCredentialUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUpdateManyWithoutFacultyNestedInput
     facultySubjects?: SubjectUpdateManyWithoutFacultyNestedInput
@@ -29111,6 +31014,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     reports?: ReportUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    webauthnCredentials?: WebAuthnCredentialUncheckedUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUncheckedUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUncheckedUpdateManyWithoutFacultyNestedInput
     facultySubjects?: SubjectUncheckedUpdateManyWithoutFacultyNestedInput
@@ -29138,6 +31042,7 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     reports?: ReportCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    webauthnCredentials?: WebAuthnCredentialCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseCreateNestedManyWithoutFacultyInput
     facultySubjects?: SubjectCreateNestedManyWithoutFacultyInput
@@ -29166,6 +31071,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     reports?: ReportUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    webauthnCredentials?: WebAuthnCredentialUncheckedCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableUncheckedCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseUncheckedCreateNestedManyWithoutFacultyInput
     facultySubjects?: SubjectUncheckedCreateNestedManyWithoutFacultyInput
@@ -29209,6 +31115,7 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     reports?: ReportUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    webauthnCredentials?: WebAuthnCredentialUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUpdateManyWithoutFacultyNestedInput
     facultySubjects?: SubjectUpdateManyWithoutFacultyNestedInput
@@ -29237,6 +31144,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     reports?: ReportUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    webauthnCredentials?: WebAuthnCredentialUncheckedUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUncheckedUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUncheckedUpdateManyWithoutFacultyNestedInput
     facultySubjects?: SubjectUncheckedUpdateManyWithoutFacultyNestedInput
@@ -29265,6 +31173,7 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     reports?: ReportCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    webauthnCredentials?: WebAuthnCredentialCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableCreateNestedManyWithoutFacultyInput
     facultySubjects?: SubjectCreateNestedManyWithoutFacultyInput
     studentCourses?: CourseCreateNestedManyWithoutStudentsInput
@@ -29293,6 +31202,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     reports?: ReportUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    webauthnCredentials?: WebAuthnCredentialUncheckedCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableUncheckedCreateNestedManyWithoutFacultyInput
     facultySubjects?: SubjectUncheckedCreateNestedManyWithoutFacultyInput
     studentCourses?: CourseUncheckedCreateNestedManyWithoutStudentsInput
@@ -29325,6 +31235,7 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     reports?: ReportCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    webauthnCredentials?: WebAuthnCredentialCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseCreateNestedManyWithoutFacultyInput
     facultySubjects?: SubjectCreateNestedManyWithoutFacultyInput
@@ -29353,6 +31264,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     reports?: ReportUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    webauthnCredentials?: WebAuthnCredentialUncheckedCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableUncheckedCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseUncheckedCreateNestedManyWithoutFacultyInput
     facultySubjects?: SubjectUncheckedCreateNestedManyWithoutFacultyInput
@@ -29494,6 +31406,8 @@ export namespace Prisma {
     status?: string
     batches?: SessionCreatebatchesInput | string[]
     attendanceCount?: number
+    attendanceCode?: string | null
+    attendanceCodeExpiry?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     faculty: UsersCreateNestedOneWithoutSessionsInput
@@ -29515,6 +31429,8 @@ export namespace Prisma {
     status?: string
     batches?: SessionCreatebatchesInput | string[]
     attendanceCount?: number
+    attendanceCode?: string | null
+    attendanceCodeExpiry?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     attendanceRecords?: AttendanceUncheckedCreateNestedManyWithoutSessionInput
@@ -29636,6 +31552,7 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     reports?: ReportUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    webauthnCredentials?: WebAuthnCredentialUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUpdateManyWithoutFacultyNestedInput
     facultySubjects?: SubjectUpdateManyWithoutFacultyNestedInput
     studentCourses?: CourseUpdateManyWithoutStudentsNestedInput
@@ -29664,6 +31581,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     reports?: ReportUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    webauthnCredentials?: WebAuthnCredentialUncheckedUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUncheckedUpdateManyWithoutFacultyNestedInput
     facultySubjects?: SubjectUncheckedUpdateManyWithoutFacultyNestedInput
     studentCourses?: CourseUncheckedUpdateManyWithoutStudentsNestedInput
@@ -29864,6 +31782,7 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     reports?: ReportCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    webauthnCredentials?: WebAuthnCredentialCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseCreateNestedManyWithoutFacultyInput
     studentCourses?: CourseCreateNestedManyWithoutStudentsInput
@@ -29892,6 +31811,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     reports?: ReportUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    webauthnCredentials?: WebAuthnCredentialUncheckedCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableUncheckedCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseUncheckedCreateNestedManyWithoutFacultyInput
     studentCourses?: CourseUncheckedCreateNestedManyWithoutStudentsInput
@@ -29914,6 +31834,8 @@ export namespace Prisma {
     status?: string
     batches?: SessionCreatebatchesInput | string[]
     attendanceCount?: number
+    attendanceCode?: string | null
+    attendanceCodeExpiry?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     course: CourseCreateNestedOneWithoutSessionsInput
@@ -29935,6 +31857,8 @@ export namespace Prisma {
     status?: string
     batches?: SessionCreatebatchesInput | string[]
     attendanceCount?: number
+    attendanceCode?: string | null
+    attendanceCodeExpiry?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     attendanceRecords?: AttendanceUncheckedCreateNestedManyWithoutSessionInput
@@ -30047,6 +31971,7 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     reports?: ReportCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    webauthnCredentials?: WebAuthnCredentialCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseCreateNestedManyWithoutFacultyInput
     facultySubjects?: SubjectCreateNestedManyWithoutFacultyInput
@@ -30075,6 +32000,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     reports?: ReportUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    webauthnCredentials?: WebAuthnCredentialUncheckedCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableUncheckedCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseUncheckedCreateNestedManyWithoutFacultyInput
     facultySubjects?: SubjectUncheckedCreateNestedManyWithoutFacultyInput
@@ -30170,6 +32096,7 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     reports?: ReportUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    webauthnCredentials?: WebAuthnCredentialUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUpdateManyWithoutFacultyNestedInput
     studentCourses?: CourseUpdateManyWithoutStudentsNestedInput
@@ -30198,6 +32125,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     reports?: ReportUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    webauthnCredentials?: WebAuthnCredentialUncheckedUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUncheckedUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUncheckedUpdateManyWithoutFacultyNestedInput
     studentCourses?: CourseUncheckedUpdateManyWithoutStudentsNestedInput
@@ -30334,6 +32262,7 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     reports?: ReportCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    webauthnCredentials?: WebAuthnCredentialCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseCreateNestedManyWithoutFacultyInput
     facultySubjects?: SubjectCreateNestedManyWithoutFacultyInput
@@ -30362,6 +32291,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     reports?: ReportUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    webauthnCredentials?: WebAuthnCredentialUncheckedCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableUncheckedCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseUncheckedCreateNestedManyWithoutFacultyInput
     facultySubjects?: SubjectUncheckedCreateNestedManyWithoutFacultyInput
@@ -30526,6 +32456,7 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     reports?: ReportUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    webauthnCredentials?: WebAuthnCredentialUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUpdateManyWithoutFacultyNestedInput
     facultySubjects?: SubjectUpdateManyWithoutFacultyNestedInput
@@ -30554,6 +32485,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     reports?: ReportUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    webauthnCredentials?: WebAuthnCredentialUncheckedUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUncheckedUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUncheckedUpdateManyWithoutFacultyNestedInput
     facultySubjects?: SubjectUncheckedUpdateManyWithoutFacultyNestedInput
@@ -30632,6 +32564,8 @@ export namespace Prisma {
     status?: string
     batches?: SessionCreatebatchesInput | string[]
     attendanceCount?: number
+    attendanceCode?: string | null
+    attendanceCodeExpiry?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     course: CourseCreateNestedOneWithoutSessionsInput
@@ -30654,6 +32588,8 @@ export namespace Prisma {
     status?: string
     batches?: SessionCreatebatchesInput | string[]
     attendanceCount?: number
+    attendanceCode?: string | null
+    attendanceCodeExpiry?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -30683,6 +32619,7 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     reports?: ReportCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    webauthnCredentials?: WebAuthnCredentialCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseCreateNestedManyWithoutFacultyInput
     facultySubjects?: SubjectCreateNestedManyWithoutFacultyInput
@@ -30711,6 +32648,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     reports?: ReportUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    webauthnCredentials?: WebAuthnCredentialUncheckedCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableUncheckedCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseUncheckedCreateNestedManyWithoutFacultyInput
     facultySubjects?: SubjectUncheckedCreateNestedManyWithoutFacultyInput
@@ -30745,6 +32683,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     batches?: SessionUpdatebatchesInput | string[]
     attendanceCount?: IntFieldUpdateOperationsInput | number
+    attendanceCode?: NullableStringFieldUpdateOperationsInput | string | null
+    attendanceCodeExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     course?: CourseUpdateOneRequiredWithoutSessionsNestedInput
@@ -30767,6 +32707,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     batches?: SessionUpdatebatchesInput | string[]
     attendanceCount?: IntFieldUpdateOperationsInput | number
+    attendanceCode?: NullableStringFieldUpdateOperationsInput | string | null
+    attendanceCodeExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -30802,6 +32744,7 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     reports?: ReportUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    webauthnCredentials?: WebAuthnCredentialUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUpdateManyWithoutFacultyNestedInput
     facultySubjects?: SubjectUpdateManyWithoutFacultyNestedInput
@@ -30830,6 +32773,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     reports?: ReportUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    webauthnCredentials?: WebAuthnCredentialUncheckedUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUncheckedUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUncheckedUpdateManyWithoutFacultyNestedInput
     facultySubjects?: SubjectUncheckedUpdateManyWithoutFacultyNestedInput
@@ -30857,6 +32801,7 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     reports?: ReportCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    webauthnCredentials?: WebAuthnCredentialCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseCreateNestedManyWithoutFacultyInput
     facultySubjects?: SubjectCreateNestedManyWithoutFacultyInput
@@ -30885,6 +32830,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     reports?: ReportUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    webauthnCredentials?: WebAuthnCredentialUncheckedCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableUncheckedCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseUncheckedCreateNestedManyWithoutFacultyInput
     facultySubjects?: SubjectUncheckedCreateNestedManyWithoutFacultyInput
@@ -30974,6 +32920,7 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     reports?: ReportUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    webauthnCredentials?: WebAuthnCredentialUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUpdateManyWithoutFacultyNestedInput
     facultySubjects?: SubjectUpdateManyWithoutFacultyNestedInput
@@ -31002,6 +32949,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     reports?: ReportUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    webauthnCredentials?: WebAuthnCredentialUncheckedUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUncheckedUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUncheckedUpdateManyWithoutFacultyNestedInput
     facultySubjects?: SubjectUncheckedUpdateManyWithoutFacultyNestedInput
@@ -31081,6 +33029,7 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     reports?: ReportCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    webauthnCredentials?: WebAuthnCredentialCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseCreateNestedManyWithoutFacultyInput
     facultySubjects?: SubjectCreateNestedManyWithoutFacultyInput
@@ -31109,6 +33058,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     reports?: ReportUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    webauthnCredentials?: WebAuthnCredentialUncheckedCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableUncheckedCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseUncheckedCreateNestedManyWithoutFacultyInput
     facultySubjects?: SubjectUncheckedCreateNestedManyWithoutFacultyInput
@@ -31141,6 +33091,7 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     reports?: ReportCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    webauthnCredentials?: WebAuthnCredentialCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseCreateNestedManyWithoutFacultyInput
     facultySubjects?: SubjectCreateNestedManyWithoutFacultyInput
@@ -31169,6 +33120,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     reports?: ReportUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    webauthnCredentials?: WebAuthnCredentialUncheckedCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableUncheckedCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseUncheckedCreateNestedManyWithoutFacultyInput
     facultySubjects?: SubjectUncheckedCreateNestedManyWithoutFacultyInput
@@ -31212,6 +33164,7 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     reports?: ReportUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    webauthnCredentials?: WebAuthnCredentialUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUpdateManyWithoutFacultyNestedInput
     facultySubjects?: SubjectUpdateManyWithoutFacultyNestedInput
@@ -31240,6 +33193,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     reports?: ReportUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    webauthnCredentials?: WebAuthnCredentialUncheckedUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUncheckedUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUncheckedUpdateManyWithoutFacultyNestedInput
     facultySubjects?: SubjectUncheckedUpdateManyWithoutFacultyNestedInput
@@ -31278,6 +33232,7 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     reports?: ReportUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    webauthnCredentials?: WebAuthnCredentialUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUpdateManyWithoutFacultyNestedInput
     facultySubjects?: SubjectUpdateManyWithoutFacultyNestedInput
@@ -31306,6 +33261,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     reports?: ReportUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    webauthnCredentials?: WebAuthnCredentialUncheckedUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUncheckedUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUncheckedUpdateManyWithoutFacultyNestedInput
     facultySubjects?: SubjectUncheckedUpdateManyWithoutFacultyNestedInput
@@ -31333,6 +33289,7 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     reports?: ReportCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    webauthnCredentials?: WebAuthnCredentialCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseCreateNestedManyWithoutFacultyInput
     facultySubjects?: SubjectCreateNestedManyWithoutFacultyInput
@@ -31361,6 +33318,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     reports?: ReportUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    webauthnCredentials?: WebAuthnCredentialUncheckedCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableUncheckedCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseUncheckedCreateNestedManyWithoutFacultyInput
     facultySubjects?: SubjectUncheckedCreateNestedManyWithoutFacultyInput
@@ -31488,6 +33446,7 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     reports?: ReportUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    webauthnCredentials?: WebAuthnCredentialUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUpdateManyWithoutFacultyNestedInput
     facultySubjects?: SubjectUpdateManyWithoutFacultyNestedInput
@@ -31516,6 +33475,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     reports?: ReportUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    webauthnCredentials?: WebAuthnCredentialUncheckedUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUncheckedUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUncheckedUpdateManyWithoutFacultyNestedInput
     facultySubjects?: SubjectUncheckedUpdateManyWithoutFacultyNestedInput
@@ -31724,6 +33684,7 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     reports?: ReportCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    webauthnCredentials?: WebAuthnCredentialCreateNestedManyWithoutUserInput
     facultyCourses?: CourseCreateNestedManyWithoutFacultyInput
     facultySubjects?: SubjectCreateNestedManyWithoutFacultyInput
     studentCourses?: CourseCreateNestedManyWithoutStudentsInput
@@ -31752,6 +33713,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     reports?: ReportUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    webauthnCredentials?: WebAuthnCredentialUncheckedCreateNestedManyWithoutUserInput
     facultyCourses?: CourseUncheckedCreateNestedManyWithoutFacultyInput
     facultySubjects?: SubjectUncheckedCreateNestedManyWithoutFacultyInput
     studentCourses?: CourseUncheckedCreateNestedManyWithoutStudentsInput
@@ -31891,6 +33853,7 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     reports?: ReportUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    webauthnCredentials?: WebAuthnCredentialUpdateManyWithoutUserNestedInput
     facultyCourses?: CourseUpdateManyWithoutFacultyNestedInput
     facultySubjects?: SubjectUpdateManyWithoutFacultyNestedInput
     studentCourses?: CourseUpdateManyWithoutStudentsNestedInput
@@ -31919,6 +33882,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     reports?: ReportUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    webauthnCredentials?: WebAuthnCredentialUncheckedUpdateManyWithoutUserNestedInput
     facultyCourses?: CourseUncheckedUpdateManyWithoutFacultyNestedInput
     facultySubjects?: SubjectUncheckedUpdateManyWithoutFacultyNestedInput
     studentCourses?: CourseUncheckedUpdateManyWithoutStudentsNestedInput
@@ -31945,6 +33909,7 @@ export namespace Prisma {
     grades?: GradeCreateNestedManyWithoutStudentInput
     reports?: ReportCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    webauthnCredentials?: WebAuthnCredentialCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseCreateNestedManyWithoutFacultyInput
     facultySubjects?: SubjectCreateNestedManyWithoutFacultyInput
@@ -31973,6 +33938,7 @@ export namespace Prisma {
     grades?: GradeUncheckedCreateNestedManyWithoutStudentInput
     reports?: ReportUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    webauthnCredentials?: WebAuthnCredentialUncheckedCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableUncheckedCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseUncheckedCreateNestedManyWithoutFacultyInput
     facultySubjects?: SubjectUncheckedCreateNestedManyWithoutFacultyInput
@@ -32062,6 +34028,7 @@ export namespace Prisma {
     grades?: GradeUpdateManyWithoutStudentNestedInput
     reports?: ReportUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    webauthnCredentials?: WebAuthnCredentialUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUpdateManyWithoutFacultyNestedInput
     facultySubjects?: SubjectUpdateManyWithoutFacultyNestedInput
@@ -32090,6 +34057,7 @@ export namespace Prisma {
     grades?: GradeUncheckedUpdateManyWithoutStudentNestedInput
     reports?: ReportUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    webauthnCredentials?: WebAuthnCredentialUncheckedUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUncheckedUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUncheckedUpdateManyWithoutFacultyNestedInput
     facultySubjects?: SubjectUncheckedUpdateManyWithoutFacultyNestedInput
@@ -32169,6 +34137,7 @@ export namespace Prisma {
     grades?: GradeCreateNestedManyWithoutStudentInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    webauthnCredentials?: WebAuthnCredentialCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseCreateNestedManyWithoutFacultyInput
     facultySubjects?: SubjectCreateNestedManyWithoutFacultyInput
@@ -32197,6 +34166,7 @@ export namespace Prisma {
     grades?: GradeUncheckedCreateNestedManyWithoutStudentInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    webauthnCredentials?: WebAuthnCredentialUncheckedCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableUncheckedCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseUncheckedCreateNestedManyWithoutFacultyInput
     facultySubjects?: SubjectUncheckedCreateNestedManyWithoutFacultyInput
@@ -32240,6 +34210,7 @@ export namespace Prisma {
     grades?: GradeUpdateManyWithoutStudentNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    webauthnCredentials?: WebAuthnCredentialUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUpdateManyWithoutFacultyNestedInput
     facultySubjects?: SubjectUpdateManyWithoutFacultyNestedInput
@@ -32268,6 +34239,7 @@ export namespace Prisma {
     grades?: GradeUncheckedUpdateManyWithoutStudentNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    webauthnCredentials?: WebAuthnCredentialUncheckedUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUncheckedUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUncheckedUpdateManyWithoutFacultyNestedInput
     facultySubjects?: SubjectUncheckedUpdateManyWithoutFacultyNestedInput
@@ -32295,6 +34267,7 @@ export namespace Prisma {
     grades?: GradeCreateNestedManyWithoutStudentInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     reports?: ReportCreateNestedManyWithoutUserInput
+    webauthnCredentials?: WebAuthnCredentialCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseCreateNestedManyWithoutFacultyInput
     facultySubjects?: SubjectCreateNestedManyWithoutFacultyInput
@@ -32323,6 +34296,7 @@ export namespace Prisma {
     grades?: GradeUncheckedCreateNestedManyWithoutStudentInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     reports?: ReportUncheckedCreateNestedManyWithoutUserInput
+    webauthnCredentials?: WebAuthnCredentialUncheckedCreateNestedManyWithoutUserInput
     timetableEntries?: TimetableUncheckedCreateNestedManyWithoutFacultyInput
     facultyCourses?: CourseUncheckedCreateNestedManyWithoutFacultyInput
     facultySubjects?: SubjectUncheckedCreateNestedManyWithoutFacultyInput
@@ -32366,6 +34340,7 @@ export namespace Prisma {
     grades?: GradeUpdateManyWithoutStudentNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     reports?: ReportUpdateManyWithoutUserNestedInput
+    webauthnCredentials?: WebAuthnCredentialUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUpdateManyWithoutFacultyNestedInput
     facultySubjects?: SubjectUpdateManyWithoutFacultyNestedInput
@@ -32394,6 +34369,7 @@ export namespace Prisma {
     grades?: GradeUncheckedUpdateManyWithoutStudentNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     reports?: ReportUncheckedUpdateManyWithoutUserNestedInput
+    webauthnCredentials?: WebAuthnCredentialUncheckedUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUncheckedUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUncheckedUpdateManyWithoutFacultyNestedInput
     facultySubjects?: SubjectUncheckedUpdateManyWithoutFacultyNestedInput
@@ -32443,6 +34419,8 @@ export namespace Prisma {
     status?: string
     batches?: SessionCreatebatchesInput | string[]
     attendanceCount?: number
+    attendanceCode?: string | null
+    attendanceCodeExpiry?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -32523,6 +34501,19 @@ export namespace Prisma {
     ipAddress?: string | null
     userAgent?: string | null
     createdAt?: Date | string
+  }
+
+  export type WebAuthnCredentialCreateManyUserInput = {
+    id?: number
+    credentialId: string
+    publicKey: string
+    counter?: number
+    deviceType?: string | null
+    backedUp?: boolean
+    transports?: WebAuthnCredentialCreatetransportsInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    lastUsedAt?: Date | string | null
   }
 
   export type TimetableCreateManyFacultyInput = {
@@ -32659,6 +34650,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     batches?: SessionUpdatebatchesInput | string[]
     attendanceCount?: IntFieldUpdateOperationsInput | number
+    attendanceCode?: NullableStringFieldUpdateOperationsInput | string | null
+    attendanceCodeExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     course?: CourseUpdateOneRequiredWithoutSessionsNestedInput
@@ -32680,6 +34673,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     batches?: SessionUpdatebatchesInput | string[]
     attendanceCount?: IntFieldUpdateOperationsInput | number
+    attendanceCode?: NullableStringFieldUpdateOperationsInput | string | null
+    attendanceCodeExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     attendanceRecords?: AttendanceUncheckedUpdateManyWithoutSessionNestedInput
@@ -32699,6 +34694,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     batches?: SessionUpdatebatchesInput | string[]
     attendanceCount?: IntFieldUpdateOperationsInput | number
+    attendanceCode?: NullableStringFieldUpdateOperationsInput | string | null
+    attendanceCodeExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -32929,6 +34926,44 @@ export namespace Prisma {
     ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     userAgent?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WebAuthnCredentialUpdateWithoutUserInput = {
+    credentialId?: StringFieldUpdateOperationsInput | string
+    publicKey?: StringFieldUpdateOperationsInput | string
+    counter?: IntFieldUpdateOperationsInput | number
+    deviceType?: NullableStringFieldUpdateOperationsInput | string | null
+    backedUp?: BoolFieldUpdateOperationsInput | boolean
+    transports?: WebAuthnCredentialUpdatetransportsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type WebAuthnCredentialUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    credentialId?: StringFieldUpdateOperationsInput | string
+    publicKey?: StringFieldUpdateOperationsInput | string
+    counter?: IntFieldUpdateOperationsInput | number
+    deviceType?: NullableStringFieldUpdateOperationsInput | string | null
+    backedUp?: BoolFieldUpdateOperationsInput | boolean
+    transports?: WebAuthnCredentialUpdatetransportsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type WebAuthnCredentialUncheckedUpdateManyWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    credentialId?: StringFieldUpdateOperationsInput | string
+    publicKey?: StringFieldUpdateOperationsInput | string
+    counter?: IntFieldUpdateOperationsInput | number
+    deviceType?: NullableStringFieldUpdateOperationsInput | string | null
+    backedUp?: BoolFieldUpdateOperationsInput | boolean
+    transports?: WebAuthnCredentialUpdatetransportsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type TimetableUpdateWithoutFacultyInput = {
@@ -33232,6 +35267,8 @@ export namespace Prisma {
     status?: string
     batches?: SessionCreatebatchesInput | string[]
     attendanceCount?: number
+    attendanceCode?: string | null
+    attendanceCodeExpiry?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -33285,6 +35322,7 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     reports?: ReportUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    webauthnCredentials?: WebAuthnCredentialUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUpdateManyWithoutFacultyNestedInput
     facultySubjects?: SubjectUpdateManyWithoutFacultyNestedInput
@@ -33313,6 +35351,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     reports?: ReportUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    webauthnCredentials?: WebAuthnCredentialUncheckedUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUncheckedUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUncheckedUpdateManyWithoutFacultyNestedInput
     facultySubjects?: SubjectUncheckedUpdateManyWithoutFacultyNestedInput
@@ -33473,6 +35512,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     batches?: SessionUpdatebatchesInput | string[]
     attendanceCount?: IntFieldUpdateOperationsInput | number
+    attendanceCode?: NullableStringFieldUpdateOperationsInput | string | null
+    attendanceCodeExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     faculty?: UsersUpdateOneRequiredWithoutSessionsNestedInput
@@ -33494,6 +35535,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     batches?: SessionUpdatebatchesInput | string[]
     attendanceCount?: IntFieldUpdateOperationsInput | number
+    attendanceCode?: NullableStringFieldUpdateOperationsInput | string | null
+    attendanceCodeExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     attendanceRecords?: AttendanceUncheckedUpdateManyWithoutSessionNestedInput
@@ -33513,6 +35556,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     batches?: SessionUpdatebatchesInput | string[]
     attendanceCount?: IntFieldUpdateOperationsInput | number
+    attendanceCode?: NullableStringFieldUpdateOperationsInput | string | null
+    attendanceCodeExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -33613,6 +35658,8 @@ export namespace Prisma {
     status?: string
     batches?: SessionCreatebatchesInput | string[]
     attendanceCount?: number
+    attendanceCode?: string | null
+    attendanceCodeExpiry?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -33657,6 +35704,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     batches?: SessionUpdatebatchesInput | string[]
     attendanceCount?: IntFieldUpdateOperationsInput | number
+    attendanceCode?: NullableStringFieldUpdateOperationsInput | string | null
+    attendanceCodeExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     course?: CourseUpdateOneRequiredWithoutSessionsNestedInput
@@ -33678,6 +35727,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     batches?: SessionUpdatebatchesInput | string[]
     attendanceCount?: IntFieldUpdateOperationsInput | number
+    attendanceCode?: NullableStringFieldUpdateOperationsInput | string | null
+    attendanceCodeExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     attendanceRecords?: AttendanceUncheckedUpdateManyWithoutSessionNestedInput
@@ -33697,6 +35748,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     batches?: SessionUpdatebatchesInput | string[]
     attendanceCount?: IntFieldUpdateOperationsInput | number
+    attendanceCode?: NullableStringFieldUpdateOperationsInput | string | null
+    attendanceCodeExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -33807,6 +35860,7 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     reports?: ReportUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    webauthnCredentials?: WebAuthnCredentialUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUpdateManyWithoutFacultyNestedInput
     facultySubjects?: SubjectUpdateManyWithoutFacultyNestedInput
@@ -33835,6 +35889,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     reports?: ReportUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    webauthnCredentials?: WebAuthnCredentialUncheckedUpdateManyWithoutUserNestedInput
     timetableEntries?: TimetableUncheckedUpdateManyWithoutFacultyNestedInput
     facultyCourses?: CourseUncheckedUpdateManyWithoutFacultyNestedInput
     facultySubjects?: SubjectUncheckedUpdateManyWithoutFacultyNestedInput

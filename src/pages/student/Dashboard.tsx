@@ -38,7 +38,13 @@ import {
 } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/AuthContext";
-import { attendanceAPI, reportsAPI, coursesAPI, sessionsAPI } from "@/lib/api";
+import {
+  attendanceAPI,
+  reportsAPI,
+  coursesAPI,
+  sessionsAPI,
+  webauthnAPI,
+} from "@/lib/api";
 import {
   format,
   startOfWeek,
@@ -50,6 +56,7 @@ import { toast } from "sonner";
 import { parseProxyNotes } from "@/lib/proxyNotes";
 import { useState } from "react";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
+import { startAuthentication, startRegistration } from "@simplewebauthn/browser";
 
 const DAY_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const ATTENDANCE_EARLY_WINDOW_MINUTES = 10;
@@ -144,6 +151,43 @@ export default function StudentDashboard() {
     {},
   );
 
+  const ensureAttendanceAuthenticatorToken = async (sessionId: number) => {
+    const statusResp = await webauthnAPI.getStatus();
+    const statusPayload = statusResp?.data?.data ?? {};
+    const required = Boolean(statusPayload?.requiredForAttendance);
+    const enrolled = Boolean(statusPayload?.enrolled);
+
+    if (!required) return null;
+
+    if (typeof window === "undefined" || !window.PublicKeyCredential) {
+      throw new Error(
+        "This device/browser does not support passkey verification required for attendance.",
+      );
+    }
+
+    if (!enrolled) {
+      const regOptionsResp = await webauthnAPI.getRegistrationOptions();
+      const regPayload = regOptionsResp?.data?.data ?? {};
+      const registrationResponse = await startRegistration(regPayload.options);
+      await webauthnAPI.verifyRegistration({
+        response: registrationResponse,
+        stateToken: regPayload.stateToken,
+      });
+      toast.success("Passkey enrolled for attendance security");
+    }
+
+    const authOptionsResp = await webauthnAPI.getAuthenticationOptions({
+      sessionId,
+    });
+    const authPayload = authOptionsResp?.data?.data ?? {};
+    const authResponse = await startAuthentication(authPayload.options);
+    const verifyResp = await webauthnAPI.verifyAuthentication({
+      response: authResponse,
+      stateToken: authPayload.stateToken,
+    });
+    return verifyResp?.data?.data?.attendanceAssertionToken || null;
+  };
+
   const markAttendanceMutation = useMutation({
     mutationFn: async (session: any) => {
       // Stable per-browser fingerprint to avoid false proxy matches
@@ -201,10 +245,19 @@ export default function StudentDashboard() {
       ].filter(Boolean);
 
       const deviceInfo = deviceInfoParts.join(" | ").slice(0, 180);
+      const codeResp = await sessionsAPI.getAttendanceCode(session.id);
+      const tokenPayload = codeResp?.data?.data ?? codeResp?.data ?? {};
+      const checkInToken = tokenPayload?.checkInToken || null;
+      const attendanceAssertionToken = await ensureAttendanceAuthenticatorToken(
+        session.id,
+      );
+
       return attendanceAPI.markAttendance({
         sessionId: session.id,
         deviceInfo,
         attendanceCode: codeInputs[session.id] || "",
+        checkInToken,
+        attendanceAssertionToken,
       });
     },
     onSuccess: (resp: any) => {
@@ -247,8 +300,32 @@ export default function StudentDashboard() {
       });
     },
     onError: (error: any) => {
+      if (
+        error?.name === "NotAllowedError" ||
+        error?.name === "AbortError" ||
+        typeof error?.message === "string"
+      ) {
+        const msg = String(error?.message || "");
+        if (
+          error?.name === "NotAllowedError" ||
+          error?.name === "AbortError" ||
+          msg.toLowerCase().includes("not allowed")
+        ) {
+          toast.error("Verification cancelled. Please confirm biometrics/passkey.");
+          return;
+        }
+      }
+
       const reason = error?.response?.data?.reason;
       const message = error?.response?.data?.message;
+
+      if (
+        typeof error?.message === "string" &&
+        error.message.toLowerCase().includes("passkey")
+      ) {
+        toast.error(error.message);
+        return;
+      }
 
       if (reason === "duplicate_attendance") {
         toast.info("Attendance already marked for this session");
@@ -288,6 +365,25 @@ export default function StudentDashboard() {
             message ||
             "Attendance check-in is allowed only from the approved campus network.",
         });
+        return;
+      }
+
+      if (
+        reason === "missing_attendance_token" ||
+        reason === "invalid_or_expired_attendance_token"
+      ) {
+        toast.error("Attendance token expired. Please retry.", {
+          description:
+            message || "Fetch the latest live session state and try again.",
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["student", "active-sessions"],
+        });
+        return;
+      }
+
+      if (reason === "attendance_authenticator_required") {
+        toast.error("Biometric or passkey verification is required.");
         return;
       }
 

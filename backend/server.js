@@ -176,6 +176,7 @@ const gradeRoutes = require("./routes/grades");
 const reportRoutes = require("./routes/reports");
 const notificationRoutes = require("./routes/notifications");
 const subjectRoutes = require("./routes/subjects");
+const webauthnRoutes = require("./routes/webauthn");
 
 // Public routes
 app.use("/api/auth", authRoutes);
@@ -192,6 +193,7 @@ app.use("/api/grades", authMiddleware, gradeRoutes);
 app.use("/api/reports", authMiddleware, reportRoutes);
 app.use("/api/notifications", authMiddleware, notificationRoutes);
 app.use("/api/subjects", authMiddleware, subjectRoutes);
+app.use("/api/webauthn", authMiddleware, webauthnRoutes);
 
 // Health check endpoint
 app.get("/api/health", (req, res) => {

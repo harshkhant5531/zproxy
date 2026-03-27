@@ -198,6 +198,17 @@ export const attendanceAPI = {
   deleteAttendance: (id: string | number) => api.delete(`/attendance/${id}`),
 };
 
+// WebAuthn / Passkey API
+export const webauthnAPI = {
+  getStatus: () => api.get("/webauthn/status"),
+  getRegistrationOptions: () => api.post("/webauthn/register/options"),
+  verifyRegistration: (data: any) => api.post("/webauthn/register/verify", data),
+  getAuthenticationOptions: (data: any) =>
+    api.post("/webauthn/authenticate/options", data),
+  verifyAuthentication: (data: any) =>
+    api.post("/webauthn/authenticate/verify", data),
+};
+
 // Exams API
 export const examsAPI = {
   getExams: () => api.get("/exams"),

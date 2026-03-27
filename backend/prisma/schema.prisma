@@ -42,6 +42,7 @@ model Users {
   notifications Notification[] @relation("UserNotifications")
   reports       Report[]        @relation("UserReports")
   auditLogs     AuditLog[]     @relation("UserAuditLogs")
+  webauthnCredentials WebAuthnCredential[]
 
   // Timetable (faculty entries)
   timetableEntries Timetable[] @relation("FacultyTimetable")
@@ -51,6 +52,24 @@ model Users {
   facultySubjects Subject[] @relation("FacultySubjects")
   studentCourses  Course[] @relation("StudentCourses")
   studentSubjects Subject[] @relation("StudentSubjects")
+}
+
+model WebAuthnCredential {
+  id                    Int      @id @default(autoincrement())
+  userId                Int
+  credentialId          String   @unique
+  publicKey             String
+  counter               Int      @default(0)
+  deviceType            String?
+  backedUp              Boolean  @default(false)
+  transports            String[]
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  lastUsedAt            DateTime?
+
+  user Users @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 // ─── Profiles ────────────────────────────────────────────────────────────────

@@ -1,4 +1,5 @@
 const express = require("express");
+const jwt = require("jsonwebtoken");
 const { body, validationResult } = require("express-validator");
 const prisma = require("../prisma");
 const authMiddleware = require("../middleware/auth");
@@ -293,6 +294,44 @@ const parseProxyAttendanceDetail = (notes, status) => {
           : "low";
 
   return { signals, riskScore, riskLabel };
+};
+
+const getAttendanceTokenSecret = () =>
+  process.env.ATTENDANCE_TOKEN_SECRET || process.env.JWT_SECRET;
+
+const verifyAttendanceCheckInToken = ({
+  token,
+  sessionId,
+  attendanceCode,
+}) => {
+  const secret = getAttendanceTokenSecret();
+  if (!secret || !token) return false;
+  try {
+    const decoded = jwt.verify(token, secret);
+    return (
+      decoded?.purpose === "attendance-checkin" &&
+      Number(decoded?.sessionId) === Number(sessionId) &&
+      String(decoded?.attendanceCode || "") === String(attendanceCode || "")
+    );
+  } catch {
+    return false;
+  }
+};
+
+const verifyAttendanceAuthenticatorToken = ({ token, sessionId, userId }) => {
+  const secret = getAttendanceTokenSecret();
+  if (!secret || !token) return false;
+  try {
+    const decoded = jwt.verify(token, secret);
+    return (
+      decoded?.purpose === "attendance-webauthn-assertion" &&
+      decoded?.uv === true &&
+      Number(decoded?.sessionId) === Number(sessionId) &&
+      Number(decoded?.userId) === Number(userId)
+    );
+  } catch {
+    return false;
+  }
 };
 
 const logAttendanceAttempt = async ({
@@ -1038,12 +1077,21 @@ router.post(
 
       if (req.user.role === "student") {
         const networkCheck = evaluateCampusWifiAccess(clientIp);
+        const wildcardBypassEnabled = process.env.CAMPUS_WIFI_CIDRS === "*";
+        const isNetworkAllowed =
+          wildcardBypassEnabled || isAllowedCampusWifiIp(clientIp);
+        const networkMode = String(
+          process.env.ATTENDANCE_NETWORK_MODE || "advisory",
+        ).toLowerCase();
         auditContext.security = {
           network: networkCheck,
+          wildcardBypassEnabled,
+          isNetworkAllowed,
+          networkMode,
           hasDeviceFingerprint: Boolean(normalizedDeviceInfo),
         };
 
-        if (!networkCheck.allowed) {
+        if (networkMode === "strict" && !isNetworkAllowed) {
           const error = new Error(
             "Attendance check-in is allowed only from approved campus WiFi.",
           );
@@ -1146,7 +1194,8 @@ router.post(
 
       // ─── One-Time Attendance Code Validation ─────────────────────────────
       if (req.user.role === "student") {
-        const { attendanceCode } = req.body;
+        const { attendanceCode, checkInToken, attendanceAssertionToken } =
+          req.body;
         if (!attendanceCode) {
           const error = new Error("Attendance code is required.");
           error.statusCode = 400;
@@ -1171,8 +1220,96 @@ router.post(
           error.reasonCode = "invalid_or_expired_attendance_code";
           throw error;
         }
+
+        const tokenMode = String(
+          process.env.ATTENDANCE_TOKEN_MODE || "required",
+        ).toLowerCase();
+        if (tokenMode !== "off") {
+          if (!checkInToken) {
+            const error = new Error("Attendance check-in token is required.");
+            error.statusCode = 400;
+            error.reasonCode = "missing_attendance_token";
+            throw error;
+          }
+
+          const tokenValid = verifyAttendanceCheckInToken({
+            token: checkInToken,
+            sessionId: parsedSessionId,
+            attendanceCode,
+          });
+          if (!tokenValid) {
+            const error = new Error("Attendance token is invalid or expired.");
+            error.statusCode = 403;
+            error.reasonCode = "invalid_or_expired_attendance_token";
+            throw error;
+          }
+        }
+
+        const authenticatorMode = String(
+          process.env.ATTENDANCE_AUTHENTICATOR_MODE || "required",
+        ).toLowerCase();
+        if (authenticatorMode !== "off") {
+          const assertionValid = verifyAttendanceAuthenticatorToken({
+            token: attendanceAssertionToken,
+            sessionId: parsedSessionId,
+            userId: req.user.id,
+          });
+          if (!assertionValid) {
+            const error = new Error(
+              "Biometric/passkey verification is required before attendance check-in.",
+            );
+            error.statusCode = 403;
+            error.reasonCode = "attendance_authenticator_required";
+            throw error;
+          }
+        }
       }
       // ─────────────────────────────────────────────────────────────────────
+
+      let mutableNotes = finalNotes;
+      const noteTags = [];
+
+      if (req.user.role === "student" && normalizedDeviceInfo) {
+        const sameDeviceDifferentStudent = await prisma.attendance.findFirst({
+          where: {
+            sessionId: parsedSessionId,
+            deviceInfo: normalizedDeviceInfo,
+            NOT: { studentId },
+          },
+          select: { studentId: true },
+        });
+        if (sameDeviceDifferentStudent) {
+          const error = new Error(
+            "Attendance blocked by security checks (shared device in same session).",
+          );
+          error.statusCode = 403;
+          error.reasonCode = "proxy_same_device_session";
+          error.decisionReason = "shared_device_same_session";
+          throw error;
+        }
+      }
+
+      if (req.user.role === "student") {
+        const networkCheck = evaluateCampusWifiAccess(clientIp);
+        if (!networkCheck.allowed) {
+          noteTags.push("[RISK:NETWORK_MISMATCH]");
+        }
+
+        if (clientIp) {
+          const sharedIpCount = await prisma.attendance.count({
+            where: {
+              sessionId: parsedSessionId,
+              ipAddress: clientIp,
+              NOT: { studentId },
+            },
+          });
+          if (sharedIpCount > 0) {
+            noteTags.push(`[IP_SHARED:count=${sharedIpCount}]`);
+          }
+        }
+      }
+
+      mutableNotes = appendNotes(mutableNotes, noteTags);
 
       // Create attendance record
       const attendance = await prisma.attendance.create({
@@ -1180,7 +1317,7 @@ router.post(
           sessionId: parsedSessionId,
           studentId,
           status: finalStatus,
-          notes: finalNotes,
+          notes: mutableNotes,
           ipAddress: clientIp,
           deviceInfo: normalizedDeviceInfo,
         },

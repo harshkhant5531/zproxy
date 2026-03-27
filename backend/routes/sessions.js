@@ -1,4 +1,5 @@
 const express = require("express");
+const jwt = require("jsonwebtoken");
 const { body, validationResult } = require("express-validator");
 const prisma = require("../prisma");
 const authMiddleware = require("../middleware/auth");
@@ -8,6 +9,27 @@ const router = express.Router();
 const {
   isStudentCheckInWindowOpen,
 } = require("../utils/sessionAttendanceWindow");
+
+const getAttendanceTokenSecret = () =>
+  process.env.ATTENDANCE_TOKEN_SECRET || process.env.JWT_SECRET;
+
+const buildAttendanceCheckInToken = ({
+  sessionId,
+  attendanceCode,
+  expiry,
+}) => {
+  const secret = getAttendanceTokenSecret();
+  if (!secret || !attendanceCode || !expiry) return null;
+  return jwt.sign(
+    {
+      purpose: "attendance-checkin",
+      sessionId,
+      attendanceCode,
+    },
+    secret,
+    { expiresIn: Math.max(1, Math.floor((expiry.getTime() - Date.now()) / 1000)) },
+  );
+};
 
 const assertSessionCodeReadAccess = async (req, session) => {
   if (req.user.role === "admin") return;
@@ -758,6 +780,11 @@ router.post(
         where: { id: sessionId },
         data: { attendanceCode: code, attendanceCodeExpiry: expiry },
       });
+      const checkInToken = buildAttendanceCheckInToken({
+        sessionId,
+        attendanceCode: code,
+        expiry,
+      });
       res.json({
         success: true,
         data: {
@@ -765,6 +792,7 @@ router.post(
           expiry,
           expiresInSeconds: expirySeconds,
           isExpired: false,
+          checkInToken,
         },
       });
     } catch (error) {
@@ -811,6 +839,14 @@ router.get("/:id/attendance-code", authMiddleware, async (req, res, next) => {
     const secondsRemaining =
       expiresAtMs !== null ? Math.max(0, Math.floor((expiresAtMs - now) / 1000)) : 0;
     const isExpired = !expiryDate || secondsRemaining <= 0;
+    const checkInToken =
+      !isExpired && session.attendanceCode
+        ? buildAttendanceCheckInToken({
+            sessionId,
+            attendanceCode: session.attendanceCode,
+            expiry: expiryDate,
+          })
+        : null;
 
     res.json({
       success: true,
@@ -821,6 +857,7 @@ router.get("/:id/attendance-code", authMiddleware, async (req, res, next) => {
         isExpired,
         hasActiveCode: Boolean(session.attendanceCode) && !isExpired,
         sessionStatus: session.status,
+        checkInToken,
       },
     });
   } catch (error) {

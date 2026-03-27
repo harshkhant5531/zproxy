@@ -1,5 +1,3 @@
-// Prisma schema for Aura Integrity Engine
-
 generator client {
   provider = "prisma-client-js"
   output   = "../generated/prisma/client"
@@ -40,9 +38,10 @@ model Users {
   grades      Grade[]      @relation("StudentGrades")
 
   // Notifications & Reports
-  notifications Notification[] @relation("UserNotifications")
-  reports       Report[]       @relation("UserReports")
-  auditLogs     AuditLog[]     @relation("UserAuditLogs")
+  notifications       Notification[]       @relation("UserNotifications")
+  reports             Report[]             @relation("UserReports")
+  auditLogs           AuditLog[]           @relation("UserAuditLogs")
+  webauthnCredentials WebAuthnCredential[]
 
   // Timetable (faculty entries)
   timetableEntries Timetable[] @relation("FacultyTimetable")
@@ -52,6 +51,24 @@ model Users {
   facultySubjects Subject[] @relation("FacultySubjects")
   studentCourses  Course[]  @relation("StudentCourses")
   studentSubjects Subject[] @relation("StudentSubjects")
+}
+
+model WebAuthnCredential {
+  id           Int       @id @default(autoincrement())
+  userId       Int
+  credentialId String    @unique
+  publicKey    String
+  counter      Int       @default(0)
+  deviceType   String?
+  backedUp     Boolean   @default(false)
+  transports   String[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  lastUsedAt   DateTime?
+
+  user Users @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 // ─── Profiles ────────────────────────────────────────────────────────────────
@@ -160,22 +177,24 @@ model Subject {
 // ─── Sessions & Attendance ────────────────────────────────────────────────────
 
 model Session {
-  id              Int      @id @default(autoincrement())
-  courseId        Int
-  facultyId       Int
-  subjectId       Int?
-  topic           String
-  description     String?
-  sessionType     String   @default("lecture")
-  date            DateTime
-  startTime       String
-  endTime         String
-  duration        Int      @default(60)
-  status          String   @default("scheduled")
-  batches         String[] // Multi-batch selection
-  attendanceCount Int      @default(0)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id                   Int       @id @default(autoincrement())
+  courseId             Int
+  facultyId            Int
+  subjectId            Int?
+  topic                String
+  description          String?
+  sessionType          String    @default("lecture")
+  date                 DateTime
+  startTime            String
+  endTime              String
+  duration             Int       @default(60)
+  status               String    @default("scheduled")
+  batches              String[] // Multi-batch selection
+  attendanceCount      Int       @default(0)
+  attendanceCode       String?
+  attendanceCodeExpiry DateTime?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
 
   course            Course       @relation(fields: [courseId], references: [id], onDelete: Cascade)
   faculty           Users        @relation("FacultySessions", fields: [facultyId], references: [id], onDelete: Cascade)
