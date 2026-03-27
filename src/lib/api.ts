@@ -169,6 +169,10 @@ export const sessionsAPI = {
   getSessionAttendance: (id: string | number) =>
     api.get(`/sessions/${id}/attendance`),
 
+  getAttendanceCode: (id: string | number) =>
+    api.get(`/sessions/${id}/attendance-code`),
+  generateAttendanceCode: (id: string | number) =>
+    api.post(`/sessions/${id}/attendance-code`),
   finalizeSession: (id: string | number) =>
     api.post(`/sessions/${id}/finalize`),
 };
@@ -304,8 +308,7 @@ export const notificationsAPI = {
 
   deleteNotification: (id: string) => api.delete(`/notifications/${id}`),
 
-  markAsRead: (id: string | number) =>
-    api.put(`/notifications/${id}/read`),
+  markAsRead: (id: string | number) => api.put(`/notifications/${id}/read`),
 
   markAllAsRead: () => api.put("/notifications/read-all"),
 };

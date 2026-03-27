@@ -29,6 +29,7 @@ import { sessionsAPI, attendanceAPI } from "@/lib/api";
 import { parseProxyNotes } from "@/lib/proxyNotes";
 import { format } from "date-fns";
 import { toast } from "sonner";
+import { differenceInSeconds } from "date-fns";
 
 export default function LiveSession() {
   const { id } = useParams();
@@ -36,6 +37,12 @@ export default function LiveSession() {
   const [showOverride, setShowOverride] = useState(false);
   const [overrideStudentId, setOverrideStudentId] = useState("");
   const [overrideReason, setOverrideReason] = useState("");
+
+  const [attendanceCode, setAttendanceCode] = useState<string | null>(null);
+  const [attendanceCodeExpiry, setAttendanceCodeExpiry] = useState<Date | null>(
+    null,
+  );
+  const [codeLoading, setCodeLoading] = useState(false);
 
   const { data: sessionData, isLoading: isSessionLoading } = useQuery({
     queryKey: ["session", id],
@@ -203,6 +210,22 @@ export default function LiveSession() {
     navigator.clipboard.writeText(headers + body).then(() => {
       toast.success("Attendance copied to clipboard (Excel format)");
     });
+  };
+
+  const handleGenerateCode = async () => {
+    setCodeLoading(true);
+    try {
+      const resp = await sessionsAPI.generateAttendanceCode(id!);
+      setAttendanceCode(resp.data.code);
+      setAttendanceCodeExpiry(
+        resp.data.expiry ? new Date(resp.data.expiry) : null,
+      );
+      toast.success("Attendance code generated");
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || "Failed to generate code");
+    } finally {
+      setCodeLoading(false);
+    }
   };
 
   if (isSessionLoading || !session) {
@@ -419,7 +442,8 @@ export default function LiveSession() {
               </p>
               <div className="space-y-2.5">
                 {proxyRecords.map((log: any) => {
-                  const isDetected = parseProxyNotes(log?.notes).signal === "detected";
+                  const isDetected =
+                    parseProxyNotes(log?.notes).signal === "detected";
                   const sharedWithId = parseProxyFlag(log.notes);
                   const sharedRecord = attendanceData?.find(
                     (a: any) => a.studentId === sharedWithId,
@@ -564,7 +588,8 @@ export default function LiveSession() {
                 <TableBody>
                   {attendanceData?.map((log: any) => {
                     const proxySharedWithId = parseProxyFlag(log.notes);
-                    const isDetected = parseProxyNotes(log?.notes).signal === "detected";
+                    const isDetected =
+                      parseProxyNotes(log?.notes).signal === "detected";
                     const proxyPartner = proxySharedWithId
                       ? attendanceData.find(
                           (a: any) => a.studentId === proxySharedWithId,
@@ -588,8 +613,8 @@ export default function LiveSession() {
                               <div className="flex items-center gap-1 mt-1">
                                 <AlertTriangle className="h-3 w-3 text-warning" />
                                 <span className="text-[9px] font-black text-warning uppercase tracking-wider">
-                                  {isDetected ? "Auto-absent" : "Suspect"} — shared
-                                  with{" "}
+                                  {isDetected ? "Auto-absent" : "Suspect"} —
+                                  shared with{" "}
                                   {proxyPartner?.student?.studentProfile
                                     ?.fullName ||
                                     proxyPartner?.student?.username ||
