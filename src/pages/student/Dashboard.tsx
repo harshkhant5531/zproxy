@@ -47,6 +47,7 @@ import {
 } from "date-fns";
 import { toast } from "sonner";
 import { parseProxyNotes } from "@/lib/proxyNotes";
+import { useState } from "react";
 
 const DAY_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const ATTENDANCE_EARLY_WINDOW_MINUTES = 10;
@@ -131,6 +132,10 @@ export default function StudentDashboard() {
     ? activeSessionsData
     : [];
 
+  const [codeInputs, setCodeInputs] = useState<{ [sessionId: number]: string }>(
+    {},
+  );
+
   const markAttendanceMutation = useMutation({
     mutationFn: async (session: any) => {
       // Stable per-browser fingerprint to avoid false proxy matches
@@ -154,10 +159,9 @@ export default function StudentDashboard() {
 
       if (!stableFpId) {
         // crypto.randomUUID is stable but may be unavailable in some environments.
-        const newId =
-          globalThis.crypto?.randomUUID
-            ? globalThis.crypto.randomUUID()
-            : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+        const newId = globalThis.crypto?.randomUUID
+          ? globalThis.crypto.randomUUID()
+          : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
         stableFpId = newId;
 
         // Persist where possible; if both are blocked, detection still works but
@@ -180,7 +184,9 @@ export default function StudentDashboard() {
         navigator.language,
         (navigator.languages || []).join(","),
         Intl.DateTimeFormat().resolvedOptions().timeZone,
-        typeof screen !== "undefined" ? `${screen.width}x${screen.height}` : null,
+        typeof screen !== "undefined"
+          ? `${screen.width}x${screen.height}`
+          : null,
         typeof navigator.hardwareConcurrency === "number"
           ? String(navigator.hardwareConcurrency)
           : null,
@@ -190,11 +196,13 @@ export default function StudentDashboard() {
       return attendanceAPI.markAttendance({
         sessionId: session.id,
         deviceInfo,
+        attendanceCode: codeInputs[session.id] || "",
       });
     },
     onSuccess: (resp: any) => {
       const attendance = resp?.data?.data?.attendance;
-      const notes: string = typeof attendance?.notes === "string" ? attendance.notes : "";
+      const notes: string =
+        typeof attendance?.notes === "string" ? attendance.notes : "";
       const proxy = parseProxyNotes(notes);
 
       if (proxy.signal !== "none" && attendance?.status === "absent") {
@@ -208,7 +216,10 @@ export default function StudentDashboard() {
               : "This check-in matched an integrity flag for manual review.",
           },
         );
-      } else if (proxy.signal === "suspect" && attendance?.status === "present") {
+      } else if (
+        proxy.signal === "suspect" &&
+        attendance?.status === "present"
+      ) {
         toast.warning("Flagged for manual review", {
           description:
             "Your check-in matched a proxy-suspect pattern. Faculty will review before final decisions.",
@@ -406,7 +417,20 @@ export default function StudentDashboard() {
                       {session.endTime}
                     </p>
                   </div>
-                  <div className="flex shrink-0 items-center gap-2">
+                  <div className="flex flex-col gap-2 items-end">
+                    <input
+                      type="text"
+                      placeholder="Attendance Code"
+                      className="input input-bordered input-sm w-32"
+                      value={codeInputs[session.id] || ""}
+                      onChange={(e) =>
+                        setCodeInputs({
+                          ...codeInputs,
+                          [session.id]: e.target.value,
+                        })
+                      }
+                      disabled={alreadyMarked}
+                    />
                     {alreadyMarked ? (
                       <Badge variant="secondary">Marked</Badge>
                     ) : (
@@ -414,7 +438,9 @@ export default function StudentDashboard() {
                         size="sm"
                         onClick={() => markAttendanceMutation.mutate(session)}
                         disabled={
-                          isMarkingCurrent || markAttendanceMutation.isPending
+                          isMarkingCurrent ||
+                          markAttendanceMutation.isPending ||
+                          !(codeInputs[session.id] || "").trim()
                         }
                       >
                         {isMarkingCurrent ? (
@@ -586,7 +612,8 @@ export default function StudentDashboard() {
                     <div className="flex flex-wrap items-center gap-2">
                       <StatusBadge status={log.status} />
                       {(() => {
-                        const notes = typeof log?.notes === "string" ? log.notes : "";
+                        const notes =
+                          typeof log?.notes === "string" ? log.notes : "";
                         const proxy = parseProxyNotes(notes);
                         if (proxy.signal === "none") return null;
 
