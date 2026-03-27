@@ -41,8 +41,11 @@ router.get("/", authMiddleware, async (req, res, next) => {
         throw error;
       }
 
-      const enrolledSubjectIds = userWithProfile.studentSubjects.map((s) => s.id);
-      const studentBatch = userWithProfile.studentProfile?.batch || "___NO_BATCH___";
+      const enrolledSubjectIds = userWithProfile.studentSubjects.map(
+        (s) => s.id,
+      );
+      const studentBatch =
+        userWithProfile.studentProfile?.batch || "___NO_BATCH___";
 
       // Filter: Enrolled in course AND (subject matches OR no subject) AND (batch matches OR no batch restriction)
       where.AND = [
@@ -52,16 +55,10 @@ router.get("/", authMiddleware, async (req, res, next) => {
           },
         },
         {
-          OR: [
-            { subjectId: null },
-            { subjectId: { in: enrolledSubjectIds } },
-          ],
+          OR: [{ subjectId: null }, { subjectId: { in: enrolledSubjectIds } }],
         },
         {
-          OR: [
-            { batches: { equals: [] } },
-            { batches: { has: studentBatch } },
-          ],
+          OR: [{ batches: { equals: [] } }, { batches: { has: studentBatch } }],
         },
       ];
     } else if (req.user.role === "faculty") {
@@ -126,7 +123,7 @@ router.get("/", authMiddleware, async (req, res, next) => {
         },
         orderBy: { date: "desc" },
       });
-      // Return all candidates for today. The frontend dashboard will handle 
+      // Return all candidates for today. The frontend dashboard will handle
       // the 'Mark Now' window visualization based on local time.
       // This solves the 'session not visible' issue caused by server/client clock drift.
       total = candidates.length;
@@ -363,95 +360,90 @@ router.post(
 // @route   PUT /api/sessions/:id
 // @desc    Update session
 // @access  Admin, Faculty
-router.put(
-  "/:id",
-  authMiddleware,
-  [],
-  async (req, res, next) => {
-    try {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        const error = new Error("Validation Error");
-        error.statusCode = 400;
-        error.errors = errors.array();
-        throw error;
-      }
-
-      const session = await prisma.session.findUnique({
-        where: { id: parseInt(req.params.id) },
-      });
-
-      if (!session) {
-        const error = new Error("Session not found");
-        error.statusCode = 404;
-        throw error;
-      }
-
-      // Check if user has access to update this session (Creator or Course Lead)
-      if (req.user.role === "faculty") {
-        const isCreator = session.facultyId === req.user.id;
-        const course = await prisma.course.findUnique({
-          where: { id: session.courseId },
-          select: { facultyId: true },
-        });
-        const isCourseLead = course?.facultyId === req.user.id;
-
-        if (!isCreator && !isCourseLead) {
-          const error = new Error(
-            "Forbidden: You are not authorized to update this session",
-          );
-          error.statusCode = 403;
-          throw error;
-        }
-      }
-
-      const {
-        courseId,
-        subjectId,
-        topic,
-        description,
-        sessionType,
-        date,
-        startTime,
-        endTime,
-        duration,
-        status,
-        batches,
-      } = req.body;
-
-      const updatedSession = await prisma.session.update({
-        where: { id: parseInt(req.params.id) },
-        data: {
-          ...(courseId && { courseId }),
-          ...(subjectId && { subjectId }),
-          ...(topic && { topic }),
-          ...(description && { description }),
-          ...(sessionType && { sessionType }),
-          ...(date && { date: new Date(date) }),
-          ...(startTime && { startTime }),
-          ...(endTime && { endTime }),
-          ...(duration && { duration }),
-          ...(status && { status }),
-          ...(batches && { batches }),
-        },
-        include: {
-          course: true,
-          faculty: true,
-          subject: true,
-          attendanceRecords: true,
-        },
-      });
-
-      res.json({
-        success: true,
-        message: "Session updated successfully",
-        data: { session: updatedSession },
-      });
-    } catch (error) {
-      next(error);
+router.put("/:id", authMiddleware, [], async (req, res, next) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      const error = new Error("Validation Error");
+      error.statusCode = 400;
+      error.errors = errors.array();
+      throw error;
     }
-  },
-);
+
+    const session = await prisma.session.findUnique({
+      where: { id: parseInt(req.params.id) },
+    });
+
+    if (!session) {
+      const error = new Error("Session not found");
+      error.statusCode = 404;
+      throw error;
+    }
+
+    // Check if user has access to update this session (Creator or Course Lead)
+    if (req.user.role === "faculty") {
+      const isCreator = session.facultyId === req.user.id;
+      const course = await prisma.course.findUnique({
+        where: { id: session.courseId },
+        select: { facultyId: true },
+      });
+      const isCourseLead = course?.facultyId === req.user.id;
+
+      if (!isCreator && !isCourseLead) {
+        const error = new Error(
+          "Forbidden: You are not authorized to update this session",
+        );
+        error.statusCode = 403;
+        throw error;
+      }
+    }
+
+    const {
+      courseId,
+      subjectId,
+      topic,
+      description,
+      sessionType,
+      date,
+      startTime,
+      endTime,
+      duration,
+      status,
+      batches,
+    } = req.body;
+
+    const updatedSession = await prisma.session.update({
+      where: { id: parseInt(req.params.id) },
+      data: {
+        ...(courseId && { courseId }),
+        ...(subjectId && { subjectId }),
+        ...(topic && { topic }),
+        ...(description && { description }),
+        ...(sessionType && { sessionType }),
+        ...(date && { date: new Date(date) }),
+        ...(startTime && { startTime }),
+        ...(endTime && { endTime }),
+        ...(duration && { duration }),
+        ...(status && { status }),
+        ...(batches && { batches }),
+      },
+      include: {
+        course: true,
+        faculty: true,
+        subject: true,
+        attendanceRecords: true,
+      },
+    });
+
+    res.json({
+      success: true,
+      message: "Session updated successfully",
+      data: { session: updatedSession },
+    });
+  } catch (error) {
+    next(error);
+  }
+});
 
 // @route   DELETE /api/sessions/:id
 // @desc    Delete session
@@ -588,10 +580,7 @@ router.post(
         (s) => !recordedIds.has(s.id) && !proxyMarkedIds.has(s.id),
       );
 
-      if (
-        absentees.length === 0 &&
-        proxyDetectedPresentRecords.length === 0
-      ) {
+      if (absentees.length === 0 && proxyDetectedPresentRecords.length === 0) {
         return res.json({
           success: true,
           message: "Session finalized. All eligible students are present.",
@@ -699,6 +688,71 @@ router.get("/:id/attendance", authMiddleware, async (req, res, next) => {
     res.json({
       success: true,
       data: { attendance },
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// @route   POST /api/sessions/:id/attendance-code
+// @desc    Generate a one-time attendance code for a session (faculty only)
+// @access  Faculty
+router.post(
+  "/:id/attendance-code",
+  authMiddleware,
+  requireRole(["faculty", "admin"]),
+  async (req, res, next) => {
+    try {
+      const sessionId = parseInt(req.params.id);
+      const session = await prisma.session.findUnique({
+        where: { id: sessionId },
+      });
+      if (!session) {
+        const error = new Error("Session not found");
+        error.statusCode = 404;
+        throw error;
+      }
+      if (req.user.role === "faculty" && session.facultyId !== req.user.id) {
+        const error = new Error("Forbidden: Not your session");
+        error.statusCode = 403;
+        throw error;
+      }
+      // Generate a 6-digit code
+      const code = Math.floor(100000 + Math.random() * 900000).toString();
+      const expirySeconds = parseInt(
+        process.env.ATTENDANCE_CODE_EXPIRY || "300",
+        10,
+      );
+      const expiry = new Date(Date.now() + expirySeconds * 1000);
+      await prisma.session.update({
+        where: { id: sessionId },
+        data: { attendanceCode: code, attendanceCodeExpiry: expiry },
+      });
+      res.json({ success: true, code, expiry });
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+// @route   GET /api/sessions/:id/attendance-code
+// @desc    Get the current attendance code and expiry (for validation, not for display)
+// @access  Faculty, Student
+router.get("/:id/attendance-code", authMiddleware, async (req, res, next) => {
+  try {
+    const sessionId = parseInt(req.params.id);
+    const session = await prisma.session.findUnique({
+      where: { id: sessionId },
+    });
+    if (!session) {
+      const error = new Error("Session not found");
+      error.statusCode = 404;
+      throw error;
+    }
+    res.json({
+      success: true,
+      code: session.attendanceCode,
+      expiry: session.attendanceCodeExpiry,
     });
   } catch (error) {
     next(error);
