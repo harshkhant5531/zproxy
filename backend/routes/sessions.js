@@ -9,6 +9,30 @@ const {
   isStudentCheckInWindowOpen,
 } = require("../utils/sessionAttendanceWindow");
 
+const assertSessionCodeReadAccess = async (req, session) => {
+  if (req.user.role === "admin") return;
+
+  if (req.user.role === "faculty") {
+    const isCreator = session.facultyId === req.user.id;
+    const course = await prisma.course.findUnique({
+      where: { id: session.courseId },
+      select: { facultyId: true },
+    });
+    const isCourseLead = course?.facultyId === req.user.id;
+
+    if (!isCreator && !isCourseLead) {
+      const error = new Error("Forbidden");
+      error.statusCode = 403;
+      throw error;
+    }
+    return;
+  }
+
+  const error = new Error("Forbidden");
+  error.statusCode = 403;
+  throw error;
+};
+
 // @route   GET /api/sessions
 // @desc    Get all sessions
 // @access  Admin, Faculty, Student (filtered by role)
@@ -704,6 +728,11 @@ router.post(
   async (req, res, next) => {
     try {
       const sessionId = parseInt(req.params.id);
+      if (!Number.isFinite(sessionId)) {
+        const error = new Error("Invalid session ID");
+        error.statusCode = 400;
+        throw error;
+      }
       const session = await prisma.session.findUnique({
         where: { id: sessionId },
       });
@@ -712,9 +741,10 @@ router.post(
         error.statusCode = 404;
         throw error;
       }
-      if (req.user.role === "faculty" && session.facultyId !== req.user.id) {
-        const error = new Error("Forbidden: Not your session");
-        error.statusCode = 403;
+      await assertSessionCodeReadAccess(req, session);
+      if (session.status === "completed") {
+        const error = new Error("Cannot generate attendance code for a completed session");
+        error.statusCode = 409;
         throw error;
       }
       // Generate a 6-digit code
@@ -728,7 +758,15 @@ router.post(
         where: { id: sessionId },
         data: { attendanceCode: code, attendanceCodeExpiry: expiry },
       });
-      res.json({ success: true, code, expiry });
+      res.json({
+        success: true,
+        data: {
+          code,
+          expiry,
+          expiresInSeconds: expirySeconds,
+          isExpired: false,
+        },
+      });
     } catch (error) {
       next(error);
     }
@@ -741,18 +779,49 @@ router.post(
 router.get("/:id/attendance-code", authMiddleware, async (req, res, next) => {
   try {
     const sessionId = parseInt(req.params.id);
+    if (!Number.isFinite(sessionId)) {
+      const error = new Error("Invalid session ID");
+      error.statusCode = 400;
+      throw error;
+    }
     const session = await prisma.session.findUnique({
       where: { id: sessionId },
+      select: {
+        id: true,
+        courseId: true,
+        facultyId: true,
+        status: true,
+        attendanceCode: true,
+        attendanceCodeExpiry: true,
+      },
     });
     if (!session) {
       const error = new Error("Session not found");
       error.statusCode = 404;
       throw error;
     }
+
+    await assertSessionCodeReadAccess(req, session);
+
+    const expiryDate = session.attendanceCodeExpiry
+      ? new Date(session.attendanceCodeExpiry)
+      : null;
+    const now = Date.now();
+    const expiresAtMs = expiryDate ? expiryDate.getTime() : null;
+    const secondsRemaining =
+      expiresAtMs !== null ? Math.max(0, Math.floor((expiresAtMs - now) / 1000)) : 0;
+    const isExpired = !expiryDate || secondsRemaining <= 0;
+
     res.json({
       success: true,
-      code: session.attendanceCode,
-      expiry: session.attendanceCodeExpiry,
+      data: {
+        code: isExpired ? null : session.attendanceCode,
+        expiry: session.attendanceCodeExpiry,
+        secondsRemaining,
+        isExpired,
+        hasActiveCode: Boolean(session.attendanceCode) && !isExpired,
+        sessionStatus: session.status,
+      },
     });
   } catch (error) {
     next(error);
