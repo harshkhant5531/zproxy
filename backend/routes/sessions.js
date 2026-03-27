@@ -829,7 +829,23 @@ router.get("/:id/attendance-code", authMiddleware, async (req, res, next) => {
       throw error;
     }
 
-    await assertSessionCodeReadAccess(req, session);
+    if (req.user.role === "student") {
+      const isEnrolled = await prisma.course.findFirst({
+        where: {
+          id: session.courseId,
+          students: { some: { id: req.user.id } },
+        },
+        select: { id: true },
+      });
+
+      if (!isEnrolled) {
+        const error = new Error("Forbidden");
+        error.statusCode = 403;
+        throw error;
+      }
+    } else {
+      await assertSessionCodeReadAccess(req, session);
+    }
 
     const expiryDate = session.attendanceCodeExpiry
       ? new Date(session.attendanceCodeExpiry)
@@ -851,7 +867,7 @@ router.get("/:id/attendance-code", authMiddleware, async (req, res, next) => {
     res.json({
       success: true,
       data: {
-        code: isExpired ? null : session.attendanceCode,
+        code: req.user.role === "student" ? null : (isExpired ? null : session.attendanceCode),
         expiry: session.attendanceCodeExpiry,
         secondsRemaining,
         isExpired,
